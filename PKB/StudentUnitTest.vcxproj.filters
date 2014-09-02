@@ -60,6 +60,15 @@
     <ClCompile Include="TestModify.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="StatTable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcTable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CallTable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Course.h">
@@ -105,6 +114,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TestModify.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StatTable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcTable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CallTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,12 +1,10 @@
-﻿Build started 2/9/2014 8:51:05 PM.
+﻿Build started 3/9/2014 12:07:43 AM.
      1>Project "C:\Users\Saloni\Desktop\NUS YEAR 4 SEM1\CS3202\StudentUnitTest\StudentUnitTest\StudentUnitTest.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
          Creating "Debug\StudentUnitTest.unsuccessfulbuild" because "AlwaysCreate" was specified.
        ClCompile:
-         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I"C:\cppunit-1.12.1\include" /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt ConstTable.cpp Course.cpp Follow.cpp Main.cpp ModifyTable.cpp ParentTable.cpp PKB.cpp Student.cpp TestFollow.cpp TestModify.cpp TestParentTable.cpp TestStudent.cpp TestUseTable.cpp UseTable.cpp VarTable.cpp
-         VarTable.cpp
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I"C:\cppunit-1.12.1\include" /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt CallTable.cpp Follow.cpp ModifyTable.cpp ParentTable.cpp ProcTable.cpp StatTable.cpp UseTable.cpp
          UseTable.cpp
-     1>c:\users\saloni\desktop\nus year 4 sem1\cs3202\studentunittest\studentunittest\usetable.cpp(28): warning C4018: '>' : signed/unsigned mismatch
      1>c:\program files (x86)\microsoft visual studio 10.0\vc\include\vector(2140): warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
                  c:\program files (x86)\microsoft visual studio 10.0\vc\include\vector(2126) : see reference to function template instantiation 'void std::vector<_Ty,_Ax>::_BConstruct<_Iter>(_Iter,_Iter,std::_Int_iterator_tag)' being compiled
                  with
@@ -22,15 +20,9 @@
                      _Ax=std::allocator<bool>,
                      _Iter=int
                  ]
-         TestUseTable.cpp
-         TestStudent.cpp
-         TestParentTable.cpp
-         TestModify.cpp
-         TestFollow.cpp
-         Student.cpp
-         PKB.cpp
+         StatTable.cpp
+         ProcTable.cpp
          ParentTable.cpp
-     1>c:\users\saloni\desktop\nus year 4 sem1\cs3202\studentunittest\studentunittest\parenttable.cpp(53): warning C4018: '>' : signed/unsigned mismatch
      1>c:\program files (x86)\microsoft visual studio 10.0\vc\include\vector(2140): warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
                  c:\program files (x86)\microsoft visual studio 10.0\vc\include\vector(2126) : see reference to function template instantiation 'void std::vector<_Ty,_Ax>::_BConstruct<_Iter>(_Iter,_Iter,std::_Int_iterator_tag)' being compiled
                  with
@@ -47,7 +39,6 @@
                      _Iter=int
                  ]
          ModifyTable.cpp
-     1>c:\users\saloni\desktop\nus year 4 sem1\cs3202\studentunittest\studentunittest\modifytable.cpp(28): warning C4018: '>' : signed/unsigned mismatch
      1>c:\program files (x86)\microsoft visual studio 10.0\vc\include\vector(2140): warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
                  c:\program files (x86)\microsoft visual studio 10.0\vc\include\vector(2126) : see reference to function template instantiation 'void std::vector<_Ty,_Ax>::_BConstruct<_Iter>(_Iter,_Iter,std::_Int_iterator_tag)' being compiled
                  with
@@ -63,9 +54,7 @@
                      _Ax=std::allocator<bool>,
                      _Iter=int
                  ]
-         Main.cpp
          Follow.cpp
-     1>c:\users\saloni\desktop\nus year 4 sem1\cs3202\studentunittest\studentunittest\follow.cpp(59): warning C4018: '>' : signed/unsigned mismatch
      1>c:\program files (x86)\microsoft visual studio 10.0\vc\include\vector(2140): warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
                  c:\program files (x86)\microsoft visual studio 10.0\vc\include\vector(2126) : see reference to function template instantiation 'void std::vector<_Ty,_Ax>::_BConstruct<_Iter>(_Iter,_Iter,std::_Int_iterator_tag)' being compiled
                  with
@@ -81,13 +70,28 @@
                      _Ax=std::allocator<bool>,
                      _Iter=int
                  ]
-         Course.cpp
-         ConstTable.cpp
+         CallTable.cpp
+     1>c:\program files (x86)\microsoft visual studio 10.0\vc\include\vector(2140): warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\vector(2126) : see reference to function template instantiation 'void std::vector<_Ty,_Ax>::_BConstruct<_Iter>(_Iter,_Iter,std::_Int_iterator_tag)' being compiled
+                 with
+                 [
+                     _Ty=bool,
+                     _Ax=std::allocator<bool>,
+                     _Iter=int
+                 ]
+                 c:\users\saloni\desktop\nus year 4 sem1\cs3202\studentunittest\studentunittest\calltable.cpp(9) : see reference to function template instantiation 'std::vector<_Ty,_Ax>::vector<int>(_Iter,_Iter)' being compiled
+                 with
+                 [
+                     _Ty=bool,
+                     _Ax=std::allocator<bool>,
+                     _Iter=int
+                 ]
          Generating Code...
        ManifestResourceCompile:
-         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\rc.exe /nologo /fo"Debug\StudentUnitTest.exe.embed.manifest.res" Debug\StudentUnitTest_manifest.rc 
+         All outputs are up-to-date.
        Link:
          c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Saloni\Desktop\NUS YEAR 4 SEM1\CS3202\StudentUnitTest\Debug\StudentUnitTest.exe" /INCREMENTAL /NOLOGO "C:\cppunit-1.12.1\lib\cppunit_debug.lib" /MANIFEST /ManifestFile:"Debug\StudentUnitTest.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\Saloni\Desktop\NUS YEAR 4 SEM1\CS3202\StudentUnitTest\Debug\StudentUnitTest.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Saloni\Desktop\NUS YEAR 4 SEM1\CS3202\StudentUnitTest\Debug\StudentUnitTest.lib" /MACHINE:X86 Debug\StudentUnitTest.exe.embed.manifest.res
+         Debug\CallTable.obj
          Debug\ConstTable.obj
          Debug\Course.obj
          Debug\Follow.obj
@@ -95,6 +99,8 @@
          Debug\ModifyTable.obj
          Debug\ParentTable.obj
          Debug\PKB.obj
+         Debug\ProcTable.obj
+         Debug\StatTable.obj
          Debug\Student.obj
          Debug\TestFollow.obj
          Debug\TestModify.obj
@@ -105,24 +111,9 @@
          Debug\VarTable.obj
        Manifest:
          C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /out:"Debug\StudentUnitTest.exe.embed.manifest" /manifest Debug\StudentUnitTest.exe.intermediate.manifest
-         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\rc.exe /nologo /fo"Debug\StudentUnitTest.exe.embed.manifest.res" Debug\StudentUnitTest_manifest.rc 
+         All outputs are up-to-date.
        LinkEmbedManifest:
-         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Saloni\Desktop\NUS YEAR 4 SEM1\CS3202\StudentUnitTest\Debug\StudentUnitTest.exe" /INCREMENTAL /NOLOGO "C:\cppunit-1.12.1\lib\cppunit_debug.lib" /MANIFEST /ManifestFile:"Debug\StudentUnitTest.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\Saloni\Desktop\NUS YEAR 4 SEM1\CS3202\StudentUnitTest\Debug\StudentUnitTest.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Saloni\Desktop\NUS YEAR 4 SEM1\CS3202\StudentUnitTest\Debug\StudentUnitTest.lib" /MACHINE:X86 Debug\StudentUnitTest.exe.embed.manifest.res
-         Debug\ConstTable.obj
-         Debug\Course.obj
-         Debug\Follow.obj
-         Debug\Main.obj
-         Debug\ModifyTable.obj
-         Debug\ParentTable.obj
-         Debug\PKB.obj
-         Debug\Student.obj
-         Debug\TestFollow.obj
-         Debug\TestModify.obj
-         Debug\TestParentTable.obj
-         Debug\TestStudent.obj
-         Debug\TestUseTable.obj
-         Debug\UseTable.obj
-         Debug\VarTable.obj
+         All outputs are up-to-date.
          StudentUnitTest.vcxproj -> C:\Users\Saloni\Desktop\NUS YEAR 4 SEM1\CS3202\StudentUnitTest\Debug\StudentUnitTest.exe
        PostBuildEvent:
          Description: Unit Tests..
@@ -154,4 +145,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:14.29
+Time Elapsed 00:00:09.10

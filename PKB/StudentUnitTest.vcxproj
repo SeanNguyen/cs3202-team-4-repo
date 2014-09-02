@@ -91,6 +91,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CallTable.cpp" />
     <ClCompile Include="ConstTable.cpp" />
     <ClCompile Include="Course.cpp" />
     <ClCompile Include="Follow.cpp" />
@@ -98,6 +99,8 @@
     <ClCompile Include="ModifyTable.cpp" />
     <ClCompile Include="ParentTable.cpp" />
     <ClCompile Include="PKB.cpp" />
+    <ClCompile Include="ProcTable.cpp" />
+    <ClCompile Include="StatTable.cpp" />
     <ClCompile Include="Student.cpp" />
     <ClCompile Include="TestFollow.cpp" />
     <ClCompile Include="TestModify.cpp" />
@@ -108,6 +111,7 @@
     <ClCompile Include="VarTable.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CallTable.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="ConstTable.h" />
     <ClInclude Include="Course.h" />
@@ -115,6 +119,8 @@
     <ClInclude Include="ModifyTable.h" />
     <ClInclude Include="ParentTable.h" />
     <ClInclude Include="PKB.h" />
+    <ClInclude Include="ProcTable.h" />
+    <ClInclude Include="StatTable.h" />
     <ClInclude Include="Student.h" />
     <ClInclude Include="TestFollow.h" />
     <ClInclude Include="TestModify.h" />
