@@ -1,0 +1,11 @@
+procedure OhSimple
+{
+	i = i + j + h+ f		+ w+ k;	\\1
+	while h{						\\2
+	  j = i + 1;					\\3
+  while	n							\\4
+{	h = h + m;}						\\5
+	f = 5;							\\6
+
+	}
+}

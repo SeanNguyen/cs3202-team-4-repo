@@ -1,0 +1,37 @@
+procedure icecream {
+	while sweet {							\\1
+		pink = red + white;					\\2
+		red = x + y + z;					\\3
+		while y {							\\4
+			y = y + x;						\\5
+			z = x + y;						\\6
+		}
+		x = 9;								\\7
+		chocolate = x + y + z + d + e;		\\8
+	}
+	vanilla = white + 100 + sweet;			\\9
+	chocolate = vanilla + red + 4;			\\10
+	while x {								\\11
+		strawberry = chocolate + vanilla;	\\12
+		while strawberry {					\\13
+			while pink {					\\14
+				pink = red + white + z;		\\15
+				while d {					\\16
+					x = 188;				\\17
+				}
+			}
+			cream = sweet + sour;			\\18
+			strawberry = sour + pink + 23;	\\19
+			while sour {					\\20
+				while sweet {				\\21
+					chocolate = sweet + chocolate; \\22
+				}
+				white = vanilla + cream;	\\23
+			}
+		}
+	}
+	sour = strawberry + pink + red + 63;	\\24
+	red = strawberry + chocolate + d + e;	\\25
+	d = 9 + cream;							\\26
+	x = x + 2 + sweet;						\\27
+}

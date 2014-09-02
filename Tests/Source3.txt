@@ -1,0 +1,37 @@
+procedure proc234 {
+	rose = 3 + r;					\\1
+	while rose						\\2
+	{
+		o = 6;						\\3
+		s = o + e;					\\4
+		while s {					\\5
+			e = 2 + o + s + e;		\\6
+		}
+		e = 8;						\\7
+		lily = r + e + rose;		\\8
+		while r {					\\9
+			while o {				\\10
+				while s {			\\11
+					tulip = rose + lily + 4;	\\12
+				}
+			}
+			flower = tulip + lily;	\\13
+			flower = flower + rose;	\\14
+		}
+		flower = 3;					\\15
+		r = flower + 123;			\\16
+		o = r + o + s + e;			\\17
+	}
+	x = 3;							\\18
+	carnation = yellow + lily;		\\19
+	yellow = 8 + carnation + 6 + yellow;	\\20
+	while o {						\\21
+		l = l + i + l + y;			\\22
+		lavender = lily + 8 + a + e;	\\23
+		e = lavender + 2 + l;		\\24
+	}
+	r = r + e +		2 + e + d;		\\25
+	while e {						\\26
+		w = 2;						\\27
+	}
+}
