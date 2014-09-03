@@ -1,0 +1,17 @@
+3
+\\this is a comment
+1. 
+assign a; while w;
+Select a such that Parent (w, a) pattern a(_, _"x+y"_) 
+result here
+5000
+2. 
+assign a; while w;
+Select a such that Parent (1 , a) pattern a(_, _) 
+result here
+5000
+3. 
+assign a; while w;
+Select a such that Modifies (a, "x") pattern a(_, _) 
+result here
+5000

@@ -1,0 +1,95 @@
+19
+cat: All Category 
+1 - Follows, ImplStmtLine ::
+stmt s1;
+Select s1 such that Follows(s1, 9)
+5
+5000
+2 - Follows, ImplStmtLine ::
+stmt s2;
+Select s2 such that Follows(25, s2)
+26
+5000
+3 - Follows, ImplStmtLine ::
+stmt s;
+Select s such that Follows(7, 8)3
+
+5000
+4 - Follows, ImplStmtLine ::
+stmt s1; stmt s2;
+Select s1 such that Follows(s1, s2)
+1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, 14, 16, 21, 22, 23, 24, 25, 26, 28, 29, 30, 32, 34, 35
+5000
+5 - Follows Star, ImplStmtLine ::
+stmt s2;
+Select s2 such that Follows*(4, s2)
+21, 22, 23, 36
+5000
+6 - Follows Star, ImplStmtLine ::
+stmt s1;
+Select s1 such that Follows*(s1, 19)
+6, 7, 9
+5000
+7 - Follows Star, ImplStmtLine ::
+constant c;
+Select c such that Follows*(2, 22)
+1, 200, 0, 2, 7
+5000
+8 - Parent, ImplStmtLine ::
+while w;
+Select w such that Parent(w, 33)
+31
+5000
+9 - Parent, ImplStmtLine ::
+stmt s;
+Select s such that Parent(9, s)
+10, 11
+5000
+10 - Parent, ImplStmtLine ::
+var v; 
+Select v such that Parent(23, 25)
+i, b, c, a, beta, oSCar, tmp, I, k, j1k, chArlie, x, left, right, Romeo, width, delta, w, g, q, shoe, lace, tie, rainbow, colours, stripe, sky, rain, best, golden,  june, holidays, may, july, options, choices, intern, chill, workout, love, Juliet, play, theatre, shakespeare, greek, alpha, lamda
+5000
+11 - Parent Star, ImplStmtLine ::
+while w;
+Select w such that Parent*(w, 13)
+4, 5, 9, 11, 12
+5000
+12 - Parent Star, ImplStmtLine ::
+stmt s;
+Select s such that Parent*(28, s)
+29, 30, 31, 32, 33, 34, 35, 36
+5000
+13 - Parent Star, ImplStmtLine ::
+while w;
+Select w such that Parent*(23, 32)
+4, 5, 7, 9, 11, 12, 16, 23, 25, 28, 31, 33
+14 - Modifies, ImplStmtLine ::
+assign a;
+Select a such that Modifies(a, "holidays")
+29, 30
+5000
+15 - Modifies, ImplStmtLine ::
+variable var;
+Select var such that Modifies(24, var)
+colours
+5000
+16 - Modifies, ImplStmtLine ::
+stmt s;
+Select s such that Modifies(s, "shoe")
+22
+5000
+17 - Uses, ImplStmtLine ::
+variable v;
+Select v such that Uses(32, v)
+intern, chill, workout
+5000
+18 - Uses, ImplStmtLine ::
+stmt s;
+Select s such that Uses(s, "Romeo")
+13, 15, 34
+5000
+19 - Uses, ImplStmtLine ::
+assign a;
+Select a such that Uses(23, "colours")
+1, 2, 3, 6, 8, 10, 13, 14, 15, 17, 18, 19, 20, 21, 22, 24, 26, 27, 29, 30, 32, 34. 35. 36

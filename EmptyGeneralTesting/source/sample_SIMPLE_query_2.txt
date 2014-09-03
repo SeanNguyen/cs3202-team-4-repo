@@ -1,0 +1,42 @@
+7
+\\this is a comment
+1. 
+assign a; while w;
+Select a such that Parent (w, a)
+result here
+5000
+2. 
+assign a; stmt s;
+Select a such that Follows (a, s) pattern a(_, _) 
+result here
+5000
+3. 
+assign a; while w;
+Select a such that Parent* (w, a)
+result here
+5000
+4.
+assign a; stmt s;
+Select a such that Follows* (a, s)
+result here
+5000
+5. 
+assign a; while w;
+Select a such that Modifies (a, "x")
+result here
+5000
+6.
+assign a;
+Select a such that Uses (a, "y")
+result here
+5000
+7.
+stmt s;
+Select s such that Parent*(1, 5) 
+result here
+5000
+8.
+stmt s;
+Select s such that Uses(3, "t") 
+result here
+5000

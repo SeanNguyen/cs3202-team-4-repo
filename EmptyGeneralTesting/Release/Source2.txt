@@ -1,0 +1,46 @@
+Test Purpose: 
+This test case intends to test the program's ability to parse multiple nested while loops, irregular spacing between statments and variables and factors. It also includes a large number of variable names.
+
+procedure spacersoul{
+	i = 5;					\\1
+	while i{				\\2
+		j = j + k;			\\3
+		while h{			\\4
+			while s			\\5
+			{
+				f = 34;		\\6
+				x = x + h + t + m + l; \\7
+			}
+			while f{ 					\\8
+				m = 3; 					\\9
+				while da{				\\10
+					plain = boring;		\\11
+					while boring{		\12
+						a = a + 42;		\\13
+						while q			\\14
+						{
+							q = q + m + h + k+ 7;	\\15
+							while e{	\\16
+								summer = summer + holiday + internship + sg;	\\17
+								while internship{								\\18
+									buggy = small;								\\19
+									buggy = big;								\\20
+									while big									\\21
+									{		
+										headache = headache + 1000 + a + b + c + d + e + f + g + h;				\\22
+										meow = meow + meow + pat + pat +32;				\\23
+										while term								\\24
+										{
+											busy = busy + hah + deadline + 5;					\\25	
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			a = 2;	\\26
+		}
+	}
+}

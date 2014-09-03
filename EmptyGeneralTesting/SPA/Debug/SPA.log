@@ -1,0 +1,67 @@
+﻿Build started 29-Aug-14 12:46:41 AM.
+     1>Project "C:\Users\Saima Mahmood\Documents\NUS\Sem 6\CS3201_CS3202 Software Engineering\SampleTestingSolution\EmptyGeneralTesting\SPA\SPA.vcxproj" on node 2 (rebuild target(s)).
+     1>InitializeBuildStatus:
+         Creating "Debug\SPA.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt ..\source\AST.cpp ..\source\ConstTable.cpp ..\source\Follow.cpp ..\source\Main.cpp ..\source\ModifyTable.cpp ..\source\ParentTable.cpp ..\source\Parser.cpp ..\source\PKB.cpp ..\source\QueryEvaluator.cpp ..\source\QueryPreprocessor.cpp ..\source\QueryProcessor.cpp ..\source\QueryRepresentator.cpp ..\source\QueryTree.cpp ..\source\StatTable.cpp ..\source\SymbolTable.cpp ..\source\TNode.cpp ..\source\Tree.cpp ..\source\UseTable.cpp ..\source\VarTable.cpp
+         VarTable.cpp
+         UseTable.cpp
+         Tree.cpp
+         TNode.cpp
+         SymbolTable.cpp
+         StatTable.cpp
+         QueryTree.cpp
+         QueryRepresentator.cpp
+         QueryProcessor.cpp
+         QueryPreprocessor.cpp
+         QueryEvaluator.cpp
+         PKB.cpp
+         Parser.cpp
+         ParentTable.cpp
+         ModifyTable.cpp
+         Main.cpp
+     1>c:\users\saima mahmood\documents\nus\sem 6\cs3201_cs3202 software engineering\sampletestingsolution\emptygeneraltesting\source\main.cpp(13): warning C4129: 'S' : unrecognized character escape sequence
+     1>c:\users\saima mahmood\documents\nus\sem 6\cs3201_cs3202 software engineering\sampletestingsolution\emptygeneraltesting\source\main.cpp(13): warning C4129: 'D' : unrecognized character escape sequence
+     1>c:\users\saima mahmood\documents\nus\sem 6\cs3201_cs3202 software engineering\sampletestingsolution\emptygeneraltesting\source\main.cpp(13): warning C4129: 'N' : unrecognized character escape sequence
+     1>c:\users\saima mahmood\documents\nus\sem 6\cs3201_cs3202 software engineering\sampletestingsolution\emptygeneraltesting\source\main.cpp(13): warning C4129: 'N' : unrecognized character escape sequence
+     1>c:\users\saima mahmood\documents\nus\sem 6\cs3201_cs3202 software engineering\sampletestingsolution\emptygeneraltesting\source\main.cpp(13): warning C4129: 'C' : unrecognized character escape sequence
+     1>c:\users\saima mahmood\documents\nus\sem 6\cs3201_cs3202 software engineering\sampletestingsolution\emptygeneraltesting\source\main.cpp(13): warning C4129: 'S' : unrecognized character escape sequence
+     1>c:\users\saima mahmood\documents\nus\sem 6\cs3201_cs3202 software engineering\sampletestingsolution\emptygeneraltesting\source\main.cpp(13): warning C4129: 'S' : unrecognized character escape sequence
+     1>c:\users\saima mahmood\documents\nus\sem 6\cs3201_cs3202 software engineering\sampletestingsolution\emptygeneraltesting\source\main.cpp(13): warning C4129: 'E' : unrecognized character escape sequence
+     1>c:\users\saima mahmood\documents\nus\sem 6\cs3201_cs3202 software engineering\sampletestingsolution\emptygeneraltesting\source\main.cpp(13): warning C4129: 'R' : unrecognized character escape sequence
+     1>c:\users\saima mahmood\documents\nus\sem 6\cs3201_cs3202 software engineering\sampletestingsolution\emptygeneraltesting\source\main.cpp(13): warning C4129: 'S' : unrecognized character escape sequence
+         Follow.cpp
+         ConstTable.cpp
+         AST.cpp
+         Generating Code...
+     1>c:\users\saima mahmood\documents\nus\sem 6\cs3201_cs3202 software engineering\sampletestingsolution\emptygeneraltesting\source\queryevaluator.cpp(753): warning C4700: uninitialized local variable 'arg1Num' used
+       Lib:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\Lib.exe /OUT:"C:\Users\Saima Mahmood\Documents\NUS\Sem 6\CS3201_CS3202 Software Engineering\SampleTestingSolution\EmptyGeneralTesting\Debug\SPA.lib" /NOLOGO Debug\AST.obj
+         Debug\ConstTable.obj
+         Debug\Follow.obj
+         Debug\Main.obj
+         Debug\ModifyTable.obj
+         Debug\ParentTable.obj
+         Debug\Parser.obj
+         Debug\PKB.obj
+         Debug\QueryEvaluator.obj
+         Debug\QueryPreprocessor.obj
+         Debug\QueryProcessor.obj
+         Debug\QueryRepresentator.obj
+         Debug\QueryTree.obj
+         Debug\StatTable.obj
+         Debug\SymbolTable.obj
+         Debug\TNode.obj
+         Debug\Tree.obj
+         Debug\UseTable.obj
+         Debug\VarTable.obj
+     1>QueryTree.obj : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
+         SPA.vcxproj -> C:\Users\Saima Mahmood\Documents\NUS\Sem 6\CS3201_CS3202 Software Engineering\SampleTestingSolution\EmptyGeneralTesting\Debug\SPA.lib
+       FinalizeBuildStatus:
+         Deleting file "Debug\SPA.unsuccessfulbuild".
+         Touching "Debug\SPA.lastbuildstate".
+     1>Done Building Project "C:\Users\Saima Mahmood\Documents\NUS\Sem 6\CS3201_CS3202 Software Engineering\SampleTestingSolution\EmptyGeneralTesting\SPA\SPA.vcxproj" (rebuild target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:11.32
