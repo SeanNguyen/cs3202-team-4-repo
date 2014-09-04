@@ -9,7 +9,7 @@
 
 using namespace std;
 
-std::string testFile = "D:\\sample_SIMPLE_source.txt";
+std::string testFile = "..\sample_SIMPLE_source.txt";
 
 void ParserTest::setUp()
 {

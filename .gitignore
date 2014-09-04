@@ -33,3 +33,8 @@
 *.tlog
 *.pdb
 *.sdf
+EmptyGeneralTesting/AutoTester/Release/
+EmptyGeneralTesting/SPA/Release/
+EmptyGeneralTesting/UnitTesting/Release/
+EmptyGeneralTesting/IntegrationTesting/Release/
+EmptyGeneralTesting/ipch/

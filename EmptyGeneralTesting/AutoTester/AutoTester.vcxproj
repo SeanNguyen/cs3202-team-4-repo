@@ -75,7 +75,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>"C:\Users\Saima Mahmood\Documents\NUS\Sem 6\CS3201_CS3202 Software Engineering\SampleTestingSolution\EmptyGeneralTesting\Release"</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Release</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
