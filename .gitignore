@@ -37,4 +37,9 @@ EmptyGeneralTesting/AutoTester/Release/
 EmptyGeneralTesting/SPA/Release/
 EmptyGeneralTesting/UnitTesting/Release/
 EmptyGeneralTesting/IntegrationTesting/Release/
+EmptyGeneralTesting/AutoTester/Debug/
+EmptyGeneralTesting/SPA/Debug/
+EmptyGeneralTesting/UnitTesting/Debug/
+EmptyGeneralTesting/IntegrationTesting/Debug/
 EmptyGeneralTesting/ipch/
+EmptyGeneralTesting/Debug/

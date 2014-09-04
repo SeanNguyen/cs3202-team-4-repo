@@ -466,7 +466,8 @@ TNode Parser::readAssignStmt(vector<string> elements, int *i) {
 
 TNode Parser::readCallStmt (vector<string> elements, int *i) {
 	TNode callNode = PKB::createNode("call", "");
-
+	TNode dummyNode = TNode();
+	return dummyNode;
 }
 
 //Helper Methods
