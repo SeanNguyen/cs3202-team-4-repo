@@ -5,10 +5,10 @@
 #include "ModifyTable.h"
 #include "VarTable.h"
 #include "ParentTable.h"
-#include "StatTable.h"
+//#include "StatTable.h"
 #include "UseTable.h"
 #include "ConstTable.h"
-#include "AST.h"
+//#include "AST.h"
 
 #include <utility>
 #include <vector>
@@ -21,30 +21,24 @@ class PKB
 	PKB();
 
 	//////////////////////////////////AST METHODS/////////////////
-	static TNode createNode(string type, string value);
+	//static TNode createNode(string type, string value);
 
-	static TNode getASTRoot();
+	//static TNode getASTRoot();
 
-	static int getNumChildren(TNode node);
-	
-	static TNode getChildAtIndex(TNode node, int index);
+	//static int getNumChildren(TNode node);
+	//static TNode getChildAtIndex(TNode node, int index);
 
-	static TNode getNodeOfStmt(int stmt);
-
-	static void setASTRoot(TNode node);
-	
-	static int setChild(TNode parent, TNode child);
-
-	static void printTree();
+	//static void setASTRoot(TNode node);
+	//static int setChild(TNode parent, TNode child);
 
 	//////////////////////////CONST TABLE METHODS/////////////////
-	static bool insertConst(string value);
+	static bool insertConst(std::string value);
 
-	static bool isConst(string value);
+	static bool isConst(std::string value);
 
-	static int getConstIndex(string value);
+	static int getConstIndex(std::string value);
 	
-	static string getConstName(int index);
+	static std::string getConstName(int index);
 
 	static int getConstTableSize();
 
@@ -101,9 +95,9 @@ class PKB
 
 	static int getModifyTableSize();
 
-	static void printModifyTable();
+	//static void printModifyTable();
 
-	//////////////////VARTABLE METHODS////////////////////////
+	////////////////////VARTABLE METHODS////////////////////////
 
 	static int insertVar(std::string name);
 
@@ -113,7 +107,7 @@ class PKB
 
 	static int getVarTableSize();
 
-	//////////////////PARENT TABLE METHODS//////////////////////////
+	////////////////////PARENT TABLE METHODS//////////////////////////
 
 	static bool isParent(int parentStmt, int childStmt);
 
@@ -145,7 +139,7 @@ class PKB
 
 	static int getStatTableSize();
 	
-	///////////////////////////USE TABLE METHODS//////////////////
+	/////////////////////////////USE TABLE METHODS//////////////////
 
 	// Method to check if uses relationship exists
 	static bool isUses(int s1, int varIndex);
@@ -169,16 +163,16 @@ class PKB
 	static int getSize();
 
 	//Method for debugging - will be removed when submit.
-	static void printTable();
+	//static void printTable();
 
 private:
-	static AST astObj;
+	//static AST astObj;
 	static ConstTable constObj;
 	static Follow followObj;
 	static Modify modifyObj;
 	static VarTable varObj;
 	static ParentTable parObj;
-	static StatTable stmtObj;
+//	static StatTable stmtObj;
 	static Use useObj;
 };
 #endif

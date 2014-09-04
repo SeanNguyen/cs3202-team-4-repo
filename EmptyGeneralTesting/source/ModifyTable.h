@@ -6,12 +6,15 @@
 #include <iostream>
 
 using namespace std;
+
+
+
 class Modify
 {
 public :
 
-	vector<pair<int, int>> ModifyTable;
-
+	std::vector<std::vector<bool>> ModifyTable;
+	
 
 	// Constructor
 	Modify();  
@@ -38,11 +41,11 @@ public :
 	int getSize();
 
 	//Method for debugging - will be removed when submit.
-	void printTable();
+	//void printTable();
 
 private:
 	std::vector<int> stmtlist;
 	std::vector<int> varlist;
-
+	int MAX_SIZE;
 };
 #endif

@@ -1,38 +1,22 @@
 #include "ParentTable.h"
 #include "Constants.h"
-#include <algorithm>
 #include <vector>
-#include <iostream>
+#include <algorithm>
 
-extern std::vector<int> OBJECT_NOT_FOUND;
-extern const int MAX_PARENT;
+//extern std::vector<int> OBJECT_NOT_FOUND;
+//extern const int MAX_PARENT;
 
 ParentTable::ParentTable()
 {
-	for(int i = 0; i < MAX_PARENT; i++)
-	{
-		hasChild[i] = 0;
-	}
-
-	for(int i = 0; i < MAX_PARENT; i++)
-	{
-		hasParent[i] = 0;
-	}
+	MAX_SIZE = 100;
+	parentTable.resize(MAX_SIZE, std::vector<bool>(MAX_SIZE,0));
 }
 
 // method to check whether the tuple(parentStmt, childStmt) is recorded in Parent Table.
 bool ParentTable::isParent(int parentStmt, int childStmt)
 {
-	bool isParent = false;
-
-	std::pair<int, int> thisPair = std::make_pair(parentStmt, childStmt);
-	for(size_t index=0; index < parentTable.size(); index++)
-	{
-		std::pair<int, int> p = parentTable.at(index);
-		if(p.first == thisPair.first && p.second == thisPair.second)
-		{
-			return true;
-		}
+	if(parentTable[parentStmt][childStmt] == 1){
+		return true;
 	}
 	return false;
 }
@@ -62,19 +46,22 @@ bool ParentTable::isParentStar(int parentStmt, int childStmt)
 // Otherwise, return -1 and the table remains unchanged.
 int ParentTable::insertParent(int parentStmt, int childStmt)
 {
+
+	//If the max size (100) if the 2d vector is reached, the 2d vector is resized to double its size.
+	//The extended set contains all 0 (boolean)
+	//Also, update the MAX_SIZE global variable.
+	if(parentTable.size() > (size_t) MAX_SIZE){
+		parentTable.resize(MAX_SIZE*2, std::vector<bool>(MAX_SIZE,0));
+		MAX_SIZE *= 2;
+	}
+
 	if (isParent(parentStmt, childStmt))
 	{
 		return -1;
 	}
 	else
 	{
-		std::pair<int, int> newPair = std::make_pair(parentStmt, childStmt);
-
-		parentTable.push_back(newPair);
-
-		//update hasChild
-		hasChild[parentStmt-1] = 1;
-		hasParent[childStmt-1] = 1;
+		parentTable[parentStmt][childStmt] = 1;
 		return parentTable.size()-1;
 	}
 }
@@ -83,18 +70,12 @@ int ParentTable::insertParent(int parentStmt, int childStmt)
 // if childStmt is invalid e.g. -1 or not in the table, return -1.
 int ParentTable::getParentStmt(int childStmt)
 {
-	int parentStmt = -1;
-	for(size_t index=0; index < parentTable.size(); index++)
-	{
-		//PTuple t = parentTable.at(index);
-		std::pair<int, int> thisPair = parentTable.at(index);
-		
-		if (thisPair.second == childStmt)
-		{
-			parentStmt = thisPair.first;
+	for(std::size_t i = 0; i < parentTable.size(); i++){
+		if(parentTable[i][childStmt] == 1){
+			return i;
 		}
 	}
-	return parentStmt;
+	return -1;
 }
 
 // method to get the list of statement numbers of childStmt if tuple(parentStmt, childStmt) exists in the table.
@@ -102,25 +83,12 @@ int ParentTable::getParentStmt(int childStmt)
 std::vector<int> ParentTable::getChildStmt(int parentStmt)
 {
 	std::vector<int> children;
-	for (size_t index=0; index < parentTable.size(); index++)
-	{
-		//PTuple t = parentTable.at(index);
-		std::pair<int, int> thisPair = parentTable.at(index);
-		if (thisPair.first == parentStmt)
-		{
-			children.push_back(thisPair.second);
+	for(std::size_t i = 0; i < parentTable.size(); i++){
+		if(parentTable[parentStmt][i] == 1){
+			children.push_back(i);
 		}
 	}
-
-	if (children.size() == 0)
-	{
-		return OBJECT_NOT_FOUND;
-	}
-	else
-	{
-		return children;
-	}
-
+	return children;
 
 }
 
@@ -128,24 +96,16 @@ std::vector<int> ParentTable::getChildStmt(int parentStmt)
 // if parentStmt is invalid e.g. -1 or not in the table, return -1.
 std::vector<int> ParentTable::getChildStarStmt(int parentStmt)
 {
-	std::vector<int> childrenStar;
+	std::vector<int> childStar;
+	childStar = getChildStarStmtHelper(parentStmt, childStar);
 
-	childrenStar = getChildStarStmtHelper(parentStmt, childrenStar);
-	if (childrenStar.size() == 0)
-	{
-		return OBJECT_NOT_FOUND;
-	}
-	else
-	{
-		std::sort(childrenStar.begin(), childrenStar.end());
-		return childrenStar;
-	}
+	return childStar;
 }
 
 // private helper function for getChildStarStmt.
 std::vector<int> ParentTable::getChildStarStmtHelper(int parentStmt, std::vector<int> &accumulated_result)
 {
-	if (hasChild[parentStmt-1] == 0) // a leaf
+	if (getChildStmt(parentStmt).empty()) 
 	{
 		// do nothing
 	}
@@ -181,7 +141,7 @@ std::vector<int> ParentTable::getParentStarStmt(int childStmt)
 // private helper function for getParentStarStmt.
 std::vector<int> ParentTable::getParentStarStmtHelper(int childStmt, std::vector<int> &accumulated_result)
 {
-	if (hasParent[childStmt-1]==0)
+	if (getChildStmt(childStmt).empty())
 	{
 		// do nothing
 	}
@@ -200,9 +160,13 @@ std::vector<int> ParentTable::getParentStarStmtHelper(int childStmt, std::vector
 std::vector<int> ParentTable::getAllParentStmt()
 {
 	std::vector<int> allParents;
-	for(size_t index=0; index < parentTable.size(); index++)
-	{
-		allParents.push_back(parentTable.at(index).first);
+	for(std::size_t i = 0; i < parentTable.size(); i++){
+		for(std::size_t j = 0; j < parentTable[i].size(); j++){
+			if(parentTable[i][j] == 1){
+				allParents.push_back(i);
+		}
+		}
+		
 	}
 	return allParents;
 }
@@ -211,9 +175,13 @@ std::vector<int> ParentTable::getAllParentStmt()
 std::vector<int> ParentTable::getAllChildStmt()
 {
 	std::vector<int> allChildren;
-	for(size_t index=0; index < parentTable.size(); index++)
-	{
-		allChildren.push_back(parentTable.at(index).second);
+	for(std::size_t i = 0; i < parentTable.size(); i++){
+		for(std::size_t j = 0; j < parentTable[i].size(); j++){
+			if(parentTable[i][j] == 1){
+				allChildren.push_back(j);
+			}
+		}
+		
 	}
 	return allChildren;
 }

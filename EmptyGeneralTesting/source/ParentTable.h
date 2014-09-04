@@ -8,13 +8,24 @@
 
 #include <string>
 #include <vector>
-#include <utility>
 
-const int MAX_PARENT = 100000;
+//const int MAX_PARENT = 10000;
+//
+//struct PTuple
+//{
+//	int parent;
+//	int child;
+//};
+
+		
+		//std::vector<int> resultlist;
 
 class ParentTable
 {
 	public:
+
+		std::vector<std::vector<bool>> parentTable;
+
 		// Default constructor
 		ParentTable();
 
@@ -41,15 +52,15 @@ class ParentTable
 
 	private:
 		// parent[i] is the parent stmt of child[i]
-		std::vector<std::pair<int, int>> parentTable;
+		/*std::vector<PTuple> parentTable;*/
 
 		// auxilary data structures supporting for STAR functions.
 		// it checks whether a particular stmt i has child or parent.
-		int hasChild[MAX_PARENT];
-		int hasParent[MAX_PARENT];
+		//int hasChild[MAX_PARENT];
+		//int hasParent[MAX_PARENT];
 		std::vector<int> getChildStarStmtHelper(int parentStmt, std::vector<int> &accumulated_result);
 		std::vector<int> getParentStarStmtHelper(int childStmt, std::vector<int> &accumulated_result);
-		
+		int MAX_SIZE;
 		
 };
 #endif

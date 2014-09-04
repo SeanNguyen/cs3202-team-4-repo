@@ -1,18 +1,17 @@
-#include "Parser.h"
-#include "QueryProcessor.h"
+#include <cppunit/CompilerOutputter.h>
+#include <cppunit/extensions/TestFactoryRegistry.h>
+#include <cppunit/ui/text/TestRunner.h>
 
-#include <iostream>
-#include <string>
-#include <vector>
-#include <Windows.h>
+int main(int argc, char* argv[])
+{
+	// Get the top level suite from the registry
+	CPPUNIT_NS::Test *suite = CPPUNIT_NS::TestFactoryRegistry::getRegistry().makeTest();
+	CppUnit::TextUi::TestRunner runner;
 
-using namespace std;
+	runner.addTest(suite);
+	bool wasSucessful = runner.run();
 
-int main() {
-	Parser parser;
-	parser.parse("C:\Users\Saloni\Desktop\NUS\NUS YEAR 3 SEM 2\CS3201\SampleTestingSolution\SampleTestingSolution\EmptyGeneralTesting\Release\Source1.txt");
+	getchar();
 
-	parser.printFollows();
-
-	return 0;
+	return wasSucessful ? 0 : 1;
 }

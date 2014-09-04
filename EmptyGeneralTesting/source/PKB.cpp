@@ -2,13 +2,13 @@
 
 #include <string>
 
-AST PKB::astObj;
+//AST PKB::astObj;
 ConstTable PKB::constObj;
 Follow PKB::followObj;
 Modify PKB::modifyObj;
 VarTable PKB::varObj;
 ParentTable PKB::parObj;
-StatTable PKB::stmtObj;
+//StatTable PKB::stmtObj;
 Use PKB::useObj;
 
 PKB::PKB()
@@ -17,37 +17,29 @@ PKB::PKB()
 }
 
 //////////////////////////////////AST METHODS/////////////////
-TNode PKB::createNode(string type, string value) {
-	return astObj.createNode(type, value);
-}
-
-TNode PKB::getASTRoot() {
-	return astObj.getRoot();
-}
-
-int PKB::getNumChildren(TNode node) {
-	return astObj.getNumChildren(node);
-}
-
-TNode PKB::getChildAtIndex(TNode node, int index) {
-	return astObj.getChildAtIndex(node, index);
-}
-
-TNode PKB::getNodeOfStmt(int stmt) {
-	return astObj.findNodeOfStmt(stmt);
-}
-
-void PKB::setASTRoot(TNode node) {
-	return astObj.setRoot(node);
-}
-
-int PKB::setChild(TNode parent, TNode child) {
-	return astObj.setChild(parent, child);
-}
-
-void PKB::printTree() {
-	astObj.printTree();
-}
+//TNode PKB::createNode(string type, string value) {
+//	return astObj.createNode(type, value);
+//}
+//
+//TNode PKB::getASTRoot() {
+//	return astObj.getRoot();
+//}
+//
+//int PKB::getNumChildren(TNode node) {
+//	return astObj.getNumChildren(node);
+//}
+//
+//TNode PKB::getChildAtIndex(TNode node, int index) {
+//	return astObj.getChildAtIndex(node, index);
+//}
+//
+//void PKB::setASTRoot(TNode node) {
+//	return astObj.setRoot(node);
+//}
+//
+//int PKB::setChild(TNode parent, TNode child) {
+//	return astObj.setChild(parent, child);
+//}
 
 /////////////////////CONST TABLE METHODS////////////////////
 bool PKB::insertConst(std::string value) {
@@ -89,6 +81,7 @@ bool PKB::insertFollows(int s1, int s2){
 }
 
 int PKB::getFollowingStmt(int s1){
+	
 	return followObj.getFollowingStmt(s1);
 }
 
@@ -151,10 +144,10 @@ int PKB::getModifyTableSize()
 	return modifyObj.getSize();
 }
 
-void PKB::printModifyTable()
-{
-	return modifyObj.printTable();
-}
+//void PKB::printModifyTable()
+//{
+//	return modifyObj.printTable();
+//}
 ////////////////////////VAR TABLE METHODS/////////////////////////
 int PKB::insertVar(std::string name) {
 	return varObj.insertVar(name);
@@ -221,30 +214,30 @@ int PKB::getParentTableSize()
 	return parObj.getSize();
 }
 
-////////////////////////STATEMENT METHODS//////////////
-bool PKB::insertStmt(std::string name) {
-	int value = stmtObj.insertStmt(name);
-	if (value == -1){
-		return false;	
-	} else {
-		return true;
-	} 
-}
-
-vector<int> PKB::getStmtIndex(std::string name){
-	return stmtObj.getStmtIndex(name);
-}
-
-std::string PKB::getStmtName(int index) {
-	return stmtObj.getStmtName(index);
-}
-
-int PKB::getStatTableSize()
-{
-	return stmtObj.getSize();
-}
-
-//////////////////////USE TABLE METHODS/////////////////////
+//////////////////////////STATEMENT METHODS//////////////
+//bool PKB::insertStmt(std::string name) {
+//	int value = stmtObj.insertStmt(name);
+//	if (value == -1){
+//		return false;	
+//	} else {
+//		return true;
+//	} 
+//}
+//
+//vector<int> PKB::getStmtIndex(std::string name){
+//	return stmtObj.getStmtIndex(name);
+//}
+//
+//std::string PKB::getStmtName(int index) {
+//	return stmtObj.getStmtName(index);
+//}
+//
+//int PKB::getStatTableSize()
+//{
+//	return stmtObj.getSize();
+//}
+//
+////////////////////////USE TABLE METHODS/////////////////////
 bool PKB::isUses(int s1, int varIndex){
 	return useObj.isUses(s1, varIndex);
 }
@@ -278,6 +271,6 @@ int PKB::getSize(){
 	return useObj.getSize();
 }
 
-void PKB::printTable(){
-	return useObj.printTable();
-}
+//void PKB::printTable(){
+//	return useObj.printTable();
+//}

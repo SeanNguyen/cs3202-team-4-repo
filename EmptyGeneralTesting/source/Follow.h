@@ -7,9 +7,14 @@
 
 class Follow
 {
+
 	public :
 
-		std::vector<std::pair<int, int>> followTable;
+		std::vector<std::vector<bool>> followTable;
+
+		//std::vector<std::pair<int, int>> followTable;
+
+
 		std::vector<int> resultlist;
 
 		// Constructor
@@ -47,6 +52,6 @@ class Follow
 	private:
 		std::vector<int> getFollowedStarStmtHelper(int s1, std::vector<int> &accumulated_result);
 		std::vector<int> getFollowingStarStmtHelper(int s1, std::vector<int> &accumulated_result);
-
+		int MAX_SIZE;
 };
 #endif

@@ -3,7 +3,6 @@
 
 
 #include <vector>
-#include <utility> //pair
 #include <iostream>
 
 using namespace std;
@@ -12,20 +11,25 @@ Follow followObject;
 
 // Constructor
 Follow::Follow(){
-	
+		MAX_SIZE = 100;
+		followTable.resize(MAX_SIZE, std::vector<bool>(MAX_SIZE,0));
 }
 
 // Method to return if 2 statement number s1 is followed by s2
 bool Follow::isFollows(int s1, int s2){
 
-	std::pair<int,int> thisPair = std::make_pair(s1, s2);
-
-	for(std::size_t i = 0; i < followTable.size(); i++){
-		if(followTable[i] == thisPair){
-			return true;
-		}
-	}
+	//for(int i=0;i<followTable.size(); i++) {
+ //     for (int j=0;j<followTable[i].size(); j++)
+ //       cout << followTable[i][j] << " "; 
+ //     cout << endl;
+ //  }
+	
+	if(Follow::followTable[s1][s2] == 1){
+		return true;
+	} 
 	return false;
+
+
 }
 
 bool Follow::isFollowsStar(int s1, int s2)
@@ -48,25 +52,30 @@ bool Follow::isFollowsStar(int s1, int s2)
 // Method to insert a pair of following statement numbers
 int Follow::insertFollows(int s1, int s2){
 
-	std::pair<int,int> thisPair = std::make_pair(s1, s2);
 
-	//check if it exists
-	for(std::size_t i = 0; i < followTable.size(); i++){
-		if(followTable[i] == thisPair){
-			return -1;
-		}
+	//If the max size (100) if the 2d vector is reached, the 2d vector is resized to double its size.
+	//The extended set contains all 0 (boolean)
+	//Also, update the MAX_SIZE global variable.
+	if(followTable.size() > (size_t) MAX_SIZE){
+		followTable.resize(MAX_SIZE*2, std::vector<bool>(MAX_SIZE,0));
+		MAX_SIZE *= 2;
 	}
-	followTable.push_back(thisPair);
+
+	if(isFollows(s1, s2)){
+		return -1;
+	} else {
+		followTable[s1][s2] = 1;
+	}
+
 	return (followTable.size() - 1);
-	//return true;
 }
 
 // Method to get the following statement to statement number s1
 int Follow::getFollowingStmt(int s1){
 	
 	for(std::size_t i = 0; i < followTable.size(); i++){
-		if(followTable[i].first == s1){
-			return followTable[i].second;
+		if(followTable[s1][i] == 1){
+			return i;
 		}
 	}
 	return -1;
@@ -76,8 +85,8 @@ int Follow::getFollowingStmt(int s1){
 int Follow::getFollowedStmt(int s1){
 
 	for(std::size_t i = 0; i < followTable.size(); i++){
-		if(followTable[i].second == s1){
-			return followTable[i].first;
+		if(followTable[i][s1] == 1){
+			return i;
 		}
 	}
 	return -1;
@@ -159,7 +168,11 @@ std::vector<int> Follow::getAllFollowingStmt(){
 	std::vector<int> list;
 
 	for(std::size_t i = 0; i < followTable.size(); i++){
-		list.push_back(followTable[i].second);
+		for(std::size_t j = 0; j < followTable[i].size(); j++){
+			if(followTable[i][j] == 1){
+				list.push_back(j);
+			}
+		}
 	}
 	return list;
 }
@@ -170,12 +183,16 @@ std::vector<int> Follow::getAllFollowedStmt(){
 	std::vector<int> list;
 
 	for(std::size_t i = 0; i < followTable.size(); i++){
-		list.push_back(followTable[i].first);
+		for(std::size_t j = 0; j < followTable[i].size(); j++){
+			if(followTable[i][j] == 1){
+				list.push_back(i);
+			}
+		}
 	}
 	return list;
 }
 
-//  Method to get statement which is followed star by statement s1
+//  Method to get number of statements
 int Follow::getSize(){
 	return followTable.size();
 }

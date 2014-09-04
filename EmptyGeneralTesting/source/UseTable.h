@@ -10,7 +10,7 @@ class Use
 {
 public :
 
-	vector<pair<int, int>> UseTable;
+	vector<vector<bool>> UseTable;
 
 	// Constructor
 	Use();  
@@ -37,7 +37,9 @@ public :
 	int getSize();
 
 	//Method for debugging - will be removed when submit.
-	void printTable();
+	//void printTable();
 
+private:
+	int MAX_SIZE;
 };
 #endif
