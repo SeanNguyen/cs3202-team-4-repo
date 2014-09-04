@@ -5,10 +5,10 @@
 #include "ModifyTable.h"
 #include "VarTable.h"
 #include "ParentTable.h"
-//#include "StatTable.h"
+#include "StatTable.h"
 #include "UseTable.h"
 #include "ConstTable.h"
-//#include "AST.h"
+#include "AST.h"
 
 #include <utility>
 #include <vector>
@@ -21,15 +21,15 @@ class PKB
 	PKB();
 
 	//////////////////////////////////AST METHODS/////////////////
-	//static TNode createNode(string type, string value);
+	static TNode createNode(string type, string value);
 
-	//static TNode getASTRoot();
+	static TNode getASTRoot();
 
-	//static int getNumChildren(TNode node);
-	//static TNode getChildAtIndex(TNode node, int index);
+	static int getNumChildren(TNode node);
+	static TNode getChildAtIndex(TNode node, int index);
 
-	//static void setASTRoot(TNode node);
-	//static int setChild(TNode parent, TNode child);
+	static void setASTRoot(TNode node);
+	static int setChild(TNode parent, TNode child);
 
 	//////////////////////////CONST TABLE METHODS/////////////////
 	static bool insertConst(std::string value);
@@ -166,13 +166,13 @@ class PKB
 	//static void printTable();
 
 private:
-	//static AST astObj;
+	static AST astObj;
 	static ConstTable constObj;
 	static Follow followObj;
 	static Modify modifyObj;
 	static VarTable varObj;
 	static ParentTable parObj;
-//	static StatTable stmtObj;
+	static StatTable stmtObj;
 	static Use useObj;
 };
 #endif
