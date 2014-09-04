@@ -9,7 +9,7 @@
 ParentTable::ParentTable()
 {
 	MAX_SIZE = 100;
-	parentTable.resize(MAX_SIZE, std::vector<bool>(MAX_SIZE,0));
+	parentTable.resize(MAX_SIZE, std::vector<bool>(MAX_SIZE, false));
 }
 
 // method to check whether the tuple(parentStmt, childStmt) is recorded in Parent Table.
@@ -51,7 +51,7 @@ int ParentTable::insertParent(int parentStmt, int childStmt)
 	//The extended set contains all 0 (boolean)
 	//Also, update the MAX_SIZE global variable.
 	if(parentTable.size() > (size_t) MAX_SIZE){
-		parentTable.resize(MAX_SIZE*2, std::vector<bool>(MAX_SIZE,0));
+		parentTable.resize(MAX_SIZE*2, std::vector<bool>(MAX_SIZE, false));
 		MAX_SIZE *= 2;
 	}
 

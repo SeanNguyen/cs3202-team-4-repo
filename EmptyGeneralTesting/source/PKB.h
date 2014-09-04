@@ -31,6 +31,8 @@ class PKB
 	static void setASTRoot(TNode node);
 	static int setChild(TNode parent, TNode child);
 
+    static TNode getNodeOfStmt(int stmt);
+
 	//////////////////////////CONST TABLE METHODS/////////////////
 	static bool insertConst(std::string value);
 

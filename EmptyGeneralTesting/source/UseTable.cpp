@@ -7,7 +7,7 @@
 // Constructor
 Use::Use(){
 	MAX_SIZE = 100;
-	UseTable.resize(MAX_SIZE, std::vector<bool>(MAX_SIZE,0));
+	UseTable.resize(MAX_SIZE, std::vector<bool>(MAX_SIZE, false));
 }
 
 //  Method to check if modifies relationship exists
@@ -26,7 +26,7 @@ int Use::insertUses(int s1, int varIndex){
 	//The extended set contains all 0 (boolean)
 	//Also, update the MAX_SIZE global variable.
 	if(UseTable.size() > (size_t) MAX_SIZE){
-		UseTable.resize(MAX_SIZE*2, std::vector<bool>(MAX_SIZE,0));
+		UseTable.resize(MAX_SIZE*2, std::vector<bool>(MAX_SIZE, false));
 		MAX_SIZE *= 2;
 	}
 

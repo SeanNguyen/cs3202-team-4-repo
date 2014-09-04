@@ -12,7 +12,7 @@ Follow followObject;
 // Constructor
 Follow::Follow(){
 		MAX_SIZE = 100;
-		followTable.resize(MAX_SIZE, std::vector<bool>(MAX_SIZE,0));
+		followTable.resize(MAX_SIZE, std::vector<bool>(MAX_SIZE, false));
 }
 
 // Method to return if 2 statement number s1 is followed by s2
@@ -57,7 +57,7 @@ int Follow::insertFollows(int s1, int s2){
 	//The extended set contains all 0 (boolean)
 	//Also, update the MAX_SIZE global variable.
 	if(followTable.size() > (size_t) MAX_SIZE){
-		followTable.resize(MAX_SIZE*2, std::vector<bool>(MAX_SIZE,0));
+		followTable.resize(MAX_SIZE*2, std::vector<bool>(MAX_SIZE, false));
 		MAX_SIZE *= 2;
 	}
 

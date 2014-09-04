@@ -6,7 +6,7 @@
 // Constructor
 Modify::Modify(){
 	MAX_SIZE = 100;
-	ModifyTable.resize(MAX_SIZE, std::vector<bool>(MAX_SIZE,0));
+	ModifyTable.resize(MAX_SIZE, std::vector<bool>(MAX_SIZE,false));
 }
 
 //  Method to check if modifies relationship exists
@@ -26,7 +26,7 @@ int Modify::insertModifies(int s1, int varIndex){
 	//The extended set contains all 0 (boolean)
 	//Also, update the MAX_SIZE global variable.
 	if(ModifyTable.size() > (size_t) MAX_SIZE){
-		ModifyTable.resize(MAX_SIZE*2, std::vector<bool>(MAX_SIZE,0));
+		ModifyTable.resize(MAX_SIZE*2, std::vector<bool>(MAX_SIZE, false));
 		MAX_SIZE *= 2;
 	}
 

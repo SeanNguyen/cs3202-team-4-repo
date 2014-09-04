@@ -37,6 +37,10 @@ void PKB::setASTRoot(TNode node) {
 	return astObj.setRoot(node);
 }
 
+TNode PKB::getNodeOfStmt(int stmt) {
+	return astObj.findNodeOfStmt(stmt);
+}
+
 int PKB::setChild(TNode parent, TNode child) {
 	return astObj.setChild(parent, child);
 }
