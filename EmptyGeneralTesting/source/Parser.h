@@ -11,40 +11,12 @@ using namespace std;
 
 class Parser
 {
-public:
-	// methods
-	Parser();
-	void parse(string fileName);
-	void buildVarTable();
-	void buildFollowTable();
-	void buildModifyTable();
-	void buildParentTable();
-	void buildStatTable();
-	void buildUseTable();
 
-	bool getFileData(string fileDirectory);
-	void getAST();
-	void getProcTable();
-	void getVarTable();
-	void getStmtTypes();
-	void getFollows();
-	void getParent();
-	void getModifies();
-	void getUses();
-
-	// testing methods
-	void printFileData();
-	void printProc();
-	void printVar();
-	void printStmtTypes();
-	void printFollows();
-	void printParent();
-	void printModifies();
-	void printUses();
-
+//attributes
 private:
-	// private variables
-	static bool Parser::isDataProcessed;
+	bool isDataProcessed;
+	string outputFileName;
+
 	vector<string> fileData;
 	vector<string> procName;
 	vector<string> varName;
@@ -54,16 +26,28 @@ private:
 	vector<pair<int, string>> modifies;
 	vector<pair<int, string>> uses;
 
-	// private methods
-	// main methods
+//public methods
+public:
+	Parser();
+	void parse(string fileName);
+	void buildVarTable();
+	void buildFollowTable();
+	void buildModifyTable();
+	void buildParentTable();
+	void buildStatTable();
+	void buildUseTable();
+	bool getFileData(string fileDirectory);
+
+//private helper methods
+private:
 	void readFileData();
 	vector<string> preprocessData(ifstream& file);
 	TNode readProcedure(vector<string> elements, int *i);
 	TNode readWhileStmt(vector<string> elements, int *i);
 	TNode readAssignStmt(vector<string> elements, int *i);
-	TNode readRightSideAssign(vector<string> elements, int i, int j);
+	TNode readCallStmt (vector<string> elements, int *i);
 
-	// supporting methods
+	TNode readRightSideAssign(vector<string> elements, int i, int j);
 	vector<string> breakFileDataIntoElements();
 	bool isNumber(const string str);
 	int getFollowedStmt(int i);

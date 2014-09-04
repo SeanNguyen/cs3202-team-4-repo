@@ -5,38 +5,22 @@
 #include <string>
 #include <iostream>
 
-/* PARAMETERS*/
-/* This parameter ensures that
- * function readFileData() runs only once
- */
-bool Parser::isDataProcessed = false;
-
-/* Write all information of source to outputFile. outputFile is used as a reference to build integration testing between Parser and tables. */
-string outputFileName = "output.txt";
-
-/* PUBLIC FUNCTIONS */
-
-// Default constructor
-Parser::Parser()
-{
-
+//PUBLIC METHODS
+Parser::Parser() {
+	Parser::isDataProcessed = false;
+	outputFileName = "output.txt";
 }
 
-/* Description: parse function will parse the SIMPLE source and store information of tables in Parser private data structure. */
+/* Description: parse function will parse the SIMPLE source and store 
+information of tables in Parser private data structure. */
 void Parser::parse(string fileName)
 {
 	bool isValid = getFileData(fileName);
 	if (isValid)
 	{
-		getAST();
+		readFileData();
 	}
 }
-
-//void Parser::buildPKBTables()
-//{
-//	buildVarTable();
-//}
-//
 
 /*
  * Description: This function builds VarTable in PKB.
@@ -163,52 +147,7 @@ bool Parser::getFileData(string fileDirectory) {
 	return false;
 }
 
-/*
- * Description: this function get the AST from the program
- * Input: no input
- * Output: (next iteration) AST of the program
- */
-void Parser::getAST() {
-	return readFileData();
-}
-
-void Parser::getProcTable() {
-	if (!Parser::isDataProcessed) {
-		readFileData();
-	}
-}
-
-void Parser::getVarTable() {
-	if (!Parser::isDataProcessed) {
-		readFileData();
-	}
-}
-
-void Parser::getFollows() {
-	if (!Parser::isDataProcessed) {
-		readFileData();
-	}
-}
-
-void Parser::getParent() {
-	if (!Parser::isDataProcessed) {
-		readFileData();
-	}
-}
-
-void Parser::getModifies() {
-	if (!Parser::isDataProcessed) {
-		readFileData();
-	}
-}
-
-void Parser::getUses() {
-	if (!Parser::isDataProcessed) {
-		readFileData();
-	}
-}
-
-/* PRIVATE FUNCTIONS */
+//PRIVATE FUNCTIONS
 /*
  * Description: this function preprocess the data from input file.
  *				It job includes: remove hashtab (comment), and 
@@ -261,14 +200,7 @@ vector<string> Parser::preprocessData(ifstream& file) {
 	return fileData;
 }
 
-/*
- * Description: this function reads fileData after the preprocessing phase.
- *				It create the AST and data for building tables
- *				Supposedly, it should return the AST of the program 
- * Input: no input
- * Output: (in next iteration) return AST
- */
-
+//main methods
 void Parser::readFileData() {
 	// rewrite logic in readFileData
 	vector<string> elements = breakFileDataIntoElements();
@@ -532,6 +464,12 @@ TNode Parser::readAssignStmt(vector<string> elements, int *i) {
 	return assignNode;
 }
 
+TNode Parser::readCallStmt (vector<string> elements, int *i) {
+	TNode callNode = PKB::createNode("call", "");
+
+}
+
+//Helper Methods
 TNode Parser::readRightSideAssign(vector<string> elements, int i, int j) {
 	// if there is only one element
 	if (j-i==0) {
@@ -586,195 +524,6 @@ TNode Parser::readRightSideAssign(vector<string> elements, int i, int j) {
 	return PKB::createNode("", "");
 }
 
-
-/* TESTING FUNCTIONS */
-void Parser::printFileData() {
-	cout<< "Print out file data after preprocessing:" <<endl <<endl;
-	for (size_t i=0; i<fileData.size(); i++) {
-		cout<< fileData.at(i)<<endl;
-	}
-	cout << endl << "End of file " <<endl;
-	return;
-}
-
-void Parser::printProc() {
-	cout << endl << "Name of procedures" << endl;
-	for (size_t i=0; i<procName.size(); i++) {
-		cout << "  " << procName[i]<<endl;
-		
-	}
-}
-
-void Parser::printVar() {
-	cout << endl << "Name of variables" << endl;
-	for (size_t i=0; i<varName.size(); i++) {
-		cout << "  " << varName[i]<<endl;
-	}
-
-	// Write to outputFile
-	ofstream outputFile (outputFileName);
-	if (outputFile.is_open())
-	{
-		outputFile << "Var Table: \n";
-		for (size_t i=0; i<varName.size(); i++) 
-		{
-			ostringstream oss;
-			oss << i << " " << varName[i] << "\n";
-			string line = oss.str();
-			outputFile << line;
-		}
-		outputFile.close();
-	}
-	
-}
-
-void Parser::printStmtTypes() {
-	cout << endl << "List of statement types" << endl;
-	for (size_t i=0; i<stmtType.size(); i++) {
-		cout << "  "<< i+1 << "	"<< stmtType[i]<<endl;
-	}
-
-	// Write to output file.
-	ofstream outputFile;
-	outputFile.open (outputFileName, std::ofstream::out | std::ofstream::app);
-	outputFile << "Statement Table: \n";
-	for (size_t i=0; i<stmtType.size(); i++) 
-	{
-		ostringstream oss;
-		oss << i+1 << " " << stmtType[i] << "\n";
-		string line = oss.str();
-		outputFile << line;	
-	}
-	outputFile.close();
-
-}
-
-void Parser::printFollows() {
-	cout << endl << "List of Follows()" << endl;
-	for (size_t i=0; i<depthLv.size(); i++) {
-		int f = getFollowedStmt(i);
-		if (f>=0) { 
-			cout << "  Follows(" << f+1 << ", " << i+1 << ")" <<endl;
-		}
-	}
-
-	// Write to output file.
-	ofstream outputFile;
-	outputFile.open (outputFileName, std::ofstream::out | std::ofstream::app);
-	outputFile << "Follow Table: \n";
-	for (size_t i=0; i<depthLv.size(); i++) 
-	{
-		int f = getFollowedStmt(i);
-		if (f >= 0)
-		{
-			ostringstream oss;
-			oss << f+1 << " " << i+1 << "\n";
-			string line = oss.str();
-			outputFile << line;
-		}	
-	}
-	outputFile.close();
-	
-}
-
-void Parser::printParent() {
-	cout << endl << "List of Parent()" << endl;
-	for (size_t i=0; i<depthLv.size(); i++) {
-		int p = getParentStmt(i);
-		if (p>=0) { 
-			cout << "  Parent(" << p+1 << ", " << i+1 << ")" <<endl;
-		}
-	}
-
-	// Write to output file.
-	ofstream outputFile;
-	outputFile.open (outputFileName, std::ofstream::out | std::ofstream::app);
-	outputFile << "Parent Table: \n";
-	for (size_t i=0; i<depthLv.size(); i++) 
-	{
-		int p = getParentStmt(i);
-		if (p >= 0)
-		{
-			ostringstream oss;
-			oss << p+1 << " " << i+1 << "\n";
-			string line = oss.str();
-			outputFile << line;
-		}	
-	}
-	outputFile.close();
-
-}
-
-void Parser::printModifies() {
-	cout << endl << "List of Modifies()" << endl;
-	for (size_t i=0; i<modifies.size(); i++) {
-		int stmt = modifies.at(i).first - 1;
-		string var = modifies.at(i).second;
-		while (stmt>=0) {
-			cout << "  Modifies(" << stmt + 1 << ", " << var << ")" <<endl;
-			stmt = getParentStmt(stmt);
-		}
-	}
-
-	// Write to output file.
-	ofstream outputFile;
-	outputFile.open (outputFileName, std::ofstream::out | std::ofstream::app);
-	outputFile << "Modify Table: \n";
-	for (size_t i=0; i<modifies.size(); i++) 
-	{
-		int stmt = modifies.at(i).first - 1;
-		string var = modifies.at(i).second;
-		while (stmt>=0) 
-		{
-			ostringstream oss;
-			oss << stmt + 1 << " " << var << "\n";
-			string line = oss.str();
-			outputFile << line;
-			
-			stmt = getParentStmt(stmt);
-		}	
-	}
-	outputFile.close();
-}
-
-void Parser::printUses() {
-	cout << endl << "List of Uses()" << endl;
-	for (size_t i=0; i<uses.size(); i++) {
-		int stmt = uses.at(i).first - 1;
-		string var = uses.at(i).second;
-		while (stmt>=0) {
-			cout << "  Uses(" << stmt + 1 << ", " << var << ")" <<endl;
-			stmt = getParentStmt(stmt);
-		}
-	}
-
-	// Write to output file.
-	ofstream outputFile;
-	outputFile.open (outputFileName, std::ofstream::out | std::ofstream::app);
-	outputFile << "Uses Table: \n";
-	for (size_t i=0; i<uses.size(); i++) 
-	{
-		int stmt = uses.at(i).first - 1;
-		string var = uses.at(i).second;
-		while (stmt>=0) 
-		{
-			ostringstream oss;
-			oss << stmt + 1 << " "  << var << "\n";
-			string line = oss.str();
-			outputFile << line;
-			stmt = getParentStmt(stmt);
-		}	
-	}
-	outputFile.close();
-}
-
-/* SUPPORTING FUNCTIONS */
-
-/*
- * Description: this function breaks file data into separate elements (symbols)
- * Input: null
- * Output: vector of all elements
- */
 vector<string> Parser::breakFileDataIntoElements() {
 	vector<string> elements;
 	for (size_t i=0; i< fileData.size(); i++) {
@@ -789,24 +538,12 @@ vector<string> Parser::breakFileDataIntoElements() {
 	return elements;
 }
 
-/*
- * Description: this function check whether the input string is a number or not
- * Input: string str
- * Output: return true if str is a number; otherwise return false
- */
 bool Parser::isNumber(const string str) {
 	string::const_iterator it = str.begin();
     while (it != str.end() && isdigit(*it)) ++it;
     return !str.empty() && it == str.end();
 }
 
-/*
- * Description: this function finds the stmt followed
- *				by the given stmt
- * Input: index i of stmt
- * Output: return index of stmt followed by given stmt,
- *		   otherwise return -1
- */
 int Parser::getFollowedStmt(int i) {
 	if (i>0) {
 		int lv = depthLv.at(i);
@@ -818,13 +555,6 @@ int Parser::getFollowedStmt(int i) {
 	return -1;
 }
 
-/*
- * Description: this function finds the parent stmt
- *				of the given stmt
- * Input: index i of stmt
- * Output: return index of parent stmt of the given stmt,
- *		   otherwise return -1
- */
 int Parser::getParentStmt(int i) {
 	int lv = depthLv.at(i);
 	if (i>0 && lv!=0) {
@@ -834,23 +564,3 @@ int Parser::getParentStmt(int i) {
 	}
 	return -1;
 }
-
-// just for testing
-//int main() {
-//	Parser p; string fileDirectory;
-//	cout<< "Please enter file directory: " ;
-//	cin >> fileDirectory;
-//	bool isValidDirectory = p.getFileData(fileDirectory);
-//	if (isValidDirectory) {
-//		//p.printFileData(); 
-//		p.getAST();
-//		p.printProc();
-//		p.printVar();
-//		p.printStmtTypes();
-//		p.printFollows();
-//		p.printParent();
-//		p.printModifies();
-//		p.printUses();
-//	}
-//	system("pause");
-//}
