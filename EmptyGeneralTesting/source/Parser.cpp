@@ -11,6 +11,10 @@ Parser::Parser() {
 	outputFileName = "output.txt";
 }
 
+Parser::~Parser() {
+
+}
+
 /* Description: parse function will parse the SIMPLE source and store 
 information of tables in Parser private data structure. */
 void Parser::parse(string fileName)
@@ -29,7 +33,6 @@ void Parser::parse(string fileName)
  */
 void Parser::buildVarTable()
 {
-	PKB pkb;
 	for (size_t index=0; index < varName.size(); index++)
 	{
 		pkb.insertVar(varName[index]);
@@ -43,7 +46,6 @@ void Parser::buildVarTable()
  */
 void Parser::buildFollowTable()
 {
-	PKB pkb;
 	for (size_t index=0; index < depthLv.size(); ++index)
 	{
 		int f = getFollowedStmt(index);
@@ -61,7 +63,6 @@ void Parser::buildFollowTable()
  */
 void Parser::buildModifyTable()
 {
-	PKB pkb;
 	for(size_t index=0; index < modifies.size(); ++index)
 	{
 		int stmt = modifies.at(index).first - 1;
@@ -82,7 +83,6 @@ void Parser::buildModifyTable()
  */
 void Parser::buildParentTable()
 {
-	PKB pkb;
 	for (size_t index=0; index < depthLv.size(); ++index)
 	{
 		int p = getParentStmt(index);
@@ -100,7 +100,6 @@ void Parser::buildParentTable()
  */
 void Parser::buildStatTable()
 {
-	PKB pkb;
 	for(size_t index=0; index < stmtType.size(); ++index)
 	{
 		pkb.insertStmt(stmtType.at(index));
@@ -114,7 +113,6 @@ void Parser::buildStatTable()
  */
 void Parser::buildUseTable()
 {
-	PKB pkb;
 	for(size_t index=0; index < uses.size(); ++index)
 	{
 		int stmt = uses.at(index).first - 1;
@@ -143,7 +141,6 @@ bool Parser::getFileData(string fileDirectory) {
 		file.close();
 		return true;
 	}
-	cout<< "This is not a file directory" <<endl;
 	return false;
 }
 
@@ -225,114 +222,7 @@ void Parser::readFileData() {
 	}
 
 	// set progNode as root of AST
-
 	PKB::setASTRoot(progNode);
-
-	/*
-	string prevElement;
-	string curElement;
-	int nestLv = 0;
-	bool isInsideProc = false;
-	
-	for (size_t i=0; i<fileData.size(); i++) {
-		string line = fileData[i];
-		istringstream ss;
-		ss.str(line);
-
-		while (ss >> curElement) {
-			// get procedure name
-			if (prevElement=="procedure") {
-				//cout<< "Name of procedure: " curElement <<endl;
-				// create a node for procedure, return reference
-				procName.push_back(curElement);
-			}
-			// recognize statement types
-			if (curElement=="=") {
-				depthLv.push_back(nestLv);
-				// create a node for assignment, return reference
-				stmtType.push_back("assignment");
-				
-				// recognize previous element as variable
-				varName.push_back(prevElement);
-				// recognize modifies relationship
-				pair<int, string> temp (stmtType.size(), prevElement);
-				modifies.push_back(temp);
-			}
-			if (curElement=="while") {
-				// create a node for while, return reference
-				depthLv.push_back(nestLv);
-				stmtType.push_back("while:stmtList");
-			}
-
-			if (curElement=="{") {
-				if (isInsideProc==false) {
-					// acknowledge the beginning of procedure
-					isInsideProc = true;
-					//cout << "Begin reading procedure" <<endl <<endl;
-				} else {
-					// acknowledge new nesting level
-					nestLv++;
-					//cout<< "Meet a nest at level "<< nestLv <<endl;
-				}
-			}
-
-			if (curElement=="+") {
-				//cout<< "Found plus expression (+) " <<endl;
-			}
-			
-			if (curElement=="}") {
-				if (isInsideProc && nestLv==0) {
-					// acknowledge end of procedure
-					isInsideProc = false;
-					cout << endl << "End of procedure" << endl;
-				} else {
-					nestLv--;
-					//cout<< "End a nest at level" << nestedLevel +1 <<endl;
-				}
-			}
-
-			if (prevElement=="while") {
-				// recognize curElement as variable
-				//cout<< "Find variable: " << curElement << " used." <<endl;
-				varName.push_back(curElement);
-				// recognize Uses relationship
-				pair<int, string> temp (stmtType.size(), curElement);
-				uses.push_back(temp);
-			}
-
-			if (prevElement=="=") {
-				if (isNumber(curElement)) {
-					// recognize curElement as constant
-					//cout << "Find constant: " << curElement << endl;
-					PKB::insertConst(curElement);
-				} else {
-					// recognize curElement as variable
-					//cout << "Find variable: " << curElement << " used." <<endl;	
-					varName.push_back(curElement);
-					// recognize Uses relationship
-					pair<int, string> temp (stmtType.size(), curElement);
-					uses.push_back(temp);
-				}
-				
-			}
-			if (prevElement=="+") {
-				if (isNumber(curElement)) {
-					// recognize curElement as constant
-					//cout << "Find constant: " << curElement << endl;
-				} else {
-					// recognize curElement as variable
-					//cout << "Find variable: " << curElement << " used." <<endl;	
-					varName.push_back(curElement);
-					// recognize Uses relationship
-					pair<int, string> temp (stmtType.size(), curElement);
-					uses.push_back(temp);
-				}
-			}
-
-			prevElement = curElement;
-		}
-	}
-	*/
 
 	// mark data as processed
 	Parser::isDataProcessed = true;
@@ -349,27 +239,20 @@ TNode Parser::readProcedure(vector<string> elements, int *i) {
 	// next element must be open brace
 	string element = elements[++*i];
 	if (element=="{") {
-		// cout << "Start reading procedure" <<endl;
-
 		// create stmtListNode
 		TNode stmtListNode = PKB::createNode("stmtList", "");
 		for (int j=*i; j< (int)elements.size(); j++) {
 			element = elements[j];
 			if (element=="while") {
-				//cout << "Find while at lv " << depth <<endl;
 				stmtType.push_back("while:stmtList");
 				depthLv.push_back(depth);
 				TNode whileNode = readWhileStmt(elements, &j);
 				stmtListNode.setChild(whileNode);
 			} else if (element=="}") {
-				//cout <<"End of procedure" <<endl;
 				*i = j;
-
-				// break the loop here
 				break;
 			} else {
 				if (j<(int)elements.size()-1 && elements[j+1]=="=") {
-					//cout << "Find assignment at lv " << depth <<endl;
 					stmtType.push_back("assignment");
 					depthLv.push_back(depth);
 					TNode assignNode = readAssignStmt(elements, &j);
@@ -386,10 +269,8 @@ TNode Parser::readProcedure(vector<string> elements, int *i) {
 
 TNode Parser::readWhileStmt(vector<string> elements, int *i) {
 	TNode whileNode = PKB::createNode("while", "");
-
 	string element = elements[++*i];
 	// element must be a variable name used by this while stmt
-	//cout << "Find var " << element <<endl;
 	// create a node for this var and add it to var list
 	TNode varNode = PKB::createNode("variable", element);
 	whileNode.setChild(varNode);
@@ -407,7 +288,6 @@ TNode Parser::readWhileStmt(vector<string> elements, int *i) {
 	for (int j=*i; j<(int)elements.size(); j++) {
 		element = elements[j];
 		if (element=="while") {
-			//	cout << "Find while at lv " << depth <<endl;
 			stmtType.push_back("while:stmtList");
 			depthLv.push_back(depth);
 			// again, call the function readWhileStmt to get a whileNode
@@ -422,7 +302,6 @@ TNode Parser::readWhileStmt(vector<string> elements, int *i) {
 			break;
 		} else {
 			if (j<(int)elements.size()-1 && elements[j+1]=="=") {
-				//cout << "Find assignment at lv " << depth <<endl;
 				stmtType.push_back("assignment");
 				depthLv.push_back(depth);
 				TNode assignNode = readAssignStmt(elements, &j);
@@ -440,7 +319,6 @@ TNode Parser::readAssignStmt(vector<string> elements, int *i) {
 
 	// the symbol at left side of equal sign ("=") must be var modified by this assignment
 	string element = elements[*i];
-	//cout << "Find var: " <<element <<endl;
 	varName.push_back(element);
 	pair<int, string> modifyPair(stmtType.size(), element);
 	modifies.push_back(modifyPair);
@@ -478,12 +356,10 @@ TNode Parser::readRightSideAssign(vector<string> elements, int i, int j) {
 		string element = elements[i];
 		// check if this is a var or a const
 		if (isNumber(element)) {
-			//cout << "Find const " <<element <<endl;
 			PKB::insertConst(element);
 			TNode constNode = PKB::createNode("constant", element);
 			return constNode;
 		} else {
-			//cout << "Find variable " <<element <<endl;
 			varName.push_back(element);
 			pair<int, string> usePair(stmtType.size(), element);
 			uses.push_back(usePair);
@@ -494,7 +370,6 @@ TNode Parser::readRightSideAssign(vector<string> elements, int i, int j) {
 		// second element from right side must be plus expression ("+")
 		string element = elements[j-1];
 		if (element=="+") {
-			//cout << "Found plus expression" <<endl;
 			TNode plusNode = PKB::createNode("expression", "plus");
 			// recursively process left side of plus expression
 			TNode leftSideNode = readRightSideAssign(elements, i, j-2);
@@ -504,12 +379,10 @@ TNode Parser::readRightSideAssign(vector<string> elements, int i, int j) {
 			// get element at j at check it type
 			element = elements[j];
 			if (isNumber(element)) {
-				//cout << "Find const " <<element <<endl;
 				PKB::insertConst(element);
 				TNode constNode = PKB::createNode("constant", element);
 				plusNode.setChild(constNode);
 			} else {
-				//cout << "Find variable " <<element <<endl;
 				varName.push_back(element);
 				pair<int, string> usePair(stmtType.size(), element);
 				uses.push_back(usePair);

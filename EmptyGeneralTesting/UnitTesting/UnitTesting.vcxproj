@@ -68,11 +68,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="source\TestParser.cpp" />
+    <ClCompile Include="source\ParserTest.cpp" />
     <ClCompile Include="source\UnitTest.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\TestParser.h" />
+    <ClInclude Include="source\ParserTest.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -14,6 +14,7 @@ class Parser
 
 //attributes
 private:
+	PKB pkb;
 	bool isDataProcessed;
 	string outputFileName;
 
@@ -29,6 +30,7 @@ private:
 //public methods
 public:
 	Parser();
+	~Parser();
 	void parse(string fileName);
 	void buildVarTable();
 	void buildFollowTable();
