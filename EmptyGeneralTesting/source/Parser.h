@@ -14,18 +14,22 @@ class Parser
 
 //attributes
 private:
-	PKB pkb;
-	bool isDataProcessed;
-	string outputFileName;
-
+	//data
 	vector<string> fileData;
 	vector<string> procName;
 	vector<string> varName;
 	vector<string> stmtType;
 	vector<int> depthLv;
-	int depth;
 	vector<pair<int, string>> modifies;
 	vector<pair<int, string>> uses;
+	vector<pair<string, string>> calls;
+
+	//references
+	PKB pkb;
+	string outputFileName;
+	int depth;
+	bool isDataProcessed;
+	string currentProcessingProc;
 
 //public methods
 public:
@@ -48,8 +52,10 @@ private:
 	TNode readWhileStmt(vector<string> elements, int *i);
 	TNode readAssignStmt(vector<string> elements, int *i);
 	TNode readCallStmt (vector<string> elements, int *i);
+	TNode readIfStmt (vector<string> elements, int *i);
 
 	TNode readRightSideAssign(vector<string> elements, int i, int j);
+	TNode readStmtList (vector<string> elements, int *i);
 	vector<string> breakFileDataIntoElements();
 	bool isNumber(const string str);
 	int getFollowedStmt(int i);

@@ -27,10 +27,10 @@ void Parser::parse(string fileName)
 }
 
 /*
- * Description: This function builds VarTable in PKB.
- * Input	  : None.
- * Output	  : None.
- */
+* Description: This function builds VarTable in PKB.
+* Input	  : None.
+* Output	  : None.
+*/
 void Parser::buildVarTable()
 {
 	for (size_t index=0; index < varName.size(); index++)
@@ -40,10 +40,10 @@ void Parser::buildVarTable()
 }
 
 /*
- * Description: This function builds FollowTable in PKB.
- * Input	  : None.
- * Output     : None.
- */
+* Description: This function builds FollowTable in PKB.
+* Input	  : None.
+* Output     : None.
+*/
 void Parser::buildFollowTable()
 {
 	for (size_t index=0; index < depthLv.size(); ++index)
@@ -57,10 +57,10 @@ void Parser::buildFollowTable()
 }
 
 /*
- * Description: This function builds ModifyTable in PKB.
- * Input	  : None.
- * Output     : None.
- */
+* Description: This function builds ModifyTable in PKB.
+* Input	  : None.
+* Output     : None.
+*/
 void Parser::buildModifyTable()
 {
 	for(size_t index=0; index < modifies.size(); ++index)
@@ -77,10 +77,10 @@ void Parser::buildModifyTable()
 }
 
 /*
- * Description: This function builds ParentTable in PKB.
- * Input	  : None.
- * Output     : None.
- */
+* Description: This function builds ParentTable in PKB.
+* Input	  : None.
+* Output     : None.
+*/
 void Parser::buildParentTable()
 {
 	for (size_t index=0; index < depthLv.size(); ++index)
@@ -94,10 +94,10 @@ void Parser::buildParentTable()
 }
 
 /*
- * Description: This function builds StatTable in PKB.
- * Input	  : None.
- * Output     : None.
- */
+* Description: This function builds StatTable in PKB.
+* Input	  : None.
+* Output     : None.
+*/
 void Parser::buildStatTable()
 {
 	for(size_t index=0; index < stmtType.size(); ++index)
@@ -107,10 +107,10 @@ void Parser::buildStatTable()
 }
 
 /*
- * Description: This function builds UseTable in PKB.
- * Input	  : None.
- * Output     : None.
- */
+* Description: This function builds UseTable in PKB.
+* Input	  : None.
+* Output     : None.
+*/
 void Parser::buildUseTable()
 {
 	for(size_t index=0; index < uses.size(); ++index)
@@ -126,12 +126,12 @@ void Parser::buildUseTable()
 }
 
 /*
- * Description: this function look for input file using 
- *				the directory user gives and preprocess the data 
- * Input: file's directory
- * Output: return true if file is found,
- *		   otherwise return false
- */
+* Description: this function look for input file using 
+*				the directory user gives and preprocess the data 
+* Input: file's directory
+* Output: return true if file is found,
+*		   otherwise return false
+*/
 bool Parser::getFileData(string fileDirectory) {
 	ifstream file(fileDirectory.c_str());
 	if (file.is_open()) {
@@ -146,12 +146,12 @@ bool Parser::getFileData(string fileDirectory) {
 
 //PRIVATE FUNCTIONS
 /*
- * Description: this function preprocess the data from input file.
- *				It job includes: remove hashtab (comment), and 
- *				separate elements
- * Input: input file
- * Output: a list of all preprocessed program lines 
- */
+* Description: this function preprocess the data from input file.
+*				It job includes: remove hashtab (comment), and 
+*				separate elements
+* Input: input file
+* Output: a list of all preprocessed program lines 
+*/
 vector<string> Parser::preprocessData(ifstream& file) {
 	string curLine;
 	while(!file.eof()){
@@ -231,35 +231,17 @@ void Parser::readFileData() {
 TNode Parser::readProcedure(vector<string> elements, int *i) {
 	// next element must be procedure name
 	procName.push_back(elements[++*i]);
-	string procName = elements[*i];
+	currentProcessingProc = elements[*i];
 
 	// create a node for procedure
-	TNode procNode = PKB::createNode("procedure", procName);
+	TNode procNode = PKB::createNode("procedure", currentProcessingProc);
 
 	// next element must be open brace
 	string element = elements[++*i];
 	if (element=="{") {
+		element = elements[++*i];
 		// create stmtListNode
-		TNode stmtListNode = PKB::createNode("stmtList", "");
-		for (int j=*i; j< (int)elements.size(); j++) {
-			element = elements[j];
-			if (element=="while") {
-				stmtType.push_back("while:stmtList");
-				depthLv.push_back(depth);
-				TNode whileNode = readWhileStmt(elements, &j);
-				stmtListNode.setChild(whileNode);
-			} else if (element=="}") {
-				*i = j;
-				break;
-			} else {
-				if (j<(int)elements.size()-1 && elements[j+1]=="=") {
-					stmtType.push_back("assignment");
-					depthLv.push_back(depth);
-					TNode assignNode = readAssignStmt(elements, &j);
-					stmtListNode.setChild(assignNode);
-				}
-			}
-		}
+		TNode stmtListNode = readStmtList(elements, i);
 		procNode.setChild(stmtListNode);
 	} else {
 		// throw error here
@@ -278,38 +260,9 @@ TNode Parser::readWhileStmt(vector<string> elements, int *i) {
 	pair<int, string> usePair(stmtType.size(), element);
 	uses.push_back(usePair);
 
-	element = elements[++*i];
-	// element must be an open brace
-	// create a node for stmtList
-	TNode stmtListNode = PKB::createNode("stmtList", "");
-	
-	depth++;
+	element = elements[++*i]; //supose to be  {
 
-	for (int j=*i; j<(int)elements.size(); j++) {
-		element = elements[j];
-		if (element=="while") {
-			stmtType.push_back("while:stmtList");
-			depthLv.push_back(depth);
-			// again, call the function readWhileStmt to get a whileNode
-			TNode whileNode2 = readWhileStmt(elements, &j);
-			stmtListNode.setChild(whileNode2);
-		} else if (element=="}") {
-			// end while, break here
-			// update *i first
-			*i = j;
-			// update depth: return it to 1 lv higher
-			depth--;
-			break;
-		} else {
-			if (j<(int)elements.size()-1 && elements[j+1]=="=") {
-				stmtType.push_back("assignment");
-				depthLv.push_back(depth);
-				TNode assignNode = readAssignStmt(elements, &j);
-				stmtListNode.setChild(assignNode);
-			}
-		}
-	}
-
+	TNode stmtListNode = readStmtList(elements, i);
 	whileNode.setChild(stmtListNode);
 	return whileNode;
 }
@@ -335,7 +288,7 @@ TNode Parser::readAssignStmt(vector<string> elements, int *i) {
 
 	TNode rightSideNode = readRightSideAssign(elements, *i, j-1);
 	assignNode.setChild(rightSideNode);
-	
+
 	// update *i
 	j=*i;
 
@@ -343,9 +296,50 @@ TNode Parser::readAssignStmt(vector<string> elements, int *i) {
 }
 
 TNode Parser::readCallStmt (vector<string> elements, int *i) {
+	//insert to depthLv Table
+	depthLv.push_back(depth);
+
+	//insert to stmtTable
+	stmtType.push_back("call");
+
+	//create nodes in PKB
 	TNode callNode = PKB::createNode("call", "");
-	TNode dummyNode = TNode();
-	return dummyNode;
+	string element = elements[++*i];
+	TNode calledProcNode = PKB::createNode ("procedure", element);
+	callNode.setChild(calledProcNode);
+	procName.push_back(element);
+
+	//insert to callTable
+	string callingProc = currentProcessingProc;
+	string calledProc = element;
+	pair <string, string> callPair(callingProc, calledProc);
+	calls.push_back(callPair);
+
+	element = elements[++*i]; //suppose to be a ;
+
+	return callNode;
+}
+
+TNode Parser::readIfStmt (vector<string> elements, int *i) {
+	//insert to depthLv Table
+	depthLv.push_back(depth);
+
+	//insert to stmt Table
+	stmtType.push_back("if");
+
+	//create Node in PKB
+	TNode ifNode = PKB::createNode("if", "");
+	string element = elements[++*i]; // suppose to be a var
+	TNode varNode = PKB::createNode("variable", element);
+	ifNode.setChild(varNode);
+	varName.push_back(element);
+	pair<int, string> usePair(stmtType.size(), element);
+	uses.push_back(usePair);
+
+	//process stmt list
+	TNode stmtListNode = readStmtList(elements, i);
+	ifNode.setChild(stmtListNode);
+	return ifNode;
 }
 
 //Helper Methods
@@ -398,6 +392,41 @@ TNode Parser::readRightSideAssign(vector<string> elements, int i, int j) {
 	return PKB::createNode("", "");
 }
 
+TNode Parser::readStmtList (vector<string> elements, int *i) {
+	TNode stmtListNode = PKB::createNode("stmtList", "");
+
+	depth++;
+
+	for (int j=*i; j<(int)elements.size(); j++) {
+		string element = elements[j];
+		if (element=="while") {
+			stmtType.push_back("while:stmtList");
+			depthLv.push_back(depth);
+			// again, call the function readWhileStmt to get a whileNode
+			TNode whileNode2 = readWhileStmt(elements, &j);
+			stmtListNode.setChild(whileNode2);
+		} else if (element == "if") {
+			TNode ifNode = readIfStmt(elements, &j);
+			stmtListNode.setChild(ifNode);
+		} else if (element == "call") {
+			TNode callNode = readCallStmt(elements, &j);
+			stmtListNode.setChild(callNode);
+		} else if (element=="}") {
+			*i = j;
+			depth--;
+			break;
+		} else {
+			if (j<(int)elements.size()-1 && elements[j+1]=="=") {
+				stmtType.push_back("assignment");
+				depthLv.push_back(depth);
+				TNode assignNode = readAssignStmt(elements, &j);
+				stmtListNode.setChild(assignNode);
+			}
+		}
+	}
+	return stmtListNode;
+}
+
 vector<string> Parser::breakFileDataIntoElements() {
 	vector<string> elements;
 	for (size_t i=0; i< fileData.size(); i++) {
@@ -414,8 +443,8 @@ vector<string> Parser::breakFileDataIntoElements() {
 
 bool Parser::isNumber(const string str) {
 	string::const_iterator it = str.begin();
-    while (it != str.end() && isdigit(*it)) ++it;
-    return !str.empty() && it == str.end();
+	while (it != str.end() && isdigit(*it)) ++it;
+	return !str.empty() && it == str.end();
 }
 
 int Parser::getFollowedStmt(int i) {

@@ -21,5 +21,4 @@ CPPUNIT_TEST_SUITE_REGISTRATION( ParserTest );
 void ParserTest::testParse() {
 	Parser parser;
 	parser.parse(testFile);
-	CPPUNIT_ASSERT (true == false);
 }
