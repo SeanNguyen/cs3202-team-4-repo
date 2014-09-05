@@ -1,45 +1,68 @@
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+#OS junk files
+[Tt]humbs.db
+*.DS_Store
 
-# Precompiled Headers
-*.gch
+#Visual Studio files
+*.[Oo]bj
+*.user
+*.aps
 *.pch
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
-*.log
+*.vspscc
+*.vssscc
+*_i.c
+*_p.c
+*.ncb
 *.suo
-*.opensdf
-*.lastbuildstate
-*.tlog
-*.pdb
+*.tlb
+*.tlh
+*.bak
+*.[Cc]ache
+*.ilk
+*.log
+*.lib
+*.sbr
 *.sdf
-EmptyGeneralTesting/AutoTester/Release/
-EmptyGeneralTesting/SPA/Release/
-EmptyGeneralTesting/UnitTesting/Release/
-EmptyGeneralTesting/IntegrationTesting/Release/
-EmptyGeneralTesting/AutoTester/Debug/
-EmptyGeneralTesting/SPA/Debug/
-EmptyGeneralTesting/UnitTesting/Debug/
-EmptyGeneralTesting/IntegrationTesting/Debug/
-EmptyGeneralTesting/ipch/
-EmptyGeneralTesting/Debug/
+*.opensdf
+*.unsuccessfulbuild
+ipch/
+[Oo]bj/
+[Bb]in
+[Dd]ebug*/
+[Rr]elease*/
+Ankh.NoLoad
+
+#MonoDevelop
+*.pidb
+*.userprefs
+
+#Tooling
+_ReSharper*/
+*.resharper
+[Tt]est[Rr]esult*
+*.sass-cache
+
+#Project files
+[Bb]uild/
+
+#Subversion files
+.svn
+
+# Office Temp Files
+~$*
+
+# vim Temp Files
+*~
+
+#NuGet
+packages/
+*.nupkg
+
+#ncrunch
+*ncrunch*
+*crunch*.local.xml
+
+# visual studio database projects
+*.dbmdl
+
+#Test files
+*.testsettings
