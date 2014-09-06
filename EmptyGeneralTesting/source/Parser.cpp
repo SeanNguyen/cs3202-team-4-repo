@@ -210,14 +210,14 @@ void Parser::readFileData() {
 	// read list of elements, one by one
 	for (int i=0; i<(int)elements.size(); i++) {
 		string element = elements[i];
-		if (element== "procedure") {
+		if (element== KEYWORD_PROCEDURE) {
 			int j=i;
 			TNode procNode = readProcedure(elements, &i);
 			if (j==0) {
 				// set progNode's name = procNode's name
-				progNode = PKB::createNode("program", procNode.getValue());
+				progNode = PKB::createNode(Symbol::Program, procNode.getValue());
 			}
-			progNode.setChild(procNode);
+			progNode.addChild(procNode);
 		}
 	}
 
@@ -234,7 +234,7 @@ TNode Parser::readProcedure(vector<string> elements, int *i) {
 	currentProcessingProc = elements[*i];
 
 	// create a node for procedure
-	TNode procNode = PKB::createNode("procedure", currentProcessingProc);
+	TNode procNode = PKB::createNode(Symbol::Procedure, currentProcessingProc);
 
 	// next element must be open brace
 	string element = elements[++*i];
@@ -242,7 +242,7 @@ TNode Parser::readProcedure(vector<string> elements, int *i) {
 		element = elements[++*i];
 		// create stmtListNode
 		TNode stmtListNode = readStmtList(elements, i);
-		procNode.setChild(stmtListNode);
+		procNode.addChild(stmtListNode);
 	} else {
 		// throw error here
 	}
@@ -250,12 +250,12 @@ TNode Parser::readProcedure(vector<string> elements, int *i) {
 }
 
 TNode Parser::readWhileStmt(vector<string> elements, int *i) {
-	TNode whileNode = PKB::createNode("while", "");
+	TNode whileNode = PKB::createNode(Symbol::While);
 	string element = elements[++*i];
 	// element must be a variable name used by this while stmt
 	// create a node for this var and add it to var list
-	TNode varNode = PKB::createNode("variable", element);
-	whileNode.setChild(varNode);
+	TNode varNode = PKB::createNode(Symbol::Var, element);
+	whileNode.addChild(varNode);
 	varName.push_back(element);
 	pair<int, string> usePair(stmtType.size(), element);
 	uses.push_back(usePair);
@@ -263,20 +263,20 @@ TNode Parser::readWhileStmt(vector<string> elements, int *i) {
 	element = elements[++*i]; //supose to be  {
 
 	TNode stmtListNode = readStmtList(elements, i);
-	whileNode.setChild(stmtListNode);
+	whileNode.addChild(stmtListNode);
 	return whileNode;
 }
 
 TNode Parser::readAssignStmt(vector<string> elements, int *i) {
-	TNode assignNode = PKB::createNode("assignment", "");
+	TNode assignNode = PKB::createNode(Symbol::Assign);
 
 	// the symbol at left side of equal sign ("=") must be var modified by this assignment
 	string element = elements[*i];
 	varName.push_back(element);
 	pair<int, string> modifyPair(stmtType.size(), element);
 	modifies.push_back(modifyPair);
-	TNode varNode = PKB::createNode("variable", element);
-	assignNode.setChild(varNode);
+	TNode varNode = PKB::createNode(Symbol::Var, element);
+	assignNode.addChild(varNode);
 
 	*i+=2;
 	int j;
@@ -287,7 +287,7 @@ TNode Parser::readAssignStmt(vector<string> elements, int *i) {
 	}
 
 	TNode rightSideNode = readRightSideAssign(elements, *i, j-1);
-	assignNode.setChild(rightSideNode);
+	assignNode.addChild(rightSideNode);
 
 	// update *i
 	j=*i;
@@ -300,13 +300,13 @@ TNode Parser::readCallStmt (vector<string> elements, int *i) {
 	depthLv.push_back(depth);
 
 	//insert to stmtTable
-	stmtType.push_back("call");
+	stmtType.push_back(KEYWORD_CALL);
 
 	//create nodes in PKB
-	TNode callNode = PKB::createNode("call", "");
+	TNode callNode = PKB::createNode(Symbol::Calls);
 	string element = elements[++*i];
-	TNode calledProcNode = PKB::createNode ("procedure", element);
-	callNode.setChild(calledProcNode);
+	TNode calledProcNode = PKB::createNode (Symbol::Procedure, element);
+	callNode.addChild(calledProcNode);
 	procName.push_back(element);
 
 	//insert to callTable
@@ -325,20 +325,20 @@ TNode Parser::readIfStmt (vector<string> elements, int *i) {
 	depthLv.push_back(depth);
 
 	//insert to stmt Table
-	stmtType.push_back("if");
+	stmtType.push_back(KEYWORD_IF);
 
 	//create Node in PKB
-	TNode ifNode = PKB::createNode("if", "");
+	TNode ifNode = PKB::createNode(Symbol::If);
 	string element = elements[++*i]; // suppose to be a var
-	TNode varNode = PKB::createNode("variable", element);
-	ifNode.setChild(varNode);
+	TNode varNode = PKB::createNode(Symbol::Var, element);
+	ifNode.addChild(varNode);
 	varName.push_back(element);
 	pair<int, string> usePair(stmtType.size(), element);
 	uses.push_back(usePair);
 
 	//process stmt list
 	TNode stmtListNode = readStmtList(elements, i);
-	ifNode.setChild(stmtListNode);
+	ifNode.addChild(stmtListNode);
 	return ifNode;
 }
 
@@ -351,37 +351,37 @@ TNode Parser::readRightSideAssign(vector<string> elements, int i, int j) {
 		// check if this is a var or a const
 		if (isNumber(element)) {
 			PKB::insertConst(element);
-			TNode constNode = PKB::createNode("constant", element);
+			TNode constNode = PKB::createNode(Symbol::Const, element);
 			return constNode;
 		} else {
 			varName.push_back(element);
 			pair<int, string> usePair(stmtType.size(), element);
 			uses.push_back(usePair);
-			TNode varNode = PKB::createNode("variable", element);
+			TNode varNode = PKB::createNode(Symbol::Var, element);
 			return varNode;
 		}
 	} else {
 		// second element from right side must be plus expression ("+")
 		string element = elements[j-1];
 		if (element=="+") {
-			TNode plusNode = PKB::createNode("expression", "plus");
+			TNode plusNode = PKB::createNode(Symbol::Plus);
 			// recursively process left side of plus expression
 			TNode leftSideNode = readRightSideAssign(elements, i, j-2);
 
-			plusNode.setChild(leftSideNode);
+			plusNode.addChild(leftSideNode);
 
 			// get element at j at check it type
 			element = elements[j];
 			if (isNumber(element)) {
 				PKB::insertConst(element);
-				TNode constNode = PKB::createNode("constant", element);
-				plusNode.setChild(constNode);
+				TNode constNode = PKB::createNode(Symbol::Const, element);
+				plusNode.addChild(constNode);
 			} else {
 				varName.push_back(element);
 				pair<int, string> usePair(stmtType.size(), element);
 				uses.push_back(usePair);
-				TNode varNode = PKB::createNode("variable", element);
-				plusNode.setChild(varNode);
+				TNode varNode = PKB::createNode(Symbol::Var, element);
+				plusNode.addChild(varNode);
 			}
 			return plusNode;
 		} else {
@@ -389,38 +389,38 @@ TNode Parser::readRightSideAssign(vector<string> elements, int i, int j) {
 		}
 	}
 
-	return PKB::createNode("", "");
+	return PKB::createNode();
 }
 
 TNode Parser::readStmtList (vector<string> elements, int *i) {
-	TNode stmtListNode = PKB::createNode("stmtList", "");
+	TNode stmtListNode = PKB::createNode(Symbol::StmtList);
 
 	depth++;
 
 	for (int j=*i; j<(int)elements.size(); j++) {
 		string element = elements[j];
-		if (element=="while") {
-			stmtType.push_back("while:stmtList");
+		if (element==KEYWORD_WHILE) {
+			stmtType.push_back(KEYWORD_WHILE);
 			depthLv.push_back(depth);
 			// again, call the function readWhileStmt to get a whileNode
 			TNode whileNode2 = readWhileStmt(elements, &j);
-			stmtListNode.setChild(whileNode2);
-		} else if (element == "if") {
+			stmtListNode.addChild(whileNode2);
+		} else if (element == KEYWORD_IF) {
 			TNode ifNode = readIfStmt(elements, &j);
-			stmtListNode.setChild(ifNode);
-		} else if (element == "call") {
+			stmtListNode.addChild(ifNode);
+		} else if (element == KEYWORD_CALL) {
 			TNode callNode = readCallStmt(elements, &j);
-			stmtListNode.setChild(callNode);
+			stmtListNode.addChild(callNode);
 		} else if (element=="}") {
 			*i = j;
 			depth--;
 			break;
 		} else {
 			if (j<(int)elements.size()-1 && elements[j+1]=="=") {
-				stmtType.push_back("assignment");
+				stmtType.push_back(KEYWORD_ASSIGNMENT);
 				depthLv.push_back(depth);
 				TNode assignNode = readAssignStmt(elements, &j);
-				stmtListNode.setChild(assignNode);
+				stmtListNode.addChild(assignNode);
 			}
 		}
 	}

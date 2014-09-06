@@ -21,16 +21,16 @@
     <ClCompile Include="source\ParserTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\TestFollow.cpp">
+    <ClCompile Include="source\TestFollow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\TestModify.cpp">
+    <ClCompile Include="source\TestModify.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\TestParentTable.cpp">
+    <ClCompile Include="source\TestParentTable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\TestUseTable.cpp">
+    <ClCompile Include="source\TestUseTable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -38,16 +38,16 @@
     <ClInclude Include="source\ParserTest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\TestFollow.h">
+    <ClInclude Include="source\TestFollow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\TestModify.h">
+    <ClInclude Include="source\TestModify.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\TestParentTable.h">
+    <ClInclude Include="source\TestParentTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\TestUseTable.h">
+    <ClInclude Include="source\TestUseTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
