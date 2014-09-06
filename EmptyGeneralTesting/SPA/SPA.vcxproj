@@ -11,8 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\StudentUnitTest\StudentUnitTest\CallTable.cpp" />
     <ClCompile Include="..\source\AST.cpp" />
+    <ClCompile Include="..\source\CallTable.cpp" />
     <ClCompile Include="..\source\ConstTable.cpp" />
     <ClCompile Include="..\source\Follow.cpp" />
     <ClCompile Include="..\source\Main.cpp" />
@@ -33,8 +33,8 @@
     <ClCompile Include="..\source\VarTable.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\StudentUnitTest\StudentUnitTest\CallTable.h" />
     <ClInclude Include="..\source\AST.h" />
+    <ClInclude Include="..\source\CallTable.h" />
     <ClInclude Include="..\source\Constants.h" />
     <ClInclude Include="..\source\ConstTable.h" />
     <ClInclude Include="..\source\Follow.h" />

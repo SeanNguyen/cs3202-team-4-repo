@@ -68,19 +68,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\StudentUnitTest\StudentUnitTest\TestFollow.cpp" />
-    <ClCompile Include="..\..\..\StudentUnitTest\StudentUnitTest\TestModify.cpp" />
-    <ClCompile Include="..\..\..\StudentUnitTest\StudentUnitTest\TestParentTable.cpp" />
-    <ClCompile Include="..\..\..\StudentUnitTest\StudentUnitTest\TestUseTable.cpp" />
     <ClCompile Include="source\ParserTest.cpp" />
+    <ClCompile Include="source\TestFollow.cpp" />
+    <ClCompile Include="source\TestModify.cpp" />
+    <ClCompile Include="source\TestParentTable.cpp" />
+    <ClCompile Include="source\TestUseTable.cpp" />
     <ClCompile Include="source\UnitTest.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\StudentUnitTest\StudentUnitTest\TestFollow.h" />
-    <ClInclude Include="..\..\..\StudentUnitTest\StudentUnitTest\TestModify.h" />
-    <ClInclude Include="..\..\..\StudentUnitTest\StudentUnitTest\TestParentTable.h" />
-    <ClInclude Include="..\..\..\StudentUnitTest\StudentUnitTest\TestUseTable.h" />
     <ClInclude Include="source\ParserTest.h" />
+    <ClInclude Include="source\TestFollow.h" />
+    <ClInclude Include="source\TestModify.h" />
+    <ClInclude Include="source\TestParentTable.h" />
+    <ClInclude Include="source\TestUseTable.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
