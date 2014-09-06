@@ -12,7 +12,7 @@ class TNode {
 public:
 	TNode();
 	TNode(Symbol _type);
-	TNode(Symbol _type, int _value);
+	TNode(Symbol _type, string _value);
 	Symbol getType();
 	string getValue();
 	int getNumChildren();
