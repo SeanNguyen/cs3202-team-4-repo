@@ -14,12 +14,12 @@ public:
 	TNode(Symbol _type);
 	TNode(Symbol _type, int _value);
 	Symbol getType();
-	int getValue();
+	string getValue();
 	int getNumChildren();
 	TNode & getChildAtIndex(int i);
-	void addChild(TNode child);
+	int addChild(TNode child);
 private:
 	Symbol type;
-	int value;
+	string value;
 	vector<TNode> children;
 };
