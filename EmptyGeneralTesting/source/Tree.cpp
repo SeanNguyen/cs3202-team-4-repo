@@ -4,15 +4,18 @@ Tree::Tree() {
 }
 
 TNode & Tree::createNode() {
-	return TNode node;
+	TNode node;
+	return node;
 }
 
 TNode & Tree::createNode(Symbol type) {
-	return TNode node(type);
+	TNode node(type);
+	return node;
 }
 
 TNode & Tree::createNode(Symbol type, string value) {
-	return TNode node(type, value);
+	TNode node(type, value);
+	return node;
 }
 
 void Tree::setRoot(TNode node) {
