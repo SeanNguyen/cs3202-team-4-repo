@@ -21,9 +21,33 @@
     <ClCompile Include="source\ParserTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\StudentUnitTest\StudentUnitTest\TestFollow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\StudentUnitTest\StudentUnitTest\TestModify.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\StudentUnitTest\StudentUnitTest\TestParentTable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\StudentUnitTest\StudentUnitTest\TestUseTable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\ParserTest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\StudentUnitTest\StudentUnitTest\TestFollow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\StudentUnitTest\StudentUnitTest\TestModify.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\StudentUnitTest\StudentUnitTest\TestParentTable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\StudentUnitTest\StudentUnitTest\TestUseTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
