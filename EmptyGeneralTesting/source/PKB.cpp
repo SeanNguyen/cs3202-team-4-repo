@@ -17,9 +17,18 @@ PKB::PKB()
 }
 
 //////////////////////////////////AST METHODS/////////////////
-TNode PKB::createNode(Symbol type, int value) {
+TNode PKB::createNode() {
+	return astObj.createNode();
+}
+
+TNode PKB::createNode(Symbol type) {
+	return astObj.createNode(type);
+}
+
+TNode PKB::createNode(Symbol type, string value) {
 	return astObj.createNode(type, value);
 }
+
 
 TNode PKB::getASTRoot() {
 	return astObj.getRoot();
@@ -41,8 +50,8 @@ TNode PKB::getNodeOfStmt(int stmt) {
 	return astObj.findNodeOfStmt(stmt);
 }
 
-int PKB::setChild(TNode parent, TNode child) {
-	return astObj.setChild(parent, child);
+int PKB::addChild(TNode parent, TNode child) {
+	return astObj.addChild(parent, child);
 }
 
 /////////////////////CONST TABLE METHODS////////////////////

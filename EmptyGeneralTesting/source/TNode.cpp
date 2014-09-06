@@ -2,15 +2,15 @@
 
 TNode::TNode() {
 	type = Undefined;
-	value = 0;
+	value = "";
 }
 
 TNode::TNode(Symbol _type) {
 	type = _type;
-	value = 0;
+	value = "";
 }
 
-TNode::TNode(Symbol _type, int _value) {
+TNode::TNode(Symbol _type, string _value) {
 	type = _type;
 	value = _value;
 }
@@ -19,7 +19,7 @@ Symbol TNode::getType() {
 	return type;
 }
 
-int TNode::getValue() {
+string TNode::getValue() {
 	return value;
 }
 
@@ -34,6 +34,7 @@ TNode & TNode::getChildAtIndex(int i) {
 	return children[i];
 }
 
-void TNode::addChild(TNode child) {
+int TNode::addChild(TNode child) {
 	children.push_back(child);
+	return children.size()-1;
 }

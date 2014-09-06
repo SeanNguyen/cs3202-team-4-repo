@@ -21,7 +21,11 @@ class PKB
 	PKB();
 
 	//////////////////////////////////AST METHODS/////////////////
-	static TNode createNode(Symbol type, int value);
+	static TNode createNode();
+
+	static TNode createNode(Symbol type);
+
+	static TNode createNode(Symbol type, string value);
 
 	static TNode getASTRoot();
 
@@ -29,7 +33,7 @@ class PKB
 	static TNode getChildAtIndex(TNode node, int index);
 
 	static void setASTRoot(TNode node);
-	static int setChild(TNode parent, TNode child);
+	static int addChild(TNode parent, TNode child);
 
     static TNode getNodeOfStmt(int stmt);
 

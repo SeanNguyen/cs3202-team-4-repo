@@ -54,7 +54,7 @@ bool AST::isSameTree(Tree tree) {
 
 TNode AST::findNodeOfStmt(TNode node, int& count, int index) {
 	// only update *count if encounting those following nodes
-	if (node.getType()=="while" || node.getType()=="assignment") {
+	if (node.getType()==While || node.getType()==Assign) {
 		count++;
 	}
 	// base case
@@ -66,7 +66,7 @@ TNode AST::findNodeOfStmt(TNode node, int& count, int index) {
 			for (int i=0; i<size; i++) {
 				TNode child = node.getChildAtIndex(i);
 				TNode result = findNodeOfStmt(child, count, index);
-				if (result.getType()!="") {
+				if (result.getType()!=Undefined) {
 					return result;
 				}
 			}
@@ -75,6 +75,6 @@ TNode AST::findNodeOfStmt(TNode node, int& count, int index) {
 	}
 
 	// return a null value here
-	TNode throwNode("", "");
+	TNode throwNode;
 	return throwNode;
 }
