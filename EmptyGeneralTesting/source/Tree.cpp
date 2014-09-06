@@ -34,6 +34,6 @@ int Tree::getNumChildren(TNode node) {
 	return node.getNumChildren();
 }
 
-TNode & getChildAtIndex(TNode node, int i) {
+TNode & Tree::getChildAtIndex(TNode node, int i) {
 	return node.getChildAtIndex(i);
 }
