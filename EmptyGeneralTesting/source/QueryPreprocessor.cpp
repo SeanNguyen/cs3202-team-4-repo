@@ -105,10 +105,10 @@ void QueryPreprocessor::preprocessQuery(vector<string> query) {
 		istringstream ss;
 		ss.str(curLine);
 		while (ss >> element) {
-			if (element=="prog_line"	|| element=="assign"	||
-				element=="stmt"			|| element=="variable"	||
-				element=="constant"		|| element=="while"		||
-				element=="if") {
+			if (element==KEYWORD_PROG_LINE	|| element==KEYWORD_ASSIGN	||
+				element==KEYWORD_STMT		|| element==KEYWORD_VAR	||
+				element==KEYWORD_CONST	|| element==KEYWORD_WHILE	||
+				element==KEYWORD_IF) {
 				// find ending sign of this declaration (";");
 				if (curLine.find_first_of(";")!=string::npos) {
 					unsigned index = curLine.find_first_of(";");
@@ -122,7 +122,7 @@ void QueryPreprocessor::preprocessQuery(vector<string> query) {
 					errors.push_back("Syntax error: Found no ending sign for symbol declaration of query " + i);
 					return;
 				}
-			} else if (element=="Select") {
+			} else if (element==KEYWORD_SELECT) {
 				//for (size_t i=0; i<table.getSize(); i++) 
 				//	cout << i << "  "<<table.getType(i)<< " " <<table.getName(i)<<endl;
 				preprocessQueryPart(tree, table, curLine, errors);
@@ -182,16 +182,16 @@ void QueryPreprocessor::preprocessQueryPart(QueryTree& tree, SymbolTable table, 
 	// break string into words
 	vector<string> list = breakStringIntoWords(queryPart);
 	// create root node for Select
-	TNode root("Select", "");
+	TNode root(Select, "");
 	// recognize result and create node for it
-	TNode result("result", "single");
+	TNode result(ResultCls, "single");
 	// check if result is a symbol
 	if (!table.isSymbol(list[1])) {
 		errors.push_back("Error: not a defined symbol: " + list[1]);
 	}
-	TNode resultChild("symbol", list[1]);
-	result.setChild(resultChild);
-	root.setChild(result);
+	TNode resultChild(QuerySymbol, list[1]);
+	result.addChild(resultChild);
+	root.addChild(result);
 
 	// find and preprocess conditions of query
 	for (size_t i=2; i<list.size(); i++) {
@@ -200,7 +200,7 @@ void QueryPreprocessor::preprocessQueryPart(QueryTree& tree, SymbolTable table, 
 			if ((int)index>i) {
 				vector<string> suchThatCondition = subList(list, i, index);
 				TNode suchThat = preprocessSuchThatCondition(suchThatCondition, table, errors);
-				root.setChild(suchThat);
+				root.addChild(suchThat);
 				// go to element after this condition
 				i = index;
 			}
@@ -209,7 +209,7 @@ void QueryPreprocessor::preprocessQueryPart(QueryTree& tree, SymbolTable table, 
 			if ((int)index>i) {
 				vector<string> patternCondition = subList(list, i, index);
 				TNode pattern = preprocessPatternCondition(patternCondition, table, errors);
-				root.setChild(pattern);
+				root.addChild(pattern);
 				// go to element after this condition
 				i = index;
 			}
@@ -225,7 +225,7 @@ void QueryPreprocessor::preprocessQueryPart(QueryTree& tree, SymbolTable table, 
 TNode QueryPreprocessor::preprocessSuchThatCondition(vector<string> list, SymbolTable table, vector<string>& errors) {
 	unsigned size = list.size();
 	// create first node for such that
-	TNode suchThatNode("condition", "suchThat");
+	TNode suchThatNode(SuchThatCls);
 
 /*	for (size_t i=0; i<list.size(); i++) {
 		cout<< list[i] << " ";
@@ -237,27 +237,27 @@ TNode QueryPreprocessor::preprocessSuchThatCondition(vector<string> list, Symbol
 
 	if (relation=="Follows" || relation=="Follows*" ||
 		relation=="Parent"	|| relation=="Parent*") {
-		TNode relationNode("relation", relation);
+			TNode relationNode(SyntaxHelper::getSymbolType(relation));
 
 		// expect correct format for relation
 		if (list[3]=="(" && list[size-1]==")" && list[5]==",") {
 			string arg1 = list[4]; string arg2 = list[6];
 			if (isNumber(arg1)) {
-				TNode arg1Node("number", arg1);
-				relationNode.setChild(arg1Node);
+				TNode arg1Node(Const, arg1);
+				relationNode.addChild(arg1Node);
 			} else if (table.isSymbol(arg1)) {
-				TNode arg1Node("symbol", arg1);
-				relationNode.setChild(arg1Node);
+				TNode arg1Node(QuerySymbol, arg1);
+				relationNode.addChild(arg1Node);
 			} else {
 				errors.push_back("Error: not a defined symbol: ");
 			}
 
 			if (isNumber(arg2)) {
-				TNode arg2Node("number", arg2);
-				relationNode.setChild(arg2Node);
+				TNode arg2Node(Const, arg2);
+				relationNode.addChild(arg2Node);
 			} else if (table.isSymbol(arg2)) {
-				TNode arg2Node("symbol", arg2);
-				relationNode.setChild(arg2Node);
+				TNode arg2Node(QuerySymbol, arg2);
+				relationNode.addChild(arg2Node);
 			} else {
 				errors.push_back("Error: not a defined symbol: " + arg2);
 			}
@@ -266,19 +266,19 @@ TNode QueryPreprocessor::preprocessSuchThatCondition(vector<string> list, Symbol
 			errors.push_back("Syntax error: expect syntax relation(entRef, entRef) for relation: " + relation);
 		}
 
-		suchThatNode.setChild(relationNode);
+		suchThatNode.addChild(relationNode);
 	} else if (relation=="Uses"	|| relation=="Modifies") {
-		TNode relationNode("relation", relation);
+		TNode relationNode(SyntaxHelper::getSymbolType(relation), relation);
 		
 		// expect correct format for relation
 		if (list[3]=="(" && list[size-1]==")" && list[5]==",") {
 			string arg1 = list[4];
 			if (isNumber(arg1)) {
-				TNode arg1Node("number", arg1);
-				relationNode.setChild(arg1Node);
+				TNode arg1Node(Const, arg1);
+				relationNode.addChild(arg1Node);
 			} else if (table.isSymbol(arg1)) {
-				TNode arg1Node("symbol", arg1);
-				relationNode.setChild(arg1Node);
+				TNode arg1Node(QuerySymbol, arg1);
+				relationNode.addChild(arg1Node);
 			} else {
 				errors.push_back("Error: not a defined symbol: " + arg1);
 			}
@@ -288,17 +288,17 @@ TNode QueryPreprocessor::preprocessSuchThatCondition(vector<string> list, Symbol
 				if (table.getType(list[6])!="variable") {
 					errors.push_back("Error: invalid symbol type (" + list[6] + "): expect variable");
 				}
-				TNode arg2Node("symbol", list[6]);
-				relationNode.setChild(arg2Node);
+				TNode arg2Node(Symbol); //NEED FIX , list[6]);
+				//relationNode.addChild(arg2Node);
 			} else if (size==10 && list[6]=="\"" && list[8]=="\"") {
 				// arg2 must be a variable name
-				TNode arg2Node("variable", list[7]);
-				relationNode.setChild(arg2Node);
+				TNode arg2Node(Var, list[7]);
+				relationNode.addChild(arg2Node);
 			} else {
 				errors.push_back("Syntax error: not recognize type of 2nd entity in relation " + relation);
 			}
 
-			suchThatNode.setChild(relationNode);
+			suchThatNode.addChild(relationNode);
 
 		} else {
 			errors.push_back("Syntax error: expect syntax relation(entRef, entRef) for relation: " + relation);
@@ -315,14 +315,14 @@ TNode QueryPreprocessor::preprocessSuchThatCondition(vector<string> list, Symbol
 TNode QueryPreprocessor::preprocessPatternCondition(vector<string> list, SymbolTable table, vector<string>& errors) {
 	unsigned size = list.size();
 	// create first node for pattern
-	TNode pattern("condition", "pattern");
+	TNode pattern(PatternCls);
 
 	// expect second element as name of assignment symbol
 	string assignSymbol = list[1];
 	if (false) {
 	}
-	TNode assignNode("symbol", assignSymbol);
-	pattern.setChild(assignNode);
+	TNode assignNode(QuerySymbol, assignSymbol);
+	pattern.addChild(assignNode);
 
 	// expect bracelets
 	if (list[2]!="(" || list[size-1]!=")") {
@@ -335,22 +335,22 @@ TNode QueryPreprocessor::preprocessPatternCondition(vector<string> list, SymbolT
 	if ((int)index==4) {
 		// expect underline or variable symbol in argument 1.
 		if (list[3]=="_") {
-			TNode arg1Node("underline", "");
-			pattern.setChild(arg1Node);
+			TNode arg1Node(Underline);
+			pattern.addChild(arg1Node);
 		} else {
 			if (table.getType(list[3])!= "variable") {
 				errors.push_back("Error: unable to find symbol: " + list[3] + " in pattern");
 			} else {
-				TNode arg1Node("symbol", list[3]);
-				pattern.setChild(arg1Node);
+				TNode arg1Node(QuerySymbol, list[3]);
+				pattern.addChild(arg1Node);
 			}
 		}
 	} else if ((int)index==6) {
 		// expect name of variable
 		if (list[3]!="\"" || list[5]!="\"") {
 		}
-		TNode arg1Node("variable", list[4]);
-		pattern.setChild(arg1Node);
+		TNode arg1Node(Var, list[4]);
+		pattern.addChild(arg1Node);
 	}
 
 	// process argument 2 of pattern
@@ -360,8 +360,8 @@ TNode QueryPreprocessor::preprocessPatternCondition(vector<string> list, SymbolT
 		// expect underline
 		if (list[index+1]!="_") {
 		}
-		TNode arg2Node("underline", "");
-		pattern.setChild(arg2Node);
+		TNode arg2Node(Underline);
+		pattern.addChild(arg2Node);
 	} else if ((int)(size-index)==7) {
 		// expect one variable name
 		if (list[index+1]!="_" || list[index+2]!="\"" ||
@@ -369,11 +369,11 @@ TNode QueryPreprocessor::preprocessPatternCondition(vector<string> list, SymbolT
 		}
 		string arg2 = list[index+3]; 
 		if (isNumber(arg2)) {
-			TNode arg2Node("constant", arg2);
-			pattern.setChild(arg2Node);
+			TNode arg2Node(Const, arg2);
+			pattern.addChild(arg2Node);
 		} else {
-			TNode arg2Node("variable", arg2);
-			pattern.setChild(arg2Node);
+			TNode arg2Node(Var, arg2);
+			pattern.addChild(arg2Node);
 		}
 	}  else if ((int)(size-index)==9) {
 		if (list[index+1]!="_" || list[index+2]!="\"" ||
@@ -381,27 +381,27 @@ TNode QueryPreprocessor::preprocessPatternCondition(vector<string> list, SymbolT
 		}
 		if (list[index+4]!="+") {
 		}
-		TNode arg2Node("expression", "plus");
+		TNode arg2Node(Plus);
 		
 		string factor1 = list[index+3];
 		string factor2 = list[index+5];
 
 		if (isNumber(factor1)) {
-			TNode factor1Node("constant", factor1);
-			arg2Node.setChild(factor1Node);
+			TNode factor1Node(Const, factor1);
+			arg2Node.addChild(factor1Node);
 		} else {
-			TNode factor1Node("variable", factor1);
-			arg2Node.setChild(factor1Node);
+			TNode factor1Node(Var, factor1);
+			arg2Node.addChild(factor1Node);
 		}
 
 		if (isNumber(factor2)) {
-			TNode factor2Node("constant", factor2);
-			arg2Node.setChild(factor2Node);
+			TNode factor2Node(Const, factor2);
+			arg2Node.addChild(factor2Node);
 		} else {
-			TNode factor2Node("variable", factor2);
-			arg2Node.setChild(factor2Node);
+			TNode factor2Node(Var, factor2);
+			arg2Node.addChild(factor2Node);
 		}
-		pattern.setChild(arg2Node);
+		pattern.addChild(arg2Node);
 	} else {
 	} 
 

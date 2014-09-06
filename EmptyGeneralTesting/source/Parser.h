@@ -9,12 +9,6 @@
 
 using namespace std;
 
-const string KEYWORD_PROGRAM = "program";
-const string KEYWORD_PROCEDURE = "procedure";
-const string KEYWORD_CALL = "call";
-const string KEYWORD_IF = "if";
-const string KEYWORD_WHILE = "while";
-const string KEYWORD_ASSIGNMENT = "assignment";
 
 class Parser
 {

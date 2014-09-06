@@ -27,6 +27,7 @@
     <ClCompile Include="..\source\QueryTree.cpp" />
     <ClCompile Include="..\source\StatTable.cpp" />
     <ClCompile Include="..\source\SymbolTable.cpp" />
+    <ClCompile Include="..\source\SyntaxHelper.cpp" />
     <ClCompile Include="..\source\TNode.cpp" />
     <ClCompile Include="..\source\Tree.cpp" />
     <ClCompile Include="..\source\UseTable.cpp" />
@@ -50,6 +51,7 @@
     <ClInclude Include="..\source\resource.h" />
     <ClInclude Include="..\source\StatTable.h" />
     <ClInclude Include="..\source\SymbolTable.h" />
+    <ClInclude Include="..\source\SyntaxHelper.h" />
     <ClInclude Include="..\source\targetver.h" />
     <ClInclude Include="..\source\TNode.h" />
     <ClInclude Include="..\source\Tree.h" />

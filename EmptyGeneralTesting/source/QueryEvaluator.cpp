@@ -127,1035 +127,239 @@ void QueryEvaluator::checkSuchThatCondition(TNode suchThatNode, vector<string> v
 	// at this point we must check if result list has the value saved in value list or not
 
 	// get root node
-	TNode root = tree.getRoot();
+	TNode & root = tree.getRoot();
 
 	// get relationship node under suchThat node
-	TNode relationNode = suchThatNode.getChildAtIndex(0); 
-	string relation = relationNode.getValue();
-	
-	// from here, there are following cases:
-	if (relation=="Follows") {
-		handleFollowsRelationship(relationNode, suchThatNode, values, result, check, childIndex	);
-	} else if (relation=="Follows*") {
-		handleFollowsSRelationship(relationNode, suchThatNode, values, result, check, childIndex);
-	} else if (relation=="Parent") {
-		handleParentRelationship(relationNode, suchThatNode, values, result, check, childIndex);
+	TNode & relationNode = suchThatNode.getChildAtIndex(0);  
+
+	handleRelationNode(relationNode, values, result, check, childIndex);
+}
+
+void QueryEvaluator::handleRelationNode(TNode & relationNode, vector<string> values, vector<string>& result, bool check, int childIndex) {
+	// get 2 argument nodes under relationNode
+	TNode & arg1Node = relationNode.getChildAtIndex(0);
+	TNode & arg2Node = relationNode.getChildAtIndex(1);
+	Symbol arg1Type = arg1Node.getType();
+	Symbol arg2Type = arg2Node.getType();
+	Symbol relation = relationNode.getType();
+	string arg1Name = arg1Node.getValue();
+	string arg2Name = arg2Node.getValue();
+
+	if (arg1Type == Const && arg2Type == Const) {
+		// check with query PKB::is*Relation*(arg1Value, arg2Value) 
+		check = isRelation(relation, arg1Name, arg2Name);	
+		//call back to checkQueryCondition
+		checkQueryCondition(childIndex++, values, result, check);
 		return;
-	} else if (relation=="Parent*") {
-		handleParentSRelationship(relationNode, suchThatNode, values, result, check, childIndex);
-	} else if (relation=="Modifies") {
-		handleModifiesRelationship(relationNode, suchThatNode, values, result, check, childIndex);
-	} else if (relation=="Uses") {
-		handleUsesRelationship(relationNode, suchThatNode, values, result, check, childIndex);
 	}
-}
-
-void QueryEvaluator::handleFollowsRelationship(TNode relationNode, TNode suchThatNode, vector<string> values, vector<string>& result, bool check, int childIndex) {
-// get child nodes
-		TNode arg1Node = relationNode.getChildAtIndex(0);
-		string arg1Type = arg1Node.getType();
-		string arg1Value = arg1Node.getValue();
-		TNode arg2Node = relationNode.getChildAtIndex(1);
-		string arg2Type = arg2Node.getType();
-		string arg2Value = arg2Node.getValue();
-		int arg1Num; int arg2Num;
-
-		// there are following cases:
-
-		// IF ARGUMENT 1 OF RELATIONSHIP FOLLOWS IS A NUMBER, eg Follows(1, 2) or Follows (1, s)
-		if (arg1Type=="number") {
-			arg1Num = atoi(arg1Value.c_str());
-			// IF ARGUMENT 2 IS A NUMBER
-			if (arg2Type=="number") {
-				arg2Num = atoi(arg2Value.c_str());
-				if (!PKB::isFollows(arg1Num, arg2Num)) {
-					check = false;
-					// RETURN TO THE PREVIOUS METHOD TO UPDATE THAT THIS VALUE LIST DOES NOT SATISFY THE CONDITIONS
-					checkQueryCondition(childIndex+1, values, result, check);
-				} 
-				// RETURN TO THE PREVIOUS METHOD TO CONTINUE WITH NEXT CONDITION (by adding the increment)
-				checkQueryCondition(childIndex+1, values, result, check);
-			}
-
-			// IF ARGUMENT 2 IS A SYMBOL
-			if (arg2Type=="symbol") {
-				
-				// get values of this symbol from vector "values"
-				int index = table.getIndex(arg2Value);
-				// IF WE ALREADY STORE A VALUE OF ARGUMENT 2 
-				// WHEN PROCESSING A PREVIOUS CONDITION
-				if (values[index]!="-1") {
-					arg2Num = atoi(values[index].c_str());
-					if (!PKB::isFollows(arg1Num, arg2Num)) {
-						check = false;
-						checkQueryCondition(childIndex+1, values, result, check);
-						return;
-					} 
-					checkQueryCondition(childIndex+1, values, result, check);
-				}
-				// IF NO VALUE OF ARGUMENT 2 WAS STORED
-				else {
-					arg2Num = PKB::getFollowingStmt(arg1Num);
-					if (arg2Num==-1) {
-						check = false;
-						checkQueryCondition(childIndex+1, values, result, check);
-						return;
-					}
-					// update values
-					if (!isDeclaredType(intToString(arg2Num), arg2Value, arg2Type)) {
-						check = false;
-						checkQueryCondition(childIndex+1, values, result, check);
-						return;
-					}
-
-					values[index] = intToString(arg2Num);
-					checkQueryCondition(childIndex+1, values, result, check);
-				}
-			}
-		}
-		// IF ARGUMENT 1 IS A SYMBOL, eg Follows(s, 12)
-		else if (arg1Type=="symbol"){
-			// get values of this symbol from vector "values"
-			int index = table.getIndex(arg1Value);
-			// IF THERE WAS STORED VALUE OF ARGUMENT 1
-			if (values[index]!="-1") {
-			arg1Num = atoi(values[index].c_str());
-
-				// IF ARGUMENT 2 IS A NUMBER 
-				if (arg2Type=="number") {
-					arg2Num = atoi(arg2Value.c_str());
-					if (!PKB::isFollows(arg1Num, arg2Num)) {
-						check = false;
-						checkQueryCondition(childIndex+1, values, result, check);
-					}
-					checkQueryCondition(childIndex+1, values, result, check);
-				} 
-				// IF ARGUMENT 2 IS A SYMBOL
-				else {
-					int index2 = table.getIndex(arg2Value);
-					// if arg2 has value stored
-					if (values[index2]!="-1") {
-						arg2Num = atoi(values[index2].c_str());
-						if (!PKB::isFollows(arg1Num, arg2Num)) {
-							check = false;
-							checkQueryCondition(childIndex+1, values, result, check);
-						}
-						checkQueryCondition(childIndex+1, values, result, check);
-					}
-					// if arg2 has no value yet
-					else {
-						int arg2Num = PKB::getFollowingStmt(arg1Num);
-						if (arg2Num==-1) {
-							check = false;
-							checkQueryCondition(childIndex+1, values, result, check);
-							return;
-						}
-
-						if (!isDeclaredType(intToString(arg2Num), arg2Value, arg2Type)) {
-							check = false;
-							checkQueryCondition(childIndex+1, values, result, check);
-							return;
-						}
-
-						values[index2] = intToString(arg2Num);
-						checkQueryCondition(childIndex+1, values, result, check);
-					}
-				}
-			} 
-			// IF THERE IS NO VALUE STORED FOR ARGUMENT 1
-			else {
-				// IF ARGUMENT 2 IS A NUMBER
-				if (arg2Type=="number") {
-					arg2Num = atoi(arg2Value.c_str());
-					arg1Num = PKB::getFollowedStmt(arg2Num);
-					if (arg1Num==-1) {
-						check = false;
-						checkQueryCondition(childIndex+1, values, result, check);
-						return;
-					}
-
-					if (!isDeclaredType(intToString(arg1Num), arg1Value, table.getType(arg1Value))) {
-						check = false;
-						checkQueryCondition(childIndex+1, values, result, check);
-						return;
-					}
-
-					// save value of argument 1 to values list and call checkQueryCondition
-					values[index] = intToString(arg1Num);
-					checkQueryCondition(childIndex+1, values, result, check);
-				} else {
-					int index2 = table.getIndex(arg2Value);
-					// IF THERE IS VALUE STORED FOR ARGUMENT 2
-					if (values[index2]!="-1") {
-						arg2Num = atoi(values[index2].c_str());
-						arg1Num = PKB::getFollowedStmt(arg2Num);
-						if (arg1Num==-1) {
-							check = false;
-							checkQueryCondition(childIndex+1, values, result, check);
-							return;
-						}
-
-						if (!isDeclaredType(intToString(arg1Num), arg1Value, arg1Type)) {
-							check = false;
-							checkQueryCondition(childIndex+1, values, result, check);
-							return;
-						}
-
-						// save value of argument 1 to values list and call checkQueryCondition
-						values[index] = intToString(arg1Num);
-						checkQueryCondition(childIndex+1, values, result, check);
-					} else {
-						// Brute force method
-						vector<int> arg1List;
-						arg1Type = table.getType(arg1Value);
-						if (arg1Type=="prog_line" || arg1Type=="stmt") {
-							// retrieve all statements 
-							for (int i=0; i<PKB::getStatTableSize(); i++) {
-								arg1List.push_back(i+1);
-							}
-						} else if (arg1Type=="assign") {
-							arg1List = PKB::getStmtIndex("assignment");
-						} else if (arg1Type=="while") {
-							arg1List = PKB::getStmtIndex("while:stmtList");
-							
-						}
-						// start checking with all values in arg1List
-						for (size_t i=0; i<arg1List.size(); i++) {
-							// save value of arg1 to vector "values"
-							values[index] = intToString(arg1List[i]);
-							// recursively call this method to continue checking arg2
-							checkSuchThatCondition(suchThatNode, values, result, check, childIndex);
-							/* REMARK
-							 * Recursion here is not necessary, however. We can also check arg2Num 
-							 * by calling PKB.getFollowingStmt(arg1Num). But I want to set this as an example
-							 * of how to deal with "brute force" in harder cases: Follows*, Parent*, Modifies and Uses.
-							 * Those relationship will need recursive to solve.
-							 */
-						}
-					}
-				}
-			}
-		}	
-}
-
-void QueryEvaluator::handleFollowsSRelationship (TNode relationNode, TNode suchThatNode, vector<string> values, vector<string>& result, bool check, int childIndex) {
-	TNode arg1Node = relationNode.getChildAtIndex(0);
-		string arg1Type = arg1Node.getType();
-		string arg1Value = arg1Node.getValue();
-		TNode arg2Node = relationNode.getChildAtIndex(1);
-		string arg2Type = arg2Node.getType();
-		string arg2Value = arg2Node.getValue();
-		int arg1Num; int arg2Num;
-
-		// there are following cases:
-
-		// IF ARGUMENT 1 OF RELATIONSHIP FOLLOWS IS A NUMBER, eg Follows(1, 2) or Follows (1, s)
-		if (arg1Type=="number") {
-			arg1Num = atoi(arg1Value.c_str());
-			// IF ARGUMENT 2 IS A NUMBER
-			if (arg2Type=="number") {
-				arg2Num = atoi(arg2Value.c_str());
-				if (!PKB::isFollowsStar(arg1Num, arg2Num)) {
-					check = false;
-					// RETURN TO THE PREVIOUS METHOD TO UPDATE THAT THIS VALUE LIST DOES NOT SATISFY THE CONDITIONS
-					checkQueryCondition(childIndex+1, values, result, check);
-				} 
-				// RETURN TO THE PREVIOUS METHOD TO CONTINUE WITH NEXT CONDITION (by adding the increment)
-				checkQueryCondition(childIndex+1, values, result, check);
-			}
-
-			// IF ARGUMENT 2 IS A SYMBOL
-			if (arg2Type=="symbol") {
-				
-				// get values of this symbol from vector "values"
-				int index2 = table.getIndex(arg2Value);
-				// IF WE ALREADY STORE A VALUE OF ARGUMENT 2 
-				// WHEN PROCESSING A PREVIOUS CONDITION
-				if (values[index2]!="-1") {
-					arg2Num = atoi(values[index2].c_str());
-					if (!PKB::isFollowsStar(arg1Num, arg2Num)) {
-						check = false;
-						checkQueryCondition(childIndex+1, values, result, check);
-						return;
-					} 
-					checkQueryCondition(childIndex+1, values, result, check);
-				}
-				// IF NO VALUE OF ARGUMENT 2 WAS STORED
-				else {
-					vector<int> arg2List = PKB::getFollowingStarStmt(arg1Num);
-					if (arg2List.size()==0 || arg2List[0]==-1) {
-						check = false;
-						checkQueryCondition(childIndex+1, values, result, check);
-						return;
-					}
-					// update values
-					for (size_t i=0; i< arg2List.size(); i++) {
-						if (isDeclaredType(intToString(arg2List[i]), arg2Value, arg2Type)) {
-							values[index2] = intToString(arg2List[i]);
-							checkQueryCondition(childIndex+1, values, result, check);
-						}
-					}					
-				}
-			}
-		}
-		// IF ARGUMENT 1 IS A SYMBOL, eg Follows*(s, 12)
-		else if (arg1Type=="symbol"){
-			// get values of this symbol from vector "values"
-			int index = table.getIndex(arg1Value);
-			// IF THERE WAS STORED VALUE OF ARGUMENT 1
-			if (values[index]!="-1") {
-			arg1Num = atoi(values[index].c_str());
-
-				// IF ARGUMENT 2 IS A NUMBER 
-				if (arg2Type=="number") {
-					arg2Num = atoi(arg2Value.c_str());
-					if (!PKB::isFollowsStar(arg1Num, arg2Num)) {
-						check = false;
-						checkQueryCondition(childIndex+1, values, result, check);
-					}
-					checkQueryCondition(childIndex+1, values, result, check);
-				} 
-				// IF ARGUMENT 2 IS A SYMBOL
-				else {
-					int index2 = table.getIndex(arg2Value);
-					// if arg2 has value stored
-					if (values[index2]!="-1") {
-						arg2Num = atoi(values[index2].c_str());
-						if (!PKB::isFollowsStar(arg1Num, arg2Num)) {
-							check = false;
-							checkQueryCondition(childIndex+1, values, result, check);
-						}
-						checkQueryCondition(childIndex+1, values, result, check);
-					}
-					// if arg2 has no value yet
-					else {
-						vector<int> arg2List = PKB::getFollowingStarStmt(arg1Num);
-						if (arg2List.size()==0 || arg2List[0]==-1) {
-							check = false;
-							checkQueryCondition(childIndex+1, values, result, check);
-							return;
-						}
-						for (size_t i=0; i<arg2List.size(); i++) {
-							if (isDeclaredType(intToString(arg2List[i]), arg2Value, arg2Type)) {
-								values[index2] = intToString(arg2List[i]);
-								checkQueryCondition(childIndex+1, values, result, check);
-							}
-						}			
-					}
-				}
-			} 
-			// IF THERE IS NO VALUE STORED FOR ARGUMENT 1
-			else {
-				// IF ARGUMENT 2 IS A NUMBER
-				if (arg2Type=="number") {
-					arg2Num = atoi(arg2Value.c_str());
-					vector<int> arg1List = PKB::getFollowedStarStmt(arg2Num);
-					if (arg1List.size()==0 || arg1List[0] ==-1) {
-						check = false;
-						checkQueryCondition(childIndex+1, values, result, check);
-						return;
-					}
-					// save value of argument 1 to values list and call checkQueryCondition
-					for (size_t i=0; i<arg1List.size(); i++) {		
-						if (isDeclaredType(intToString(arg1List[i]), arg1Value, arg1Type)) {
-							values[index] = intToString(arg1List[i]);
-							checkQueryCondition(childIndex+1, values, result, check);
-						}
-					}
-				} else {
-					int index2 = table.getIndex(arg2Value);
-					// IF THERE IS VALUE STORED FOR ARGUMENT 2
-					if (values[index2]!="-1") {
-						arg2Num = atoi(values[index2].c_str());
-						vector<int> arg1List = PKB::getFollowedStarStmt(arg2Num);
-						if (arg1List.size()==0 || arg1List[0] ==-1) {
-							check = false;
-							checkQueryCondition(childIndex+1, values, result, check);
-							return;
-						}
-						// save value of argument 1 to values list and call checkQueryCondition
-						for (size_t i=0; i<arg1List.size(); i++) {
-							if (isDeclaredType(intToString(arg1List[i]), arg1Value, arg1Type)) {
-								values[index] = intToString(arg1List[i]);
-								checkQueryCondition(childIndex+1, values, result, check);
-							}
-						}
-					} else {
-						// Brute force method
-						vector<int> arg1List;
-						arg1Type = table.getType(arg1Value);
-						if (arg1Type=="prog_line" || arg1Type=="stmt") {
-							// retrieve all statements 
-							for (int i=0; i<PKB::getStatTableSize(); i++) {
-								arg1List.push_back(i+1);
-							}
-						} else if (arg1Type=="assign") {
-							arg1List = PKB::getStmtIndex("assignment");
-						} else if (arg1Type=="while") {
-							arg1List = PKB::getStmtIndex("while:stmtList");
-							
-						}
-						// start checking with all values in arg1List
-						for (size_t i=0; i<arg1List.size(); i++) {
-							// save value of arg1 to vector "values"
-							values[index] = intToString(arg1List[i]);
-							// recursively call this method to continue checking arg2
-							checkSuchThatCondition(suchThatNode, values, result, check, childIndex);
-							/* REMARK
-							 * Recursion here is not necessary, however. We can also check arg2Num 
-							 * by calling PKB.getFollowingStmt(arg1Num). But I want to set this as an example
-							 * of how to deal with "brute force" in harder cases: Follows*, Parent*, Modifies and Uses.
-							 * Those relationship will need recursive to solve.
-							 */
-						}
-					}
-				}
-			}
-		}	
-}
-
-void QueryEvaluator::handleParentRelationship (TNode relationNode, TNode suchThatNode, vector<string> values, vector<string>& result, bool check, int childIndex) {
-	TNode arg1Node = relationNode.getChildAtIndex(0);
-	string arg1Type = arg1Node.getType();
-	string arg1Value = arg1Node.getValue();
-	TNode arg2Node = relationNode.getChildAtIndex(1);
-	string arg2Type = arg2Node.getType();
-	string arg2Value = arg2Node.getValue();
-	int arg1Num; int arg2Num;
-
-	// IF ARGUMENT 1 OF RELATIONSHIP PARENT IS A NUMBER, eg Follows(1, 2) or Follows (1, s)
-	if (arg1Type=="number") {
-		arg1Num = atoi(arg1Value.c_str());
-		// IF ARGUMENT 2 IS A NUMBER
-		if (arg2Type=="number") {
-			arg2Num = atoi(arg2Value.c_str());
-			if (!PKB::isParent(arg1Num, arg2Num)) {
-				check = false;
-				// RETURN TO THE PREVIOUS METHOD TO UPDATE THAT THIS VALUE LIST DOES NOT SATISFY THE CONDITIONS
-				checkQueryCondition(childIndex+1, values, result, check);
-			} 
-			// RETURN TO THE PREVIOUS METHOD TO CONTINUE WITH NEXT CONDITION (by adding the increment)
-			checkQueryCondition(childIndex+1, values, result, check);
-		}
-
-		// IF ARGUMENT 2 IS A SYMBOL
-		if (arg2Type=="symbol") {
-			// get values of this symbol from vector "values"
-			int index = table.getIndex(arg2Value);
-			// IF WE ALREADY STORE A VALUE OF ARGUMENT 2 
-			// WHEN PROCESSING A PREVIOUS CONDITION
-			if (values[index]!="-1") {
-				arg2Num = atoi(values[index].c_str());
-				if (!PKB::isParent(arg1Num, arg2Num)) {
-					check = false;
-					checkQueryCondition(childIndex+1, values, result, check);
-					return;
-				} 
-				checkQueryCondition(childIndex+1, values, result, check);
-			}
-			// IF NO VALUE OF ARGUMENT 2 WAS STORED
-			else {
-				// How to pass infor to value as a list of int
-
-				vector<int> arg2List = PKB::getChildStmt(arg1Num);
-				if (arg2List.size()==0 || arg2List[0] == -1) {
-					check = false;
-					checkQueryCondition(childIndex+1, values, result, check);
-					return;
-				}
-				// update values
-				for (size_t i=0; i<arg2List.size(); i++) {
-					if (isDeclaredType(intToString(arg2List[i]), arg2Value, arg2Type)) {
-						values[index] = intToString(arg2List[i]);
-						checkQueryCondition(childIndex+1, values, result, check);	
-					}
-				}
-			}
-		}
-	}
-	// IF ARGUMENT 1 IS A SYMBOL, eg Follows(s, 12)
-	else if (arg1Type=="symbol"){
-		// get values of this symbol from vector "values"
-		int index = table.getIndex(arg1Value);
-		// IF THERE WAS STORED VALUE OF ARGUMENT 1
-		if (values[index]!="-1") {
-			arg1Num = atoi(values[index].c_str());
-
-			// IF ARGUMENT 2 IS A NUMBER 
-			if (arg2Type=="number") {
-				arg2Num = atoi(arg2Value.c_str());
-				if (!PKB::isParent(arg1Num, arg2Num)) {
-					check = false;
-					checkQueryCondition(childIndex+1, values, result, check);
-				}
-				checkQueryCondition(childIndex+1, values, result, check);
-			} 
-			// IF ARGUMENT 2 IS A SYMBOL
-			else {
-				int index2 = table.getIndex(arg2Value);
-				// if arg2 has value stored
-				if (values[index2]!="-1") {
-					arg2Num = atoi(values[index2].c_str());
-					if (!PKB::isParent(arg1Num, arg2Num)) {
-						check = false;
-						checkQueryCondition(childIndex+1, values, result, check);
-					}
-					checkQueryCondition(childIndex+1, values, result, check);
-				} else { // if arg2 has no value yet
-					/* REFER TO PREVIOUS CASE: arg1 is number and arg2 has no value */
-					vector<int> arg2List = PKB::getChildStmt(arg1Num);
-					if (arg2List.size()==0 || arg2List[0] == -1) {
-						check = false;
-						checkQueryCondition(childIndex+1, values, result, check);
-						return;
-					}
-					// update values
-					for (size_t i=0; i<arg2List.size(); i++) {
-						if (isDeclaredType(intToString(arg2List[i]), arg2Value, arg2Type)) {
-							values[index2] = intToString(arg2List[i]);
-							checkQueryCondition(childIndex+1, values, result, check);	
-						}
-					}
-				}
-			}
-		} 
-		// IF THERE IS NO VALUE STORED FOR ARGUMENT 1
-		else {
-			// IF ARGUMENT 2 IS A NUMBER
-			if (arg2Type=="number") {
-				arg2Num = atoi(arg2Value.c_str());
-				arg1Num = PKB::getParentStmt(arg2Num);
-				if (arg1Num==-1) {
-					check = false;
-					checkQueryCondition(childIndex+1, values, result, check);
-					return;
-				}
-				
-				if (!isDeclaredType(intToString(arg1Num), arg1Value, arg1Type)) {
-					check = false;
-					checkQueryCondition(childIndex+1, values, result, check);
-					return;
-				}
-				// save value of argument 1 to values list and call checkQueryCondition
-				values[index] = intToString(arg1Num);
-				checkQueryCondition(childIndex+1, values, result, check);
-			} else {
-				int index2 = table.getIndex(arg2Value);
-				// IF THERE IS VALUE STORED FOR ARGUMENT 2
-				if (values[index2]!="-1") {
-					arg2Num = atoi(values[index2].c_str());
-					arg1Num = PKB::getParentStmt(arg2Num);
-					if (arg1Num==-1) {
-						check = false;
-						checkQueryCondition(childIndex+1, values, result, check);
-						return;
-					}
-
-					if (!isDeclaredType(intToString(arg1Num), arg1Value, arg1Type)) {
-						check = false;
-						checkQueryCondition(childIndex+1, values, result, check);
-						return;
-					}
-
-					// save value of argument 1 to values list and call checkQueryCondition
-					values[index] = intToString(arg1Num);
-					checkQueryCondition(childIndex+1, values, result, check);
-				} else {
-
-					// Brute force method
-					vector<int> arg1List;
-					arg1Type = table.getType(arg1Value);
-					if (arg1Type=="prog_line" || arg1Type=="stmt") {
-						// retrieve all statements 
-						for (int i=0; i<PKB::getStatTableSize(); i++) {
-							arg1List.push_back(i+1);
-						}
-					} else if (arg1Type=="assign") {
-						arg1List = PKB::getStmtIndex("assignment");
-					} else if (arg1Type=="while") {
-						arg1List = PKB::getStmtIndex("while:stmtList");
-					}
-
-					// start checking with all values in arg1List
-					for (size_t i=0; i<arg1List.size(); i++) {
-						// save value of arg1 to vector "values"
-						values[index] = intToString(arg1List[i]);
-						// recursively call this method to continue checking arg2
-						checkSuchThatCondition(suchThatNode, values, result, check, childIndex);
-						/* REMARK
-						* Recursion here is not necessary, however. We can also check arg2Num 
-						* by calling PKB.getFollowingStmt(arg1Num). But I want to set this as an example
-						* of how to deal with "brute force" in harder cases: Follows*, Parent*, Modifies and Uses.
-						* Those relationship will need recursive to solve.
-						*/
-					}
-				}
-			}
-		}
-	}
-}
-
-void QueryEvaluator::handleParentSRelationship (TNode relationNode, TNode suchThatNode, vector<string> values, vector<string>& result, bool check, int childIndex) {
-	TNode arg1Node = relationNode.getChildAtIndex(0);
-	string arg1Type = arg1Node.getType();
-	string arg1Value = arg1Node.getValue();
-	TNode arg2Node = relationNode.getChildAtIndex(1);
-	string arg2Type = arg2Node.getType();
-	string arg2Value = arg2Node.getValue();
-	int arg1Num; int arg2Num;
-
-	// IF ARGUMENT 1 OF RELATIONSHIP PARENT IS A NUMBER, eg Follows(1, 2) or Follows (1, s)
-	if (arg1Type=="number") {
-		arg1Num = atoi(arg1Value.c_str());
-		// IF ARGUMENT 2 IS A NUMBER
-		if (arg2Type=="number") {
-			arg2Num = atoi(arg2Value.c_str());
-			if (!PKB::isParentStar(arg1Num, arg2Num)) {
-				check = false;
-				// RETURN TO THE PREVIOUS METHOD TO UPDATE THAT THIS VALUE LIST DOES NOT SATISFY THE CONDITIONS
-				checkQueryCondition(childIndex+1, values, result, check);
-			} 
-			// RETURN TO THE PREVIOUS METHOD TO CONTINUE WITH NEXT CONDITION (by adding the increment)
-			checkQueryCondition(childIndex+1, values, result, check);
-		}
-
-		// IF ARGUMENT 2 IS A SYMBOL
-		if (arg2Type=="symbol") {
-			// get values of this symbol from vector "values"
-			int index2 = table.getIndex(arg2Value);
-			// IF WE ALREADY STORE A VALUE OF ARGUMENT 2 
-			// WHEN PROCESSING A PREVIOUS CONDITION
-			if (values[index2]!="-1") {
-				arg2Num = atoi(values[index2].c_str());
-				if (!PKB::isParentStar(arg1Num, arg2Num)) {
-					check = false;
-					checkQueryCondition(childIndex+1, values, result, check);
-					return;
-				} 
-				checkQueryCondition(childIndex+1, values, result, check);
-			}
-			// IF NO VALUE OF ARGUMENT 2 WAS STORED
-			else {
-				// How to pass infor to value as a list of int
-				vector<int> arg2List = PKB::getChildStarStmt(arg1Num);
-				if (arg2List.size()==0 || arg2List[0]==-1) {
-					check = false;
-					checkQueryCondition(childIndex+1, values, result, check);
-					return;
-				}
-				// update values
-				for (size_t i=0; i<arg2List.size(); i++) {
-					if (isDeclaredType(intToString(arg2List[i]), arg2Value, arg2Type)) {
-						values[index2] = intToString(arg2List[i]);
-						checkQueryCondition(childIndex+1, values, result, check);	
-					}
-				}
-			}
-		}
-	}
-	// IF ARGUMENT 1 IS A SYMBOL, eg Follows(s, 12)
-	else if (arg1Type=="symbol"){
-		// get values of this symbol from vector "values"
-		int index = table.getIndex(arg1Value);
-		// IF THERE WAS STORED VALUE OF ARGUMENT 1
-		if (values[index]!="-1") {
-			arg1Num = atoi(values[index].c_str());
-
-			// IF ARGUMENT 2 IS A NUMBER 
-			if (arg2Type=="number") {
-				arg2Num = atoi(arg2Value.c_str());
-				if (!PKB::isParentStar(arg1Num, arg2Num)) {
-					check = false;
-					checkQueryCondition(childIndex+1, values, result, check);
-				}
-				checkQueryCondition(childIndex+1, values, result, check);
-			} 
-			// IF ARGUMENT 2 IS A SYMBOL
-			else {
-				int index2 = table.getIndex(arg2Value);
-				// if arg2 has value stored
-				if (values[index2]!="-1") {
-					arg2Num = atoi(values[index2].c_str());
-					if (!PKB::isParentStar(arg1Num, arg2Num)) {
-						check = false;
-						checkQueryCondition(childIndex+1, values, result, check);
-					}
-					checkQueryCondition(childIndex+1, values, result, check);
-				}
-				// if arg2 has no value yet
-				else {
-					//how to pass info to value as a list
-					vector<int> arg2List = PKB::getChildStarStmt(arg1Num);
-					if (arg2List.size()==0 || arg2List[0]==-1) {
-						check = false;
-						checkQueryCondition(childIndex+1, values, result, check);
-						return;
-					}
-					// update values
-					for (size_t i=0; i<arg2List.size(); i++) {
-						if (isDeclaredType(intToString(arg2List[i]), arg2Value, arg2Type)) {
-							values[index] = intToString(arg2List[i]);
-							checkQueryCondition(childIndex+1, values, result, check);	
-						}
-					}
-				}
-			}
-		} 
-		// IF THERE IS NO VALUE STORED FOR ARGUMENT 1
-		else {
-			// IF ARGUMENT 2 IS A NUMBER
-			if (arg2Type=="number") {
-				arg2Num = atoi(arg2Value.c_str());
-				vector<int> arg1List = PKB::getParentStarStmt(arg2Num);
-				if (arg1List.size()==0 || arg1List[0]==-1) {
-					check = false;
-					checkQueryCondition(childIndex+1, values, result, check);
-					return;
-				}
-				// update values
-				for (size_t i=0; i<arg1List.size(); i++) {
-					values[index] = intToString(arg1List[i]);
-					checkQueryCondition(childIndex+1, values, result, check);	
-				}
-			} else {
-				int index2 = table.getIndex(arg2Value);
-				// IF THERE IS VALUE STORED FOR ARGUMENT 2
-				if (values[index2]!="-1") {
-					arg2Num = atoi(values[index2].c_str());
-					vector<int> arg1List = PKB::getParentStarStmt(arg2Num);
-					if (arg1List.size()==0 || arg1List[0]==-1) {
-						check = false;
-						checkQueryCondition(childIndex+1, values, result, check);
-						return;
-					}
-
-					if (!isDeclaredType(intToString(arg1Num), arg1Value, arg1Type)) {
-						check = false;
-						checkQueryCondition(childIndex+1, values, result, check);
-						return;
-					}
-
-					for (size_t i=0; i<arg1List.size(); i++) {
-						if (!isDeclaredType(intToString(arg1List[i]), arg1Value, arg1Type)) {
-							// save value of argument 1 to values list and call checkQueryCondition
-							values[index] = intToString(arg1List[i]);
-							checkQueryCondition(childIndex+1, values, result, check);
-						}
-					}
-					
-				} else {
-					// Brute force method
-					vector<int> arg1List;
-					arg1Type = table.getType(arg1Value);
-					if (arg1Type=="prog_line" || arg1Type=="stmt") {
-						// retrieve all statements 
-						for (int i=0; i<PKB::getStatTableSize(); i++) {
-							arg1List.push_back(i+1);
-						}
-					} else if (arg1Type=="assign") {
-						arg1List = PKB::getStmtIndex("assignment");
-					} else if (arg1Type=="while") {
-						arg1List = PKB::getStmtIndex("while:stmtList");
-
-					}
-					// start checking with all values in arg1List
-					for (size_t i=0; i<arg1List.size(); i++) {
-						// save value of arg1 to vector "values"
-						values[index] = intToString(arg1List[i]);
-						// recursively call this method to continue checking arg2
-						checkSuchThatCondition(suchThatNode, values, result, check, childIndex);
-						/* REMARK
-						* Recursion here is not necessary, however. We can also check arg2Num 
-						* by calling PKB.getFollowingStmt(arg1Num). But I want to set this as an example
-						* of how to deal with "brute force" in harder cases: Follows*, Parent*, Modifies and Uses.
-						* Those relationship will need recursive to solve.
-						*/
-					}
-				}
-			}
-		}
-	}
-}
-
-void QueryEvaluator::handleModifiesRelationship (TNode relationNode, TNode suchThatNode, vector<string> values, vector<string>& result, bool check, int childIndex) {
-	TNode arg1Node = relationNode.getChildAtIndex(0);
-		string arg1Type = arg1Node.getType();
-		string arg1Value = arg1Node.getValue();
-		TNode arg2Node = relationNode.getChildAtIndex(1);
-		string arg2Type = arg2Node.getType();
-		string arg2Value = arg2Node.getValue();
-		int arg1Num;
-
-		if (arg1Type=="number") {
-			arg1Num = atoi(arg1Value.c_str());
-			if (arg2Type=="variable") {
-				int arg2Index = PKB::getVarIndex(arg2Value);
-				if (PKB::isModifies(arg1Num, arg2Index)) {
-					checkQueryCondition(childIndex+1, values, result, check);
-				} else {
-					check = false;
-					checkQueryCondition(childIndex+1, values, result, check);
-				}
-			} else {
-				int index2 = table.getIndex(arg2Value);
-				if (values[index2]!="-1") {
-					string arg2Name = values[index2];
-					int arg2Index = PKB::getVarIndex(arg2Name);
-					if (PKB::isModifies(arg1Num, arg2Index)) {
-						checkQueryCondition(childIndex+1, values, result, check);
-					} else {
-						check = false;
-						checkQueryCondition(childIndex+1, values, result, check);
-					}
-				} else {
-					vector<int> arg2Indexes = PKB::getModifiedVarAtStmt(arg1Num);
-					if (arg2Indexes.size()==0 || arg2Indexes[0]==-1) {
-						check = false;
-						checkQueryCondition(childIndex+1, values, result, check);
-					} else {
-						for (size_t i=0; i< arg2Indexes.size(); i++) {
-							if (isDeclaredType(PKB::getVarName(arg2Indexes[i]), arg2Value, table.getType(arg2Value))) {
-								values[index2] = PKB::getVarName(arg2Indexes[i]);
-								checkQueryCondition(childIndex+1, values, result, check);
-							}
-						}
-					}
-				}
-			}
+	if (arg1Type == Const && arg2Type == QuerySymbol) {
+		string arg2Value = getStoredValue(values, arg2Name);
+		if (arg2Value!="-1") {
+			check = isRelation(relation, arg1Name, arg2Value);	
+			//call back to checkQueryCondition
+			checkQueryCondition(childIndex++, values, result, check);
+			return;
 		} else {
-			int index = table.getIndex(arg1Value);
-			if (values[index]!="-1") {
-				arg1Num = atoi(values[index].c_str());
-				if (arg2Type=="variable") {
-					int arg2Index = PKB::getVarIndex(arg2Value);
-					if (PKB::isModifies(arg1Num, arg2Index)) {
-						checkQueryCondition(childIndex+1, values, result, check);
-					} else {
-						check =false;
-						checkQueryCondition(childIndex+1, values, result, check);
-					}
-				} else {
-					int index2 = table.getIndex(arg2Value);
-					if (values[index2]!="-1") {
-						string arg2Name = values[index2];
-						int arg2Index = PKB::getVarIndex(arg2Name);
-						if (PKB::isModifies(arg1Num, arg2Index)) {
-							checkQueryCondition(childIndex+1, values, result, check);
-						} else {
-							check =false;
-							checkQueryCondition(childIndex+1, values, result, check);
-						}
-					} else {
-						vector<int> arg2Indexes = PKB::getModifiedVarAtStmt(arg1Num);
-						if (arg2Indexes.size()==0 || arg2Indexes[0] == -1) {
-							check =false;
-							checkQueryCondition(childIndex+1, values, result, check);
-						} else {
-							for (size_t i=0; i<arg2Indexes.size(); i++) {
-								if (isDeclaredType(PKB::getVarName(arg2Indexes[i]), arg2Value, arg2Type)) {
-									values[index2] = PKB::getVarName(arg2Indexes[i]);
-									checkQueryCondition(childIndex+1, values, result, check);
-								}
-							}
-						}
-					}
-				} 
-			} else {
-				if (arg2Type=="variable") {
-					int arg2Index = PKB::getVarIndex(arg2Value);
-					vector<int> arg1Values = PKB::getStmtModifyingVar(arg2Index);
-					if (arg1Values.size()==0 || arg1Values[0]==-1) {
-						check =false;
-						checkQueryCondition(childIndex+1, values, result, check);
-					} else {
-						for (size_t i=0; i<arg1Values.size(); i++) {
-							values[index] = intToString(arg1Values[i]);
-							checkQueryCondition(childIndex+1, values, result, check);
-						}
-					}
-				} else {
-					int index2 = table.getIndex(arg2Value);
-					if (values[index2]!="-1") {
-						string arg2Name = values[index2];
-						int arg2Index = PKB::getVarIndex(arg2Name);
-						vector<int> arg1Values = PKB::getStmtModifyingVar(arg2Index);
-						if (arg1Values.size()==0 || arg1Values[0]==-1) {
-							check =false;
-							checkQueryCondition(childIndex+1, values, result, check);
-						} else {
-							for (size_t i=0; i<arg1Values.size(); i++) {
-								if (isDeclaredType(intToString(arg1Values[i]), arg1Value, arg1Type)) {
-									values[index] = intToString(arg1Values[i]);
-									checkQueryCondition(childIndex+1, values, result, check);
-								}
-							}
-						}
-					} else {
-						// brute force
-						vector<int> arg1List;
-						arg1Type = table.getType(arg1Value);
-						if (arg1Type=="prog_line" || arg1Type=="stmt") {
-							// retrieve all statements 
-							for (int i=0; i<PKB::getStatTableSize(); i++) {
-								arg1List.push_back(i+1);
-							}
-						} else if (arg1Type=="assign") {
-							arg1List = PKB::getStmtIndex("assignment");
-						} else if (arg1Type=="while") {
-							arg1List = PKB::getStmtIndex("while:stmtList");
-							
-						}
-						// start checking with all values in arg1List
-						for (size_t i=0; i<arg1List.size(); i++) {
-							values[index] = intToString(arg1List[i]);
-							checkQueryCondition(childIndex+1, values, result, check);
-						}
-					}
-				}
-			}
+			vector<string> arg2Value = getArgumentValueInRelation(relation, arg1Name, arg2Name, ARG2_UNKNOWN);
 		}
+	}
+	if (arg1Type == QuerySymbol && arg2Type == Const) {
+	}
+	if (arg1Type == QuerySymbol && arg2Type == QuerySymbol) {
+	}
 }
 
-void QueryEvaluator::handleUsesRelationship (TNode relationNode, TNode suchThatNode, vector<string> values, vector<string>& result, bool check, int childIndex) {
-	TNode arg1Node = relationNode.getChildAtIndex(0);
-	string arg1Type = arg1Node.getType();
-	string arg1Value = arg1Node.getValue();
-	TNode arg2Node = relationNode.getChildAtIndex(1);
-	string arg2Type = arg2Node.getType();
-	string arg2Value = arg2Node.getValue();
-	int arg1Num;
+vector<string> & QueryEvaluator::getArgumentValueInRelation(Symbol relation, string arg1Value, string arg2Value, int argIndex) {
+	vector<string> resultList;
 
-	if (arg1Type=="number") {
-		arg1Num = atoi(arg1Value.c_str());
-		if (arg2Type=="variable") {
-			int arg2Index = PKB::getVarIndex(arg2Value);
-			if (PKB::isUses(arg1Num, arg2Index)) {
-				checkQueryCondition(childIndex+1, values, result, check);
-			} else {
-				check = false;
-				checkQueryCondition(childIndex+1, values, result, check);
-			}
-		} else {
-			int index2 = table.getIndex(arg2Value);
-			if (values[index2]!="-1") {
-				string arg2Name = values[index2];
-				int arg2Index = PKB::getVarIndex(arg2Name);
-				if (PKB::isUses(arg1Num, arg2Index)) {
-					checkQueryCondition(childIndex+1, values, result, check);
-				} else {
-					check = false;
-					checkQueryCondition(childIndex+1, values, result, check);
+	switch (argIndex) {
+	case ARG1_UNKNOWN:
+	{
+		switch (relation) {
+			case Follows:
+			{
+				int stmt2 = atoi(arg2Value.c_str());
+				int result = PKB::getFollowedStmt(stmt2);		
+				if (result!=-1) {
+					resultList.push_back(intToString(result));
 				}
-			} else {
-				vector<int> arg2Indexes = PKB::getUsedVarAtStmt(arg1Num);
-				if (arg2Indexes.size()==0 || arg2Indexes[0]==-1) {
-					check = false;
-					checkQueryCondition(childIndex+1, values, result, check);
-				} else {
-					for (size_t i=0; i< arg2Indexes.size(); i++) {
-						if (isDeclaredType(PKB::getVarName(arg2Indexes[i]), arg2Value, table.getType(arg2Value))) {
-							values[index2] = PKB::getVarName(arg2Indexes[i]);
-							checkQueryCondition(childIndex+1, values, result, check);
-						}
-					}
-				}
+				return resultList;
 			}
+			case FollowsS:
+			{
+				int stmt2 = atoi(arg2Value.c_str());
+				vector<int> stmts = PKB::getFollowedStarStmt(stmt2);
+				return resultList;
+			}
+			case Parent:
+			{
+				int stmt2 = atoi(arg2Value.c_str());
+				int result = PKB::getParentStmt(stmt2);
+				if (result!=-1) {
+					resultList.push_back(intToString(result));
+				}
+				return resultList;
+			}
+			case ParentS:
+			{
+				int stmt2 = atoi(arg2Value.c_str());
+				vector<int> stmts = PKB::getParentStarStmt(stmt2);
+				for (int i=0; i<stmts.size(); i++) {
+					resultList.push_back(intToString(stmts[i]));
+				}
+				return resultList;
+			}
+			case Modifies:
+			{
+				int var2 = PKB::getVarIndex(arg2Value);
+				vector<int> stmts = PKB::getStmtModifyingVar(var2);
+				for (int i=0; i<stmts.size(); i++) {
+					resultList.push_back(intToString(stmts[i]));
+				}
+				return resultList;
+			}
+			case Uses:
+			{
+				int var2 = PKB::getVarIndex(arg2Value);
+				vector<int> stmts = PKB::getStmtUsingVar(var2);
+				for (int i=0; i<stmts.size(); i++) {
+					resultList.push_back(intToString(stmts[i]));
+				}
+				return resultList;
+			}
+				case Calls:
+				case CallsS:
+			default:
+				return resultList;
 		}
-	} else {
-		int index = table.getIndex(arg1Value);
-		if (values[index]!="-1") {
-			arg1Num = atoi(values[index].c_str());
-			if (arg2Type=="variable") {
-				int arg2Index = PKB::getVarIndex(arg2Value);
-				if (PKB::isUses(arg1Num, arg2Index)) {
-					checkQueryCondition(childIndex+1, values, result, check);
-				} else {
-					check =false;
-					checkQueryCondition(childIndex+1, values, result, check);
+	}
+	case ARG2_UNKNOWN:
+	{
+		switch (relation) {
+			case Follows:
+			{
+				int stmt1 = atoi(arg1Value.c_str());
+				int result = PKB::getFollowingStmt(stmt1);		
+				if (result!=-1) {
+					resultList.push_back(intToString(result));
 				}
-			} else {
-				int index2 = table.getIndex(arg2Value);
-				if (values[index2]!="-1") {
-					string arg2Name = values[index2];
-					int arg2Index = PKB::getVarIndex(arg2Name);
-					if (PKB::isUses(arg1Num, arg2Index)) {
-						checkQueryCondition(childIndex+1, values, result, check);
-					} else {
-						check =false;
-						checkQueryCondition(childIndex+1, values, result, check);
-					}
-				} else {
-					vector<int> arg2Indexes = PKB::getUsedVarAtStmt(arg1Num);
-					if (arg2Indexes.size()==0 || arg2Indexes[0] == -1) {
-						check =false;
-						checkQueryCondition(childIndex+1, values, result, check);
-					} else {
-						for (size_t i=0; i<arg2Indexes.size(); i++) {
-							if (isDeclaredType(PKB::getVarName(arg2Indexes[i]), arg2Value, table.getType(arg2Value))) {
-								values[index2] = PKB::getVarName(arg2Indexes[i]);
-								checkQueryCondition(childIndex+1, values, result, check);
-							}
-						}
-					}
-				}
-			} 
-		} else {
-			if (arg2Type=="variable") {
-				int arg2Index = PKB::getVarIndex(arg2Value);
-				vector<int> arg1Values = PKB::getStmtUsingVar(arg2Index);
-				if (arg1Values.size()==0 || arg1Values[0]==-1) {
-					check =false;
-					checkQueryCondition(childIndex+1, values, result, check);
-				} else {
-					for (size_t i=0; i<arg1Values.size(); i++) {
-						if (isDeclaredType(intToString(arg1Values[i]), arg1Value, arg1Type)) {
-							values[index] = intToString(arg1Values[i]);
-							checkQueryCondition(childIndex+1, values, result, check);
-						}
-					}
-				}
-			} else {
-				int index2 = table.getIndex(arg2Value);
-				if (values[index2]!="-1") {
-					string arg2Name = values[index2];
-					int arg2Index = PKB::getVarIndex(arg2Name);
-					vector<int> arg1Values = PKB::getStmtUsingVar(arg2Index);
-					if (arg1Values.size()==0 || arg1Values[0]==-1) {
-						check =false;
-						checkQueryCondition(childIndex+1, values, result, check);
-					} else {
-						for (size_t i=0; i<arg1Values.size(); i++) {
-							if (isDeclaredType(intToString(arg1Values[i]), arg1Value, arg1Type)) {
-								values[index] = intToString(arg1Values[i]);
-								checkQueryCondition(childIndex+1, values, result, check);
-							}
-						}
-					}
-				} else {
-					// brute force
-					vector<int> arg1List;
-						arg1Type = table.getType(arg1Value);
-						if (arg1Type=="prog_line" || arg1Type=="stmt") {
-							// retrieve all statements 
-							for (int i=0; i<PKB::getStatTableSize(); i++) {
-								arg1List.push_back(i+1);
-							}
-						} else if (arg1Type=="assign") {
-							arg1List = PKB::getStmtIndex("assignment");
-						} else if (arg1Type=="while") {
-							arg1List = PKB::getStmtIndex("while:stmtList");
-							
-						}
-						// start checking with all values in arg1List
-						for (size_t i=0; i<arg1List.size(); i++) {
-							values[index] = intToString(arg1List[i]);
-							checkQueryCondition(childIndex+1, values, result, check);
-						}
-					}
-				}
+				return resultList;
 			}
+			case FollowsS:
+			{
+				int stmt1 = atoi(arg1Value.c_str());
+				vector<int> stmts = PKB::getFollowingStarStmt(stmt1);
+				return resultList;
+			}
+			case Parent:
+			{
+				int stmt1 = atoi(arg1Value.c_str());
+				vector<int> stmts = PKB::getChildStmt(stmt1);
+				for (int i=0; i<stmts.size(); i++) {
+					resultList.push_back(intToString(stmts[i]));
+				}
+				return resultList;
+			}
+			case ParentS:
+			{
+				int stmt1 = atoi(arg1Value.c_str());
+				vector<int> stmts = PKB::getChildStarStmt(stmt1);
+				for (int i=0; i<stmts.size(); i++) {
+					resultList.push_back(intToString(stmts[i]));
+				}
+				return resultList;
+			}
+			case Modifies:
+			{
+				int var2 = PKB::getVarIndex(arg2Value);
+				vector<int> stmts = PKB::getStmtModifyingVar(var2);
+				for (int i=0; i<stmts.size(); i++) {
+					resultList.push_back(intToString(stmts[i]));
+				}
+				return resultList;
+			}
+			case Uses:
+			{
+				int var2 = PKB::getVarIndex(arg2Value);
+				vector<int> stmts = PKB::getStmtUsingVar(var2);
+				for (int i=0; i<stmts.size(); i++) {
+					resultList.push_back(intToString(stmts[i]));
+				}
+				return resultList;
+			}
+				case Calls:
+				case CallsS:
+			default:
+				return resultList;
 		}
+		
+	}
+	default:
+		return resultList;
+	}
 }
+
+bool QueryEvaluator::isRelation(Symbol relation, string arg1Value, string arg2Value) {
+	switch (relation) {
+	case Follows:
+	{
+		// 2 arguments' values are stmt no
+		int stmt1 = atoi(arg1Value.c_str());
+		int stmt2 = atoi(arg2Value.c_str());
+		return PKB::isFollows(stmt1, stmt2);
+	}
+	case FollowsS:
+	{
+		int stmt1 = atoi(arg1Value.c_str());
+		int stmt2 = atoi(arg2Value.c_str());
+		return PKB::isFollowsStar(stmt1, stmt2);
+	}
+	case Parent:
+	{
+		int stmt1 = atoi(arg1Value.c_str());
+		int stmt2 = atoi(arg2Value.c_str());
+		return PKB::isParent(stmt1, stmt2);
+	}
+	case ParentS:
+	{
+		int stmt1 = atoi(arg1Value.c_str());
+		int stmt2 = atoi(arg2Value.c_str());
+		return PKB::isParentStar(stmt1, stmt2);
+	}
+	case Modifies:	
+	{
+		int stmt1 = atoi(arg1Value.c_str());
+		int varIndex = PKB::getVarIndex(arg2Value);
+		return PKB::isModifies(stmt1, varIndex);
+	}
+	case Uses:
+	{
+		int stmt1 = atoi(arg1Value.c_str());
+		int varIndex = PKB::getVarIndex(arg2Value);
+		return PKB::isUses(stmt1, varIndex);
+	}
+	case Calls:
+	{
+		int proc1 = atoi(arg1Value.c_str());
+		int proc2 = atoi(arg2Value.c_str());
+		return false;
+	}
+	case CallsS:
+	{
+		int proc1 = atoi(arg1Value.c_str());
+		int proc2 = atoi(arg2Value.c_str());
+		return false;
+	}
+	default:
+		return false;
+	}
+}
+
+string QueryEvaluator::getStoredValue(vector<string> values, string argName) {
+	int index = table.getIndex(argName);
+	return values[index];
+}
+
 
 void QueryEvaluator::checkPatternCondition(TNode patternNode,vector<string> values,vector<string>& result,bool check,int childIndex) {
 	// get first child of patternNode
@@ -1194,11 +398,11 @@ void QueryEvaluator::checkPatternCondition(TNode patternNode,vector<string> valu
 
 		// get second child and check it value
 		TNode child2 = patternNode.getChildAtIndex(1);
-		string child2Type = child2.getType();
+		Symbol child2Type = child2.getType();
 		string child2Val = child2.getValue();
-		if (child2Type=="underline") {
+		if (child2Type==Underline) {
 			leftHandSide = true;
-		} else if (child2Type=="variable"){
+		} else if (child2Type==Var){
 			// check if child2Val is a variable name or not
 			int child2Index = PKB::getVarIndex(child2Val);
 			if (child2Index==-1) {
@@ -1209,7 +413,7 @@ void QueryEvaluator::checkPatternCondition(TNode patternNode,vector<string> valu
 					leftHandSide = false;
 				} else leftHandSide = true;
 			}
-		} else if (child2Type=="symbol") {
+		} else if (child2Type==QuerySymbol) {
 			// check if child2 has value stored in "values" list
 			int child2Index = table.getIndex(child2Val);
 			if (values[child2Index]!="-1") {
@@ -1249,7 +453,7 @@ void QueryEvaluator::checkPatternCondition(TNode patternNode,vector<string> valu
 		// get third child, which is the right hand side
 		TNode child3 = patternNode.getChildAtIndex(2);
 
-		if (child3.getType()=="underline") {
+		if (child3.getType()==Underline) {
 			rightHandSide=true;
 		} else {
 			TNode node = PKB::getNodeOfStmt(child1Val);
@@ -1271,7 +475,7 @@ void QueryEvaluator::updateResultList(vector<string> values, vector<string>& res
 	TNode child = root.getChildAtIndex(0);
 
 	child = child.getChildAtIndex(0);
-	string paramType = child.getType();
+	Symbol paramType = child.getType();
 	string paramName = child.getValue();
 	// get index of the parameter
 	int paramIndex = table.getIndex(paramName);
@@ -1279,7 +483,7 @@ void QueryEvaluator::updateResultList(vector<string> values, vector<string>& res
 	// check if paramVal is null value or not
 	if (paramVal!="-1") {
 		// check if paramVal has same type as in paramType
-		if (!isDeclaredType(paramVal, paramName, paramType)) {
+		if (!isDeclaredType(paramVal, paramName, "")) { // need fix
 			return;
 		}
 
@@ -1293,7 +497,7 @@ void QueryEvaluator::updateResultList(vector<string> values, vector<string>& res
 	} else {
 		// all values possible of param are result
 		string paramType = table.getType(paramName);
-		if (paramType=="prog_line" || paramType=="stmt") {
+		if (paramType== "prog_line" || paramType=="stmt") {
 			// retrieve all statements 
 			for (int i=0; i<PKB::getStatTableSize(); i++) {
 				paramVal = intToString(i+1);
@@ -1324,7 +528,7 @@ void QueryEvaluator::updateResultList(vector<string> values, vector<string>& res
 			for (int i=0; i<PKB::getVarTableSize(); i++) {
 				result.push_back(PKB::getVarName(i));
 			}
-		} else if (paramType=="constant") {
+		} else if (paramType=="const") {
 			for (int i=0; i<PKB::getConstTableSize(); i++) {
 				result.push_back(PKB::getConstName(i));
 			}
@@ -1342,7 +546,7 @@ bool QueryEvaluator::isResult(string val, vector<string> result) {
 
 
 bool QueryEvaluator::isDeclaredType(string val, string name, string type) {
-	if (type=="constant") {
+	if (type=="const") {
 		if (PKB::getConstIndex(val)==-1) return false; 
 	} else if (type=="variable") {
 		if (PKB::getVarIndex(val)==-1) return false;
@@ -1361,226 +565,8 @@ bool QueryEvaluator::isDeclaredType(string val, string name, string type) {
 	return true;
 }
 
-/*
-void QueryEvaluator::findResult(int index, vector<string> values, vector<string>& result) {
-	int size = table.getSize();
-	// base case
-	if (index==size) { // no more symbol to retrieve
-		// printSymbolValues(values);
-		if (isQueryConditionsSatisfied(values)) {
-
-		// update result and return
-		string value = getResultAfterEvaluation(values);
-		addNewResult(result, value);
-		}
-		return;
-	} else {
-		// retrieve list of values for next symbol in SymbolTable
-		string type = table.getType(index);
-		vector<string> symbolValues;
-
-		if (type=="prog_line" || type=="stmt") {
-			// retrieve all stmt numbers from stmtTable
-			// and change them to string type
-			for (int i=0; i<PKB::getStatTableSize(); i++) {
-				string stmtNum = intToString(i+1);
-				symbolValues.push_back(stmtNum);
-			}
-		} else if (type=="assign") {
-			vector<int> assignList = PKB::getStmtIndex("assignment");
-			for (size_t i=0; i<assignList.size(); i++) {
-				string assignNum = intToString(assignList[i]);
-				symbolValues.push_back(assignNum);
-			}
-		} else if (type=="while") {
-			vector<int> whileList = PKB::getStmtIndex("while:stmtList");
-			for (size_t i=0; i<whileList.size(); i++) {
-				string whileNum = intToString(whileList[i]);
-				symbolValues.push_back(whileNum);
-			}
-		} else if (type=="variable") {
-			// retrieve all variable names from VarTable
-			for (int i=0; i<PKB::getVarTableSize(); i++) {
-				
-				string varName = PKB::getVarName(i);
-				symbolValues.push_back(varName);
-			}
-		} else if (type=="const") {
-			for (int i=0; i<PKB::getConstTableSize(); i++) {
-				
-				string constName = PKB::getConstName(i);
-				symbolValues.push_back(constName);
-			}
-		}
-
-		// if no values is retrieve, add a null value to symbolValues
-		if (symbolValues.size()==0) 
-			symbolValues.push_back("");
-
-		for (size_t i=0; i<symbolValues.size(); i++) {
-			values.push_back(symbolValues[i]);
-			findResult(index+1, values, result);
-			values.erase(values.begin() + index);
-		}
-	}
-} 
-
-// Description: check whether the conditions of query are satisfied
-// by the current list of values of symbols
-
-bool QueryEvaluator::isQueryConditionsSatisfied(vector<string> values) {
-	bool check_1 = true;
-	bool check_2 = true;
-
-	TNode root = tree.getRoot();
-
-	for (int i=0; i<root.getNumChildren(); i++) {
-		TNode child = root.getChildAtIndex(i);
-		if (child.getValue()=="suchThat") {
-			check_1 = isSuchThatConditionSatisfied(values, child);
-		} 
-		if (child.getValue()=="pattern") {
-			check_2 = isPatternConditionSatisfied(values, child);
-		}
-	}
-
-	return (check_1 && check_2) ? true : false;
-}
-
-// Description: check if such that condition is satisfied
-bool QueryEvaluator::isSuchThatConditionSatisfied(vector<string> values, TNode node) {
-	string relation;
-	string arg1;
-	string arg2;
-	TNode relationNode = node.getChildAtIndex(0);
-	TNode arg1Node = relationNode.getChildAtIndex(0);
-	TNode arg2Node = relationNode.getChildAtIndex(1);
-
-	// get relation type
-	relation = relationNode.getValue();
-	// get arg1 value
-	if (arg1Node.getType()=="number") {
-		arg1 = arg1Node.getValue();
-	} else {
-		// find index of symbol and its value stored in values
-		int index = table.getIndex(arg1Node.getValue());
-		arg1 = values[index];
-	}
-	// get arg2 value
-	if (arg2Node.getType()=="number") {
-		arg2 = arg2Node.getValue();
-	} else if (arg2Node.getType()=="variable")  {
-		arg2 = arg2Node.getValue();
-	} else {
-		// find index of symbol and its value stored in values
-		int index = table.getIndex(arg2Node.getValue());
-		arg2 = values[index];
-	}
-	// check if arg1 or arg2 takes no value
-	if (arg1=="" || arg2=="") {
-		return false;
-	}
-
-	// convert to type int if necessary
-	int argNum1 = atoi(arg1.c_str());
-	int argNum2;
-	if (relation!="Uses" && relation!="Modifies") {
-		argNum2 = atoi(arg2.c_str());
-	} else {
-		argNum2 = PKB::getVarIndex(arg2);
-	}
-
-	// check validity of relation
-	if (relation=="Follows") {
-		return PKB::isFollows(argNum1, argNum2);
-	}  
-	if (relation=="Follows*") {
-		return PKB::isFollowsStar(argNum1, argNum2);
-	}
-	if (relation=="Parent") {
-		return PKB::isParent(argNum1, argNum2);
-	}
-	if (relation=="Parent*") {
-		// fault
-		return PKB::isParentStar(argNum1, argNum2);
-	}
-	if (relation=="Uses") {
-		return PKB::isUses(argNum1, argNum2);
-	}
-	if (relation=="Modifies") {
-		return PKB::isModifies(argNum1, argNum2);
-	}
-	
-	return false;
-}
-
-// Description: check if pattern condition is satisfied
-bool QueryEvaluator::isPatternConditionSatisfied(vector<string> values, TNode node) {
-	bool leftHandSide = false;
-	bool rightHandSide = false;
-
-	// get first child and retrieve it value from values list
-	// NOTE: value is stmt# of the stmt in pattern condition
-	// that we want to check
-	TNode child_1 = node.getChildAtIndex(0);
-	string name = child_1.getValue();
-	int index = table.getIndex(name);
-	string value = values[index];
-
-	// check if symbol is not type assign
-	if (table.getType(index)!="assign") {
-		return false;
-	}
-
-	// check if value is not null
-	if (value=="") {
-		return false;
-	}
-
-	// get modified var by this assignment
-	int stmtNum = atoi(value.c_str());
-	vector<int> varIndexes;
-	varIndexes = PKB::getModifiedVarAtStmt(stmtNum);
-	int varIndex = varIndexes[0];
-	string var = PKB::getVarName(varIndex);
-
-	TNode assign("", "assign");
-
-	// get second child and check it value
-	TNode child_2 = node.getChildAtIndex(1);
-	if (child_2.getType()=="underline" || 
-		(child_2.getType()=="variable" && child_2.getValue()==var)) {
-		leftHandSide = true;
-	} else {
-		if (child_2.getType()=="symbol") {
-			int index = table.getIndex(child_2.getValue());
-			if (values[index]==var) {
-				leftHandSide = true;
-			}
-		}
-	}
-
-	// get third child and check it value
-	TNode child_3 = node.getChildAtIndex(2);
-	if (child_3.getType()=="underline") {
-		rightHandSide = true;
-	}
-
-	// Get node containing assignment whose stmt number is stmtNum 
-	// TNode node = PKB::findNodeOfStmt(stmtNum);
-	// AST subAST; subAST.setRoot(node);
-	// Tree tree; tree.setRoot(child_3);
-	// rightHandSide = subAST.hasSubTree(tree);
-
-	return (leftHandSide && rightHandSide) ? true : false;
-}
-*/
-
 // Description: this function is to get the result values from list of symbols' values
 // after the functions isSuchThatConditionSatisfied and isPatternConditionSatisfied finish
-
-
-
 string QueryEvaluator::getResultAfterEvaluation(vector<string> values) {
 	// get node containing symbol name of result
 	TNode root = tree.getRoot();

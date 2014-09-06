@@ -10,6 +10,7 @@
 #include <sstream>
 #include <vector>
 #include <string>
+#include "SyntaxHelper.h"
 
 using namespace std;
 

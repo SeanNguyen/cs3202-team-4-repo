@@ -11,6 +11,9 @@
 
 using namespace std;
 
+const int ARG1_UNKNOWN = 0;
+const int ARG2_UNKNOWN = 1;
+
 class QueryEvaluator {
 public:
 	void Evaluate();
@@ -27,12 +30,13 @@ private:
 	void checkQueryCondition(int childIndex, vector<string> values, vector<string>& result, bool check);
 	void checkSuchThatCondition(TNode node, vector<string> values, vector<string>& result, bool check, int childIndex);
 	void checkPatternCondition(TNode node, vector<string> values, vector<string>& result, bool check, int childIndex);
-	void handleFollowsRelationship(TNode relationNode, TNode suchThatNode, vector<string> values, vector<string>& result, bool check, int childIndex);
-	void handleFollowsSRelationship(TNode relationNode, TNode suchThatNode, vector<string> values, vector<string>& result, bool check, int childIndex);
-	void handleParentRelationship (TNode relationNode, TNode suchThatNode, vector<string> values, vector<string>& result, bool check, int childIndex);
-    void handleParentSRelationship (TNode relationNode, TNode suchThatNode, vector<string> values, vector<string>& result, bool check, int childIndex);
-	void handleModifiesRelationship(TNode relationNode, TNode suchThatNode, vector<string> values, vector<string>& result, bool check, int childIndex);
-	void handleUsesRelationship(TNode relationNode, TNode suchThatNode, vector<string> values, vector<string>& result, bool check, int childIndex);
+	void handleRelationNode(TNode & relationNode, vector<string> values, vector<string> & result, bool check, int childIndex);
+	
+	vector<string> & getArgumentValueInRelation(Symbol Relation, string arg1Value, string arg2Value, int argIndex);
+
+	bool isRelation(Symbol relation, string arg1Value, string arg2Value);
+	string getStoredValue(vector<string> values, string argName);
+
 	void updateResultList(vector<string> values, vector<string>& result);
 	bool isResult(string val, vector<string> result);
 	bool isDeclaredType(string val, string name, string type);
