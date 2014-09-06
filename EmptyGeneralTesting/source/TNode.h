@@ -1,26 +1,25 @@
-#ifndef TNode_h
-#define TNode_h
+#pragma once
 
 #include <string>
 #include <vector>
 
+#include "SyntaxHelper.h"
+
 using namespace std;
+
 
 class TNode {
 public:
 	TNode();
-	TNode(string type, string value);
-
-	string getType();
-	string getValue();
+	TNode(Symbol _type);
+	TNode(Symbol _type, int _value);
+	Symbol getType();
+	int getValue();
 	int getNumChildren();
-	TNode getChildAtIndex(int index);
-	
-	int setChild(TNode node);
+	TNode & getChildAtIndex(int i);
+	void addChild(TNode child);
 private:
-	string type;
-	string value;
+	Symbol type;
+	int value;
 	vector<TNode> children;
 };
-
-#endif

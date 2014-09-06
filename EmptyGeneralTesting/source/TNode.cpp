@@ -1,38 +1,39 @@
 #include "TNode.h"
 
 TNode::TNode() {
-	this -> value = "";
-	this -> type = "";
+	type = Undefined;
+	value = 0;
 }
 
-TNode::TNode(string type, string value) {
-	this -> type = type;
-	this -> value = value;
+TNode::TNode(Symbol _type) {
+	type = _type;
+	value = 0;
 }
 
-string TNode::getType() {
-	return this -> type;
+TNode::TNode(Symbol _type, int _value) {
+	type = _type;
+	value = _value;
 }
 
-string TNode::getValue() {
-	return this -> value;
+Symbol TNode::getType() {
+	return type;
+}
+
+int TNode::getValue() {
+	return value;
 }
 
 int TNode::getNumChildren() {
-	return this -> children.size();
-}
-
-TNode TNode::getChildAtIndex(int index) {
-	if (getNumChildren()==0) {
-		throw "Error: TNode has no child";
-	} 
-	if (index<0 || index>getNumChildren()) {
-			throw "Error: index out of range";
-	}
-	return children[index]; 
-}
-
-int TNode::setChild(TNode node) {
-	children.push_back(node);
 	return children.size();
+}
+
+TNode & TNode::getChildAtIndex(int i) {
+	if (i<0 || i >=  this -> getNumChildren()) {
+		throw "Out of bounds";
+	}
+	return children[i];
+}
+
+void TNode::addChild(TNode child) {
+	children.push_back(child);
 }
