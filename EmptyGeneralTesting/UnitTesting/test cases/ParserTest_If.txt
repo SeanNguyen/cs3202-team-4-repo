@@ -1,0 +1,10 @@
+procedure OhSimple
+{
+	if x then {						\\1
+		while n	{					\\2	
+			h = h + m;				\\3
+		}
+	} else {
+		y = 20;						\\4
+	}
+}

@@ -1,0 +1,9 @@
+procedure OhSimple
+{
+	while h {						\\1
+		j = i + 1;					\\2
+		while n {					\\3
+			h = h + m;				\\4
+		}
+	}
+}
