@@ -1,0 +1,4 @@
+procedure OhSimple
+{
+	i = i + (j + h) + ( (f * 9) + w ) * k;
+}

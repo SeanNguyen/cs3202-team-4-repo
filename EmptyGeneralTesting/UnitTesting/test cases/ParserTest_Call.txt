@@ -1,0 +1,7 @@
+procedure OhSimple
+{
+	call B;
+}
+
+procedure B {
+}
