@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef ParserTest_h
 #define ParserTest_h
 
