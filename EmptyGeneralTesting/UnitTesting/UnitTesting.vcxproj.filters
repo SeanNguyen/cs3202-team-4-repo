@@ -36,6 +36,12 @@
     <ClCompile Include="TestTNode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TestTree.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestTree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\ParserTest.h">

@@ -75,6 +75,8 @@
     <ClCompile Include="source\TestUseTable.cpp" />
     <ClCompile Include="source\UnitTest.cpp" />
     <ClCompile Include="TestTNode.cpp" />
+    <ClCompile Include="TestTree.cpp" />
+    <ClCompile Include="TestTree.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\ParserTest.h" />
