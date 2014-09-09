@@ -27,14 +27,14 @@ int TNode::getNumChildren() {
 	return children.size();
 }
 
-TNode & TNode::getChildAtIndex(int i) {
+TNode *TNode::getChildAtIndex(int i) {
 	if (i<0 || i >=  this -> getNumChildren()) {
 		throw "Out of bounds";
 	}
 	return children[i];
 }
 
-int TNode::addChild(TNode child) {
+int TNode::addChild(TNode *child) {
 	children.push_back(child);
 	return children.size()-1;
 }

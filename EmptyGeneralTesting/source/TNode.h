@@ -16,10 +16,10 @@ public:
 	Symbol getType();
 	string getValue();
 	int getNumChildren();
-	TNode & getChildAtIndex(int i);
-	int addChild(TNode child);
+	TNode *getChildAtIndex(int i);
+	int addChild(TNode *child);
 private:
 	Symbol type;
 	string value;
-	vector<TNode> children;
+	vector<TNode*> children;
 };
