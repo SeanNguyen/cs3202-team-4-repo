@@ -34,7 +34,7 @@ TNode *TNode::getChildAtIndex(int i) {
 	return children[i];
 }
 
-int TNode::addChild(TNode *child) {
-	children.push_back(child);
+int TNode::addChild(TNode &child) {
+	children.push_back(&child);
 	return children.size()-1;
 }
