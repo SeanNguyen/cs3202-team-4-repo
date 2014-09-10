@@ -19,7 +19,14 @@ const string KEYWORD_WHILE = "while";
 const string KEYWORD_VAR = "variable";
 const string KEYWORD_CONST = "const";
 
-
+const string FOLLOWS_RLT = "Follows";
+const string FOLLOWSSTAR_RLT = "Follows*";
+const string PARENT_RLT = "Parent";
+const string PARENTSTAR_RLT = "Parent*";
+const string MODIFIES_RLT = "Modifies";
+const string USES_RLT = "Uses";
+const string CALLS_RLT = "Calls";
+const string CALLSSTAR_RLT = "Calls*";
 
 enum Symbol {
 	Undefined,
@@ -41,4 +48,5 @@ enum Symbol {
 class SyntaxHelper {
 public:
 	static Symbol getSymbolType(string);
+	static bool isRelation(string);
 };

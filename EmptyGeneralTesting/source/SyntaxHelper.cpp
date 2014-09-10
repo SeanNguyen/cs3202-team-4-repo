@@ -53,3 +53,17 @@ Symbol SyntaxHelper::getSymbolType(string type) {
 
 	return Undefined;
 }
+
+bool SyntaxHelper::isRelation(string str) {
+	if (str==FOLLOWS_RLT) return true;
+	if (str==FOLLOWSSTAR_RLT) return true;
+	if (str==PARENT_RLT) return true;
+	if (str==PARENTSTAR_RLT) return true;
+	if (str==MODIFIES_RLT) return true;
+	if (str==USES_RLT) return true;
+	if (str==CALLS_RLT) return true;
+	if (str==CALLSSTAR_RLT) return true;
+	
+
+	return false;
+}
