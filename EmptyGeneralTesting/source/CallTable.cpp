@@ -6,7 +6,7 @@
 // Constructor
 Call::Call(){
 	MAX_SIZE = 100;
-	callTable.resize(MAX_SIZE, std::vector<bool>(MAX_SIZE,0));
+	callTable.resize(MAX_SIZE, std::vector<bool>(MAX_SIZE, false));
 }
 
 //  Method to check if calls relationship exists
@@ -26,7 +26,7 @@ int Call::insertCalls(int proc1, int proc2){
 	//The extended set contains all 0 (boolean)
 	//Also, update the MAX_SIZE global variable.
 	if(callTable.size() > (size_t) MAX_SIZE){
-		callTable.resize(MAX_SIZE*2, std::vector<bool>(MAX_SIZE,0));
+		callTable.resize(MAX_SIZE*2, std::vector<bool>(MAX_SIZE,false));
 		MAX_SIZE *= 2;
 	}
 
