@@ -103,48 +103,48 @@ void UseTest::testgetStmtUsingVar(){
 
 	return;
 }
-
-void UseTest::testgetAllUsingStmt(){
-	
-	Use useObj;
-
-	//insert a few pairs first
-	int result = useObj.insertUses(1, 1);
-	int result1 = useObj.insertUses(2, 2);
-	int result2 = useObj.insertUses(3, 3);
-	int result3 = useObj.insertUses(9, 4);
-
-	std::vector<int> actual = useObj.getAllUsingStmt();
-
-	std::cout<<"getAllUsingStmt";
-	
-	for(std::size_t i = 0; i < actual.size(); i++){
-		std::cout << actual[i] << std::endl;
-	 }
-
-	return;
-}
-
-void UseTest::testgetAllUsedVar(){
-	
-	Use useObj;
-
-	//insert a few pairs first
-	int result = useObj.insertUses(1, 1);
-	int result1 = useObj.insertUses(2, 2);
-	int result2 = useObj.insertUses(3, 3);
-	int result3 = useObj.insertUses(9, 4);
-
-	std::vector<int> actual = useObj.getAllUsedVar();
-
-	std::cout<<"getAllUsedVar";
-	
-	for(std::size_t i = 0; i < actual.size(); i++){
-		std::cout << actual[i] << std::endl;
-	 }
-
-	return;
-}
+//
+//void UseTest::testgetAllUsingStmt(){
+//	
+//	Use useObj;
+//
+//	//insert a few pairs first
+//	int result = useObj.insertUses(1, 1);
+//	int result1 = useObj.insertUses(2, 2);
+//	int result2 = useObj.insertUses(3, 3);
+//	int result3 = useObj.insertUses(9, 4);
+//
+//	std::vector<int> actual = useObj.getAllUsingStmt();
+//
+//	std::cout<<"getAllUsingStmt";
+//	
+//	for(std::size_t i = 0; i < actual.size(); i++){
+//		std::cout << actual[i] << std::endl;
+//	 }
+//
+//	return;
+//}
+//
+//void UseTest::testgetAllUsedVar(){
+//	
+//	Use useObj;
+//
+//	//insert a few pairs first
+//	int result = useObj.insertUses(1, 1);
+//	int result1 = useObj.insertUses(2, 2);
+//	int result2 = useObj.insertUses(3, 3);
+//	int result3 = useObj.insertUses(9, 4);
+//
+//	std::vector<int> actual = useObj.getAllUsedVar();
+//
+//	std::cout<<"getAllUsedVar";
+//	
+//	for(std::size_t i = 0; i < actual.size(); i++){
+//		std::cout << actual[i] << std::endl;
+//	 }
+//
+//	return;
+//}
 
 		
 		

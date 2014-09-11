@@ -289,17 +289,45 @@ std::vector<int> PKB::getStmtUsingVar(int varIndex){
 	return useObj.getStmtUsingVar(varIndex);
 }
 
-std::vector<int> PKB::getAllUsingStmt(){
-	return useObj.getAllUsingStmt();
+	// Method to check if uses relationship exists
+bool PKB::isUsesProc(int proc1, int varIndex){
+	return useObj.isUsesProc(proc1, varIndex);
+}
+  
+	// Method to insert a pair of uses proc number and variable
+int PKB::insertUsesProc(int proc1, int varIndex){
+		int value = useObj.insertUsesProc(proc1, varIndex);
+	if (value == -1){
+		return false;	
+	} else {
+		return true;
+	}
 }
 
-std::vector<int> PKB::getAllUsedVar(){
-	return useObj.getAllUsedVar();
+
+	// Method to get the variables used in proc proc1
+std::vector<int> PKB::getUsedVarAtProc(int proc1){
+	return useObj.getUsedVarAtProc(proc1);
 }
 
-int PKB::getSize(){
-	return useObj.getSize();
+	// Method to get the list of proc using var
+std::vector<int> PKB::getProcUsingVar(int varIndex){
+	return useObj.getProcUsingVar(varIndex);
 }
+
+//std::vector<int> PKB::getAllUsingStmt(){
+//	return useObj.getAllUsingStmt();
+//}
+//
+//std::vector<int> PKB::getAllUsedVar(){
+//	return useObj.getAllUsedVar();
+//}
+//
+//int PKB::getSize(){
+//	return useObj.getSize();
+//}
+
+
 
 //void PKB::printTable(){
 //	return useObj.printTable();

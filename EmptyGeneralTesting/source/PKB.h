@@ -168,14 +168,28 @@ class PKB
 	// Method to get the list of stmt using var
 	static std::vector<int> getStmtUsingVar(int varIndex);
 
+
+
+	// Method to check if uses relationship exists
+	static bool isUsesProc(int proc1, int varIndex);
+  
+	// Method to insert a pair of uses proc number and variable
+	static int insertUsesProc(int proc1, int varIndex);
+
+	// Method to get the variables used in proc proc1
+	static std::vector<int> getUsedVarAtProc(int proc1);
+
+	// Method to get the list of proc using var
+	static std::vector<int> getProcUsingVar(int varIndex);
+
 	//Method to get all statements using some variable
-	static std::vector<int> getAllUsingStmt();
+	//static std::vector<int> getAllUsingStmt();
 
-	//Method to get all variables being used 
-	static std::vector<int> getAllUsedVar();
+	////Method to get all variables being used 
+	//static std::vector<int> getAllUsedVar();
 
-	//Method to get the number of records in the table.
-	static int getSize();
+	////Method to get the number of records in the table.
+	//static int getSize();
 
 	//Method for debugging - will be removed when submit.
 	//static void printTable();

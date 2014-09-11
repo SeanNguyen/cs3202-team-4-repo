@@ -11,8 +11,8 @@ class UseTest : public CPPUNIT_NS::TestFixture // Note 2
 	CPPUNIT_TEST( testisUse );
 	CPPUNIT_TEST( testgetUsedVarAtStmt ) ;
 	CPPUNIT_TEST( testgetStmtUsingVar ) ;
-	CPPUNIT_TEST( testgetAllUsingStmt ) ;
-	CPPUNIT_TEST( testgetAllUsedVar ) ;
+	//CPPUNIT_TEST( testgetAllUsingStmt ) ;
+	//CPPUNIT_TEST( testgetAllUsedVar ) ;
 
 	CPPUNIT_TEST_SUITE_END();
 
@@ -29,9 +29,9 @@ public:
 
 	void testgetStmtUsingVar();
 
-	void testgetAllUsingStmt();
+	//void testgetAllUsingStmt();
 
-	void testgetAllUsedVar();
+	//void testgetAllUsedVar();
 
 };
 #endif

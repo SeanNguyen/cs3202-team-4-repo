@@ -12,8 +12,6 @@
 //
 //	//CPPUNIT_TEST( testgetModifiedVarAtStmt );
 //	//CPPUNIT_TEST( testgetStmtModifyingVar );
-//	//CPPUNIT_TEST( testgetAllModifyingStmt );
-//	//CPPUNIT_TEST( testgetAllModifiedVar );
 //	CPPUNIT_TEST_SUITE_END();
 //
 //public:
@@ -30,9 +28,7 @@
 
 	//void testgetStmtModifyingVar();
 
-	//void testgetAllModifyingStmt();
 
-	//void testgetAllModifiedVar();
 //
 //};
 //#endif

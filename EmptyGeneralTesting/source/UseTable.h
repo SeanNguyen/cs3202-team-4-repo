@@ -11,6 +11,7 @@ class Use
 public :
 
 	vector<vector<bool>> UseTable;
+	vector<vector<bool>> UseTableProc;
 
 	// Constructor
 	Use();  
@@ -27,14 +28,29 @@ public :
 	// Method to get the list of stmt using var
 	std::vector<int> getStmtUsingVar(int varIndex);
 
+
+	///NEW METHODS///
+
+	// Method to check if uses relationship exists
+	bool isUsesProc(int proc1, int varIndex);
+  
+	// Method to insert a pair of uses proc number and variable
+	int insertUsesProc(int proc1, int varIndex);
+
+	// Method to get the variables used in proc proc1
+	std::vector<int> getUsedVarAtProc(int proc1);
+
+	// Method to get the list of proc using var
+	std::vector<int> getProcUsingVar(int varIndex);
+
 	//Method to get all statements using some variable
-	std::vector<int> getAllUsingStmt();
+	//std::vector<int> getAllUsingStmt();
 
-	//Method to get all variables being used 
-	std::vector<int> getAllUsedVar();
+	////Method to get all variables being used 
+	//std::vector<int> getAllUsedVar();
 
-	//Method to get the number of records in the table.
-	int getSize();
+	////Method to get the number of records in the table.
+	//int getSize();
 
 	//Method for debugging - will be removed when submit.
 	//void printTable();
