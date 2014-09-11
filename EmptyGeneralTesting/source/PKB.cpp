@@ -145,18 +145,34 @@ std::vector<int> PKB::getStmtModifyingVar(int varIndex){
 	return modifyObj.getStmtModifyingVar(varIndex);
 }
 
-std::vector<int> PKB::getAllModifyingStmt(){
-	return modifyObj.getAllModifyingStmt();
+bool PKB::isModifiesProc(int proc1, int varIndex){
+	return modifyObj.isModifiesProc(proc1, varIndex);
 }
 
-std::vector<int> PKB::getAllModifiedVar(){
-	return modifyObj.getAllModifiedVar();
+int PKB::insertModifiesProc(int proc1, int varIndex){
+	return modifyObj.insertModifiesProc(proc1, varIndex);
 }
 
-int PKB::getModifyTableSize()
-{
-	return modifyObj.getSize();
+std::vector<int> PKB::getModifiedVarAtProc(int proc1){
+	return modifyObj.getModifiedVarAtProc(proc1);
 }
+
+std::vector<int> PKB::getProcModifyingVar(int varIndex){
+	return modifyObj.getProcModifyingVar(varIndex);
+}
+
+//std::vector<int> PKB::getAllModifyingStmt(){
+//	return modifyObj.getAllModifyingStmt();
+//}
+//
+//std::vector<int> PKB::getAllModifiedVar(){
+//	return modifyObj.getAllModifiedVar();
+//}
+//
+//int PKB::getModifyTableSize()
+//{
+//	return modifyObj.getSize();
+//}
 
 //void PKB::printModifyTable()
 //{

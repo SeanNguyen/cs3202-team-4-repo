@@ -94,13 +94,21 @@ class PKB
 	// Method to get the list of stmt modifying var
 	static std::vector<int> getStmtModifyingVar(int varIndex);
 
-	//Method to get all statements modifying some variable
-	static std::vector<int> getAllModifyingStmt();
+	////Method to get all statements modifying some variable
+	//static std::vector<int> getAllModifyingStmt();
 
-	//Method to get all variables being modified 
-	static std::vector<int> getAllModifiedVar();
+	////Method to get all variables being modified 
+	//static std::vector<int> getAllModifiedVar();
 
-	static int getModifyTableSize();
+	//static int getModifyTableSize();
+
+	static bool isModifiesProc(int proc1, int varIndex);
+
+	static int insertModifiesProc(int proc1, int varIndex);     
+
+	static std::vector<int> getModifiedVarAtProc(int proc1);
+
+	static std::vector<int> getProcModifyingVar(int varIndex);
 
 	//static void printModifyTable();
 

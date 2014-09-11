@@ -79,14 +79,6 @@ std::vector<int> Call::getCallingStarProc(int proc1){
 	std::vector<int> callingStar;
 	callingStar = getCallingStarProcHelper(proc1, callingStar);
 
-	////get the immediate ones first
-	//for(std::size_t i = 0; i < followTable.size(); i++){
-	//	if(followTable[i].first == s1){
-	//		resultlist.push_back(followTable[i].second);
-	//		getFollowingStarStmt(followTable[i].second);
-	//	}
-	//}
-
 	return callingStar;
 
 }
