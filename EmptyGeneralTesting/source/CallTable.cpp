@@ -116,37 +116,32 @@ std::vector<int> Call::getCallingProc(int proc1)
 }
 
 //Method to get all statements modifying some variable
-std::vector<int> Call::getAllCallingProc(){
-	vector<int> procList;
-	for(std::size_t i = 0; i < callTable.size(); i++){
-		for(std::size_t j = 0; j < callTable[i].size(); j++){
-			if(callTable[i][j] == 1){
-				procList.push_back(i);
-			}
-		}
-	}
-
-	return procList;
-}
-
-//Method to get all variables being modified 
-std::vector<int> Call::getAllCalledProc(){
-	vector<int> procList;
-	for(std::size_t i = 0; i < callTable.size(); i++){
-		for(std::size_t j = 0; j < callTable[i].size(); j++){
-			if(callTable[i][j] == 1){
-				procList.push_back(j);
-			}
-		}
-	}
-
-	return procList;
-}
-
-int Call::getSize()
-{
-	return callTable.size();
-}
+//std::vector<int> Call::getAllCallingProc(){
+//	vector<int> procList;
+//	for(std::size_t i = 0; i < callTable.size(); i++){
+//		for(std::size_t j = 0; j < callTable[i].size(); j++){
+//			if(callTable[i][j] == 1){
+//				procList.push_back(i);
+//			}
+//		}
+//	}
+//
+//	return procList;
+//}
+//
+////Method to get all variables being modified 
+//std::vector<int> Call::getAllCalledProc(){
+//	vector<int> procList;
+//	for(std::size_t i = 0; i < callTable.size(); i++){
+//		for(std::size_t j = 0; j < callTable[i].size(); j++){
+//			if(callTable[i][j] == 1){
+//				procList.push_back(j);
+//			}
+//		}
+//	}
+//
+//	return procList;
+//}
 
 //void Modify::printTable()
 //{

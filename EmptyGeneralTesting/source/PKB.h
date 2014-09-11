@@ -8,6 +8,7 @@
 #include "StatTable.h"
 #include "UseTable.h"
 #include "ConstTable.h"
+#include "CallTable.h"
 #include "AST.h"
 
 #include <utility>
@@ -171,6 +172,20 @@ class PKB
 	//Method for debugging - will be removed when submit.
 	//static void printTable();
 
+	/////////////////////////CALL TABLE/////////////////////////////////////////
+
+	static bool isCalls(int proc1, int proc2);
+
+	static int insertCalls(int proc1, int proc2);
+
+	static bool isCallStar(int proc1, int proc2);
+
+	static std::vector<int> getCallingStarProc(int proc1);
+
+	static std::vector<int> getCalledByProc(int proc1);
+
+	static std::vector<int> getCallingProc(int proc1);
+
 private:
 	static AST astObj;
 	static ConstTable constObj;
@@ -180,5 +195,6 @@ private:
 	static ParentTable parObj;
 	static StatTable stmtObj;
 	static Use useObj;
+	static CallTable callObj;
 };
 #endif

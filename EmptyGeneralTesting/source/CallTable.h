@@ -36,14 +36,7 @@ public :
 	// Method to get the list of proc calling proc1
 	std::vector<int> getCallingProc(int proc1);
 
-	//Method to get all calling Proc
-	std::vector<int> getAllCallingProc();
-
-	//Method to get all proc being called
-	std::vector<int> getAllCalledProc();
-
 	//Method to get the number of records in the table.
-	int getSize();
 
 	//Method for debugging - will be removed when submit.
 	//void printTable();
