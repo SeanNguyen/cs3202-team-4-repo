@@ -10,7 +10,7 @@ VarTable PKB::varObj;
 ParentTable PKB::parObj;
 StatTable PKB::stmtObj;
 Use PKB::useObj;
-CallTable PKB::callObj;
+Call PKB::callObj;
 
 PKB::PKB()
 {

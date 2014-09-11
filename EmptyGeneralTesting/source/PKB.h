@@ -203,6 +203,6 @@ private:
 	static ParentTable parObj;
 	static StatTable stmtObj;
 	static Use useObj;
-	static CallTable callObj;
+	static Call callObj;
 };
 #endif
