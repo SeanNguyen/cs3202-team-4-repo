@@ -16,6 +16,7 @@ using namespace std;
 
 class QueryPreprocessor {
 public:
+	QueryPreprocessor();
 	QueryPreprocessor(string directory);
 	void Preprocess();
 	void Preprocess(string query);

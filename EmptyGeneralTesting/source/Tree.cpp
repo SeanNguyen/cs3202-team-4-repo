@@ -36,3 +36,8 @@ int Tree::getNumChildren(TNode &node) {
 TNode *Tree::getChildAtIndex(TNode &node, int i) {
 	return node.getChildAtIndex(i);
 }
+
+void Tree::printTree() {
+	TNode root = *getRoot();
+	root.printTNode();
+}

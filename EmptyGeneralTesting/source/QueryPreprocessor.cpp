@@ -1,6 +1,9 @@
 #include "QueryPreprocessor.h"
 
 /* CONSTRUCTOR */
+QueryPreprocessor::QueryPreprocessor() {
+}
+
 QueryPreprocessor::QueryPreprocessor(string directory) {
 	this -> fileDirectory = directory;
 }
@@ -87,7 +90,7 @@ void QueryPreprocessor::preprocessFileData() {
 	// loop: queryData, take query one by one
 	for (size_t i=0; i<fileData.size(); i++) {
 		vector<string> query = fileData[i];
-		cout << i + 1 <<endl;
+	//	cout << i + 1 <<endl;
 		preprocessQuery(query);
 	}
 }

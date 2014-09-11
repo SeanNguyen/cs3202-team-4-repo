@@ -74,6 +74,7 @@
     <ClCompile Include="source\TestParentTable.cpp" />
     <ClCompile Include="source\TestUseTable.cpp" />
     <ClCompile Include="source\UnitTest.cpp" />
+    <ClCompile Include="TestQueryPreprocessor.cpp" />
     <ClCompile Include="TestTNode.cpp" />
     <ClCompile Include="TestTree.cpp" />
     <ClCompile Include="TestTree.h" />
@@ -84,6 +85,7 @@
     <ClInclude Include="source\TestModify.h" />
     <ClInclude Include="source\TestParentTable.h" />
     <ClInclude Include="source\TestUseTable.h" />
+    <ClInclude Include="TestQueryPreprocessor.h" />
     <ClInclude Include="TestTNode.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
