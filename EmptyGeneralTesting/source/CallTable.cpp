@@ -44,10 +44,10 @@ bool Call::isCallStar(int proc1, int proc2){
 	bool isCallStar = false;
 	if (proc1 >= 1 && proc2 >= 1)
 	{
-		vector<int> callingStarProc = getCallingStarProc(proc1);
+		vector<int> callingStarProc = getCallingStarProc(proc2);
 		for(size_t index=0; index < callingStarProc.size(); index++)
 		{
-			if (callingStarProc.at(index) == proc2)
+			if (callingStarProc.at(index) == proc1)
 			{
 				isCallStar = true;
 			}
@@ -95,7 +95,7 @@ std::vector<int> Call::getCalledByProc(int proc1){
 	return calledProc;
 }
 
-// Method to get the list of stmt modifying var
+// Method to get the list of proc calling proc1
 std::vector<int> Call::getCallingProc(int proc1)
 {
 	vector<int> callingProc;

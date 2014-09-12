@@ -69,6 +69,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="source\ParserTest.cpp" />
+    <ClCompile Include="source\TestCall.cpp" />
     <ClCompile Include="source\TestFollow.cpp" />
     <ClCompile Include="source\TestModify.cpp" />
     <ClCompile Include="source\TestParentTable.cpp" />
@@ -80,6 +81,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\ParserTest.h" />
+    <ClInclude Include="source\TestCall.h" />
     <ClInclude Include="source\TestFollow.h" />
     <ClInclude Include="source\TestModify.h" />
     <ClInclude Include="source\TestParentTable.h" />

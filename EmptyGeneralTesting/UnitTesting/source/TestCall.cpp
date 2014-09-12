@@ -75,7 +75,7 @@ void CallTest::testisCalls(){
 	return;
 }
 
-void CallTest::testisCallStar()
+void CallTest::testisCallStar()                               
 {
 	Call callObj;
 	callObj.insertCalls(1, 2);
