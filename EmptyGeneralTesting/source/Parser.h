@@ -27,10 +27,14 @@ private:
 
 	//references
 	PKB pkb;
-	string outputFileName;
-	int depth;
+	
+	int currentIndex;
+	vector <string> tokens;
+	int currentDepth;
+
 	bool isDataProcessed;
 	string currentProcessingProc;
+	string outputFileName;
 
 //public methods
 public:
@@ -43,22 +47,31 @@ public:
 	void buildParentTable();
 	void buildStatTable();
 	void buildUseTable();
+	void buildCallTable();
 	bool getFileData(string fileDirectory);
 
 //private helper methods
 private:
 	void readFileData();
 	vector<string> preprocessData(ifstream& file);
-	TNode readProcedure(vector<string> elements, int *i);
-	TNode readWhileStmt(vector<string> elements, int *i);
-	TNode readAssignStmt(vector<string> elements, int *i);
-	TNode readCallStmt (vector<string> elements, int *i);
-	TNode readIfStmt (vector<string> elements, int *i);
+	TNode readProcedure();
+	TNode readStmtList();
+	TNode readWhileStmt();
+	TNode readCallStmt();
+	TNode readIfStmt();
+	TNode readAssignStmt();
+	TNode readExpression(vector<string> expressionTokens);
+	TNode readTerm(vector<string> termTokens);
+	TNode readFactor(vector<string> factorTokens);
+	
 
-	TNode readRightSideAssign(vector<string> elements, int i, int j);
-	TNode readStmtList (vector<string> elements, int *i);
+	void match(string expectedToken);
+	string getCurrentToken();
+	string peekForwardToken (int numberOfIndexForward);
+	void error();
 	vector<string> breakFileDataIntoElements();
 	bool isNumber(const string str);
 	int getFollowedStmt(int i);
 	int getParentStmt(int i);
+	int getLastIndexOfToken (vector<string> tokens, string token);
 };
