@@ -11,6 +11,7 @@ ParentTable PKB::parObj;
 StatTable PKB::stmtObj;
 Use PKB::useObj;
 Call PKB::callObj;
+ProcTable PKB::procObj;
 
 PKB::PKB()
 {
@@ -264,7 +265,7 @@ std::string PKB::getStmtName(int index) {
 
 int PKB::getStatTableSize()
 {
-	return stmtObj.getSize();
+	return stmtObj.getStmtTableSize();
 }
 
 //////////////////////USE TABLE METHODS/////////////////////
@@ -363,3 +364,25 @@ std::vector<int> PKB::getCallingProc(int proc1){
 	return callObj.getCallingProc(proc1);
 }
 
+////////////////////////PROCEDURE METHODS//////////////
+bool PKB::insertProc(std::string name) {
+	int value = procObj.insertProc(name);
+	if (value == -1){
+		return false;	
+	} else {
+		return true;
+	} 
+}
+
+vector<int> PKB::getProcIndex(std::string name){
+	return procObj.getProcIndex(name);
+}
+
+std::string PKB::getProcName(int index) {
+	return procObj.getProcName(index);
+}
+
+int PKB::getProcTableSize()
+{
+	return procObj.getProcTableSize();
+}

@@ -21,7 +21,7 @@ public:
 
 	vector<int> getStmtIndex(string name);
 	string getStmtName(int index);
-	int getSize();
+	int getStmtTableSize();
 	
 };
 

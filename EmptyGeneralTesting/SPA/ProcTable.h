@@ -17,7 +17,7 @@ public:
 
 	vector<int> getProcIndex(string name);
 	string getProcName(int index);
-	int getSize();
+	int getProcTableSize();
 	
 };
 

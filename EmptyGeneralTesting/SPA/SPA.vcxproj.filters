@@ -22,6 +22,7 @@
     <ClCompile Include="..\source\Tree.cpp" />
     <ClCompile Include="..\source\UseTable.cpp" />
     <ClCompile Include="..\source\VarTable.cpp" />
+    <ClCompile Include="ProcTable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\source\AST.h" />
@@ -47,5 +48,6 @@
     <ClInclude Include="..\source\Tree.h" />
     <ClInclude Include="..\source\UseTable.h" />
     <ClInclude Include="..\source\VarTable.h" />
+    <ClInclude Include="ProcTable.h" />
   </ItemGroup>
 </Project>

@@ -35,7 +35,7 @@ string StatTable::getStmtName(int index)
 	return "variable not found";
 }
 
-int StatTable::getSize()
+int StatTable::getStmtTableSize()
 {
 	return statTable.size();
 }

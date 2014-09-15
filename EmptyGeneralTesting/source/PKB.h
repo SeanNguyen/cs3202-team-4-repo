@@ -208,6 +208,16 @@ class PKB
 
 	static std::vector<int> getCallingProc(int proc1);
 
+	///////////////////////////////PROCTABLE////////////////////////////////////
+
+	static bool insertProc(string name);
+
+	static vector<int> getProcIndex(string name);
+	
+	static string getProcName(int index);
+
+	static int getProcTableSize();
+
 private:
 	static AST astObj;
 	static ConstTable constObj;
@@ -218,5 +228,6 @@ private:
 	static StatTable stmtObj;
 	static Use useObj;
 	static Call callObj;
+	static ProcTable procObj;
 };
 #endif
