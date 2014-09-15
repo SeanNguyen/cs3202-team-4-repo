@@ -16,8 +16,10 @@ public:
 	int insertProc(string name);
 
 	vector<int> getProcIndex(string name);
+
 	string getProcName(int index);
-	int getProcTableSize();
+
+	int getSize();
 	
 };
 

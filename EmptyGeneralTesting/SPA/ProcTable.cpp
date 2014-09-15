@@ -35,7 +35,7 @@ string ProcTable::getProcName(int index)
 	return "procedure not found";
 }
 
-int ProcTable::getProcTableSize()
+int ProcTable::getSize()
 {
 	return procTable.size();
 }

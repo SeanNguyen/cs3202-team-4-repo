@@ -388,5 +388,5 @@ std::string PKB::getProcName(int index) {
 
 int PKB::getProcTableSize()
 {
-	return procObj.getProcTableSize();
+	return procObj.getSize();
 }
