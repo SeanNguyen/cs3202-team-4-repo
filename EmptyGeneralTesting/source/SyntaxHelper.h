@@ -18,7 +18,15 @@ const string KEYWORD_IF = "if";
 const string KEYWORD_WHILE = "while";
 const string KEYWORD_VAR = "variable";
 const string KEYWORD_CONST = "const";
-
+const string KEYWORD_OPENCURLYBRACKET = "{";
+const string KEYWORD_CLOSECURLYBRACKET = "}";
+const string KEYWORD_OPENBRACKET = "(";
+const string KEYWORD_CLOSEBRACKET = ")";
+const string KEYWORD_EQUALSIGN = "=";
+const string KEYWORD_SEMICOLON = ";";
+const string KEYWORD_PLUSSIGN = "+";
+const string KEYWORD_MINUSSIGN = "-";
+const string KEYWORD_MULTIPLYSIGN = "*";
 
 
 enum Symbol {
