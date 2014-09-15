@@ -47,6 +47,7 @@ public:
 	void buildParentTable();
 	void buildStatTable();
 	void buildUseTable();
+	void buildProcTable();
 	void buildCallTable();
 	bool getFileData(string fileDirectory);
 

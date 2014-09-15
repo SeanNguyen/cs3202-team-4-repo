@@ -126,11 +126,29 @@ void Parser::buildUseTable()
 }
 
 /*
+* Description: This function builds ProcTable in PKB.
+* Input	  : None.
+* Output     : None.
+*/
+void Parser::buildProcTable() {
+	for (int i = 0; i < this->procName.size(); i++) {
+		string procedureName = this->procName[i];
+		pkb.insertProc(procedureName);
+	}
+}
+
+/*
 * Description: This function builds CallTable in PKB.
 * Input	  : None.
 * Output     : None.
 */
 void Parser::buildCallTable() {
+	for (int i = 0; i < this->calls.size(); i++) {
+		pair <string, string> callPair = this->calls[i];
+		int callingProc = pkb.getProcIndex(callPair.first).front();
+		int calledProc = pkb.getProcIndex(callPair.second).front();
+		pkb.insertCalls(callingProc, calledProc);
+	}
 }
 
 /*
