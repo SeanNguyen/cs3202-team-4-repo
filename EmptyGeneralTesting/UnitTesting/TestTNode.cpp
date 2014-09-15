@@ -115,3 +115,30 @@ void TNodeTest::testAddChild() {
 	TNode node_1 = *node.getChildAtIndex(3);
 	CPPUNIT_ASSERT(node_1.getType()==Calls);
 }
+
+void TNodeTest::testPrintNode() {
+	// randomize some TNodes for testing
+	TNode root(Program);
+	TNode node1(Procedure, "p");
+	TNode node2(StmtList);
+	TNode node3(Var, "x");
+	TNode node4(Const, "2");
+	TNode node1_1(While);
+	TNode node1_2(If);
+	TNode node1_3(Assign);
+	TNode node1_1_1(StmtList);
+	TNode node2_1(Var, "y");
+
+	// build tree
+	node1_1.addChild(node1_1_1);
+	node1.addChild(node1_1);
+	node1.addChild(node1_2);
+	node1.addChild(node1_3);
+	node2.addChild(node2_1);
+	root.addChild(node1);
+	root.addChild(node2);
+	root.addChild(node3);
+	root.addChild(node4);
+
+	//root.printTNode();
+}

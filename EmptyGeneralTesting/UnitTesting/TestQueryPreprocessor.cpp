@@ -14,9 +14,13 @@ void QueryPreprocessorTest::testReadFileData() {
 void QueryPreprocessorTest::testBuildTree() {
 	QueryPreprocessor qp;
 	string query = "stmt s1; Select s1";
+	QueryRepresentator::reset();
 	qp.Preprocess(query);
-	Tree tree = QueryRepresentator::getQueryTree(0);
-	// tree.printTree();
+	//int size = QueryRepresentator::getSize();
+	//CPPUNIT_ASSERT_EQUAL(1, size);
+	//Tree tree = QueryRepresentator::getQueryTree(0);
+	//TNode root = *tree.getRoot();
+	//cout << root.getType() << endl;
 }
 
 void QueryPreprocessorTest::testBuildSuchThatCls() {

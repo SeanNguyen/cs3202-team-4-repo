@@ -11,6 +11,7 @@ class TNodeTest : public CPPUNIT_NS::TestFixture // Note 2
 	CPPUNIT_TEST( testGetNumChildren );
 	CPPUNIT_TEST( testGetChildAtIndex );
 	CPPUNIT_TEST( testAddChild );
+	CPPUNIT_TEST( testPrintNode );
 
 	CPPUNIT_TEST_SUITE_END();
 
@@ -22,4 +23,5 @@ public:
 	void testGetNumChildren();
 	void testGetChildAtIndex();
 	void testAddChild();
+	void testPrintNode();
 };
