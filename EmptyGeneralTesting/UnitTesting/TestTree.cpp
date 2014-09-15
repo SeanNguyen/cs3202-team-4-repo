@@ -98,7 +98,7 @@ void TreeTest::testPrintTree() {
 	tree.addChild(node1, node1_2);
 	tree.addChild(root, node2);
 
-	cout <<endl;
+	/*cout <<endl;
 	tree.printTree();
-	cout <<endl;
+	cout <<endl;*/
 }

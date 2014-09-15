@@ -13,7 +13,7 @@ int QueryRepresentator::size = 0;
 /* PUBLIC METHODS */
 
 // Description: this method is to add new query into QueryRepresentator
-int QueryRepresentator::addQuery(SymbolTable table, QueryTree tree, bool isQueryValid) {
+int QueryRepresentator::addQuery(SymbolTable &table, QueryTree &tree, bool isQueryValid) {
 	tables.push_back(table);
 	trees.push_back(tree);
 	if (isQueryValid) {
@@ -31,29 +31,29 @@ int QueryRepresentator::getSize() {
 }
 
 // Description: this method is to get SymbolTable of query at index "index"
-SymbolTable *QueryRepresentator::getSymbolTable(int index) {
+SymbolTable QueryRepresentator::getSymbolTable(int index) {
 	if (index<0 || index >=size) {
 		SymbolTable table;
-		return &table;
+		return table;
 	}
 	if (size==0) {
 		SymbolTable table;
-		return &table;
+		return table;
 	}
-	return &tables[index];
+	return tables[index];
 }
 
 // Description: this method is to get QueryTree of query at index "index"
-QueryTree *QueryRepresentator::getQueryTree(int index) {
+QueryTree QueryRepresentator::getQueryTree(int index) {
 	if (index<0 || index >=size) {
 		QueryTree tree;
-		return &tree;
+		return tree;
 	}
 	if (size==0) {
 		QueryTree tree;
-		return &tree;
+		return tree;
 	}
-	return &trees[index];
+	return trees[index];
 }
 
 // Description: this method is to check query's validity at index "index"

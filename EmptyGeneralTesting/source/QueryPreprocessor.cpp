@@ -138,7 +138,6 @@ void QueryPreprocessor::preprocessQuery(vector<string> query) {
 	}
 
 	if (errors.size()==0) {
-		cout << "Reach here" <<endl;
 		//		tree.printTree();
 		QueryRepresentator::addQuery(table, tree, true);
 	} else {

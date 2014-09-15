@@ -39,5 +39,7 @@ TNode *Tree::getChildAtIndex(TNode &node, int i) {
 
 void Tree::printTree() {
 	TNode root = *getRoot();
+	cout <<endl;
 	root.printTNode();
+	cout <<endl;
 }

@@ -20,6 +20,10 @@ void QueryRepresentatorTest::setUpData() {
 	TNode n1(ResultCls, "1"); 
 	TNode n2(QuerySymbol, "s1");
 	n1.addChild(n2); root1.addChild(n1); tree1.setRoot(root1);
+	/*cout <<endl;
+	root1.printTNode();
+	tree1.printTree();
+	cout <<endl;*/
 
 	SymbolTable table2; QueryTree tree2;
 	table2.setSymbol(KEYWORD_STMT, "s1");
@@ -61,10 +65,12 @@ void QueryRepresentatorTest::setUpData() {
 }
 
 void QueryRepresentatorTest::testSymbolTable() {
-	SymbolTable table1 = *QueryRepresentator::getSymbolTable(0);
-	SymbolTable table2 = *QueryRepresentator::getSymbolTable(1);
-	SymbolTable table3 = *QueryRepresentator::getSymbolTable(2);
+	CPPUNIT_ASSERT_EQUAL(3, QueryRepresentator::getSize());
 
+	SymbolTable table1 = QueryRepresentator::getSymbolTable(0);
+	SymbolTable table2 = QueryRepresentator::getSymbolTable(1);
+	SymbolTable table3 = QueryRepresentator::getSymbolTable(2);
+	
 	CPPUNIT_ASSERT_EQUAL(1, table1.getSize());
 	CPPUNIT_ASSERT_EQUAL(KEYWORD_STMT, table1.getType(0));
 	CPPUNIT_ASSERT("s1"==table1.getName(0));
@@ -83,7 +89,9 @@ void QueryRepresentatorTest::testSymbolTable() {
 }
 
 void QueryRepresentatorTest::testQueryTree() {
-	QueryTree tree1 = *QueryRepresentator::getQueryTree(0);
+	QueryTree tree1 = QueryRepresentator::getQueryTree(2);
+	TNode root1 = *tree1.getRoot();
+	//CPPUNIT_ASSERT_EQUAL(1, root1.getNumChildren());
 	/*cout<< endl;
 	tree1.printTree();
 	cout <<endl;*/
