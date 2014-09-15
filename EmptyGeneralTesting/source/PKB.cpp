@@ -356,6 +356,10 @@ std::vector<int> PKB::getCallingStarProc(int proc1){
 	return callObj.getCallingStarProc(proc1);
 }
 
+std::vector<int> PKB::getCalledByStarProc(int proc1){
+	return callObj.getCalledByStarProc(proc1);
+}
+
 std::vector<int> PKB::getCalledByProc(int proc1){
 	return callObj.getCalledByProc(proc1);
 }

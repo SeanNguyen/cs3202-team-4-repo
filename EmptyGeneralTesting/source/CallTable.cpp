@@ -71,6 +71,22 @@ std::vector<int> Call::getCallingStarProcHelper(int proc1, std::vector<int> &acc
 	}
 	return accumulated_result;
 }
+
+// private helper function for getCalledByStarStmt.
+std::vector<int> Call::getCalledByStarProcHelper(int proc1, std::vector<int> &accumulated_result)
+{	
+	if(getCalledByProc(proc1).empty()){
+		return accumulated_result;
+	}
+	std::vector<int> procList = getCalledByProc(proc1);
+
+	accumulated_result.insert(accumulated_result.end(), procList.begin(), procList.end());
+	for(size_t index=0; index < procList.size(); index++)
+	{
+		getCalledByStarProcHelper(procList.at(index), accumulated_result);
+	}
+	return accumulated_result;
+}
   
 // Method to get the following statement to statement number s1
 //assuming there will be inserts like (1, 2), (1, 3) then a list is better.
@@ -81,6 +97,11 @@ std::vector<int> Call::getCallingStarProc(int proc1){
 
 	return callingStar;
 
+}
+
+std::vector<int> Call::getCalledByStarProc(int proc1){
+	std::vector<int> calledByStar;
+	calledByStar = getCalledByStarProcHelper(proc1, calledByStar);
 }
 
 //Method to get the proc called in proc1

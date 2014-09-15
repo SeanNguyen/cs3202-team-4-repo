@@ -10,6 +10,7 @@
 #include "ConstTable.h"
 #include "CallTable.h"
 #include "AST.h"
+#include "ProcTable.h"
 
 #include <utility>
 #include <vector>
@@ -203,6 +204,8 @@ class PKB
 	static bool isCallStar(int proc1, int proc2);
 
 	static std::vector<int> getCallingStarProc(int proc1);
+
+	static std::vector<int> getCalledByStarProc(int proc1);
 
 	static std::vector<int> getCalledByProc(int proc1);
 

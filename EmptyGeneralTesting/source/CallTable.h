@@ -28,6 +28,8 @@ public :
 
 	std::vector<int> getCallingStarProc(int proc1);
 
+	std::vector<int> getCalledByStarProc(int proc1);
+
 	// Method to get the list of proc called by proc1
 	std::vector<int> getCalledByProc(int proc1);
 
@@ -40,7 +42,7 @@ public :
 	//void printTable();
 
 private:
-	std::vector<int> getCalledStarProcHelper(int proc1, std::vector<int> &accumulated_result);
+	std::vector<int> getCalledByStarProcHelper(int proc1, std::vector<int> &accumulated_result);
 	std::vector<int> getCallingStarProcHelper(int proc1, std::vector<int> &accumulated_result);
 	int MAX_SIZE;
 };
