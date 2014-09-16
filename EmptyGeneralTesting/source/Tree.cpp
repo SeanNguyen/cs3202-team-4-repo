@@ -1,6 +1,8 @@
 #include "Tree.h"
 
 Tree::Tree() {
+	TNode node;
+	setRoot(node);
 }
 
 TNode Tree::createNode() { 

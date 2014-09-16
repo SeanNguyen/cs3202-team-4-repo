@@ -19,11 +19,8 @@ void QueryRepresentatorTest::setUpData() {
 	TNode root1(Select);
 	TNode n1(ResultCls, "1"); 
 	TNode n2(QuerySymbol, "s1");
-	n1.addChild(n2); root1.addChild(n1); tree1.setRoot(root1);
-	/*cout <<endl;
-	root1.printTNode();
-	tree1.printTree();
-	cout <<endl;*/
+	tree1.setRoot(root1);
+	n1.addChild(n2); root1.addChild(n1);
 
 	SymbolTable table2; QueryTree tree2;
 	table2.setSymbol(KEYWORD_STMT, "s1");
@@ -35,9 +32,9 @@ void QueryRepresentatorTest::setUpData() {
 	TNode n6(Uses);
 	TNode n7(QuerySymbol, "s1");
 	TNode n8(QuerySymbol, "x");
+	tree2.setRoot(root2);
 	n6.addChild(n7); n6.addChild(n8); n5.addChild(n6);
 	n3.addChild(n4); root2.addChild(n3); root2.addChild(n5);
-	tree2.setRoot(root2);
 
 	SymbolTable table3; QueryTree tree3;
 	table3.setSymbol(KEYWORD_STMT, "s1");
@@ -54,14 +51,17 @@ void QueryRepresentatorTest::setUpData() {
 	TNode n17(Var, "x");
 	TNode n18(Underline);
 	n9.addChild(n10);
+	tree3.setRoot(root3);
 	n12.addChild(n13); n12.addChild(n14); n11.addChild(n12);
 	n15.addChild(n16); n15.addChild(n17); n15.addChild(n18);
 	root3.addChild(n9); root3.addChild(n11); root3.addChild(n15);
-	tree3.setRoot(root3);
 
 	QueryRepresentator::addQuery(table1, tree1, true);
 	QueryRepresentator::addQuery(table2, tree2, true);
 	QueryRepresentator::addQuery(table3, tree3, true);
+
+	/*Tree t = QueryRepresentator::getQueryTree(1);
+	t.printTree();*/
 }
 
 void QueryRepresentatorTest::testSymbolTable() {

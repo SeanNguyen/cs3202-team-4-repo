@@ -7,6 +7,7 @@
 class QueryPreprocessorTest : public CPPUNIT_NS::TestFixture {
 	CPPUNIT_TEST_SUITE( QueryPreprocessorTest );  
 	CPPUNIT_TEST( testReadFileData );
+	CPPUNIT_TEST( testBuildSymbolTable );
 	CPPUNIT_TEST( testBuildTree );
 	CPPUNIT_TEST( testBuildSuchThatCls );
 	CPPUNIT_TEST( testBuildPatternCls );
@@ -17,6 +18,7 @@ public:
 	void setUp();
 	void tearDown();
 	void testReadFileData();
+	void testBuildSymbolTable();
 	void testBuildTree();
 	void testBuildSuchThatCls();
 	void testBuildPatternCls();

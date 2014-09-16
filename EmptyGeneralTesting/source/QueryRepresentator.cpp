@@ -27,7 +27,7 @@ int QueryRepresentator::addQuery(SymbolTable &table, QueryTree &tree, bool isQue
 
 // Description: this method is to get number of queries
 int QueryRepresentator::getSize() {
-	return size;
+	return trees.size();
 }
 
 // Description: this method is to get SymbolTable of query at index "index"
