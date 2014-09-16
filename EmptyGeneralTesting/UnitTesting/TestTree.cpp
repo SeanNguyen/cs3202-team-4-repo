@@ -82,3 +82,23 @@ void TreeTest::testAddChild() {
 	CPPUNIT_ASSERT_EQUAL(Procedure, _child1.getType());
 	CPPUNIT_ASSERT_EQUAL(2, _child1.getNumChildren());
 }
+
+void TreeTest::testPrintTree() {
+	Tree tree;
+	// randomize some nodes
+	TNode root = tree.createNode(Program);
+	TNode node1 = tree.createNode(Procedure, "First");
+	TNode node1_1 = tree.createNode(StmtList);
+	TNode node1_2 = tree.createNode(While);
+	TNode node2 = tree.createNode(If);
+
+	tree.setRoot(root);
+	tree.addChild(root, node1);
+	tree.addChild(node1, node1_1);
+	tree.addChild(node1, node1_2);
+	tree.addChild(root, node2);
+
+	/*cout <<endl;
+	tree.printTree();
+	cout <<endl;*/
+}

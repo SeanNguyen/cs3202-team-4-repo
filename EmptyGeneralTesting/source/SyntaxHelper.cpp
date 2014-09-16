@@ -53,3 +53,81 @@ Symbol SyntaxHelper::getSymbolType(string type) {
 
 	return Undefined;
 }
+
+string SyntaxHelper::SymbolToString(Symbol symbol) {
+	switch (symbol) {
+	case Program:
+		return KEYWORD_PROGRAM;
+	case Procedure:
+		return KEYWORD_PROCEDURE;
+	case StmtList:
+		return KEYWORD_STMTLIST;
+	case Prog_line:
+		return KEYWORD_PROG_LINE;
+	case Stmt:
+		return KEYWORD_STMT;
+	case Assign:
+		return KEYWORD_ASSIGN;
+	case While:
+		return KEYWORD_WHILE;
+	case If:
+		return KEYWORD_IF;
+	case Var:
+		return KEYWORD_VAR;
+	case Const:
+		return KEYWORD_CONST; 
+	case Plus:
+		return "+";
+	case Minus:
+		return "-";
+	case Times:
+		return "*";
+		
+	case Select:
+		return KEYWORD_SELECT;
+	case ResultCls:
+		return "ResultCls";
+	case SuchThatCls:
+		return "SuchThatCls";
+	case PatternCls:
+		return "PatternCls";
+	case WithCls:
+		return "WithCls";
+	case QuerySymbol:
+		return "QuerySymbol";
+	case Underline:
+		return "Underline";
+	case Follows:
+		return FOLLOWS_RLT;
+	case FollowsS:
+		return FOLLOWSSTAR_RLT;
+	case Parent:
+		return PARENT_RLT;
+	case ParentS:
+		return PARENTSTAR_RLT;
+	case Modifies:
+		return MODIFIES_RLT;
+	case Uses:
+		return USES_RLT;
+	case Calls:
+		return CALLS_RLT;
+	case CallsS:
+		return CALLSSTAR_RLT;
+	default:
+		return "Undefined";
+	}
+}
+
+bool SyntaxHelper::isRelation(string str) {
+	if (str==FOLLOWS_RLT) return true;
+	if (str==FOLLOWSSTAR_RLT) return true;
+	if (str==PARENT_RLT) return true;
+	if (str==PARENTSTAR_RLT) return true;
+	if (str==MODIFIES_RLT) return true;
+	if (str==USES_RLT) return true;
+	if (str==CALLS_RLT) return true;
+	if (str==CALLSSTAR_RLT) return true;
+	
+
+	return false;
+}

@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <iostream>
 
 #include "SyntaxHelper.h"
 
@@ -18,8 +19,11 @@ public:
 	int getNumChildren();
 	TNode *getChildAtIndex(int i);
 	int addChild(TNode &child);
+	void printTNode();
 private:
 	Symbol type;
 	string value;
 	vector<TNode*> children;
+
+	void printTNode(int depth);
 };

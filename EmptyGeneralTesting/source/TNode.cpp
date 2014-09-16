@@ -38,3 +38,18 @@ int TNode::addChild(TNode &child) {
 	children.push_back(&child);
 	return children.size()-1;
 }
+
+void TNode::printTNode() {
+	printTNode(0);
+}
+
+void TNode::printTNode(int depth) {
+	for (int i=0; i<depth; i++) {
+		cout << "  ";
+	}
+	cout << SyntaxHelper::SymbolToString(type) << " " << value <<endl;
+	for (size_t i=0; i<children.size(); i++) {
+		TNode child = *getChildAtIndex(i);
+		child.printTNode(depth+1);
+	}
+}

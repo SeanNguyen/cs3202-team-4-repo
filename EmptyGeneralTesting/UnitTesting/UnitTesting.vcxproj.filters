@@ -42,7 +42,14 @@
     <ClCompile Include="TestTree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="source\TestCall.cpp">
+=======
+    <ClCompile Include="TestQueryPreprocessor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestQueryRepresentator.cpp">
+>>>>>>> tho
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -65,7 +72,14 @@
     <ClInclude Include="TestTNode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="source\TestCall.h">
+=======
+    <ClInclude Include="TestQueryPreprocessor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TestQueryRepresentator.h">
+>>>>>>> tho
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

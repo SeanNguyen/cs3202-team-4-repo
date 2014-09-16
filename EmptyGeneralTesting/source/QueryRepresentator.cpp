@@ -13,7 +13,7 @@ int QueryRepresentator::size = 0;
 /* PUBLIC METHODS */
 
 // Description: this method is to add new query into QueryRepresentator
-int QueryRepresentator::addQuery(SymbolTable table, QueryTree tree, bool isQueryValid) {
+int QueryRepresentator::addQuery(SymbolTable &table, QueryTree &tree, bool isQueryValid) {
 	tables.push_back(table);
 	trees.push_back(tree);
 	if (isQueryValid) {
@@ -27,7 +27,7 @@ int QueryRepresentator::addQuery(SymbolTable table, QueryTree tree, bool isQuery
 
 // Description: this method is to get number of queries
 int QueryRepresentator::getSize() {
-	return size;
+	return trees.size();
 }
 
 // Description: this method is to get SymbolTable of query at index "index"

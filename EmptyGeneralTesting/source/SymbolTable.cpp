@@ -5,7 +5,7 @@ SymbolTable::SymbolTable() {
 }
 
 int SymbolTable::getSize() {
-	return this -> size;
+	return this -> names.size();
 }
 
 string SymbolTable::getType(string name) {

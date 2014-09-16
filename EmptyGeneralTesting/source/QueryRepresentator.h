@@ -15,7 +15,7 @@ public:
 	static QueryTree getQueryTree(int index);
 	static bool getQueryValidity(int index);
 	static int getSize();
-	static int addQuery(SymbolTable table, QueryTree tree, bool isQueryValid);
+	static int addQuery(SymbolTable &table, QueryTree &tree, bool isQueryValid);
 	static void reset();
 private:
 	static vector<SymbolTable> tables;

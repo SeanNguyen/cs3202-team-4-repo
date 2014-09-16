@@ -1,6 +1,8 @@
 #include "Tree.h"
 
 Tree::Tree() {
+	TNode node;
+	setRoot(node);
 }
 
 TNode Tree::createNode() { 
@@ -35,4 +37,11 @@ int Tree::getNumChildren(TNode &node) {
 
 TNode *Tree::getChildAtIndex(TNode &node, int i) {
 	return node.getChildAtIndex(i);
+}
+
+void Tree::printTree() {
+	TNode root = *getRoot();
+	cout <<endl;
+	root.printTNode();
+	cout <<endl;
 }

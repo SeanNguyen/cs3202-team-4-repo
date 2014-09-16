@@ -13,6 +13,7 @@ public:
 	TNode *getRoot();
 	int getNumChildren(TNode &node);
 	TNode *getChildAtIndex(TNode &node, int i);
+	void printTree();
 private:
 	TNode *root;
 };
