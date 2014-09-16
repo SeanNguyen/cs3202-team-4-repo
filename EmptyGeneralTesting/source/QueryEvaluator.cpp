@@ -92,7 +92,7 @@ void QueryEvaluator::checkQueryCondition(int childIndex, vector<string> values, 
 		return;
 	}
 
-	TNode root = tree.getRoot();
+	TNode root = *tree.getRoot();
 
 	// if no more condition to check
 	if (childIndex==root.getNumChildren()) {
@@ -111,7 +111,7 @@ void QueryEvaluator::checkQueryCondition(int childIndex, vector<string> values, 
 	} 
 
 	// get root's child at index
-	TNode child = root.getChildAtIndex(childIndex);
+	TNode child = *root.getChildAtIndex(childIndex);
 	if (child.getValue()=="suchThat") {
 		// find values satisfying such that condition
 		checkSuchThatCondition(child, values, result, check, childIndex);
@@ -127,18 +127,18 @@ void QueryEvaluator::checkSuchThatCondition(TNode suchThatNode, vector<string> v
 	// at this point we must check if result list has the value saved in value list or not
 
 	// get root node
-	TNode & root = tree.getRoot();
+	TNode root = *tree.getRoot();
 
 	// get relationship node under suchThat node
-	TNode & relationNode = suchThatNode.getChildAtIndex(0);  
+	TNode relationNode = *suchThatNode.getChildAtIndex(0);  
 
 	handleRelationNode(relationNode, values, result, check, childIndex);
 }
 
 void QueryEvaluator::handleRelationNode(TNode & relationNode, vector<string> values, vector<string>& result, bool check, int childIndex) {
 	// get 2 argument nodes under relationNode
-	TNode & arg1Node = relationNode.getChildAtIndex(0);
-	TNode & arg2Node = relationNode.getChildAtIndex(1);
+	TNode arg1Node = *relationNode.getChildAtIndex(0);
+	TNode arg2Node = *relationNode.getChildAtIndex(1);
 	Symbol arg1Type = arg1Node.getType();
 	Symbol arg2Type = arg2Node.getType();
 	Symbol relation = relationNode.getType();
@@ -165,7 +165,7 @@ void QueryEvaluator::handleRelationNode(TNode & relationNode, vector<string> val
 	}
 	if (arg1Type == QuerySymbol && arg2Type == Const) {
 		string arg1Value=getStoredValue(values, arg1Name);
-		if(arg1Value!='-1'){
+		if(arg1Value!="-1"){
 			check=isRelation(relation,arg1Value, arg2Name);
 			//call back to checkQueryCondition
 			checkQueryCondition(childIndex++, values, result, check);
@@ -178,18 +178,18 @@ void QueryEvaluator::handleRelationNode(TNode & relationNode, vector<string> val
 		string arg1Value=getStoredValue(values, arg1Name);
 		string arg2Value = getStoredValue(values, arg2Name);
 
-		if(arg1Value!='-1' & arg2Value!='-1'){
-			check=isRelation(relation, arg1Value, arg2Value)
+		if(arg1Value!="-1" & arg2Value!="-1"){
+			check=isRelation(relation, arg1Value, arg2Value);
 			//call back to checkQueryCondition
 			checkQueryCondition(childIndex++, values, result, check);
 			return;
-		} else if(arg1Value!='-1' & arg2Value=='-1'){
+		} else if(arg1Value!="-1" & arg2Value=="-1"){
 			check=isRelation(relation,arg1Value, arg2Name);
 			//call back to checkQueryCondition
 			checkQueryCondition(childIndex++, values, result, check);
 			return;
 
-		} else if(arg1Value=='-1' & arg2Value!='-1'){
+		} else if(arg1Value=="-1" & arg2Value!="-1"){
 			check = isRelation(relation, arg1Name, arg2Value);	
 			//call back to checkQueryCondition
 			checkQueryCondition(childIndex++, values, result, check);
@@ -247,8 +247,8 @@ vector<string> & QueryEvaluator::getArgumentValueInRelation(Symbol relation, str
 				int var2;
 				vector<int> stmts;
 
-				if(arg2Type=="procedure"){
-					var2=PKB::getProcIndex(arg2Value);
+				if(arg2Type==Procedure){
+					//var2=PKB::getProcIndex(arg2Value);
 					stmts=PKB::getModifiedVarAtProc(var2);
 				}
 					
@@ -266,8 +266,8 @@ vector<string> & QueryEvaluator::getArgumentValueInRelation(Symbol relation, str
 			{
 				int var2;
 				vector<int> stmts;
-				if(arg2Type=="procedure"){
-					var2=PKB::getProcIndex(arg2Value);
+				if(arg2Type==Procedure){ // FIX
+					//var2=PKB::getProcIndex(arg2Value);
 					stmts=PKB::getUsedVarAtProc(var2);
 
 				}
@@ -283,7 +283,8 @@ vector<string> & QueryEvaluator::getArgumentValueInRelation(Symbol relation, str
 			}
 			case Calls:
 			{
-				int var2=PKB::getProcIndex(arg2Value);
+				int var2 = 0;
+				//int var2=PKB::getProcIndex(arg2Value);
 				vector<int> stmts=PKB::getCalledByProc(var2);
 				for(int i=0;i<stmts.size();i++){
 					resultList.push_back(intToString(stmts[i]));
@@ -292,7 +293,8 @@ vector<string> & QueryEvaluator::getArgumentValueInRelation(Symbol relation, str
 			}
 			case CallsS:
 			{
-				int var2=PKB::getProcIndex(arg2Value);
+				int var2 = 0;
+				//int var2=PKB::getProcIndex(arg2Value);
 				vector<int> stmts=PKB::getCalledByStarProc(var2);
 				for(int i=0;i<stmts.size();i++){
 					resultList.push_back(intToString(stmts[i]));
@@ -360,7 +362,8 @@ vector<string> & QueryEvaluator::getArgumentValueInRelation(Symbol relation, str
 			}
 			case Calls:
 			{
-				int var2=PKB::getProcIndex(arg1Value);
+				int var2= 0;
+				//int var2=PKB::getProcIndex(arg1Value);
 				vector<int> stmts=PKB::getCallingProc(var2);
 				for(int i=0;i<stmts.size();i++){
 					resultList.push_back(intToString(stmts[i]));
@@ -370,7 +373,8 @@ vector<string> & QueryEvaluator::getArgumentValueInRelation(Symbol relation, str
 			}
 			case CallsS:
 			{
-				int var2=PKB::getProcIndex(arg1Value);
+				int var2 = 0;
+				//int var2=PKB::getProcIndex(arg1Value);
 				vector<int> stmts=PKB::getCallingStarProc(var2);
 				for(int i=0;i<stmts.size();i++){
 					resultList.push_back(intToString(stmts[i]));
@@ -452,7 +456,7 @@ string QueryEvaluator::getStoredValue(vector<string> values, string argName) {
 
 void QueryEvaluator::checkPatternCondition(TNode patternNode,vector<string> values,vector<string>& result,bool check,int childIndex) {
 	// get first child of patternNode
-	TNode child1 = patternNode.getChildAtIndex(0);
+	TNode child1 = *patternNode.getChildAtIndex(0);
 	string child1Name = child1.getValue();
 	int child1Index = table.getIndex(child1Name);
 
@@ -486,7 +490,7 @@ void QueryEvaluator::checkPatternCondition(TNode patternNode,vector<string> valu
 
 
 		// get second child and check it value
-		TNode child2 = patternNode.getChildAtIndex(1);
+		TNode child2 = *patternNode.getChildAtIndex(1);
 		Symbol child2Type = child2.getType();
 		string child2Val = child2.getValue();
 		if (child2Type==Underline) {
@@ -540,13 +544,13 @@ void QueryEvaluator::checkPatternCondition(TNode patternNode,vector<string> valu
 		}
 		
 		// get third child, which is the right hand side
-		TNode child3 = patternNode.getChildAtIndex(2);
+		TNode child3 = *patternNode.getChildAtIndex(2);
 
 		if (child3.getType()==Underline) {
 			rightHandSide=true;
 		} else {
 			TNode node = PKB::getNodeOfStmt(child1Val);
-			AST subAST; subAST.setRoot(node.getChildAtIndex(1));
+			AST subAST; subAST.setRoot(*node.getChildAtIndex(1));
 			Tree tree; tree.setRoot(child3);
 			rightHandSide = subAST.hasSubTree(tree);
 		}
@@ -559,11 +563,11 @@ void QueryEvaluator::checkPatternCondition(TNode patternNode,vector<string> valu
 	
 
 void QueryEvaluator::updateResultList(vector<string> values, vector<string>& result) {
-	TNode root = tree.getRoot();
+	TNode root = *tree.getRoot();
 	// get first child
-	TNode child = root.getChildAtIndex(0);
+	TNode child = *root.getChildAtIndex(0);
 
-	child = child.getChildAtIndex(0);
+	child = *child.getChildAtIndex(0);
 	Symbol paramType = child.getType();
 	string paramName = child.getValue();
 	// get index of the parameter
@@ -658,9 +662,9 @@ bool QueryEvaluator::isDeclaredType(string val, string name, string type) {
 // after the functions isSuchThatConditionSatisfied and isPatternConditionSatisfied finish
 string QueryEvaluator::getResultAfterEvaluation(vector<string> values) {
 	// get node containing symbol name of result
-	TNode root = tree.getRoot();
-	TNode result = root.getChildAtIndex(0);
-	TNode resultChild1 = result.getChildAtIndex(0);
+	TNode root = *tree.getRoot();
+	TNode result = *root.getChildAtIndex(0);
+	TNode resultChild1 = *result.getChildAtIndex(0);
 
 	string name = resultChild1.getValue();
 	int index = table.getIndex(name);

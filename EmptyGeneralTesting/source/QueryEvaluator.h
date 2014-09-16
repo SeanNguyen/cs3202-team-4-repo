@@ -32,7 +32,7 @@ private:
 	void checkPatternCondition(TNode node, vector<string> values, vector<string>& result, bool check, int childIndex);
 	void handleRelationNode(TNode & relationNode, vector<string> values, vector<string> & result, bool check, int childIndex);
 	
-	vector<string> & getArgumentValueInRelation(Symbol Relation, string arg1Value, string arg2Value, int argIndex);
+	vector<string> & getArgumentValueInRelation(Symbol Relation, string arg1Value, Symbol arg1Type, string arg2Value, Symbol arg2Type, int argIndex);
 
 	bool isRelation(Symbol relation, string arg1Value, string arg2Value);
 	string getStoredValue(vector<string> values, string argName);
