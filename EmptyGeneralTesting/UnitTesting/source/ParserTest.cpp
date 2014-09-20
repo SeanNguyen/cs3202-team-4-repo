@@ -26,7 +26,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION( ParserTest );
 
 void ParserTest::testParseEmptyProcedure() {
 	Parser parser;
-	//parser.parse(testFile_EmptyProcedure);
+	parser.parse(testFile_EmptyProcedure);
+	cout << "end" << endl;
 }
 
 void ParserTest::testParseCall() {
