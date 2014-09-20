@@ -31,7 +31,7 @@ private:
 	void preprocessQuery(vector<string> query);
 	void preprocessDeclaration(SymbolTable& table, string declaration, vector<string>& errors);
 	void preprocessQueryPart(QueryTree& tree, SymbolTable table, string queryPart, vector<string>& errors);
-	TNode * preprocessResultNode();
+	TNode * preprocessResultNode(vector<string> list, SymbolTable table, vector<string> & errors, int i);
 	TNode * preprocessSuchThatCondition(vector<string> suchthat, SymbolTable table, vector<string>& errors);
 	TNode * preprocessPatternCondition(vector<string> pattern, SymbolTable table, vector<string>& errors);
 	TNode * preprocessWithCondition(vector<string> list, SymbolTable table, vector<string>& errors, int i);

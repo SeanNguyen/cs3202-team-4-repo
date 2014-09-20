@@ -1,3 +1,4 @@
 procedure OhSimple
 {
+	x=1;
 }

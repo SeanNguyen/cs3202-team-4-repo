@@ -90,6 +90,7 @@ void QueryRepresentatorTest::testSymbolTable() {
 void QueryRepresentatorTest::testQueryTree() {
 	QueryTree tree1 = QueryRepresentator::getQueryTree(2);
 	TNode root1 = *tree1.getRoot();
+
 	//CPPUNIT_ASSERT_EQUAL(1, root1.getNumChildren());
 	cout<< endl;
 	tree1.printTree();

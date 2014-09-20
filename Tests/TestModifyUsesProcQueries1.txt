@@ -1,0 +1,46 @@
+9
+cat: Use, Modify
+1 - Variable, Modifies ::
+variable v;
+Select BOOLEAN such that Modifies("A","z")
+true
+5000
+2 - Variable, Modifies ::
+variable v;
+Select BOOLEAN such that Uses("A","t")
+true
+5000
+3 - Variable, Modifies ::
+variable v;
+Select BOOLEAN such that Modifies("E","m")
+true
+5000
+4 - Variable, Modifies ::
+variable v;
+Select BOOLEAN such that Uses("D","n")
+true
+5000
+5 - Variable, Modifies ::
+variable v;
+Select BOOLEAN such that Uses("F","y")
+true
+5000
+6 - Variable, Modifies ::
+variable v;
+Select BOOLEAN such that Modifies("E","z")
+true
+5000
+7 - Variable, Modifies ::
+variable v;
+Select BOOLEAN such that Modifies("A","x")
+false
+8 - Procedure, Variable, Modifies ::
+procedure p;
+Select p such that Modifies (p, "m");
+2
+5000
+9 - Procedure, Uses ::
+procedure p;
+Select p such that Uses(p, "n");
+2
+5000

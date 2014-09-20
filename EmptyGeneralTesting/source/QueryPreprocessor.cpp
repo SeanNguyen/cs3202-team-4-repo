@@ -111,7 +111,7 @@ void QueryPreprocessor::preprocessQuery(vector<string> query) {
 			if (element==KEYWORD_PROG_LINE	|| element==KEYWORD_ASSIGN	||
 				element==KEYWORD_STMT		|| element==KEYWORD_VAR	||
 				element==KEYWORD_CONST	|| element==KEYWORD_WHILE	||
-				element==KEYWORD_IF) {
+				element==KEYWORD_IF || element==KEYWORD_PROCEDURE) {
 				// find ending sign of this declaration (";");
 				if (curLine.find_first_of(";")!=string::npos) {
 					unsigned index = curLine.find_first_of(";");
@@ -188,13 +188,7 @@ void QueryPreprocessor::preprocessQueryPart(QueryTree& tree, SymbolTable table, 
 	// create root node for Select
 	TNode * root = new TNode(Select, "");
 	// recognize result and create node for it
-	TNode * result = new TNode(ResultCls, "single");
-	// check if result is a symbol
-	if (!table.isSymbol(list[1])) {
-		errors.push_back("Error: not a defined symbol: " + list[1]);
-	}
-	TNode * resultChild = new TNode(QuerySymbol, list[1]);
-	result -> addChild(resultChild);
+	TNode * result = preprocessResultNode(list, table, errors, 1);
 	root -> addChild(result);
 
 	// find and preprocess conditions of query
@@ -219,12 +213,31 @@ void QueryPreprocessor::preprocessQueryPart(QueryTree& tree, SymbolTable table, 
 			}
 		} else if (list[i]=="with") {
 			TNode * withCls = preprocessWithCondition(list, table, errors, i);
+			root -> addChild(withCls);
 		} else {
 			cout <<  "";
 		}
 	}
 
 	tree.setRoot(root);
+}
+
+TNode * QueryPreprocessor::preprocessResultNode(vector<string> list, SymbolTable table, vector<string>& errors, int i) {
+	// FOR ITERATION 1 AND 2: BOOLEAN and single value
+	if (list[i]=="BOOLEAN") {
+		TNode * node = new TNode(ResultCls, "BOOLEAN");
+		return node;
+	} else {
+		if (table.isSymbol(list[i])) {
+			TNode * node = new TNode(ResultCls, "single");
+			TNode * nodeChild = new TNode(QuerySymbol, list[i]);
+			node -> addChild(nodeChild);
+			return node;
+		}
+		errors.push_back("Error: unable to find symbol: " + list[1]);
+		TNode * node = new TNode();
+		return node;
+	}
 }
 
 // Description: this method is to preprocess the such that condition of query
@@ -294,7 +307,8 @@ TNode * QueryPreprocessor::preprocessPatternCondition(vector<string> list, Symbo
 
 	// expect second element as name of assignment symbol
 	string assignSymbol = list[1];
-	if (false) {
+	if (table.getType(list[1])!=KEYWORD_ASSIGN) {
+		errors.push_back("Not a valid symbol for pattern clause: " + list[1]);
 	}
 	TNode * assignNode = new TNode(QuerySymbol, assignSymbol);
 	pattern -> addChild(assignNode);
@@ -386,6 +400,88 @@ TNode * QueryPreprocessor::preprocessPatternCondition(vector<string> list, Symbo
 TNode * QueryPreprocessor::preprocessWithCondition(vector<string> list, SymbolTable table, vector<string> & errors, int index) {
 	TNode * withCls = new TNode(WithCls);
 
+	string arg1 = list[index+1];
+	string arg1Type = table.getType(arg1);
+	if (table.isSymbol(arg1)) {
+		// check syntax
+		if (list[index+2]!=".") {
+			errors.push_back("Wrong expression: " + arg1 + list[index+2] + list[index+3]);
+		} 
+		if (arg1Type==KEYWORD_PROCEDURE && list[index+3]!="procName") {
+			errors.push_back("Wrong expression HERE: " + arg1 + list[index+2] + list[index+3]);
+		}
+		if (arg1Type==KEYWORD_VAR && list[index+3]!="varName") {
+			errors.push_back("Wrong expression: " + arg1 + list[index+2] + list[index+3]);
+		}
+		if (arg1Type==KEYWORD_CONST && list[index+3]!="value") {
+			errors.push_back("Wrong expression: " + arg1 + list[index+2] + list[index+3]);
+		}
+		if ((arg1Type==KEYWORD_STMT || arg1Type==KEYWORD_ASSIGN ||
+			arg1Type==KEYWORD_WHILE || arg1Type==KEYWORD_IF || arg1Type == KEYWORD_CALL)
+			&& list[index+3]!="stmt#") {
+			errors.push_back("Wrong expression: " + arg1 + list[index+2] + list[index+3]);
+		}
+		if (arg1Type==KEYWORD_PROG_LINE && list[index+3]!="prog_line#") {
+			errors.push_back("Wrong expression: " + arg1 + list[index+2] + list[index+3]);
+		}
+		if (arg1Type==KEYWORD_CALL && list[index+3]!="procName") {
+			errors.push_back("Wrong expression: " + arg1 + list[index+2] + list[index+3]);
+		}
+		TNode * arg1Node = new TNode(QuerySymbol, arg1);
+		withCls -> addChild(arg1Node);
+		index += 4;
+	}
+
+	if (list[index]!="=") {
+		errors.push_back("Error: expect equality size (=) but find " + list[index] +" instead");
+		return withCls;
+	}
+	index++;
+
+	string arg2 = list[index];
+
+	if (table.isSymbol(arg2)) {
+		string arg2Type = table.getType(arg2);
+		if (arg1Type==KEYWORD_PROCEDURE || arg1Type==KEYWORD_VAR || arg1Type==KEYWORD_CALL) { 
+			if (arg2Type!=KEYWORD_PROCEDURE && arg2Type==KEYWORD_VAR && arg2Type!=KEYWORD_CALL) {
+				errors.push_back("Not correct comparison (different attribute type): " + arg1 + " and " + arg2);
+			} else {
+				TNode * arg2Node = new TNode(Const, arg2);
+				withCls -> addChild(arg2Node);
+			}
+		} else {
+			if (arg2Type!=KEYWORD_CONST && arg2Type!=KEYWORD_PROG_LINE &&
+			arg2Type!=KEYWORD_STMT && arg2Type!=KEYWORD_ASSIGN && arg2Type!=KEYWORD_WHILE &&
+			arg2Type!=KEYWORD_IF && arg2Type==KEYWORD_CALL) {
+				errors.push_back("Not correct comparison (different attribute type): " + arg1 + " and " + arg2);
+			} else {
+				TNode * arg2Node = new TNode(Const, arg2);
+				withCls -> addChild(arg2Node);
+			}
+		}
+	} else {
+		if (arg1Type==KEYWORD_PROCEDURE || arg1Type==KEYWORD_VAR || arg1Type==KEYWORD_CALL) {
+			// expect semicolon
+			if (list[index]=="\"" && list[index+2]=="\"") {
+				TNode * arg2Node = new TNode(Const, list[index+1]);
+				withCls -> addChild(arg2Node);
+			} else {
+				errors.push_back("Not correct comparison (different attribute type): " + arg1 + " and " + arg2);
+			}
+		} else if (arg1Type==KEYWORD_CONST || arg1Type==KEYWORD_PROG_LINE ||
+			arg1Type==KEYWORD_STMT || arg1Type==KEYWORD_ASSIGN || arg1Type==KEYWORD_WHILE ||
+			arg1Type==KEYWORD_IF || arg1Type==KEYWORD_CALL) {
+			if (isNumber(arg2)) {
+				TNode * arg2Node = new TNode(Const, arg2);
+				withCls -> addChild(arg2Node);
+			} else {
+				errors.push_back("Not correct comparison (different attribute type): " + arg1 + " and " + arg2);
+			}
+		} else {
+			errors.push_back("Not correct comparison (different attribute type): " + arg1 + " and " + arg2);
+		}
+	}
+
 	return withCls;
 }
 
@@ -438,6 +534,18 @@ vector<string> QueryPreprocessor::breakStringIntoWords(string str) {
 		}
 		if (curChar==34) {
 			str = str.replace(i, 1, " \" ");
+			i+=2;
+		}
+		if (curChar=='.') {
+			str = str.replace(i, 1, " . ");
+			i+=2;
+		}
+		if (curChar=='<') {
+			str = str.replace(i, 1, " < ");
+			i+=2;
+		}
+		if (curChar=='>') {
+			str = str.replace(i, 1, " > ");
 			i+=2;
 		}
 	}
