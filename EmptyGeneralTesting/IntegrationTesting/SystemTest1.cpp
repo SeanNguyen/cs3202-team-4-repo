@@ -16,6 +16,15 @@ void SystemTest1::test1() {
 	QueryProcessor qp(queries);
 	
 	parser.parse(source);
+	parser.buildCallTable();
+	parser.buildFollowTable();
+	parser.buildModifyTable();
+	parser.buildParentTable();
+	parser.buildStatTable();
+	parser.buildProcTable();
+	parser.buildUseTable();
+	parser.buildVarTable();
+
 	vector<vector<string>> results = qp.Process();
 
 	for (size_t i=0; i<results.size(); i++) {
