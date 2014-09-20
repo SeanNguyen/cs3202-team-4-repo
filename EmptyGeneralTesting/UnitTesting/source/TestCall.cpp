@@ -163,6 +163,7 @@ void CallTest::testgetCalledByProc(){
 	return;
 }
 
+// getCallingStarProc( proc ) gets all procedures that call proc directly and indirectly
 void CallTest::testgetCallingStarProc(){
 	
 	Call callObj;
@@ -201,6 +202,46 @@ void CallTest::testgetCallingStarProc(){
 	// attempt to get one which does not exist
 	callingStarProc.clear();
 	CPPUNIT_ASSERT_THROW(callObj.getCallingStarProc(7).at(0), std::out_of_range );
+
+	return;
+}
+
+// getCalledByStarProc( proc ) gets all procedures that are called by proc directly and indirectly
+void CallTest::testgetCalledByStarProc(){
+	
+	Call callObj;
+	vector<int> callingStarProc;
+
+	//insert a few pairs first
+	int result = callObj.insertCalls(1, 2);
+	int result1 = callObj.insertCalls(2, 3);
+	int result2 = callObj.insertCalls(5, 6);
+	int result4 = callObj.insertCalls(4, 6);
+	int result3 = callObj.insertCalls(3, 6);
+
+	//insert results in a vector
+	callingStarProc.push_back(2);
+	callingStarProc.push_back(3);
+	callingStarProc.push_back(6);
+	
+	// verify that the pair exists - Note 7
+	CPPUNIT_ASSERT_EQUAL(callingStarProc.at(0), callObj.getCallingStarProc(6).at(0));
+	CPPUNIT_ASSERT_EQUAL(callingStarProc.at(1), callObj.getCallingStarProc(6).at(1));
+	CPPUNIT_ASSERT_EQUAL(callingStarProc.at(2), callObj.getCallingStarProc(6).at(2));
+
+	//callingStarProc.clear();
+	//callingStarProc.push_back(1);
+	//CPPUNIT_ASSERT_EQUAL(callingStarProc.at(0), callObj.getCallingStarProc(2).at(0));
+	//callingStarProc.clear();
+	//callingStarProc.push_back(2);
+	//callingStarProc.push_back(1);
+	//CPPUNIT_ASSERT_EQUAL(callingStarProc.at(0), callObj.getCallingStarProc(3).at(0));
+	//CPPUNIT_ASSERT_EQUAL(callingStarProc.at(1), callObj.getCallingStarProc(3).at(1));
+
+
+	//// attempt to get one which does not exist
+	//callingStarProc.clear();
+	//CPPUNIT_ASSERT_THROW(callObj.getCallingStarProc(7).at(0), std::out_of_range );
 
 	return;
 }

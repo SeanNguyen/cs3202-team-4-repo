@@ -16,14 +16,133 @@ void SystemTest1::test1() {
 	QueryProcessor qp(queries);
 	
 	parser.parse(source);
-	parser.buildCallTable();
-	parser.buildFollowTable();
-	parser.buildModifyTable();
-	parser.buildParentTable();
-	parser.buildStatTable();
-	parser.buildProcTable();
-	parser.buildUseTable();
-	parser.buildVarTable();
+	parser.buildPKB();
+
+	vector<vector<string>> results = qp.Process();
+
+	for (size_t i=0; i<results.size(); i++) {
+		cout << "Query " << i+1 << ": ";
+		for (size_t j=0; j< results[i].size(); j++) {
+			cout << results[i][j] << " ";
+		}
+		cout <<endl;
+	}
+
+}
+
+void SystemTest1::testCallsCallStar() {
+	string source = "..\\..\\Tests\\TestCallCallStarSource1.txt";
+	string queries = "..\\..\\Tests\\TestCallCallStarQueries1.txt";
+	Parser parser;
+	QueryProcessor qp(queries);
+	
+	parser.parse(source);
+	parser.buildPKB();
+
+	vector<vector<string>> results = qp.Process();
+
+	for (size_t i=0; i<results.size(); i++) {
+		cout << "Query " << i+1 << ": ";
+		for (size_t j=0; j< results[i].size(); j++) {
+			cout << results[i][j] << " ";
+		}
+		cout <<endl;
+	}
+
+}
+
+void SystemTest1::test2() {
+	string source = "..\\..\\Tests\\Source2.txt";
+	string queries = "..\\..\\Tests\\Queries2.txt";
+	Parser parser;
+	QueryProcessor qp(queries);
+	
+	parser.parse(source);
+	parser.buildPKB();
+
+	vector<vector<string>> results = qp.Process();
+
+	for (size_t i=0; i<results.size(); i++) {
+		cout << "Query " << i+1 << ": ";
+		for (size_t j=0; j< results[i].size(); j++) {
+			cout << results[i][j] << " ";
+		}
+		cout <<endl;
+	}
+
+}
+
+void SystemTest1::test3() {
+	string source = "..\\..\\Tests\\Source3.txt";
+	string queries = "..\\..\\Tests\\Queries3.txt";
+	Parser parser;
+	QueryProcessor qp(queries);
+	
+	parser.parse(source);
+	parser.buildPKB();
+
+	vector<vector<string>> results = qp.Process();
+
+	for (size_t i=0; i<results.size(); i++) {
+		cout << "Query " << i+1 << ": ";
+		for (size_t j=0; j< results[i].size(); j++) {
+			cout << results[i][j] << " ";
+		}
+		cout <<endl;
+	}
+
+}
+
+void SystemTest1::test4() {
+	string source = "..\\..\\Tests\\Source4.txt";
+	string queries = "..\\..\\Tests\\Queries4.txt";
+	Parser parser;
+	QueryProcessor qp(queries);
+	
+	parser.parse(source);
+	parser.buildPKB();
+
+	vector<vector<string>> results = qp.Process();
+
+	for (size_t i=0; i<results.size(); i++) {
+		cout << "Query " << i+1 << ": ";
+		for (size_t j=0; j< results[i].size(); j++) {
+			cout << results[i][j] << " ";
+		}
+		cout <<endl;
+	}
+
+}
+
+void SystemTest1::test5() {
+	string source = "..\\..\\Tests\\Source5.txt";
+	string queries = "..\\..\\Tests\\Queries5.txt";
+	Parser parser;
+	QueryProcessor qp(queries);
+	
+	parser.parse(source);
+	parser.buildPKB();
+
+	vector<vector<string>> results = qp.Process();
+
+	for (size_t i=0; i<results.size(); i++) {
+		cout << "Query " << i+1 << ": ";
+		for (size_t j=0; j< results[i].size(); j++) {
+			cout << results[i][j] << " ";
+		}
+		cout <<endl;
+	}
+
+}
+
+void SystemTest1::test6() {
+	string source = "..\\..\\Tests\\Source6.txt";
+	string queries = "..\\..\\Tests\\Queries6.txt";
+	Parser parser;
+	QueryProcessor qp(queries);
+	
+	parser.parse(source);
+	parser.buildPKB();
 
 	vector<vector<string>> results = qp.Process();
 

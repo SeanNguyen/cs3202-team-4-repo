@@ -30,6 +30,8 @@ public:
 
 	void testgetCallingStarProc();
 
+	void testgetCalledByStarProc();
+
 	void testgetCalledByProc();
 
 	void testgetCallingProc();

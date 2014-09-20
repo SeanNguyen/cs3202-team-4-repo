@@ -19,7 +19,7 @@ CppUnit::TextUi::TestRunner runner;
 
 runner.addTest(suite);
 bool wasSucessful = runner.run();
-
+cin.get();
 
 //getchar();
 
