@@ -12,6 +12,7 @@ class QueryPreprocessorTest : public CPPUNIT_NS::TestFixture {
 	CPPUNIT_TEST( testBuildSuchThatCls );
 	CPPUNIT_TEST( testBuildPatternCls );
 	CPPUNIT_TEST( testBuildWithCls );
+	CPPUNIT_TEST( testBuildComplexQuery1);
 
 	CPPUNIT_TEST_SUITE_END();
 public:
@@ -23,4 +24,5 @@ public:
 	void testBuildSuchThatCls();
 	void testBuildPatternCls();
 	void testBuildWithCls();
+	void testBuildComplexQuery1();
 };
