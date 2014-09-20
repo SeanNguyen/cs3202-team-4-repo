@@ -26,7 +26,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION( ParserTest );
 
 void ParserTest::testParseEmptyProcedure() {
 	Parser parser;
-	CPPUNIT_ASSERT_THROW ( parser.parse(testFile_EmptyProcedure), exception);
+	CPPUNIT_ASSERT_THROW ( parser.parse(testFile_EmptyProcedure), bad_exception);
 }
 
 void ParserTest::testParseCall() {

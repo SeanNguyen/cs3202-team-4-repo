@@ -296,6 +296,10 @@ TNode* Parser::readStmtList() {
 	}
 
 	match(KEYWORD_CLOSECURLYBRACKET);
+
+	if (stmtListNode->getNumChildren() == 0)
+		error();
+
 	this->currentDepth--;
 	return stmtListNode;
 }
@@ -493,8 +497,7 @@ string Parser::peekForwardToken (int numberOfIndexForward) {
 }
 
 void Parser::error() {
-	throw new exception();
-	exit(1);
+	throw bad_exception("There are some syntax or logic errors in your SIMPLE source code");
 }
 
 vector<string> Parser::breakFileDataIntoElements() {
