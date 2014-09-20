@@ -1,7 +1,7 @@
 #include "Tree.h"
 
 Tree::Tree() {
-	TNode node;
+	TNode * node = new TNode();
 	setRoot(node);
 }
 
@@ -19,29 +19,29 @@ TNode Tree::createNode(Symbol type, string value) {
 	return node;
 }
 
-void Tree::setRoot(TNode &node) {
-	root = &node;
+void Tree::setRoot(TNode * node) {
+	root = node;
 }
 
-int Tree::addChild(TNode &parent, TNode &child) {
-	return parent.addChild(child);
+int Tree::addChild(TNode * parent, TNode * child) {
+	return parent -> addChild(child);
 }
 
-TNode *Tree::getRoot() {
+TNode * Tree::getRoot() {
 	return root;
 }
 
-int Tree::getNumChildren(TNode &node) {
-	return node.getNumChildren();
+int Tree::getNumChildren(TNode * node) {
+	return node -> getNumChildren();
 }
 
-TNode *Tree::getChildAtIndex(TNode &node, int i) {
-	return node.getChildAtIndex(i);
+TNode * Tree::getChildAtIndex(TNode * node, int i) {
+	return node -> getChildAtIndex(i);
 }
 
 void Tree::printTree() {
-	TNode root = *getRoot();
+	TNode * root = getRoot();
 	cout <<endl;
-	root.printTNode();
+	root -> printTNode();
 	cout <<endl;
 }

@@ -453,7 +453,6 @@ string QueryEvaluator::getStoredValue(vector<string> values, string argName) {
 	return values[index];
 }
 
-
 void QueryEvaluator::checkPatternCondition(TNode patternNode,vector<string> values,vector<string>& result,bool check,int childIndex) {
 	// get first child of patternNode
 	TNode child1 = *patternNode.getChildAtIndex(0);
@@ -544,13 +543,13 @@ void QueryEvaluator::checkPatternCondition(TNode patternNode,vector<string> valu
 		}
 		
 		// get third child, which is the right hand side
-		TNode child3 = *patternNode.getChildAtIndex(2);
+		TNode * child3 = patternNode.getChildAtIndex(2);
 
-		if (child3.getType()==Underline) {
+		if (child3 -> getType()==Underline) {
 			rightHandSide=true;
 		} else {
-			TNode node = PKB::getNodeOfStmt(child1Val);
-			AST subAST; subAST.setRoot(*node.getChildAtIndex(1));
+			TNode * node = PKB::getNodeOfStmt(child1Val);
+			AST subAST; subAST.setRoot(node -> getChildAtIndex(1));
 			Tree tree; tree.setRoot(child3);
 			rightHandSide = subAST.hasSubTree(tree);
 		}
@@ -561,7 +560,6 @@ void QueryEvaluator::checkPatternCondition(TNode patternNode,vector<string> valu
 	}
 }
 	
-
 void QueryEvaluator::updateResultList(vector<string> values, vector<string>& result) {
 	TNode root = *tree.getRoot();
 	// get first child

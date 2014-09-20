@@ -5,12 +5,12 @@
 
 class AST : public Tree {
 public:
-TNode findNodeOfStmt(int index);
+TNode * findNodeOfStmt(int index);
 bool hasSubTree(Tree tree);
 bool isSameTree(Tree tree);
 
 private:
-TNode findNodeOfStmt(TNode node, int& count, int index); 
+TNode * findNodeOfStmt(TNode * node, int& count, int index); 
 };
 
 #endif
