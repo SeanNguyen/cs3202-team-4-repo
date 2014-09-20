@@ -51,6 +51,14 @@ public:
 	void buildCallTable();
 	bool getFileData(string fileDirectory);
 
+	//testing methods
+	int getProcNumber();
+	int getVarNumber();
+	int getStmtNumber();
+	int getModifyPairNumber();
+	int getUsePairNumber();
+	int getCallPairNumber();
+
 //private helper methods
 private:
 	void readFileData();

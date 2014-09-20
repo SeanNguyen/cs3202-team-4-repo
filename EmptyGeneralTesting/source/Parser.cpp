@@ -415,7 +415,7 @@ TNode* Parser::readExpression(vector<string> expressionTokens) {
 	if (lastSignIndex < 0) {
 		return readTerm(expressionTokens);
 	}
-	
+
 	vector<string> subExpressionTokens (expressionTokens.begin(), expressionTokens.begin() + lastSignIndex);
 	vector<string> termTokens (expressionTokens.begin() + lastSignIndex + 1, expressionTokens.end());
 	TNode* subExpresstionNode = readExpression(subExpressionTokens);
@@ -556,4 +556,29 @@ int Parser::getLastIndexOfTokenNotIndsideBracket (vector<string> tokens, string 
 			return i;
 	}
 	return -1;
+}
+
+//Testing methods
+int Parser::getProcNumber() {
+	return this->procName.size();
+}
+
+int Parser::getVarNumber() {
+	return this->varName.size();
+}
+
+int Parser::getStmtNumber() {
+	return this->stmtType.size();
+}
+
+int Parser::getModifyPairNumber() {
+	return this->modifies.size();
+}
+
+int Parser::getUsePairNumber() {
+	return this->uses.size();
+}
+
+int Parser::getCallPairNumber() {
+	return this->calls.size();
 }

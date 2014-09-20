@@ -1,9 +1,7 @@
 procedure OhSimple
 {
 	if x then {						\\1
-		while n	{					\\2	
-			h = h + m;				\\3
-		}
+		x=1;
 	} else {
 		y = 20;						\\4
 	}
