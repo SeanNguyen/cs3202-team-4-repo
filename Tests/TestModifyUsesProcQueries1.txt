@@ -1,4 +1,4 @@
-7
+9
 cat: Use, Modify
 1 - Variable, Modifies ::
 variable v;
@@ -34,4 +34,13 @@ true
 variable v;
 Select BOOLEAN such that Modifies("A","x")
 false
+8 - Procedure, Variable, Modifies ::
+procedure p;
+Select p such that Modifies (p, "m");
+2
+5000
+9 - Procedure, Uses ::
+procedure p;
+Select p such that Uses(p, "n");
+2
 5000
