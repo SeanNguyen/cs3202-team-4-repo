@@ -588,7 +588,7 @@ void QueryEvaluator::updateResultList(vector<string> values, vector<string>& res
 	} else {
 		// all values possible of param are result
 		string paramType = table.getType(paramName);
-		if (paramType== "prog_line" || paramType=="stmt") {
+		if (paramType== KEYWORD_PROG_LINE || paramType==KEYWORD_STMT) {
 			// retrieve all statements 
 			for (int i=0; i<PKB::getStatTableSize(); i++) {
 				paramVal = intToString(i+1);
@@ -597,8 +597,8 @@ void QueryEvaluator::updateResultList(vector<string> values, vector<string>& res
 					result.push_back(paramVal);
 				}
 			}
-		} else if (paramType=="assign") {
-			vector<int> paramList = PKB::getStmtIndex("assignment");
+		} else if (paramType==KEYWORD_ASSIGN) {
+			vector<int> paramList = PKB::getStmtIndex(KEYWORD_ASSIGN);
 			for (size_t i=0; i<paramList.size(); i++) {
 				paramVal = intToString(paramList[i]);
 				if (!isResult(paramVal, result)) {
@@ -606,8 +606,8 @@ void QueryEvaluator::updateResultList(vector<string> values, vector<string>& res
 					result.push_back(paramVal);
 				}
 			}
-		} else if (paramType=="while") {
-			vector<int> paramList = PKB::getStmtIndex("while:stmtList");
+		} else if (paramType==KEYWORD_WHILE) {
+			vector<int> paramList = PKB::getStmtIndex(KEYWORD_WHILE);
 			for (size_t i=0; i<paramList.size(); i++) {
 				paramVal = intToString(paramList[i]);
 				if (!isResult(paramVal, result)) {
@@ -615,11 +615,11 @@ void QueryEvaluator::updateResultList(vector<string> values, vector<string>& res
 					result.push_back(paramVal);
 				}
 			}
-		} else if (paramType=="variable") {
+		} else if (paramType==KEYWORD_VAR) {
 			for (int i=0; i<PKB::getVarTableSize(); i++) {
 				result.push_back(PKB::getVarName(i));
 			}
-		} else if (paramType=="const") {
+		} else if (paramType==KEYWORD_CONST) {
 			for (int i=0; i<PKB::getConstTableSize(); i++) {
 				result.push_back(PKB::getConstName(i));
 			}
