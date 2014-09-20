@@ -41,6 +41,7 @@ public:
 	Parser();
 	~Parser();
 	void parse(string fileName);
+	void buildPKB();
 	void buildVarTable();
 	void buildFollowTable();
 	void buildModifyTable();

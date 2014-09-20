@@ -26,6 +26,18 @@ void Parser::parse(string fileName)
 	}
 }
 
+void Parser::buildPKB() {
+	buildProcTable();
+	buildStatTable();
+	buildVarTable();
+
+	buildCallTable();
+	buildFollowTable();
+	buildModifyTable();
+	buildParentTable();
+	buildUseTable();
+}
+
 /*
 * Description: This function builds VarTable in PKB.
 * Input	  : None.
