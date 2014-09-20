@@ -102,6 +102,7 @@ std::vector<int> Call::getCallingStarProc(int proc1){
 std::vector<int> Call::getCalledByStarProc(int proc1){
 	std::vector<int> calledByStar;
 	calledByStar = getCalledByStarProcHelper(proc1, calledByStar);
+	return calledByStar;
 }
 
 //Method to get the proc called in proc1
