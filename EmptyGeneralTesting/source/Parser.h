@@ -55,15 +55,15 @@ public:
 private:
 	void readFileData();
 	vector<string> preprocessData(ifstream& file);
-	TNode readProcedure();
-	TNode readStmtList();
-	TNode readWhileStmt();
-	TNode readCallStmt();
-	TNode readIfStmt();
-	TNode readAssignStmt();
-	TNode readExpression(vector<string> expressionTokens);
-	TNode readTerm(vector<string> termTokens);
-	TNode readFactor(vector<string> factorTokens);
+	TNode* readProcedure();
+	TNode* readStmtList();
+	TNode* readWhileStmt();
+	TNode* readCallStmt();
+	TNode* readIfStmt();
+	TNode* readAssignStmt();
+	TNode* readExpression(vector<string> expressionTokens);
+	TNode* readTerm(vector<string> termTokens);
+	TNode* readFactor(vector<string> factorTokens);
 	
 
 	void match(string expectedToken);
