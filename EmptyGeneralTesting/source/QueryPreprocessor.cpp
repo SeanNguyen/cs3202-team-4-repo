@@ -217,6 +217,8 @@ void QueryPreprocessor::preprocessQueryPart(QueryTree& tree, SymbolTable table, 
 				// go to element after this condition
 				i = index;
 			}
+		} else if (list[i]=="with") {
+			TNode * withCls = preprocessWithCondition(list, table, errors, i);
 		} else {
 			cout <<  "";
 		}
@@ -379,6 +381,12 @@ TNode * QueryPreprocessor::preprocessPatternCondition(vector<string> list, Symbo
 	} 
 
 	return pattern;
+}
+
+TNode * QueryPreprocessor::preprocessWithCondition(vector<string> list, SymbolTable table, vector<string> & errors, int index) {
+	TNode * withCls = new TNode(WithCls);
+
+	return withCls;
 }
 
 /* SUPPORTING FUCNTIONS */
