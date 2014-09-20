@@ -19,15 +19,15 @@ PKB::PKB()
 }
 
 ////////////////////////////////AST METHODS/////////////////
-TNode PKB::createNode() {
+TNode * PKB::createNode() {
 	return astObj.createNode();
 }
 
-TNode PKB::createNode(Symbol type) {
+TNode * PKB::createNode(Symbol type) {
 	return astObj.createNode(type);
 }
 
-TNode PKB::createNode(Symbol type, string value) {
+TNode * PKB::createNode(Symbol type, string value) {
 	return astObj.createNode(type, value);
 }
 

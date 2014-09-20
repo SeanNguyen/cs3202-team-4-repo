@@ -34,6 +34,7 @@ private:
 	TNode * preprocessResultNode();
 	TNode * preprocessSuchThatCondition(vector<string> suchthat, SymbolTable table, vector<string>& errors);
 	TNode * preprocessPatternCondition(vector<string> pattern, SymbolTable table, vector<string>& errors);
+	TNode * preprocessWithCondition(vector<string> list, SymbolTable table, vector<string>& errors, int i);
 
 	vector<string> breakStringIntoWords(string str);
 	unsigned int findFirstElement(vector<string> list, unsigned i, string element);

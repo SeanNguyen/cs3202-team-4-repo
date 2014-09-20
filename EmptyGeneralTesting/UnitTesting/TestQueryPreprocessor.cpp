@@ -31,6 +31,7 @@ void QueryPreprocessorTest::testBuildTree() {
 	CPPUNIT_ASSERT_EQUAL(1, size);
 	Tree tree = QueryRepresentator::getQueryTree(0);
 	TNode root = *tree.getRoot();
+	cout << "TEST BUILD TREE: Query: stmt s1; Select s1" <<endl;
 	root.printTNode();
 	//cout <<endl<< SyntaxHelper::SymbolToString(root.getType()) << endl;
 }
