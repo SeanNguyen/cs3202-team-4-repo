@@ -28,12 +28,12 @@ vector<vector<string>> QueryProcessor::Process() {
 vector<string> QueryProcessor::Process(string query) {
 	QueryPreprocessor preprocessor("");
 	QueryEvaluator evaluator;
-
+/*
 	if (AbstractWrapper::GlobalStop) {
 		vector<string> results;
 		return results;
 	}
-
+*/
 	preprocessor.Preprocess(query);
 	evaluator.Evaluate();
 

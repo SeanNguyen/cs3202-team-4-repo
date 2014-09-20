@@ -12,10 +12,10 @@ void QueryEvaluator::Evaluate() {
 		checkValid = QueryRepresentator::getQueryValidity(i);
 		evaluateQuery();
 		/* COOPERATIVE MODE WITH AUTO TESTER */
-		if (AbstractWrapper::GlobalStop) {
-			// do cleanup
-			return;
-		}
+		//if (AbstractWrapper::GlobalStop) {
+		//	// do cleanup
+		//	return;
+		//}
 	}
 }
 
@@ -634,7 +634,6 @@ bool QueryEvaluator::isResult(string val, vector<string> result) {
 	}
 	return false;
 }
-
 
 bool QueryEvaluator::isDeclaredType(string val, string name, string type) {
 	if (type=="const") {

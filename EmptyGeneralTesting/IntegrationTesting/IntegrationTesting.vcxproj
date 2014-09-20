@@ -67,6 +67,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="source\IntegrationTest.cpp" />
+    <ClCompile Include="SystemTest1.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="SystemTest1.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
