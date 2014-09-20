@@ -67,12 +67,12 @@ private:
 	
 
 	void match(string expectedToken);
-	string getCurrentToken();
+	string getNextToken();
 	string peekForwardToken (int numberOfIndexForward);
 	void error();
 	vector<string> breakFileDataIntoElements();
 	bool isNumber(const string str);
 	int getFollowedStmt(int i);
 	int getParentStmt(int i);
-	int getLastIndexOfToken (vector<string> tokens, string token);
+	int getLastIndexOfTokenNotIndsideBracket (vector<string> tokens, string token);
 };

@@ -1,4 +1,4 @@
-procedure OhSimple
-{
+procedure OhSimple{
 	i = i + (j + h) + ( (f * 9) + w ) * k;
+	star = 	(star + star * star - x + (y - 3)) +3 * (4 - (y + 6));
 }

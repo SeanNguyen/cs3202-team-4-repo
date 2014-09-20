@@ -200,12 +200,24 @@ vector<string> Parser::preprocessData(ifstream& file) {
 				curLine = curLine.replace(i, 1, " + "); 
 				i+=2;
 			}
+			if (curChar=='*' && ((int)i==0 || curLine.at(i)!=' ')) {
+				curLine = curLine.replace(i, 1, " * "); 
+				i+=2;
+			}
 			if (curChar=='{' && ((int)i==0 || curLine.at(i)!=' ')) {
 				curLine = curLine.replace(i, 1, " { "); 
 				i+=2;
 			}
 			if (curChar=='}' && ((int)i==0 || curLine.at(i)!=' ')) {
 				curLine = curLine.replace(i, 1, " } "); 
+				i+=2;
+			}
+			if (curChar=='(' && ((int)i==0 || curLine.at(i)!=' ')) {
+				curLine = curLine.replace(i, 1, " ( "); 
+				i+=2;
+			}
+			if (curChar==')' && ((int)i==0 || curLine.at(i)!=' ')) {
+				curLine = curLine.replace(i, 1, " ) "); 
 				i+=2;
 			}
 			if (curChar==';' && ((int)i==0 || curLine.at(i)!=' ')) {
@@ -229,12 +241,12 @@ void Parser::readFileData() {
 	this->tokens = breakFileDataIntoElements();
 
 	// initialize parsing properties
-	this->currentIndex = 0;
+	this->currentIndex = -1;
 	this->isDataProcessed = false;
 
-	TNode* progNode;
+	TNode* progNode = PKB::createNode(Symbol::Program);
 
-	while (this->currentIndex < this->tokens.size()) {
+	while (this->currentIndex == -1 || this->currentIndex < this->tokens.size() - 1) {
 		TNode* procedureNode = readProcedure();
 		progNode->addChild(procedureNode);
 	}
@@ -248,7 +260,7 @@ void Parser::readFileData() {
 
 TNode* Parser::readProcedure() {
 	match(KEYWORD_PROCEDURE);
-	currentProcessingProc = getCurrentToken();
+	currentProcessingProc = getNextToken();
 	procName.push_back(currentProcessingProc);
 	this->currentDepth = 0;
 
@@ -283,7 +295,7 @@ TNode* Parser::readStmtList() {
 		}
 	}
 
-	match(KEYWORD_CLOSEBRACKET);
+	match(KEYWORD_CLOSECURLYBRACKET);
 	this->currentDepth--;
 	return stmtListNode;
 }
@@ -294,7 +306,7 @@ TNode* Parser::readWhileStmt() {
 	this->depthLv.push_back(currentDepth);
 	this->stmtType.push_back(KEYWORD_WHILE);
 
-	string conditionVar = getCurrentToken();
+	string conditionVar = getNextToken();
 	TNode* varNode = PKB::createNode(Symbol::Var, conditionVar);
 	whileNode->addChild(varNode);
 	varName.push_back(conditionVar);
@@ -315,7 +327,7 @@ TNode* Parser::readCallStmt () {
 	//create nodes in PKB
 	TNode* callNode = PKB::createNode(Symbol::Calls);
 
-	string calledProcedureName = getCurrentToken();
+	string calledProcedureName = getNextToken();
 	TNode* calledProcNode = PKB::createNode (Symbol::Procedure, calledProcedureName);
 	callNode->addChild(calledProcNode);
 	procName.push_back(calledProcedureName);
@@ -336,16 +348,22 @@ TNode* Parser::readIfStmt () {
 
 	//create Node in PKB
 	TNode* ifNode = PKB::createNode(Symbol::If);
-	string conditionVar = getCurrentToken();
+	string conditionVar = getNextToken();
 	TNode* varNode = PKB::createNode(Symbol::Var, conditionVar);
 	ifNode->addChild(varNode);
 	varName.push_back(conditionVar);
 	pair<int, string> usePair(stmtType.size(), conditionVar);
 	uses.push_back(usePair);
 
-	//process stmt list
-	TNode* stmtListNode = readStmtList();
-	ifNode->addChild(stmtListNode);
+	//process stmt list of "then"
+	match(KEYWORD_THEN);
+	TNode* thenNode = readStmtList();
+	ifNode->addChild(thenNode);
+	//processstmt list of "else"
+	match(KEYWORD_ELSE);
+	TNode* elseNode = readStmtList();
+	ifNode->addChild(elseNode);
+
 	return ifNode;
 }
 
@@ -354,7 +372,7 @@ TNode* Parser::readAssignStmt() {
 	this->depthLv.push_back(this->currentDepth);
 	this->stmtType.push_back(KEYWORD_ASSIGN);
 
-	string leftHandSideVar = getCurrentToken();
+	string leftHandSideVar = getNextToken();
 	varName.push_back(leftHandSideVar);
 	pair<int, string> modifyPair(stmtType.size(), leftHandSideVar);
 	modifies.push_back(modifyPair);
@@ -368,8 +386,8 @@ TNode* Parser::readAssignStmt() {
 	for (int i = this->currentIndex; i <this->tokens.size(); i++) {
 		string currentPeekedToken = peekForwardToken(i - this->currentIndex);
 		if (currentPeekedToken == KEYWORD_SEMICOLON) {
-			expressionTokens = vector<string>(this->tokens.begin() + this->currentIndex, this->tokens.begin() + i);
-			this->currentIndex = i;
+			expressionTokens = vector<string>(this->tokens.begin() + this->currentIndex + 1, this->tokens.begin() + i);
+			this->currentIndex = i - 1;
 			break;
 		}
 	}
@@ -386,8 +404,8 @@ TNode* Parser::readAssignStmt() {
 }
 
 TNode* Parser::readExpression(vector<string> expressionTokens) {
-	int lastPlusSignIndex = getLastIndexOfToken(expressionTokens, KEYWORD_PLUSSIGN);
-	int lastMinusSignIndex = getLastIndexOfToken(expressionTokens, KEYWORD_MINUSSIGN);
+	int lastPlusSignIndex = getLastIndexOfTokenNotIndsideBracket(expressionTokens, KEYWORD_PLUSSIGN);
+	int lastMinusSignIndex = getLastIndexOfTokenNotIndsideBracket(expressionTokens, KEYWORD_MINUSSIGN);
 	int lastSignIndex = max(lastPlusSignIndex, lastMinusSignIndex);
 
 	if (lastSignIndex < 0) {
@@ -410,7 +428,7 @@ TNode* Parser::readExpression(vector<string> expressionTokens) {
 }
 
 TNode* Parser::readTerm(vector<string> termTokens) {
-	int lastMulSignIndex = getLastIndexOfToken(termTokens, KEYWORD_MULTIPLYSIGN);
+	int lastMulSignIndex = getLastIndexOfTokenNotIndsideBracket(termTokens, KEYWORD_MULTIPLYSIGN);
 	if (lastMulSignIndex > 0 && lastMulSignIndex < termTokens.size() - 1) {
 		vector<string> subTermTokens;
 		vector<string> factorTokens;
@@ -451,15 +469,17 @@ TNode* Parser::readFactor(vector<string> factorTokens) {
 
 //Helper Methods
 void Parser::match(string expectedToken) {
-	string realToken = getCurrentToken();
+	string realToken = getNextToken();
 	if (expectedToken != realToken) {
 		error();
 	}
 }
 
-string Parser::getCurrentToken() {
-	string token = this->tokens[this->currentIndex];
+string Parser::getNextToken() {
 	this->currentIndex++;
+	if (this->currentIndex >= this->tokens.size())
+		error();
+	string token = this->tokens[this->currentIndex];
 	return token;
 }
 
@@ -518,9 +538,18 @@ int Parser::getParentStmt(int i) {
 	return -1;
 }
 
-int Parser::getLastIndexOfToken (vector<string> tokens, string token) {
+int Parser::getLastIndexOfTokenNotIndsideBracket (vector<string> tokens, string token) {
+	int nestedLv = 0;
+	vector <int> tokenNestedLvs(tokens.size());
+	for (int i = 0; i < tokens.size(); i++) {
+		tokenNestedLvs[i] = nestedLv;
+		if (tokens[i] == KEYWORD_OPENBRACKET)
+			nestedLv++;
+		if (tokens[i] == KEYWORD_CLOSEBRACKET)
+			nestedLv--;
+	}
 	for (int i = tokens.size() - 1; i >= 0; i--) {
-		if (tokens[i] == token)
+		if (tokens[i] == token && tokenNestedLvs[i] == 0)
 			return i;
 	}
 	return -1;

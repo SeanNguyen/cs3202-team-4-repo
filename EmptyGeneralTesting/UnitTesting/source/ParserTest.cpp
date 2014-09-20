@@ -26,30 +26,30 @@ CPPUNIT_TEST_SUITE_REGISTRATION( ParserTest );
 
 void ParserTest::testParseEmptyProcedure() {
 	Parser parser;
-	//parser.parse(testFile_EmptyProcedure);
+	CPPUNIT_ASSERT_THROW ( parser.parse(testFile_EmptyProcedure), exception);
 }
 
 void ParserTest::testParseCall() {
 	Parser parser;
-	//parser.parse(testFile_Call);
+	parser.parse(testFile_Call);
 }
 
 void ParserTest::testParseWhile() {
 	Parser parser;
-	//parser.parse(testFile_While);
+	parser.parse(testFile_While);
 }
 
 void ParserTest::testParseIf() {
 	Parser parser;
-	//parser.parse(testFile_If);
+	parser.parse(testFile_If);
 }
 
 void ParserTest::testParseSimpleAssign() {
 	Parser parser;
-	//parser.parse(testFile_SimpleAssign);
+	parser.parse(testFile_SimpleAssign);
 }
 
 void ParserTest::testParseComplexAssign() {
 	Parser parser;
-	//parser.parse(testFile_ComplexAssign);
+	parser.parse(testFile_ComplexAssign);
 }
