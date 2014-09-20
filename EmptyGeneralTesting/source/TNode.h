@@ -17,8 +17,8 @@ public:
 	Symbol getType();
 	string getValue();
 	int getNumChildren();
-	TNode *getChildAtIndex(int i);
-	int addChild(TNode &child);
+	TNode * getChildAtIndex(int i);
+	int addChild(TNode * child);
 	void printTNode();
 private:
 	Symbol type;

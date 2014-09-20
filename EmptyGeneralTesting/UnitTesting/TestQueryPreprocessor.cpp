@@ -30,7 +30,8 @@ void QueryPreprocessorTest::testBuildTree() {
 	int size = QueryRepresentator::getSize();
 	CPPUNIT_ASSERT_EQUAL(1, size);
 	Tree tree = QueryRepresentator::getQueryTree(0);
-	//TNode root = *tree.getRoot();
+	TNode root = *tree.getRoot();
+	root.printTNode();
 	//cout <<endl<< SyntaxHelper::SymbolToString(root.getType()) << endl;
 }
 

@@ -29,15 +29,15 @@ class PKB
 
 	static TNode createNode(Symbol type, string value);
 
-	static TNode getASTRoot();
+	static TNode * getASTRoot();
 
-	static int getNumChildren(TNode node);
-	static TNode getChildAtIndex(TNode node, int index);
+	static int getNumChildren(TNode * node);
+	static TNode getChildAtIndex(TNode * node, int index);
 
-	static void setASTRoot(TNode node);
-	static int addChild(TNode parent, TNode child);
+	static void setASTRoot(TNode * node);
+	static int addChild(TNode * parent, TNode * child);
 
-    static TNode getNodeOfStmt(int stmt);
+    static TNode * getNodeOfStmt(int stmt);
 
 	//////////////////////////CONST TABLE METHODS/////////////////
 	static bool insertConst(std::string value);
