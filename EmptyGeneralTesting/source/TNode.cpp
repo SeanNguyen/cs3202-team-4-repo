@@ -27,15 +27,15 @@ int TNode::getNumChildren() {
 	return children.size();
 }
 
-TNode *TNode::getChildAtIndex(int i) {
+TNode * TNode::getChildAtIndex(int i) {
 	if (i<0 || i >=  this -> getNumChildren()) {
 		throw "Out of bounds";
 	}
 	return children[i];
 }
 
-int TNode::addChild(TNode &child) {
-	children.push_back(&child);
+int TNode::addChild(TNode * child) {
+	children.push_back(child);
 	return children.size()-1;
 }
 
@@ -47,7 +47,7 @@ void TNode::printTNode(int depth) {
 	for (int i=0; i<depth; i++) {
 		cout << "  ";
 	}
-	cout << SyntaxHelper::SymbolToString(type) << " " << value <<endl;
+	cout << SyntaxHelper::SymbolToString(type) << " " << value << " " << getNumChildren()<<endl;
 	for (size_t i=0; i<children.size(); i++) {
 		TNode child = *getChildAtIndex(i);
 		child.printTNode(depth+1);

@@ -186,16 +186,16 @@ void QueryPreprocessor::preprocessQueryPart(QueryTree& tree, SymbolTable table, 
 	// break string into words
 	vector<string> list = breakStringIntoWords(queryPart);
 	// create root node for Select
-	TNode root(Select, "");
+	TNode * root = new TNode(Select, "");
 	// recognize result and create node for it
-	TNode result(ResultCls, "single");
+	TNode * result = new TNode(ResultCls, "single");
 	// check if result is a symbol
 	if (!table.isSymbol(list[1])) {
 		errors.push_back("Error: not a defined symbol: " + list[1]);
 	}
-	TNode resultChild(QuerySymbol, list[1]);
-	result.addChild(resultChild);
-	root.addChild(result);
+	TNode * resultChild = new TNode(QuerySymbol, list[1]);
+	result -> addChild(resultChild);
+	root -> addChild(result);
 
 	// find and preprocess conditions of query
 	for (size_t i=2; i<list.size(); i++) {
@@ -203,8 +203,8 @@ void QueryPreprocessor::preprocessQueryPart(QueryTree& tree, SymbolTable table, 
 			unsigned index = findFirstElement(list, i, ")");
 			if ((int)index>i) {
 				vector<string> suchThatCondition = subList(list, i, index);
-				TNode suchThat = *preprocessSuchThatCondition(suchThatCondition, table, errors);
-				root.addChild(suchThat);
+				TNode * suchThat = preprocessSuchThatCondition(suchThatCondition, table, errors);
+				root -> addChild(suchThat);
 				// go to element after this condition
 				i = index;
 			}
@@ -212,11 +212,13 @@ void QueryPreprocessor::preprocessQueryPart(QueryTree& tree, SymbolTable table, 
 			unsigned index = findFirstElement(list, i, ")");
 			if ((int)index>i) {
 				vector<string> patternCondition = subList(list, i, index);
-				TNode pattern = preprocessPatternCondition(patternCondition, table, errors);
-				root.addChild(pattern);
+				TNode * pattern = preprocessPatternCondition(patternCondition, table, errors);
+				root -> addChild(pattern);
 				// go to element after this condition
 				i = index;
 			}
+		} else if (list[i]=="with") {
+			TNode * withCls = preprocessWithCondition(list, table, errors, i);
 		} else {
 			cout <<  "";
 		}
@@ -226,16 +228,16 @@ void QueryPreprocessor::preprocessQueryPart(QueryTree& tree, SymbolTable table, 
 }
 
 // Description: this method is to preprocess the such that condition of query
-TNode *QueryPreprocessor::preprocessSuchThatCondition(vector<string> list, SymbolTable table, vector<string>& errors) {
+TNode * QueryPreprocessor::preprocessSuchThatCondition(vector<string> list, SymbolTable table, vector<string>& errors) {
 	unsigned size = list.size();
 	// create first node for such that
-	TNode suchThatNode(SuchThatCls);
+	TNode * suchThatNode = new TNode(SuchThatCls);
 
 	//expect second node to be relationship's name
 	string relation = list[2];
 
 	if (SyntaxHelper::isRelation(relation)) {
-		TNode relationNode(SyntaxHelper::getSymbolType(relation));
+		TNode * relationNode = new TNode(SyntaxHelper::getSymbolType(relation));
 		
 		if (list[3]!="(") {
 			errors.push_back("Expect symbol ( after relation name");
@@ -246,56 +248,56 @@ TNode *QueryPreprocessor::preprocessSuchThatCondition(vector<string> list, Symbo
 			commaIndex=5;
 			string arg1 = list[4];
 			if (isNumber(arg1)) {
-				TNode arg1Node(Const, arg1);
-				relationNode.addChild(arg1Node);
+				TNode * arg1Node = new TNode(Const, arg1);
+				relationNode -> addChild(arg1Node);
 			} else {
-				TNode arg1Node(QuerySymbol, arg1);
-				relationNode.addChild(arg1Node);
+				TNode * arg1Node = new TNode(QuerySymbol, arg1);
+				relationNode -> addChild(arg1Node);
 			}
 		} else if (list[7]==",") {
 			commaIndex = 7;
 			// expect a procedure name
-			TNode arg1Node(Const, list[5]);
-			relationNode.addChild(arg1Node);
+			TNode * arg1Node = new TNode(Const, list[5]);
+			relationNode -> addChild(arg1Node);
 		}
 
 		if (list[commaIndex+2]==")") {
 			string arg2 = list[commaIndex+1];
 			if (isNumber(arg2)) {
-				TNode arg2Node(Const, arg2);
-				relationNode.addChild(arg2Node);
+				TNode * arg2Node = new TNode(Const, arg2);
+				relationNode -> addChild(arg2Node);
 			} else {
-				TNode arg2Node(QuerySymbol, arg2);
-				relationNode.addChild(arg2Node);
+				TNode * arg2Node = new TNode(QuerySymbol, arg2);
+				relationNode -> addChild(arg2Node);
 			}
 		} else if (list[commaIndex+4]==")") {
 			// expect a name
-			TNode arg2Node(Const, list[commaIndex+2]);
-			relationNode.addChild(arg2Node);
+			TNode * arg2Node = new TNode(Const, list[commaIndex+2]);
+			relationNode -> addChild(arg2Node);
 		} else {
 			errors.push_back("Error: no sign of ending for relation");
 		}
 
-		suchThatNode.addChild(relationNode);
+		suchThatNode -> addChild(relationNode);
 	} else {
 		errors.push_back("Not a relation name: " + relation);
 	}
 
-	return &suchThatNode;
+	return suchThatNode;
 }
 
 // Description: this method is to preprocess the pattern condition of query
-TNode QueryPreprocessor::preprocessPatternCondition(vector<string> list, SymbolTable table, vector<string>& errors) {
+TNode * QueryPreprocessor::preprocessPatternCondition(vector<string> list, SymbolTable table, vector<string>& errors) {
 	unsigned size = list.size();
 	// create first node for pattern
-	TNode pattern(PatternCls);
+	TNode * pattern = new TNode(PatternCls);
 
 	// expect second element as name of assignment symbol
 	string assignSymbol = list[1];
 	if (false) {
 	}
-	TNode assignNode(QuerySymbol, assignSymbol);
-	pattern.addChild(assignNode);
+	TNode * assignNode = new TNode(QuerySymbol, assignSymbol);
+	pattern -> addChild(assignNode);
 
 	// expect bracelets
 	if (list[2]!="(" || list[size-1]!=")") {
@@ -308,22 +310,22 @@ TNode QueryPreprocessor::preprocessPatternCondition(vector<string> list, SymbolT
 	if ((int)index==4) {
 		// expect underline or variable symbol in argument 1.
 		if (list[3]=="_") {
-			TNode arg1Node(Underline);
-			pattern.addChild(arg1Node);
+			TNode * arg1Node = new TNode(Underline);
+			pattern -> addChild(arg1Node);
 		} else {
 			if (table.getType(list[3])!= "variable") {
 				errors.push_back("Error: unable to find symbol: " + list[3] + " in pattern");
 			} else {
-				TNode arg1Node(QuerySymbol, list[3]);
-				pattern.addChild(arg1Node);
+				TNode * arg1Node = new TNode(QuerySymbol, list[3]);
+				pattern -> addChild(arg1Node);
 			}
 		}
 	} else if ((int)index==6) {
 		// expect name of variable
 		if (list[3]!="\"" || list[5]!="\"") {
 		}
-		TNode arg1Node(Var, list[4]);
-		pattern.addChild(arg1Node);
+		TNode * arg1Node = new TNode (Var, list[4]);
+		pattern -> addChild(arg1Node);
 	}
 
 	// process argument 2 of pattern
@@ -333,8 +335,8 @@ TNode QueryPreprocessor::preprocessPatternCondition(vector<string> list, SymbolT
 		// expect underline
 		if (list[index+1]!="_") {
 		}
-		TNode arg2Node(Underline);
-		pattern.addChild(arg2Node);
+		TNode * arg2Node = new TNode(Underline);
+		pattern -> addChild(arg2Node);
 	} else if ((int)(size-index)==7) {
 		// expect one variable name
 		if (list[index+1]!="_" || list[index+2]!="\"" ||
@@ -342,11 +344,11 @@ TNode QueryPreprocessor::preprocessPatternCondition(vector<string> list, SymbolT
 		}
 		string arg2 = list[index+3]; 
 		if (isNumber(arg2)) {
-			TNode arg2Node(Const, arg2);
-			pattern.addChild(arg2Node);
+			TNode * arg2Node = new TNode(Const, arg2);
+			pattern -> addChild(arg2Node);
 		} else {
-			TNode arg2Node(Var, arg2);
-			pattern.addChild(arg2Node);
+			TNode * arg2Node = new TNode(Var, arg2);
+			pattern -> addChild(arg2Node);
 		}
 	}  else if ((int)(size-index)==9) {
 		if (list[index+1]!="_" || list[index+2]!="\"" ||
@@ -354,31 +356,37 @@ TNode QueryPreprocessor::preprocessPatternCondition(vector<string> list, SymbolT
 		}
 		if (list[index+4]!="+") {
 		}
-		TNode arg2Node(Plus);
+		TNode * arg2Node = new TNode(Plus);
 		
 		string factor1 = list[index+3];
 		string factor2 = list[index+5];
 
 		if (isNumber(factor1)) {
-			TNode factor1Node(Const, factor1);
-			arg2Node.addChild(factor1Node);
+			TNode * factor1Node = new TNode(Const, factor1);
+			arg2Node -> addChild(factor1Node);
 		} else {
-			TNode factor1Node(Var, factor1);
-			arg2Node.addChild(factor1Node);
+			TNode * factor1Node = new TNode(Var, factor1);
+			arg2Node -> addChild(factor1Node);
 		}
 
 		if (isNumber(factor2)) {
-			TNode factor2Node(Const, factor2);
-			arg2Node.addChild(factor2Node);
+			TNode * factor2Node = new TNode(Const, factor2);
+			arg2Node -> addChild(factor2Node);
 		} else {
-			TNode factor2Node(Var, factor2);
-			arg2Node.addChild(factor2Node);
+			TNode * factor2Node = new TNode(Var, factor2);
+			arg2Node -> addChild(factor2Node);
 		}
-		pattern.addChild(arg2Node);
+		pattern -> addChild(arg2Node);
 	} else {
 	} 
 
 	return pattern;
+}
+
+TNode * QueryPreprocessor::preprocessWithCondition(vector<string> list, SymbolTable table, vector<string> & errors, int index) {
+	TNode * withCls = new TNode(WithCls);
+
+	return withCls;
 }
 
 /* SUPPORTING FUCNTIONS */

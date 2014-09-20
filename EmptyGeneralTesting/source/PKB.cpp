@@ -19,15 +19,15 @@ PKB::PKB()
 }
 
 ////////////////////////////////AST METHODS/////////////////
-TNode PKB::createNode() {
+TNode * PKB::createNode() {
 	return astObj.createNode();
 }
 
-TNode PKB::createNode(Symbol type) {
+TNode * PKB::createNode(Symbol type) {
 	return astObj.createNode(type);
 }
 
-TNode PKB::createNode(Symbol type, string value) {
+TNode * PKB::createNode(Symbol type, string value) {
 	return astObj.createNode(type, value);
 }
 
@@ -36,7 +36,7 @@ TNode PKB::createNode(Symbol type, string value) {
 //	return astObj.getRoot();
 //}
 
-int PKB::getNumChildren(TNode node) {
+int PKB::getNumChildren(TNode * node) {
 	return astObj.getNumChildren(node);
 }
 
@@ -44,15 +44,15 @@ int PKB::getNumChildren(TNode node) {
 //	return astObj.getChildAtIndex(node, index);
 //}
 
-void PKB::setASTRoot(TNode node) {
+void PKB::setASTRoot(TNode * node) {
 	return astObj.setRoot(node);
 }
 
-TNode PKB::getNodeOfStmt(int stmt) {
+TNode * PKB::getNodeOfStmt(int stmt) {
 	return astObj.findNodeOfStmt(stmt);
 }
 
-int PKB::addChild(TNode parent, TNode child) {
+int PKB::addChild(TNode * parent, TNode * child) {
 	return astObj.addChild(parent, child);
 }
 
