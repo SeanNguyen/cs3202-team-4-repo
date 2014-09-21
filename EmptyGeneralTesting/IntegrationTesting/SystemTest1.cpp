@@ -62,6 +62,14 @@ void SystemTest1::test2() {
 
 	vector<vector<string>> results = qp.Process();
 
+	vector<int> testingVec = PKB::getFollowedStarStmt(24);
+
+	/*for (size_t i=0; i<testingVec.size(); i++) {
+		cout << "TestFollowStar " << i+1 << ": ";
+		cout << testingVec[i] << " ";
+		cout << endl;
+	}*/
+
 	for (size_t i=0; i<results.size(); i++) {
 		cout << "Query " << i+1 << ": ";
 		for (size_t j=0; j< results[i].size(); j++) {
