@@ -268,8 +268,6 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 			{
 				cout << "here " <<endl;
 				int stmt2 = atoi(arg2Value.c_str());
-				if (PKB::getParentStarStmt(stmt2)==OBJECT_NOT_FOUND) {
-				}
 				vector<int> stmts = PKB::getParentStarStmt(stmt2);
 				for (int i=0; i<stmts.size(); i++) {
 					cout << "Value = " + stmts[i] <<endl;

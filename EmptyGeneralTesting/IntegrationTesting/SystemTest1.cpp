@@ -53,7 +53,7 @@ void SystemTest1::testCallsCallStar() {
 
 void SystemTest1::test2() {
 	string source = "..\\..\\Tests\\Source2.txt";
-	string queries = "..\\..\\Tests\\Queries2.txt";
+	string queries = "..\\..\\Tests\\Queries2_1.txt";
 	Parser parser;
 	QueryProcessor qp(queries);
 	
