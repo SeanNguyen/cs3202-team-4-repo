@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Parser.h"
-
 #include <string>
 #include <iostream>
 
@@ -36,6 +35,7 @@ void Parser::buildPKB() {
 	buildModifyTable();
 	buildParentTable();
 	buildUseTable();
+	buildCFG();
 }
 
 /*
@@ -161,6 +161,10 @@ void Parser::buildCallTable() {
 		int calledProc = pkb.getProcIndex(callPair.second).front();
 		pkb.insertCalls(callingProc, calledProc);
 	}
+}
+
+void Parser::buildCFG() {
+	buildControlFlowPath(0);
 }
 
 /*
@@ -290,38 +294,46 @@ TNode* Parser::readStmtList() {
 
 	while (true) {
 		string nextToken = peekForwardToken(1);
-		if (nextToken == KEYWORD_WHILE) {
-			TNode* whileNode = readWhileStmt();
-			stmtListNode->addChild(whileNode);
-		} else if (nextToken == KEYWORD_IF) {
-			TNode* ifNode = readIfStmt();
-			stmtListNode->addChild(ifNode);
-		} else if (nextToken == KEYWORD_CALL) {
-			TNode* callNode = readCallStmt();
-			stmtListNode->addChild(callNode);
-		} else if (nextToken == KEYWORD_CLOSECURLYBRACKET) {
+		if (nextToken == KEYWORD_CLOSECURLYBRACKET)
 			break;
-		} else {
-			TNode* assignNode = readAssignStmt();
-			stmtListNode->addChild(assignNode);
-		}
+		TNode* stmtNode = readStmt();
+		stmtListNode->addChild(stmtNode);
 	}
 
 	match(KEYWORD_CLOSECURLYBRACKET);
-
 	if (stmtListNode->getNumChildren() == 0)
 		error();
-
 	this->currentDepth--;
 	return stmtListNode;
 }
 
+TNode* Parser::readStmt() {
+	this->depthLv.push_back(currentDepth);
+	this->thenStmtFlags.push_back(false);
+	this->processedCFGStmtFlags.push_back(false);
+
+	TNode* stmtNode;
+	string nextToken = peekForwardToken(1);
+	if (nextToken == KEYWORD_WHILE) {
+		stmtNode = readWhileStmt();
+	} else if (nextToken == KEYWORD_IF) {
+		stmtNode = readIfStmt();
+	} else if (nextToken == KEYWORD_CALL) {
+		stmtNode = readCallStmt();
+	} else {
+		stmtNode = readAssignStmt();
+	}
+	return stmtNode;
+}
+
 TNode* Parser::readWhileStmt() {
 	match(KEYWORD_WHILE);
+
+	//Stmt
 	TNode* whileNode = PKB::createNode(While);
-	this->depthLv.push_back(currentDepth);
 	this->stmtType.push_back(KEYWORD_WHILE);
 
+	//Variable
 	string conditionVar = getNextToken();
 	TNode* varNode = PKB::createNode(Var, conditionVar);
 	whileNode->addChild(varNode);
@@ -337,7 +349,6 @@ TNode* Parser::readWhileStmt() {
 
 TNode* Parser::readCallStmt () {
 	match(KEYWORD_CALL);
-	this->depthLv.push_back(this->currentDepth);
 	stmtType.push_back(KEYWORD_CALL);
 
 	//create nodes in PKB
@@ -359,7 +370,6 @@ TNode* Parser::readCallStmt () {
 
 TNode* Parser::readIfStmt () {
 	match(KEYWORD_IF);
-	this->depthLv.push_back(currentDepth);
 	stmtType.push_back(KEYWORD_IF);
 
 	//create Node in PKB
@@ -373,8 +383,14 @@ TNode* Parser::readIfStmt () {
 
 	//process stmt list of "then"
 	match(KEYWORD_THEN);
+	size_t startOfThenStmtList = this->stmtType.size();
 	TNode* thenNode = readStmtList();
+	size_t endOfThenStmtList = this->stmtType.size() - 1;
 	ifNode->addChild(thenNode);
+
+	for (size_t i = startOfThenStmtList; i <= endOfThenStmtList; i++)
+		this->thenStmtFlags[i] = true;
+
 	//processstmt list of "else"
 	match(KEYWORD_ELSE);
 	TNode* elseNode = readStmtList();
@@ -385,7 +401,6 @@ TNode* Parser::readIfStmt () {
 
 TNode* Parser::readAssignStmt() {
 	TNode* assignNode = PKB::createNode(Assign);
-	this->depthLv.push_back(this->currentDepth);
 	this->stmtType.push_back(KEYWORD_ASSIGN);
 
 	string leftHandSideVar = getNextToken();
@@ -549,6 +564,18 @@ int Parser::getFollowedStmt(int i) {
 	return -1;
 }
 
+int Parser::getFollowingStmt(int i) {
+	int numberOfStmt = this->stmtType.size();
+	if (i < numberOfStmt - 1) {
+		int lv = depthLv.at(i);
+		for (int j=i + 1; j < numberOfStmt; j++) {
+			if (depthLv.at(j)==lv-1) return -1;
+			if (depthLv.at(j)==lv) return j;
+		}
+	}
+	return -1;
+}
+
 int Parser::getParentStmt(int i) {
 	int lv = depthLv.at(i);
 	if (i>0 && lv!=0) {
@@ -576,6 +603,9 @@ int Parser::getLastIndexOfTokenNotIndsideBracket (vector<string> tokens, string 
 	return -1;
 }
 
+void Parser::buildControlFlowPath(size_t stmtNo) {
+}
+
 //Testing methods
 int Parser::getProcNumber() {
 	return this->procName.size();
@@ -587,6 +617,15 @@ int Parser::getVarNumber() {
 
 int Parser::getStmtNumber() {
 	return this->stmtType.size();
+}
+
+int Parser::getThenStmtNumber() {
+	int count = 0;
+	for (size_t i = 0; i < this->thenStmtFlags.size(); i++)	{
+		if (this->thenStmtFlags[i])
+			count++;
+	}
+	return count;
 }
 
 int Parser::getModifyPairNumber() {

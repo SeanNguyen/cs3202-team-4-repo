@@ -1,6 +1,5 @@
 #pragma once
 #include "PKB.h"
-
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -8,7 +7,6 @@
 #include <string>
 
 using namespace std;
-
 
 class Parser
 {
@@ -31,6 +29,8 @@ private:
 	size_t currentIndex;
 	vector <string> tokens;
 	int currentDepth;
+	vector <bool> processedCFGStmtFlags;
+	vector <bool> thenStmtFlags;
 
 	bool isDataProcessed;
 	string currentProcessingProc;
@@ -50,12 +50,14 @@ public:
 	void buildUseTable();
 	void buildProcTable();
 	void buildCallTable();
+	void buildCFG();
 	bool getFileData(string fileDirectory);
 
 	//testing methods
 	int getProcNumber();
 	int getVarNumber();
 	int getStmtNumber();
+	int getThenStmtNumber();
 	int getModifyPairNumber();
 	int getUsePairNumber();
 	int getCallPairNumber();
@@ -66,6 +68,7 @@ private:
 	vector<string> preprocessData(ifstream& file);
 	TNode* readProcedure();
 	TNode* readStmtList();
+	TNode* readStmt();
 	TNode* readWhileStmt();
 	TNode* readCallStmt();
 	TNode* readIfStmt();
@@ -82,6 +85,8 @@ private:
 	vector<string> breakFileDataIntoElements();
 	bool isNumber(const string str);
 	int getFollowedStmt(int i);
+	int getFollowingStmt(int i);
 	int getParentStmt(int i);
 	int getLastIndexOfTokenNotIndsideBracket (vector<string> tokens, string token);
+	void buildControlFlowPath(size_t statementNo);
 };

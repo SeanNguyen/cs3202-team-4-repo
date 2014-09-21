@@ -88,6 +88,7 @@ void ParserTest::testParseIf() {
 	int expectedProcNumber = 1;
 	int expectedVarNumber = 3;
 	int expectedStmtNumber = 3;
+	int expectedThenStmtNumber = 1;
 	int expectedModifyPairNumber = 2;
 	int expectedUsePairNumber = 1;
 	int expectedCallPairNumber = 0;
@@ -98,10 +99,12 @@ void ParserTest::testParseIf() {
 	int actualModifyPairNumber = parser.getModifyPairNumber();
 	int actualUsePairNumber = parser.getUsePairNumber();
 	int actualCallPairNumber = parser.getCallPairNumber();
+	int acttualThenStmtNumber = parser.getThenStmtNumber();
 
 	CPPUNIT_ASSERT_EQUAL(expectedProcNumber, actualProcNumber);
 	CPPUNIT_ASSERT_EQUAL(expectedVarNumber, actualVarNumber);
 	CPPUNIT_ASSERT_EQUAL(expectedStmtNumber, actualStmtNumber);
+	CPPUNIT_ASSERT_EQUAL(expectedThenStmtNumber, acttualThenStmtNumber);
 	CPPUNIT_ASSERT_EQUAL(expectedModifyPairNumber, actualModifyPairNumber);
 	CPPUNIT_ASSERT_EQUAL(expectedUsePairNumber, actualUsePairNumber);
 	CPPUNIT_ASSERT_EQUAL(expectedCallPairNumber, actualCallPairNumber);
