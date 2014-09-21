@@ -28,7 +28,7 @@ private:
 	//references
 	PKB pkb;
 	
-	int currentIndex;
+	size_t currentIndex;
 	vector <string> tokens;
 	int currentDepth;
 
