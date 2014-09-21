@@ -253,12 +253,12 @@ void Parser::readFileData() {
 	this->tokens = breakFileDataIntoElements();
 
 	// initialize parsing properties
-	this->currentIndex = 0;
+	this->currentIndex = UINT_MAX;
 	this->isDataProcessed = false;
 
 	TNode* progNode = PKB::createNode(Program);
 
-	while (this->currentIndex < this->tokens.size() - 1) {
+	while (this->currentIndex == UINT_MAX || this->currentIndex < this->tokens.size() - 1) {
 		TNode* procedureNode = readProcedure();
 		progNode->addChild(procedureNode);
 	}
@@ -493,9 +493,12 @@ void Parser::match(string expectedToken) {
 }
 
 string Parser::getNextToken() {
-	if (this->currentIndex > 0 ) {
+	if (this->currentIndex == UINT_MAX ) {
+		this->currentIndex = 0;
+	} else {
 		this->currentIndex++;
 	}
+
 	if (this->currentIndex >= this->tokens.size())
 		error();
 	string token = this->tokens[this->currentIndex];
