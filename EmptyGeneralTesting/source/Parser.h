@@ -29,8 +29,10 @@ private:
 	size_t currentIndex;
 	vector <string> tokens;
 	int currentDepth;
-	vector <bool> processedCFGStmtFlags;
-	vector <bool> thenStmtFlags;
+	vector < vector < int > > CFGNodes;
+	vector <int> processedCFGStmtFlags;
+	vector <int> thenStmtFlags;
+	vector <string> procedureMask;
 
 	bool isDataProcessed;
 	string currentProcessingProc;
@@ -89,4 +91,6 @@ private:
 	int getParentStmt(int i);
 	int getLastIndexOfTokenNotIndsideBracket (vector<string> tokens, string token);
 	void buildControlFlowPath(size_t statementNo);
+	vector <int> getNextNodeInControlFlow(int stmtNo);
+	vector <int> getChildrenStmts(int stmtNo);
 };
