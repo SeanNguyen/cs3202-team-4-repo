@@ -129,7 +129,7 @@ std::vector<int> ParentTable::getParentStarStmt(int childStmt)
 	parentStar = getParentStarStmtHelper(childStmt, parentStar);
 	if (parentStar.size() == 0)
 	{
-		return OBJECT_NOT_FOUND;
+		return parentStar; //just return empty
 	}
 	else
 	{
