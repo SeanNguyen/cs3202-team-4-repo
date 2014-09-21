@@ -22,7 +22,7 @@ void QueryPreprocessor::Preprocess(string query) {
 	QueryRepresentator::reset();
 
 	vector<string> queryList; queryList.push_back(query);
-	preprocessQuery(queryList);
+	preprocessQuery(queryList, 0);
 }
 
 /* PRIVATE METHODS */
@@ -91,13 +91,13 @@ void QueryPreprocessor::preprocessFileData() {
 	for (size_t i=0; i<fileData.size(); i++) {
 		vector<string> query = fileData[i];
 	//	cout << i + 1 <<endl;
-		preprocessQuery(query);
+		preprocessQuery(query, i);
 	}
 }
 
 // Description: this method is to save query data into QueryTree and SymbolTable,
 // and save them into QueryRepresentator
-void QueryPreprocessor::preprocessQuery(vector<string> query) {
+void QueryPreprocessor::preprocessQuery(vector<string> query, int index) {
 	SymbolTable table;
 	QueryTree tree;
 	vector<string> errors;
@@ -122,7 +122,7 @@ void QueryPreprocessor::preprocessQuery(vector<string> query) {
 					curLine = curLine.substr(index+1);
 					ss.str(curLine);
 				} else {
-					errors.push_back("Syntax error: Found no ending sign for symbol declaration of query " + i);
+					errors.push_back("Error 001: Found no ending sign for symbol declaration of query " + i);
 					return;
 				}
 			} else if (element==KEYWORD_SELECT) {
@@ -132,7 +132,7 @@ void QueryPreprocessor::preprocessQuery(vector<string> query) {
 				ss.str("");
 				ss.clear();
 			} else {
-				errors.push_back("Syntax error: Unable to recognize symbol: " + element + " in line \n" + curLine);
+				errors.push_back("Error 002: Unable to recognize symbol: " + element + " in line \n" + curLine);
 			}
 		} 
 	}
@@ -141,7 +141,7 @@ void QueryPreprocessor::preprocessQuery(vector<string> query) {
 		//		tree.printTree();
 		QueryRepresentator::addQuery(table, tree, true);
 	} else {
-		cout << "ERROR LIST "<<endl;
+		cout << "ERROR LIST:, QUERY " << index+1 <<endl;
 		for (size_t i=0; i<errors.size(); i++) {
 			cout << errors[i] <<endl;
 		}
@@ -162,14 +162,14 @@ void QueryPreprocessor::preprocessDeclaration(SymbolTable& table, string declara
 		// expect to meet comma or semicolon
 		if (i%2==0) {
 			if (list[i]!="," && list[i]!=";") { 
-				errors.push_back("Syntax error: expect end sign");
+				errors.push_back("Error 003: expect end sign");
 				return;
 			}
 		}
 		// expect to meet symbol
 		else {
 			if (list[i]=="," || list[i]==";")  {
-				errors.push_back("Syntax error: expect symbol");
+				errors.push_back("Error 004: expect symbol");
 				return;
 			}
 			string name = list[i];
@@ -234,7 +234,7 @@ TNode * QueryPreprocessor::preprocessResultNode(vector<string> list, SymbolTable
 			node -> addChild(nodeChild);
 			return node;
 		}
-		errors.push_back("Error: unable to find symbol: " + list[1]);
+		errors.push_back("Error 005: unable to find symbol: " + list[i]);
 		TNode * node = new TNode();
 		return node;
 	}
@@ -253,7 +253,7 @@ TNode * QueryPreprocessor::preprocessSuchThatCondition(vector<string> list, Symb
 		TNode * relationNode = new TNode(SyntaxHelper::getSymbolType(relation));
 		
 		if (list[3]!="(") {
-			errors.push_back("Expect symbol ( after relation name");
+			errors.push_back("Error 006: expect symbol ( after relation name");
 		}
 
 		int commaIndex=0;
@@ -288,12 +288,12 @@ TNode * QueryPreprocessor::preprocessSuchThatCondition(vector<string> list, Symb
 			TNode * arg2Node = new TNode(Const, list[commaIndex+2]);
 			relationNode -> addChild(arg2Node);
 		} else {
-			errors.push_back("Error: no sign of ending for relation");
+			errors.push_back("Error 007: no sign of ending for relation");
 		}
 
 		suchThatNode -> addChild(relationNode);
 	} else {
-		errors.push_back("Not a relation name: " + relation);
+		errors.push_back("Error 008: not a relation name: " + relation);
 	}
 
 	return suchThatNode;
@@ -308,7 +308,7 @@ TNode * QueryPreprocessor::preprocessPatternCondition(vector<string> list, Symbo
 	// expect second element as name of assignment symbol
 	string assignSymbol = list[1];
 	if (table.getType(list[1])!=KEYWORD_ASSIGN) {
-		errors.push_back("Not a valid symbol for pattern clause: " + list[1]);
+		errors.push_back("Error 009: not a valid symbol for pattern clause: " + list[1]);
 	}
 	TNode * assignNode = new TNode(QuerySymbol, assignSymbol);
 	pattern -> addChild(assignNode);
@@ -328,7 +328,7 @@ TNode * QueryPreprocessor::preprocessPatternCondition(vector<string> list, Symbo
 			pattern -> addChild(arg1Node);
 		} else {
 			if (table.getType(list[3])!= "variable") {
-				errors.push_back("Error: unable to find symbol: " + list[3] + " in pattern");
+				errors.push_back("Error 010: unable to find symbol: " + list[3] + " in pattern");
 			} else {
 				TNode * arg1Node = new TNode(QuerySymbol, list[3]);
 				pattern -> addChild(arg1Node);
@@ -405,27 +405,27 @@ TNode * QueryPreprocessor::preprocessWithCondition(vector<string> list, SymbolTa
 	if (table.isSymbol(arg1)) {
 		// check syntax
 		if (list[index+2]!=".") {
-			errors.push_back("Wrong expression: " + arg1 + list[index+2] + list[index+3]);
+			errors.push_back("Error 011: wrong expression: " + arg1 + list[index+2] + list[index+3]);
 		} 
 		if (arg1Type==KEYWORD_PROCEDURE && list[index+3]!="procName") {
-			errors.push_back("Wrong expression HERE: " + arg1 + list[index+2] + list[index+3]);
+			errors.push_back("Error 012: wrong expression: " + arg1 + list[index+2] + list[index+3]);
 		}
 		if (arg1Type==KEYWORD_VAR && list[index+3]!="varName") {
-			errors.push_back("Wrong expression: " + arg1 + list[index+2] + list[index+3]);
+			errors.push_back("Error 013: wrong expression: " + arg1 + list[index+2] + list[index+3]);
 		}
 		if (arg1Type==KEYWORD_CONST && list[index+3]!="value") {
-			errors.push_back("Wrong expression: " + arg1 + list[index+2] + list[index+3]);
+			errors.push_back("Error 014: wrong expression: " + arg1 + list[index+2] + list[index+3]);
 		}
 		if ((arg1Type==KEYWORD_STMT || arg1Type==KEYWORD_ASSIGN ||
 			arg1Type==KEYWORD_WHILE || arg1Type==KEYWORD_IF || arg1Type == KEYWORD_CALL)
 			&& list[index+3]!="stmt#") {
-			errors.push_back("Wrong expression: " + arg1 + list[index+2] + list[index+3]);
+			errors.push_back("Error 015: wrong expression: " + arg1 + list[index+2] + list[index+3]);
 		}
 		if (arg1Type==KEYWORD_PROG_LINE && list[index+3]!="prog_line#") {
-			errors.push_back("Wrong expression: " + arg1 + list[index+2] + list[index+3]);
+			errors.push_back("Error 016: wrong expression: " + arg1 + list[index+2] + list[index+3]);
 		}
 		if (arg1Type==KEYWORD_CALL && list[index+3]!="procName") {
-			errors.push_back("Wrong expression: " + arg1 + list[index+2] + list[index+3]);
+			errors.push_back("Error 017: wrong expression: " + arg1 + list[index+2] + list[index+3]);
 		}
 		TNode * arg1Node = new TNode(QuerySymbol, arg1);
 		withCls -> addChild(arg1Node);
@@ -433,7 +433,7 @@ TNode * QueryPreprocessor::preprocessWithCondition(vector<string> list, SymbolTa
 	}
 
 	if (list[index]!="=") {
-		errors.push_back("Error: expect equality size (=) but find " + list[index] +" instead");
+		errors.push_back("Error 018: expect equality size (=) but find " + list[index] +" instead");
 		return withCls;
 	}
 	index++;
@@ -444,7 +444,7 @@ TNode * QueryPreprocessor::preprocessWithCondition(vector<string> list, SymbolTa
 		string arg2Type = table.getType(arg2);
 		if (arg1Type==KEYWORD_PROCEDURE || arg1Type==KEYWORD_VAR || arg1Type==KEYWORD_CALL) { 
 			if (arg2Type!=KEYWORD_PROCEDURE && arg2Type==KEYWORD_VAR && arg2Type!=KEYWORD_CALL) {
-				errors.push_back("Not correct comparison (different attribute type): " + arg1 + " and " + arg2);
+				errors.push_back("Error 019: not correct comparison (different attribute type): " + arg1 + " and " + arg2);
 			} else {
 				TNode * arg2Node = new TNode(Const, arg2);
 				withCls -> addChild(arg2Node);
@@ -453,7 +453,7 @@ TNode * QueryPreprocessor::preprocessWithCondition(vector<string> list, SymbolTa
 			if (arg2Type!=KEYWORD_CONST && arg2Type!=KEYWORD_PROG_LINE &&
 			arg2Type!=KEYWORD_STMT && arg2Type!=KEYWORD_ASSIGN && arg2Type!=KEYWORD_WHILE &&
 			arg2Type!=KEYWORD_IF && arg2Type==KEYWORD_CALL) {
-				errors.push_back("Not correct comparison (different attribute type): " + arg1 + " and " + arg2);
+				errors.push_back("Error 020: not correct comparison (different attribute type): " + arg1 + " and " + arg2);
 			} else {
 				TNode * arg2Node = new TNode(Const, arg2);
 				withCls -> addChild(arg2Node);
@@ -466,7 +466,7 @@ TNode * QueryPreprocessor::preprocessWithCondition(vector<string> list, SymbolTa
 				TNode * arg2Node = new TNode(Const, list[index+1]);
 				withCls -> addChild(arg2Node);
 			} else {
-				errors.push_back("Not correct comparison (different attribute type): " + arg1 + " and " + arg2);
+				errors.push_back("Error 021: not correct comparison (different attribute type): " + arg1 + " and " + arg2);
 			}
 		} else if (arg1Type==KEYWORD_CONST || arg1Type==KEYWORD_PROG_LINE ||
 			arg1Type==KEYWORD_STMT || arg1Type==KEYWORD_ASSIGN || arg1Type==KEYWORD_WHILE ||
@@ -475,10 +475,10 @@ TNode * QueryPreprocessor::preprocessWithCondition(vector<string> list, SymbolTa
 				TNode * arg2Node = new TNode(Const, arg2);
 				withCls -> addChild(arg2Node);
 			} else {
-				errors.push_back("Not correct comparison (different attribute type): " + arg1 + " and " + arg2);
+				errors.push_back("Error 022: not correct comparison (different attribute type): " + arg1 + " and " + arg2);
 			}
 		} else {
-			errors.push_back("Not correct comparison (different attribute type): " + arg1 + " and " + arg2);
+			errors.push_back("Error 023: not correct comparison (different attribute type): " + arg1 + " and " + arg2);
 		}
 	}
 

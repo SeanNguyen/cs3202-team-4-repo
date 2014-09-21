@@ -28,7 +28,7 @@ private:
 
 	void readFileData();
 	void preprocessFileData();
-	void preprocessQuery(vector<string> query);
+	void preprocessQuery(vector<string> query, int index);
 	void preprocessDeclaration(SymbolTable& table, string declaration, vector<string>& errors);
 	void preprocessQueryPart(QueryTree& tree, SymbolTable table, string queryPart, vector<string>& errors);
 	TNode * preprocessResultNode(vector<string> list, SymbolTable table, vector<string> & errors, int i);

@@ -31,7 +31,7 @@ void SystemTest1::test1() {
 }
 
 void SystemTest1::testCallsCallStar() {
-	string source = "..\\..\\Tests\\TestCallCallStarSource1.txt";
+	/*string source = "..\\..\\Tests\\TestCallCallStarSource1.txt";
 	string queries = "..\\..\\Tests\\TestCallCallStarQueries1.txt";
 	Parser parser;
 	QueryProcessor qp(queries);
@@ -48,7 +48,7 @@ void SystemTest1::testCallsCallStar() {
 		}
 		cout <<endl;
 	}
-
+*/
 }
 
 void SystemTest1::test2() {
@@ -73,7 +73,7 @@ void SystemTest1::test2() {
 }
 
 void SystemTest1::test3() {
-	string source = "..\\..\\Tests\\Source3.txt";
+	/*string source = "..\\..\\Tests\\Source3.txt";
 	string queries = "..\\..\\Tests\\Queries3.txt";
 	Parser parser;
 	QueryProcessor qp(queries);
@@ -90,11 +90,11 @@ void SystemTest1::test3() {
 		}
 		cout <<endl;
 	}
-
+*/
 }
 
 void SystemTest1::test4() {
-	string source = "..\\..\\Tests\\Source4.txt";
+	/*string source = "..\\..\\Tests\\Source4.txt";
 	string queries = "..\\..\\Tests\\Queries4.txt";
 	Parser parser;
 	QueryProcessor qp(queries);
@@ -111,11 +111,11 @@ void SystemTest1::test4() {
 		}
 		cout <<endl;
 	}
-
+*/
 }
 
 void SystemTest1::test5() {
-	string source = "..\\..\\Tests\\Source5.txt";
+	/*string source = "..\\..\\Tests\\Source5.txt";
 	string queries = "..\\..\\Tests\\Queries5.txt";
 	Parser parser;
 	QueryProcessor qp(queries);
@@ -132,11 +132,11 @@ void SystemTest1::test5() {
 		}
 		cout <<endl;
 	}
-
+*/
 }
 
 void SystemTest1::test6() {
-	string source = "..\\..\\Tests\\Source6.txt";
+	/*string source = "..\\..\\Tests\\Source6.txt";
 	string queries = "..\\..\\Tests\\Queries6.txt";
 	Parser parser;
 	QueryProcessor qp(queries);
@@ -153,5 +153,5 @@ void SystemTest1::test6() {
 		}
 		cout <<endl;
 	}
-
+*/
 }

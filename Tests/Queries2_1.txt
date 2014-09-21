@@ -1,0 +1,7 @@
+18
+cat: All Category
+2 - Follows, ImplStmtLine ::
+stmt s2;
+Select s2 such that Follows(11, s2)
+12
+5000

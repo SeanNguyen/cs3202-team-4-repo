@@ -1,6 +1,3 @@
-Test Purpose: 
-This test case intends to test the program's ability to parse multiple nested while loops, irregular spacing between statments and variables and factors. It also includes a large number of variable names.
-
 procedure spacersoul{
 	i = 5;					\\1
 	while i{				\\2

@@ -20,7 +20,7 @@ const string KEYWORD_THEN = "then";
 const string KEYWORD_ELSE = "else";
 const string KEYWORD_WHILE = "while";
 const string KEYWORD_VAR = "variable";
-const string KEYWORD_CONST = "const";
+const string KEYWORD_CONST = "constant";
 const string KEYWORD_OPENCURLYBRACKET = "{";
 const string KEYWORD_CLOSECURLYBRACKET = "}";
 const string KEYWORD_OPENBRACKET = "(";
@@ -45,7 +45,7 @@ enum Symbol {
 
 	Program,
 	Procedure,
-	StmtList, Assign, While, If,
+	StmtList, Assign, While, If, CallStmt,
 	Var, Const,
 	Plus, Minus, Times,
 

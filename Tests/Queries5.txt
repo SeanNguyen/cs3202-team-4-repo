@@ -1,7 +1,7 @@
 6
 cat: Variable, Statement
 1 - Variable, ImplStmtLine ::
-statement s;
+stmt s;
 Select s such that Follows(_, s)
 2, 4, 5, 7, 8, 9, 10, 13, 14, 15, 16, 17, 18, 19, 20, 21, 23, 24, 25, 26
 5000

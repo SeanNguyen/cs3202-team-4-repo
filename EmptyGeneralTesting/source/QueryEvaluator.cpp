@@ -112,12 +112,12 @@ void QueryEvaluator::checkQueryCondition(int childIndex, vector<string> values, 
 
 	// get root's child at index
 	TNode child = *root.getChildAtIndex(childIndex);
-	if (child.getValue()=="suchThat") {
+	if (child.getType()==SuchThatCls) {
 		// find values satisfying such that condition
 		checkSuchThatCondition(child, values, result, check, childIndex);
 	}
 
-	if (child.getValue()=="pattern") {
+	if (child.getType()==PatternCls) {
 		// find values satisfying pattern condition
 		checkPatternCondition(child, values, result, check, childIndex);
 	}
@@ -137,6 +137,7 @@ void QueryEvaluator::checkSuchThatCondition(TNode suchThatNode, vector<string> v
 
 void QueryEvaluator::handleRelationNode(TNode & relationNode, vector<string> values, vector<string>& result, bool check, int childIndex) {
 	// get 2 argument nodes under relationNode
+
 	TNode arg1Node = *relationNode.getChildAtIndex(0);
 	TNode arg2Node = *relationNode.getChildAtIndex(1);
 	Symbol arg1Type = arg1Node.getType();
@@ -149,7 +150,7 @@ void QueryEvaluator::handleRelationNode(TNode & relationNode, vector<string> val
 		// check with query PKB::is*Relation*(arg1Value, arg2Value) 
 		check = isRelation(relation, arg1Name, arg2Name);	
 		//call back to checkQueryCondition
-		checkQueryCondition(childIndex++, values, result, check);
+		checkQueryCondition(childIndex+1, values, result, check);
 		return;
 	}
 	if (arg1Type == Const && arg2Type == QuerySymbol) {
@@ -157,21 +158,35 @@ void QueryEvaluator::handleRelationNode(TNode & relationNode, vector<string> val
 		if (arg2Value!="-1") {
 			check = isRelation(relation, arg1Name, arg2Value);	
 			//call back to checkQueryCondition
-			checkQueryCondition(childIndex++, values, result, check);
+			checkQueryCondition(childIndex+1, values, result, check);
 			return;
 		} else {
 			vector<string> arg2Value = getArgumentValueInRelation(relation, arg1Name,arg1Type, arg2Name,arg2Type, ARG2_UNKNOWN);
+			for (size_t i=0; i<arg2Value.size(); i++) {
+				int arg2Index = table.getIndex(arg2Name);
+				values[arg2Index] = arg2Value[i];
+				checkQueryCondition(childIndex+1, values, result, check);
+				return;
+			}
 		}
 	}
 	if (arg1Type == QuerySymbol && arg2Type == Const) {
 		string arg1Value=getStoredValue(values, arg1Name);
+		cout << arg1Value <<endl;
 		if(arg1Value!="-1"){
 			check=isRelation(relation,arg1Value, arg2Name);
 			//call back to checkQueryCondition
-			checkQueryCondition(childIndex++, values, result, check);
+			checkQueryCondition(childIndex+1, values, result, check);
 			return;
 		} else{
 			vector<string> arg1Value=getArgumentValueInRelation(relation, arg1Name,arg1Type, arg2Name, arg2Type, ARG1_UNKNOWN);
+			// for each valu of arg1 we call checkQueryCondition again
+			for (size_t i=0; i<arg1Value.size(); i++) {
+				int arg1Index = table.getIndex(arg1Name);
+				values[arg1Index] = arg1Value[i];
+				checkQueryCondition(childIndex+1, values, result, check);
+				return;
+			}
 		}
 	}
 	if (arg1Type == QuerySymbol && arg2Type == QuerySymbol) {
@@ -181,28 +196,41 @@ void QueryEvaluator::handleRelationNode(TNode & relationNode, vector<string> val
 		if(arg1Value!="-1" & arg2Value!="-1"){
 			check=isRelation(relation, arg1Value, arg2Value);
 			//call back to checkQueryCondition
-			checkQueryCondition(childIndex++, values, result, check);
+			checkQueryCondition(childIndex+1, values, result, check);
 			return;
 		} else if(arg1Value!="-1" & arg2Value=="-1"){
-			check=isRelation(relation,arg1Value, arg2Name);
-			//call back to checkQueryCondition
-			checkQueryCondition(childIndex++, values, result, check);
-			return;
-
+			vector<string> arg2Value = getArgumentValueInRelation(relation, arg1Name,arg1Type, arg2Name,arg2Type, ARG2_UNKNOWN);
+			for (size_t i=0; i<arg2Value.size(); i++) {
+				int arg2Index = table.getIndex(arg2Name);
+				values[arg2Index] = arg2Value[i];
+				checkQueryCondition(childIndex+1, values, result, check);
+				return;
+			}
 		} else if(arg1Value=="-1" & arg2Value!="-1"){
-			check = isRelation(relation, arg1Name, arg2Value);	
-			//call back to checkQueryCondition
-			checkQueryCondition(childIndex++, values, result, check);
-			return;
-
+			vector<string> arg1Value=getArgumentValueInRelation(relation, arg1Name,arg1Type, arg2Name, arg2Type, ARG1_UNKNOWN);
+			// for each valu of arg1 we call checkQueryCondition again
+			for (size_t i=0; i<arg1Value.size(); i++) {
+				int arg1Index = table.getIndex(arg1Name);
+				values[arg1Index] = arg1Value[i];
+				checkQueryCondition(childIndex+1, values, result, check);
+				return;
+			}
 		} else{
 			//brute force method
+			vector<string> arg1Value = getAllArgValues(arg1Type);
+			// for each valu of arg1 we call checkQueryCondition again
+			for (size_t i=0; i<arg1Value.size(); i++) {
+				int arg1Index = table.getIndex(arg1Name);
+				values[arg1Index] = arg1Value[i];
+				checkQueryCondition(childIndex, values, result, check);
+				return;
+			}
 		}
 
 	}
 }
 
-vector<string> & QueryEvaluator::getArgumentValueInRelation(Symbol relation, string arg1Value, Symbol arg1Type, string arg2Value, Symbol arg2Type, int argIndex) {
+vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, string arg1Value, Symbol arg1Type, string arg2Value, Symbol arg2Type, int argIndex) {
 	vector<string> resultList;
 
 	switch (argIndex) {
@@ -212,7 +240,7 @@ vector<string> & QueryEvaluator::getArgumentValueInRelation(Symbol relation, str
 			case Follows:
 			{
 				int stmt2 = atoi(arg2Value.c_str());
-				int result = PKB::getFollowedStmt(stmt2);		
+				int result = PKB::getFollowedStmt(stmt2);
 				if (result!=-1) {
 					resultList.push_back(intToString(result));
 				}
@@ -222,6 +250,9 @@ vector<string> & QueryEvaluator::getArgumentValueInRelation(Symbol relation, str
 			{
 				int stmt2 = atoi(arg2Value.c_str());
 				vector<int> stmts = PKB::getFollowedStarStmt(stmt2);
+				for (size_t i=0; i<stmts.size(); i++) {
+					resultList.push_back(intToString(stmts[i]));
+				}
 				return resultList;
 			}
 			case Parent:
@@ -235,9 +266,13 @@ vector<string> & QueryEvaluator::getArgumentValueInRelation(Symbol relation, str
 			}
 			case ParentS:
 			{
+				cout << "here " <<endl;
 				int stmt2 = atoi(arg2Value.c_str());
+				if (PKB::getParentStarStmt(stmt2)==OBJECT_NOT_FOUND) {
+				}
 				vector<int> stmts = PKB::getParentStarStmt(stmt2);
 				for (int i=0; i<stmts.size(); i++) {
+					cout << "Value = " + stmts[i] <<endl;
 					resultList.push_back(intToString(stmts[i]));
 				}
 				return resultList;
@@ -322,6 +357,9 @@ vector<string> & QueryEvaluator::getArgumentValueInRelation(Symbol relation, str
 			{
 				int stmt1 = atoi(arg1Value.c_str());
 				vector<int> stmts = PKB::getFollowingStarStmt(stmt1);
+				for (int i=0; i<stmts.size(); i++) {
+					resultList.push_back(intToString(stmts[i]));
+				}
 				return resultList;
 			}
 			case Parent:
@@ -559,7 +597,68 @@ void QueryEvaluator::checkPatternCondition(TNode patternNode,vector<string> valu
 		checkQueryCondition(childIndex+1, values, result, check);
 	}
 }
-	
+
+vector<string> QueryEvaluator::getAllArgValues(Symbol type) {
+	vector<string> result;
+	switch(type) {
+	case Var:
+		for (int i=0; i<PKB::getVarTableSize(); i++) {
+			result.push_back(PKB::getVarName(i));
+		}
+		break;
+	case Const:
+		for (int i=0; i<PKB::getConstTableSize(); i++) {
+			result.push_back(PKB::getConstName(i));
+		}
+		break;
+	case Procedure:
+		for (int i=0; i<PKB::getProcTableSize(); i++) {
+			result.push_back(PKB::getProcName(i));
+		}
+		break;
+	case Stmt:
+	case Prog_line:
+		for (int i=0; i<PKB::getStatTableSize(); i++) {
+			result.push_back(intToString(i+1));
+		}
+		break;
+	case Assign:
+		{
+			vector<int> assignStmts = PKB::getStmtIndex(KEYWORD_ASSIGN);
+			for (int i=0; i<assignStmts.size(); i++) {
+				result.push_back(intToString(assignStmts[i]));
+			}
+			break;
+		}
+	case While:
+		{
+			vector<int> whileStmts = PKB::getStmtIndex(KEYWORD_WHILE);
+			for (int i=0; i<whileStmts.size(); i++) {
+				result.push_back(intToString(whileStmts[i]));
+			}
+			break;
+		}
+	case If:
+		{
+			vector<int> IfStmts = PKB::getStmtIndex(KEYWORD_IF);
+			for (int i=0; i<IfStmts.size(); i++) {
+				result.push_back(intToString(IfStmts[i]));
+			}
+			break;
+		}
+	case CallStmt: {
+			vector<int> callStmts = PKB::getStmtIndex(KEYWORD_CALL);
+			for (int i=0; i<callStmts.size(); i++) {
+				result.push_back(intToString(callStmts[i]));
+			}
+			break;
+		}
+	default:
+		break;
+	}
+	return result;
+}
+
 void QueryEvaluator::updateResultList(vector<string> values, vector<string>& result) {
 	TNode root = *tree.getRoot();
 	// get first child
@@ -577,8 +676,6 @@ void QueryEvaluator::updateResultList(vector<string> values, vector<string>& res
 		if (!isDeclaredType(paramVal, paramName, "")) { // need fix
 			return;
 		}
-
-		// for debugging
 
 		// check if result list has this paramVal
 		if (!isResult(paramVal, result)) {
