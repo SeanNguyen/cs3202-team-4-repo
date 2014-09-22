@@ -353,7 +353,6 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 				int stmt1 = atoi(arg1Value.c_str());
 				vector<int> stmts = PKB::getFollowingStarStmt(stmt1);
 				for (int i=0; i<stmts.size(); i++) {
-					cout << "FollowsStar " << stmts.size()  << " "<<stmts[i] <<endl;
 					resultList.push_back(intToString(stmts[i]));
 				}
 				return resultList;
