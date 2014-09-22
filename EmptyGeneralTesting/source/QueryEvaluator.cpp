@@ -760,6 +760,24 @@ void QueryEvaluator::updateResultList(vector<string> values, vector<string>& res
 					result.push_back(paramVal);
 				}
 			}
+		} else if (paramType==KEYWORD_IF) {
+			vector<int> paramList = PKB::getStmtIndex(KEYWORD_IF);
+			for (size_t i=0; i<paramList.size(); i++) {
+				paramVal = intToString(paramList[i]);
+				if (!isResult(paramVal, result)) {
+					// add new result to list
+					result.push_back(paramVal);
+				}
+			}
+		} else if (paramType==KEYWORD_CALL) {
+			vector<int> paramList = PKB::getStmtIndex(KEYWORD_CALL);
+			for (size_t i=0; i<paramList.size(); i++) {
+				paramVal = intToString(paramList[i]);
+				if (!isResult(paramVal, result)) {
+					// add new result to list
+					result.push_back(paramVal);
+				}
+			}
 		} else if (paramType==KEYWORD_VAR) {
 			for (int i=0; i<PKB::getVarTableSize(); i++) {
 				result.push_back(PKB::getVarName(i));
@@ -767,6 +785,11 @@ void QueryEvaluator::updateResultList(vector<string> values, vector<string>& res
 		} else if (paramType==KEYWORD_CONST) {
 			for (int i=0; i<PKB::getConstTableSize(); i++) {
 				result.push_back(PKB::getConstName(i));
+			}
+		} else if (paramType==KEYWORD_PROCEDURE) {
+			for (int i=0; i<PKB::getProcTableSize(); i++) {
+				cout << PKB::getProcName(i) <<endl;
+				result.push_back(PKB::getProcName(i));
 			}
 		}
 		else return;

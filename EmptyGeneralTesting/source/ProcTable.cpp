@@ -49,12 +49,10 @@ vector<int> ProcTable::getProcIndex(string name)
 
 string ProcTable::getProcName(int index) 
 {
-	index--;
-
-	if((procTable.size()-1)>=(size_t)index)
+	if((procTable.size())>(size_t)index)
 		return procTable.at(index); 
 
-	return "variable not found";
+	return "procedure not found";
 }
 
 int ProcTable::getSize()

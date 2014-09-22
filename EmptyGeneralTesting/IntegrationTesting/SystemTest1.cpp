@@ -40,7 +40,7 @@ void SystemTest1::testCallsCallStar() {
 	parser.parse(source);
 	parser.buildPKB();
 
-	/*vector<vector<string>> results = qp.Process();
+	vector<vector<string>> results = qp.Process();
 
 	for (size_t i=0; i<results.size(); i++) {
 		cout << "Query " << i+1 << ": ";
@@ -48,7 +48,7 @@ void SystemTest1::testCallsCallStar() {
 			cout << results[i][j] << " ";
 		}
 		cout <<endl;
-	}*/
+	}
 
 }
 
