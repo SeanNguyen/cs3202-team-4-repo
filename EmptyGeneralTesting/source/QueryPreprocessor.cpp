@@ -215,7 +215,6 @@ void QueryPreprocessor::preprocessQueryPart(QueryTree& tree, SymbolTable table, 
 			TNode * withCls = preprocessWithCondition(list, table, errors, i);
 			root -> addChild(withCls);
 		} else {
-			cout <<  "";
 		}
 	}
 
@@ -416,6 +415,7 @@ TNode * QueryPreprocessor::preprocessWithCondition(vector<string> list, SymbolTa
 		if (arg1Type==KEYWORD_CONST && list[index+3]!="value") {
 			errors.push_back("Error 014: wrong expression: " + arg1 + list[index+2] + list[index+3]);
 		}
+
 		if ((arg1Type==KEYWORD_STMT || arg1Type==KEYWORD_ASSIGN ||
 			arg1Type==KEYWORD_WHILE || arg1Type==KEYWORD_IF || arg1Type == KEYWORD_CALL)
 			&& list[index+3]!="stmt#") {
@@ -446,7 +446,7 @@ TNode * QueryPreprocessor::preprocessWithCondition(vector<string> list, SymbolTa
 			if (arg2Type!=KEYWORD_PROCEDURE && arg2Type==KEYWORD_VAR && arg2Type!=KEYWORD_CALL) {
 				errors.push_back("Error 019: not correct comparison (different attribute type): " + arg1 + " and " + arg2);
 			} else {
-				TNode * arg2Node = new TNode(Const, arg2);
+				TNode * arg2Node = new TNode(QuerySymbol, arg2);
 				withCls -> addChild(arg2Node);
 			}
 		} else {
@@ -455,7 +455,7 @@ TNode * QueryPreprocessor::preprocessWithCondition(vector<string> list, SymbolTa
 			arg2Type!=KEYWORD_IF && arg2Type==KEYWORD_CALL) {
 				errors.push_back("Error 020: not correct comparison (different attribute type): " + arg1 + " and " + arg2);
 			} else {
-				TNode * arg2Node = new TNode(Const, arg2);
+				TNode * arg2Node = new TNode(QuerySymbol, arg2);
 				withCls -> addChild(arg2Node);
 			}
 		}
@@ -546,6 +546,10 @@ vector<string> QueryPreprocessor::breakStringIntoWords(string str) {
 		}
 		if (curChar=='>') {
 			str = str.replace(i, 1, " > ");
+			i+=2;
+		}
+		if (curChar=='=') {
+			str = str.replace(i, 1, " = ");
 			i+=2;
 		}
 	}

@@ -31,6 +31,7 @@ private:
 	void checkQueryCondition(int childIndex, vector<string> values, vector<string>& result, bool check);
 	void checkSuchThatCondition(TNode node, vector<string> values, vector<string>& result, bool check, int childIndex);
 	void checkPatternCondition(TNode node, vector<string> values, vector<string>& result, bool check, int childIndex);
+	void checkWithCondition(TNode node, vector<string> values, vector<string>& result, bool check, int childIndex);
 	void handleRelationNode(TNode & relationNode, vector<string> values, vector<string> & result, bool check, int childIndex);
 	
 	vector<string> getArgumentValueInRelation(Symbol Relation, string arg1Value, Symbol arg1Type, string arg2Value, Symbol arg2Type, int argIndex);

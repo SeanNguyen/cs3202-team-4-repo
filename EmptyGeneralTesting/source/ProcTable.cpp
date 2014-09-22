@@ -41,7 +41,7 @@ vector<int> ProcTable::getProcIndex(string name)
 	for(size_t i=0;i<procTable.size();i++)
 	{
 		if(procTable.at(i)==name)
-			indexes.push_back(i+1);
+			indexes.push_back(i);
 	}
 
 	return indexes ;

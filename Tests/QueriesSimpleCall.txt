@@ -55,3 +55,23 @@ procedure p1;
 Select p1 such that Calls(p1, "Simple0")
 
 5000
+12 - CallsStar ::
+procedure p1;
+Select p1 such that Calls*("Simple1", "Simple3")
+Simple1, Simple2, Simple3
+5000
+13 - CallsStar ::
+procedure p1;
+Select p1 such that Calls*("Simple1", "Simple4")
+
+5000
+14 - CallsStar ::
+procedure p1;
+Select p1 such that Calls*("Simple4", "Simple2")
+
+5000
+15 - CallsStar ::
+procedure p1;
+Select p1 such that Calls*("Simple0", "Simple4")
+
+5000
