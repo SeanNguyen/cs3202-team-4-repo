@@ -405,6 +405,10 @@ int PKB::getProcTableSize()
 	return procObj.getSize();
 }
 
+bool PKB::isProc(string name) {
+	return procObj.isProc(name);
+}
+
 ////////////////////////////////////Next METHODS///////////////////////////////
 // Method to check if next relationship exists
 bool PKB::isNext(int n1, int n2){

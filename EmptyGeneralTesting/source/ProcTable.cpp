@@ -3,6 +3,15 @@
 #include <iostream>
 #include <algorithm>
 
+
+bool ProcTable::isProc(string name) {
+	for (size_t i=0; i<procTable.size(); i++) {
+		if (procTable[i]==name) 
+			return true;
+	}
+	return false;
+}
+
 int ProcTable::insertProc(string name) 
 {	
 	//otherwise insert the variable to the end of the vector and return index

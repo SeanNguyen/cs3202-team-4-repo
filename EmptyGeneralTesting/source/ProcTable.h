@@ -13,6 +13,8 @@ private:
 
 public:
 	
+	bool isProc(string name);
+
 	int insertProc(string name);
 
 	vector<int> getProcIndex(string name);

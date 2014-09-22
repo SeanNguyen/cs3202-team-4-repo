@@ -223,6 +223,8 @@ class PKB
 
 	static int getProcTableSize();
 
+	static bool isProc(string name);
+
 
 	///////////////////////NEXTTABLE////////////////////////////////////
 	// Method to check if next relationship exists

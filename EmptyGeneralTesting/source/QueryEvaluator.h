@@ -42,6 +42,7 @@ private:
 	void updateResultList(vector<string> values, vector<string>& result);
 	bool isResult(string val, vector<string> result);
 	bool isDeclaredType(string val, string name, string type);
+	vector<string> removeInvalidValues(vector<string> list, Symbol type);
 
 	// unused methods
 	bool isQueryConditionsSatisfied(vector<string> values);

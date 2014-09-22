@@ -162,6 +162,10 @@ void QueryEvaluator::handleRelationNode(TNode & relationNode, vector<string> val
 			return;
 		} else {
 			vector<string> arg2Value = getArgumentValueInRelation(relation, arg1Name,arg1Type, arg2Name,arg2Type, ARG2_UNKNOWN);
+			if (arg2Value.size()==0) {
+				checkQueryCondition(childIndex+1, values, result, false);
+				return;
+			}
 			for (size_t i=0; i<arg2Value.size(); i++) {
 				int arg2Index = table.getIndex(arg2Name);
 				values[arg2Index] = arg2Value[i];
@@ -179,6 +183,10 @@ void QueryEvaluator::handleRelationNode(TNode & relationNode, vector<string> val
 			return;
 		} else{
 			vector<string> arg1Value=getArgumentValueInRelation(relation, arg1Name,arg1Type, arg2Name, arg2Type, ARG1_UNKNOWN);
+			if (arg1Value.size()==0) {
+				checkQueryCondition(childIndex+1, values, result, false);
+				return;
+			}
 			// for each valu of arg1 we call checkQueryCondition again
 			for (size_t i=0; i<arg1Value.size(); i++) {
 				int arg1Index = table.getIndex(arg1Name);
@@ -198,32 +206,41 @@ void QueryEvaluator::handleRelationNode(TNode & relationNode, vector<string> val
 			checkQueryCondition(childIndex+1, values, result, check);
 			return;
 		} else if(arg1Value!="-1" & arg2Value=="-1"){
-			vector<string> arg2Value = getArgumentValueInRelation(relation, arg1Name,arg1Type, arg2Name,arg2Type, ARG2_UNKNOWN);
+			vector<string> arg2Values = getArgumentValueInRelation(relation, arg1Value,arg1Type, arg2Name,arg2Type, ARG2_UNKNOWN);
+			if (arg2Values.size()==0) {
+				checkQueryCondition(childIndex+1, values, result, false);
+				return;
+			}
 			int arg2Index = table.getIndex(arg2Name);
-			for (size_t i=0; i<arg2Value.size(); i++) {
-				values[arg2Index] = arg2Value[i];
+			for (size_t i=0; i<arg2Values.size(); i++) {
+				values[arg2Index] = arg2Values[i];
 				checkQueryCondition(childIndex+1, values, result, check);
 			}
 			return;
 		} else if(arg1Value=="-1" & arg2Value!="-1"){
-			vector<string> arg1Value=getArgumentValueInRelation(relation, arg1Name,arg1Type, arg2Name, arg2Type, ARG1_UNKNOWN);
+			vector<string> arg1Values=getArgumentValueInRelation(relation, arg1Name,arg1Type, arg2Value, arg2Type, ARG1_UNKNOWN);
+			if (arg1Values.size()==0) {
+				checkQueryCondition(childIndex+1, values, result, false);
+				return;
+			}
 			// for each valu of arg1 we call checkQueryCondition again
-			for (size_t i=0; i<arg1Value.size(); i++) {
+			for (size_t i=0; i<arg1Values.size(); i++) {
 				int arg1Index = table.getIndex(arg1Name);
-				values[arg1Index] = arg1Value[i];
+				values[arg1Index] = arg1Values[i];
 				checkQueryCondition(childIndex+1, values, result, check);
 			}
 			return;
 		} else{
 			//brute force method
-			vector<string> arg1Value = getAllArgValues(arg1Type);
+			string type = table.getType(arg1Name);
+			vector<string> arg1Value = getAllArgValues(SyntaxHelper::getSymbolType(type));
 			// for each valu of arg1 we call checkQueryCondition again
 			for (size_t i=0; i<arg1Value.size(); i++) {
 				int arg1Index = table.getIndex(arg1Name);
 				values[arg1Index] = arg1Value[i];
 				checkQueryCondition(childIndex, values, result, check);
-				return;
 			}
+			return;
 		}
 
 	}
@@ -307,7 +324,7 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 				for (int i=0; i<stmts.size(); i++) {
 					resultList.push_back(intToString(stmts[i]));
 				}
-				return resultList;
+				break;
 			}
 			case Calls:
 			{
@@ -317,7 +334,7 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 				for(int i=0;i<stmts.size();i++){
 					resultList.push_back(intToString(stmts[i]));
 				}
-				return resultList;
+				break;
 			}
 			case CallsS:
 			{
@@ -327,12 +344,13 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 				for(int i=0;i<stmts.size();i++){
 					resultList.push_back(intToString(stmts[i]));
 				}
-				return resultList;
+				break;
 
 			}
 			default:
-				return resultList;
+				break;
 		}
+		break;
 	}
 	case ARG2_UNKNOWN:
 	{
@@ -344,7 +362,7 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 				if (result!=-1) {
 					resultList.push_back(intToString(result));
 				}
-				return resultList;
+				break;
 			}
 			case FollowsS:
 			{
@@ -353,7 +371,7 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 				for (int i=0; i<stmts.size(); i++) {
 					resultList.push_back(intToString(stmts[i]));
 				}
-				return resultList;
+				break;
 			}
 			case Parent:
 			{
@@ -362,7 +380,7 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 				for (int i=0; i<stmts.size(); i++) {
 					resultList.push_back(intToString(stmts[i]));
 				}
-				return resultList;
+				break;
 			}
 			case ParentS:
 			{
@@ -371,7 +389,7 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 				for (int i=0; i<stmts.size(); i++) {
 					resultList.push_back(intToString(stmts[i]));
 				}
-				return resultList;
+				break;
 			}
 			case Modifies:
 			{
@@ -386,7 +404,7 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 				for (int i=0; i<stmts.size(); i++) {
 					resultList.push_back(PKB::getVarName(stmts[i]));
 				}
-				return resultList;
+				break;
 			}
 			case Uses:
 			{
@@ -401,7 +419,7 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 				for (int i=0; i<stmts.size(); i++) {
 					resultList.push_back(PKB::getVarName(stmts[i]));
 				}
-				return resultList;
+				break;
 			}
 			case Calls:
 			{
@@ -411,7 +429,7 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 				for(int i=0;i<stmts.size();i++){
 					resultList.push_back(intToString(stmts[i]));
 				}
-				return resultList;
+				break;
 
 			}
 			case CallsS:
@@ -422,17 +440,38 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 				for(int i=0;i<stmts.size();i++){
 					resultList.push_back(intToString(stmts[i]));
 				}
-				return resultList;
+				break;
 				
 			}
 			default:
-				return resultList;
+				break;
 		}
 		
 	}
 	default:
-		return resultList;
+		break;
 	}
+
+	// remove values with wrong type
+	switch(argIndex) {
+	case (ARG1_UNKNOWN):
+		{
+			string argType = table.getType(arg1Value);
+			Symbol type = SyntaxHelper::getSymbolType(argType);
+			resultList = removeInvalidValues(resultList, type);
+			break;
+		}
+	case (ARG2_UNKNOWN):
+		{
+			string argType = table.getType(arg2Value);
+			Symbol type = SyntaxHelper::getSymbolType(argType);
+			resultList = removeInvalidValues(resultList, type);
+		}
+	default:
+		break;
+	}
+
+	return resultList;
 }
 
 bool QueryEvaluator::isRelation(Symbol relation, string arg1Value, string arg2Value) {
@@ -732,6 +771,64 @@ void QueryEvaluator::updateResultList(vector<string> values, vector<string>& res
 		}
 		else return;
 	}	
+}
+
+vector<string> QueryEvaluator::removeInvalidValues(vector<string> list, Symbol type) {
+	vector<string> result;
+	for (size_t i=0; i<list.size(); i++) {
+		string value = list[i];
+		switch (type) {
+		case Procedure:
+			{
+				if (PKB::isProc(value)) { result.push_back(value); }	
+				break;
+			}
+		case Stmt: 
+		case Prog_line:
+			{
+				int stmt = atoi(value.c_str());
+				if (stmt <= PKB::getStatTableSize() ) { result.push_back(value);}
+				break;
+			}
+		case Assign:
+			{
+				int stmt = atoi(value.c_str());
+				if (PKB::getStmtName(stmt)==KEYWORD_ASSIGN ) { result.push_back(value);}
+				break;
+			}
+		case While:
+			{
+				int stmt = atoi(value.c_str());
+				if (PKB::getStmtName(stmt)==KEYWORD_WHILE ) { result.push_back(value);}
+				break;
+			}
+		case If:
+			{
+				int stmt = atoi(value.c_str());
+				if (PKB::getStmtName(stmt)==KEYWORD_IF ) { result.push_back(value);}
+				break;
+			}
+		case CallStmt:
+			{
+				int stmt = atoi(value.c_str());
+				if (PKB::getStmtName(stmt)==KEYWORD_CALL ) { result.push_back(value);}
+				break;
+			}
+		case Var:
+			{
+				if (PKB::getVarIndex(value)!=-1 ) { result.push_back(value);}
+				break;
+			}
+		case Const:
+			{
+				if (PKB::getConstIndex(value)!=-1 ) { result.push_back(value);}
+				break;
+			}
+		default:
+			break;
+		}
+	}
+	return result;
 }
 
 bool QueryEvaluator::isResult(string val, vector<string> result) {
