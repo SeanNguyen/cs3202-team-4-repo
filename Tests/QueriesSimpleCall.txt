@@ -1,0 +1,7 @@
+12
+cat: Calls, CallsStar
+1 - Procedure ::
+stmt p1;
+Select p1 
+Simple1, Simple2, Simple3
+5000

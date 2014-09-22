@@ -1,0 +1,11 @@
+procedure Simple1 {
+	call Simple2;
+}
+
+procedure Simple2 {
+	call Simple3;
+}
+
+procedure Simple3 {
+	x = 0;	
+}

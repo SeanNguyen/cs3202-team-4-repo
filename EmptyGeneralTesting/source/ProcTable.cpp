@@ -15,9 +15,14 @@ bool ProcTable::isProc(string name) {
 int ProcTable::insertProc(string name) 
 {	
 	//otherwise insert the variable to the end of the vector and return index
+	if (procTable.empty()) {
+		procTable.push_back(name);
+		int index= procTable.size(); 
+		return index;
+	}
 
 	for (size_t index = 0; index < procTable.size(); index++){
-		if(std::find(procTable.begin(), procTable.end(), name)== procTable.end()){
+		if(!isProc(name)){
 			procTable.push_back(name);
 			int index= procTable.size(); 
 			return index;
