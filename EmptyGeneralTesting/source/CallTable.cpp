@@ -11,6 +11,9 @@ Call::Call(){
 
 //  Method to check if calls relationship exists
 bool Call::isCalls(int proc1, int proc2){
+	// Check if proc1 and proc2 are valid number
+	if (proc1<0 || proc2<0) return false;
+	if (proc1>=callTable.size() || proc2>=callTable.size()) return false;
 
 	//Just check if that particular element in the 2d vector is 1.
 	if(callTable[proc1][proc2] == 1){

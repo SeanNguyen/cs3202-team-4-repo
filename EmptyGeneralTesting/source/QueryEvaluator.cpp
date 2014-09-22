@@ -515,9 +515,14 @@ bool QueryEvaluator::isRelation(Symbol relation, string arg1Value, string arg2Va
 	}
 	case Calls:
 	{
-		int proc1 = atoi(arg1Value.c_str());
-		int proc2 = atoi(arg2Value.c_str());
-		return false;
+		int proc1 = -1; int proc2 = -1;
+		if (PKB::getProcIndex(arg1Value).size()!=0) {
+			proc1 = PKB::getProcIndex(arg1Value).front();
+		}
+		if (PKB::getProcIndex(arg2Value).size()!=0) {
+			proc2 = PKB::getProcIndex(arg2Value).front();
+		}
+		return PKB::isCalls(proc1, proc2);
 	}
 	case CallsS:
 	{
@@ -716,21 +721,17 @@ void QueryEvaluator::updateResultList(vector<string> values, vector<string>& res
 	string paramVal = values[paramIndex];
 	// check if paramVal is null value or not
 	if (paramVal!="-1") {
-		//cout << "checkpoint 01" <<endl;
 		// check if paramVal has same type as in paramType
 		if (!isDeclaredType(paramVal, paramName, "")) { // need fix
-			//cout << "checkpoint 02" <<endl;
 			return;
 		}
 
 		// check if result list has this paramVal
 		if (!isResult(paramVal, result)) {
-			//cout << "checkpoint 03" <<endl;
 			// add new result to list
 			result.push_back(paramVal);
 		}
 	} else {
-		//cout << "checkpoint 04" <<endl;
 		// all values possible of param are result
 		string paramType = table.getType(paramName);
 		if (paramType== KEYWORD_PROG_LINE || paramType==KEYWORD_STMT) {
@@ -788,7 +789,6 @@ void QueryEvaluator::updateResultList(vector<string> values, vector<string>& res
 			}
 		} else if (paramType==KEYWORD_PROCEDURE) {
 			for (int i=0; i<PKB::getProcTableSize(); i++) {
-				cout << PKB::getProcName(i) <<endl;
 				result.push_back(PKB::getProcName(i));
 			}
 		}
