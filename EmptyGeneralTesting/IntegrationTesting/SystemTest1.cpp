@@ -62,10 +62,12 @@ void SystemTest1::test2() {
 
 	vector<vector<string>> results = qp.Process();
 
-	vector<int> testingVec = PKB::getFollowedStarStmt(24);
+	vector<int> testingVec = PKB::getParentStarStmt(24);
+
+	cout << testingVec.size() <<endl;
 
 	/*for (size_t i=0; i<testingVec.size(); i++) {
-		cout << "TestFollowStar " << i+1 << ": ";
+		cout << "TestChildStar " << i+1 << ": ";
 		cout << testingVec[i] << " ";
 		cout << endl;
 	}*/
