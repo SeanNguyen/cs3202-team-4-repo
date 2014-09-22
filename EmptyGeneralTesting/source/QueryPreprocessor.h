@@ -34,6 +34,9 @@ private:
 	TNode * preprocessResultNode(vector<string> list, SymbolTable table, vector<string> & errors, int i);
 	TNode * preprocessSuchThatCondition(vector<string> suchthat, SymbolTable table, vector<string>& errors);
 	TNode * preprocessPatternCondition(vector<string> pattern, SymbolTable table, vector<string>& errors);
+	TNode * preprocessAssignPattern(string name, vector<string> pattern, SymbolTable table, vector<string>& errors);
+	TNode * preprocessWhilePattern(string name, vector<string> pattern, SymbolTable table, vector<string>& errors);
+	TNode * preprocessIfPattern(string name, vector<string> pattern, SymbolTable table, vector<string>& errors);
 	TNode * preprocessWithCondition(vector<string> list, SymbolTable table, vector<string>& errors, int i);
 
 	vector<string> breakStringIntoWords(string str);

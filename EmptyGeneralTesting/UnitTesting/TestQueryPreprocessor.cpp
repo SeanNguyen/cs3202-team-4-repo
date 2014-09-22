@@ -13,7 +13,7 @@ void QueryPreprocessorTest::testReadFileData() {
 
 void QueryPreprocessorTest::testBuildSymbolTable() {
 	QueryPreprocessor qp;
-	string query = "stmt s1, s2, s3; variable x, y, s; const this; Select s1";
+	string query = "stmt s1, s2, s3; variable x, y, s; constant this; Select s1";
 	qp.Preprocess(query);
 	SymbolTable table = QueryRepresentator::getSymbolTable(0);
 	CPPUNIT_ASSERT_EQUAL(7, table.getSize());
