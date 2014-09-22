@@ -172,7 +172,6 @@ void QueryEvaluator::handleRelationNode(TNode & relationNode, vector<string> val
 	}
 	if (arg1Type == QuerySymbol && arg2Type == Const) {
 		string arg1Value=getStoredValue(values, arg1Name);
-		cout << arg1Value <<endl;
 		if(arg1Value!="-1"){
 			check=isRelation(relation,arg1Value, arg2Name);
 			//call back to checkQueryCondition
@@ -269,7 +268,6 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 				int stmt2 = atoi(arg2Value.c_str());
 				vector<int> stmts = PKB::getParentStarStmt(stmt2);
 				for (int i=0; i<stmts.size(); i++) {
-					cout << "Value = " << stmts[i] <<endl;
 					resultList.push_back(intToString(stmts[i]));
 				}
 				return resultList;
@@ -281,7 +279,7 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 
 				if(arg2Type==Procedure){
 					//var2=PKB::getProcIndex(arg2Value);
-					stmts=PKB::getModifiedVarAtProc(var2);
+					stmts=PKB::getProcModifyingVar(var2);
 				}
 					
 				else{
@@ -290,6 +288,7 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 				}
 				
 				for (int i=0; i<stmts.size(); i++) {
+					cout << "result " << stmts[i] <<endl;
 					resultList.push_back(intToString(stmts[i]));
 				}
 				return resultList;
@@ -300,7 +299,7 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 				vector<int> stmts;
 				if(arg2Type==Procedure){ // FIX
 					//var2=PKB::getProcIndex(arg2Value);
-					stmts=PKB::getUsedVarAtProc(var2);
+					stmts=PKB::getProcUsingVar(var2);
 
 				}
 				else{
@@ -379,19 +378,21 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 			}
 			case Modifies:
 			{
-				int var2 = PKB::getVarIndex(arg1Value);
-				vector<int> stmts = PKB::getStmtModifyingVar(var2);
+				int stmt1 = atoi(arg1Value.c_str());
+				cout << "CHECK " << stmt1 << endl;
+				vector<int> stmts = PKB::getModifiedVarAtStmt(stmt1);
 				for (int i=0; i<stmts.size(); i++) {
-					resultList.push_back(intToString(stmts[i]));
+					cout << stmts[i] <<endl;
+					resultList.push_back(PKB::getVarName(stmts[i]));
 				}
 				return resultList;
 			}
 			case Uses:
 			{
-				int var2 = PKB::getVarIndex(arg1Value);
-				vector<int> stmts = PKB::getStmtUsingVar(var2);
+				int stmt1 = atoi(arg1Value.c_str());
+				vector<int> stmts = PKB::getUsedVarAtStmt(stmt1);
 				for (int i=0; i<stmts.size(); i++) {
-					resultList.push_back(intToString(stmts[i]));
+					resultList.push_back(PKB::getVarName(stmts[i]));
 				}
 				return resultList;
 			}
@@ -669,17 +670,21 @@ void QueryEvaluator::updateResultList(vector<string> values, vector<string>& res
 	string paramVal = values[paramIndex];
 	// check if paramVal is null value or not
 	if (paramVal!="-1") {
+		//cout << "checkpoint 01" <<endl;
 		// check if paramVal has same type as in paramType
 		if (!isDeclaredType(paramVal, paramName, "")) { // need fix
+			//cout << "checkpoint 02" <<endl;
 			return;
 		}
 
 		// check if result list has this paramVal
 		if (!isResult(paramVal, result)) {
+			//cout << "checkpoint 03" <<endl;
 			// add new result to list
 			result.push_back(paramVal);
 		}
 	} else {
+		//cout << "checkpoint 04" <<endl;
 		// all values possible of param are result
 		string paramType = table.getType(paramName);
 		if (paramType== KEYWORD_PROG_LINE || paramType==KEYWORD_STMT) {
