@@ -1,5 +1,4 @@
 #include "PKB.h"
-
 #include <string>
 
 AST PKB::astObj;
@@ -16,7 +15,21 @@ Next PKB::nextObj;
 
 PKB::PKB()
 {
-		
+}
+
+void PKB::resetPBK() {
+	
+	PKB::astObj = AST();
+	PKB::constObj = ConstTable();
+	PKB::followObj = Follow();
+	PKB::modifyObj = Modify();
+	PKB::varObj = VarTable();
+	PKB::parObj = ParentTable();
+	PKB::stmtObj = StatTable();
+	PKB::useObj = Use();
+	PKB::callObj = Call();
+	PKB::procObj = ProcTable();
+	PKB::nextObj = Next();
 }
 
 ////////////////////////////////AST METHODS/////////////////
@@ -97,7 +110,7 @@ bool PKB::insertFollows(int s1, int s2){
 }
 
 int PKB::getFollowingStmt(int s1){
-	
+
 	return followObj.getFollowingStmt(s1);
 }
 
@@ -291,14 +304,14 @@ std::vector<int> PKB::getStmtUsingVar(int varIndex){
 	return useObj.getStmtUsingVar(varIndex);
 }
 
-	// Method to check if uses relationship exists
+// Method to check if uses relationship exists
 bool PKB::isUsesProc(int proc1, int varIndex){
 	return useObj.isUsesProc(proc1, varIndex);
 }
-  
-	// Method to insert a pair of uses proc number and variable
+
+// Method to insert a pair of uses proc number and variable
 int PKB::insertUsesProc(int proc1, int varIndex){
-		int value = useObj.insertUsesProc(proc1, varIndex);
+	int value = useObj.insertUsesProc(proc1, varIndex);
 	if (value == -1){
 		return false;	
 	} else {
@@ -307,12 +320,12 @@ int PKB::insertUsesProc(int proc1, int varIndex){
 }
 
 
-	// Method to get the variables used in proc proc1
+// Method to get the variables used in proc proc1
 std::vector<int> PKB::getUsedVarAtProc(int proc1){
 	return useObj.getUsedVarAtProc(proc1);
 }
 
-	// Method to get the list of proc using var
+// Method to get the list of proc using var
 std::vector<int> PKB::getProcUsingVar(int varIndex){
 	return useObj.getProcUsingVar(varIndex);
 }
@@ -397,7 +410,7 @@ int PKB::getProcTableSize()
 bool PKB::isNext(int n1, int n2){
 	return nextObj.isNext(n1, n2);
 }
-  
+
 // Method to insert a pair of line numbers
 bool PKB::insertNext(int n1, int n2){
 	int value = nextObj.insertNext(n1, n2);
