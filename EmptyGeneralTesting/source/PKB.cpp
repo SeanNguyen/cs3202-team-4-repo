@@ -12,6 +12,7 @@ StatTable PKB::stmtObj;
 Use PKB::useObj;
 Call PKB::callObj;
 ProcTable PKB::procObj;
+Next PKB::nextObj;
 
 PKB::PKB()
 {
@@ -339,7 +340,7 @@ bool PKB::isCalls(int proc1, int proc2){
 	return callObj.isCalls(proc1, proc2);
 }
 
-int PKB::insertCalls(int proc1, int proc2){
+bool PKB::insertCalls(int proc1, int proc2){
 	int value = callObj.insertCalls(proc1, proc2);
 	if (value == -1){
 		return false;	
@@ -389,4 +390,39 @@ std::string PKB::getProcName(int index) {
 int PKB::getProcTableSize()
 {
 	return procObj.getSize();
+}
+
+////////////////////////////////////Next METHODS///////////////////////////////
+// Method to check if next relationship exists
+bool PKB::isNext(int n1, int n2){
+	return nextObj.isNext(n1, n2);
+}
+  
+// Method to insert a pair of line numbers
+bool PKB::insertNext(int n1, int n2){
+	int value = nextObj.insertNext(n1, n2);
+	if (value == -1){
+		return false;	
+	} else {
+		return true;
+	}
+}
+
+// Method to check if line numbers are nextStar
+//bool isNextStar(int n1, int n2);
+
+//Method to get the first parameter in the NextStar relationship --> Next*(n1, x)
+//std::vector<int> getNextOneStarLine(int n1);
+
+//Method to get the second parameter in the NextStar relationship --> Next*(x, n1)
+//std::vector<int> getNextTwoStarLine(int n1);
+
+// Method to get the list of line numbers next to n1
+std::vector<int> PKB::getNextOneLine(int n1){
+	return nextObj.getNextOneLine(n1);
+}
+
+// Method to get the list of line numbers for which the next line number is n1
+std::vector<int> PKB::getNextTwoLine(int n1){
+	return nextObj.getNextTwoLine(n1);
 }

@@ -11,6 +11,7 @@
 #include "CallTable.h"
 #include "AST.h"
 #include "ProcTable.h"
+#include "NextTable.h"
 
 #include <utility>
 #include <vector>
@@ -199,7 +200,7 @@ class PKB
 
 	static bool isCalls(int proc1, int proc2);
 
-	static int insertCalls(int proc1, int proc2);
+	static bool insertCalls(int proc1, int proc2);
 
 	static bool isCallStar(int proc1, int proc2);
 
@@ -221,6 +222,29 @@ class PKB
 
 	static int getProcTableSize();
 
+
+	///////////////////////NEXTTABLE////////////////////////////////////
+	// Method to check if next relationship exists
+	static bool isNext(int n1, int n2);
+  
+	// Method to insert a pair of line numbers
+	static bool insertNext(int n1, int n2);
+
+	// Method to check if line numbers are nextStar
+	//static bool isNextStar(int n1, int n2);
+
+	//Method to get the first parameter in the NextStar relationship --> Next*(n1, x)
+	//static std::vector<int> getNextOneStarLine(int n1);
+
+	//Method to get the second parameter in the NextStar relationship --> Next*(x, n1)
+	//static std::vector<int> getNextTwoStarLine(int n1);
+
+	// Method to get the list of line numbers next to n1
+	static std::vector<int> getNextOneLine(int n1);
+
+	// Method to get the list of line numbers for which the next line number is n1
+	static std::vector<int> getNextTwoLine(int n1);
+
 private:
 	static AST astObj;
 	static ConstTable constObj;
@@ -232,5 +256,6 @@ private:
 	static Use useObj;
 	static Call callObj;
 	static ProcTable procObj;
+	static Next nextObj;
 };
 #endif

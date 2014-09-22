@@ -67,6 +67,9 @@
     <ClCompile Include="..\source\UseTable.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
+    <ClCompile Include="NextTable.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\source\AST.h">
@@ -130,6 +133,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\source\VarTable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NextTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
