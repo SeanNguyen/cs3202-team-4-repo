@@ -166,8 +166,8 @@ void QueryEvaluator::handleRelationNode(TNode & relationNode, vector<string> val
 				int arg2Index = table.getIndex(arg2Name);
 				values[arg2Index] = arg2Value[i];
 				checkQueryCondition(childIndex+1, values, result, check);
-				return;
 			}
+			return;
 		}
 	}
 	if (arg1Type == QuerySymbol && arg2Type == Const) {
@@ -185,8 +185,8 @@ void QueryEvaluator::handleRelationNode(TNode & relationNode, vector<string> val
 				int arg1Index = table.getIndex(arg1Name);
 				values[arg1Index] = arg1Value[i];
 				checkQueryCondition(childIndex+1, values, result, check);
-				return;
 			}
+			return;
 		}
 	}
 	if (arg1Type == QuerySymbol && arg2Type == QuerySymbol) {
@@ -200,12 +200,12 @@ void QueryEvaluator::handleRelationNode(TNode & relationNode, vector<string> val
 			return;
 		} else if(arg1Value!="-1" & arg2Value=="-1"){
 			vector<string> arg2Value = getArgumentValueInRelation(relation, arg1Name,arg1Type, arg2Name,arg2Type, ARG2_UNKNOWN);
+			int arg2Index = table.getIndex(arg2Name);
 			for (size_t i=0; i<arg2Value.size(); i++) {
-				int arg2Index = table.getIndex(arg2Name);
 				values[arg2Index] = arg2Value[i];
 				checkQueryCondition(childIndex+1, values, result, check);
-				return;
 			}
+			return;
 		} else if(arg1Value=="-1" & arg2Value!="-1"){
 			vector<string> arg1Value=getArgumentValueInRelation(relation, arg1Name,arg1Type, arg2Name, arg2Type, ARG1_UNKNOWN);
 			// for each valu of arg1 we call checkQueryCondition again
@@ -213,8 +213,8 @@ void QueryEvaluator::handleRelationNode(TNode & relationNode, vector<string> val
 				int arg1Index = table.getIndex(arg1Name);
 				values[arg1Index] = arg1Value[i];
 				checkQueryCondition(childIndex+1, values, result, check);
-				return;
 			}
+			return;
 		} else{
 			//brute force method
 			vector<string> arg1Value = getAllArgValues(arg1Type);
@@ -266,11 +266,10 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 			}
 			case ParentS:
 			{
-				cout << "here " <<endl;
 				int stmt2 = atoi(arg2Value.c_str());
 				vector<int> stmts = PKB::getParentStarStmt(stmt2);
 				for (int i=0; i<stmts.size(); i++) {
-					cout << "Value = " + stmts[i] <<endl;
+					cout << "Value = " << stmts[i] <<endl;
 					resultList.push_back(intToString(stmts[i]));
 				}
 				return resultList;

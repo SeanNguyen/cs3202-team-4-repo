@@ -141,7 +141,7 @@ std::vector<int> ParentTable::getParentStarStmt(int childStmt)
 // private helper function for getParentStarStmt.
 std::vector<int> ParentTable::getParentStarStmtHelper(int childStmt, std::vector<int> &accumulated_result)
 {
-	if (getChildStmt(childStmt).empty())
+	if (childStmt<0 || getChildStmt(childStmt).empty())
 	{
 		// do nothing
 	}
