@@ -64,8 +64,6 @@ void SystemTest1::test2() {
 
 	vector<int> testingVec = PKB::getParentStarStmt(24);
 
-	cout << testingVec.size() <<endl;
-
 	/*for (size_t i=0; i<testingVec.size(); i++) {
 		cout << "TestChildStar " << i+1 << ": ";
 		cout << testingVec[i] << " ";
