@@ -149,9 +149,11 @@ std::vector<int> ParentTable::getParentStarStmtHelper(int childStmt, std::vector
 	{
 		std::vector<int> result;
 		int parent = getParentStmt(childStmt);
-		result.push_back(parent);
-		accumulated_result.insert(accumulated_result.end(), result.begin(), result.end());
-		getParentStarStmtHelper(parent, accumulated_result);
+		if (parent!=-1) {
+			result.push_back(parent);
+			accumulated_result.insert(accumulated_result.end(), result.begin(), result.end());
+			getParentStarStmtHelper(parent, accumulated_result);
+		}
 	}
 	return accumulated_result;
 }
