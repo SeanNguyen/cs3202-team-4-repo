@@ -81,7 +81,7 @@ void SystemTest1::test2() {
 }
 
 void SystemTest1::test3() {
-	/*string source = "..\\..\\Tests\\Source3.txt";
+	string source = "..\\..\\Tests\\Source3.txt";
 	string queries = "..\\..\\Tests\\Queries3.txt";
 	Parser parser;
 	QueryProcessor qp(queries);
@@ -98,7 +98,7 @@ void SystemTest1::test3() {
 		}
 		cout <<endl;
 	}
-*/
+
 }
 
 void SystemTest1::test4() {

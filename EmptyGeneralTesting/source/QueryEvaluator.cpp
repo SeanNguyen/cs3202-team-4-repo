@@ -277,7 +277,7 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 				int var2;
 				vector<int> stmts;
 
-				if(arg2Type==Procedure){
+				if(arg1Type==Procedure){
 					//var2=PKB::getProcIndex(arg2Value);
 					stmts=PKB::getProcModifyingVar(var2);
 				}
@@ -288,7 +288,6 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 				}
 				
 				for (int i=0; i<stmts.size(); i++) {
-					cout << "result " << stmts[i] <<endl;
 					resultList.push_back(intToString(stmts[i]));
 				}
 				return resultList;
@@ -297,7 +296,7 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 			{
 				int var2;
 				vector<int> stmts;
-				if(arg2Type==Procedure){ // FIX
+				if(arg1Type==Procedure){ // FIX
 					//var2=PKB::getProcIndex(arg2Value);
 					stmts=PKB::getProcUsingVar(var2);
 
@@ -354,6 +353,7 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 				int stmt1 = atoi(arg1Value.c_str());
 				vector<int> stmts = PKB::getFollowingStarStmt(stmt1);
 				for (int i=0; i<stmts.size(); i++) {
+					cout << "FollowsStar " << stmts.size()  << " "<<stmts[i] <<endl;
 					resultList.push_back(intToString(stmts[i]));
 				}
 				return resultList;
@@ -378,19 +378,47 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 			}
 			case Modifies:
 			{
-				int stmt1 = atoi(arg1Value.c_str());
-				cout << "CHECK " << stmt1 << endl;
-				vector<int> stmts = PKB::getModifiedVarAtStmt(stmt1);
+				vector<int> stmts;
+				switch (arg1Type) {
+				case Procedure:
+					{
+						vector<int> procs = PKB::getProcIndex(arg1Value);
+						stmts = PKB::getModifiedVarAtProc(procs[0]);
+						break;
+					}					
+				case Stmt:
+					{
+						int stmt1 = atoi(arg1Value.c_str());
+						stmts = PKB::getStmtModifyingVar(stmt1);
+						break;
+					}
+				default:
+					break;
+				}
 				for (int i=0; i<stmts.size(); i++) {
-					cout << stmts[i] <<endl;
 					resultList.push_back(PKB::getVarName(stmts[i]));
 				}
 				return resultList;
 			}
 			case Uses:
 			{
-				int stmt1 = atoi(arg1Value.c_str());
-				vector<int> stmts = PKB::getUsedVarAtStmt(stmt1);
+				vector<int> stmts;
+				switch (arg1Type) {
+				case Procedure:
+					{
+						vector<int> procs = PKB::getProcIndex(arg1Value);
+						stmts = PKB::getModifiedVarAtProc(procs[0]);
+						break;
+					}					
+				case Stmt:
+					{
+						int stmt1 = atoi(arg1Value.c_str());
+						stmts = PKB::getStmtModifyingVar(stmt1);
+						break;
+					}
+				default:
+					break;
+				}
 				for (int i=0; i<stmts.size(); i++) {
 					resultList.push_back(PKB::getVarName(stmts[i]));
 				}
