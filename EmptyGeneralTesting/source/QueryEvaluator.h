@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 #include <sstream>
-#include <algorithm>
+#include <cctype>
 
 using namespace std;
 
@@ -51,6 +51,7 @@ private:
 	void addNewResult(vector<string>& resultList, string result);
 
 	string intToString(int num);
+	bool isNumber(string str);
 	void printSymbolValues(vector <string> symbolValues);
 };
 
