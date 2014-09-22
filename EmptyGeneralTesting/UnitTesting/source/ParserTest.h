@@ -13,6 +13,7 @@ class ParserTest : public CPPUNIT_NS::TestFixture {
 	CPPUNIT_TEST( testParseIf );
 	CPPUNIT_TEST( testParseSimpleAssign );
 	CPPUNIT_TEST( testParseComplexAssign );
+	CPPUNIT_TEST( testBuildCFG );
 	CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -26,6 +27,7 @@ public:
 	void testParseIf();
 	void testParseSimpleAssign();
 	void testParseComplexAssign();
+	void testBuildCFG();
 };
 
 #endif

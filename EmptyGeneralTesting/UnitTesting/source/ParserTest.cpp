@@ -15,6 +15,7 @@ string testFile_While = "..\\UnitTesting\\test cases\\ParserTest_While.txt";
 string testFile_If = "..\\UnitTesting\\test cases\\ParserTest_If.txt";
 string testFile_SimpleAssign = "..\\UnitTesting\\test cases\\ParserTest_SimpleAssign.txt";
 string testFile_ComplexAssign = "..\\UnitTesting\\test cases\\ParserTest_ComplexAssign.txt";
+string testFile_NormalComplex = "..\\UnitTesting\\test cases\\ParserTest_NormalComplex.txt";
 
 void ParserTest::setUp() {
 }
@@ -88,6 +89,7 @@ void ParserTest::testParseIf() {
 	int expectedProcNumber = 1;
 	int expectedVarNumber = 3;
 	int expectedStmtNumber = 3;
+	int expectedThenStmtNumber = 1;
 	int expectedModifyPairNumber = 2;
 	int expectedUsePairNumber = 1;
 	int expectedCallPairNumber = 0;
@@ -98,10 +100,12 @@ void ParserTest::testParseIf() {
 	int actualModifyPairNumber = parser.getModifyPairNumber();
 	int actualUsePairNumber = parser.getUsePairNumber();
 	int actualCallPairNumber = parser.getCallPairNumber();
+	int acttualThenStmtNumber = parser.getThenStmtNumber();
 
 	CPPUNIT_ASSERT_EQUAL(expectedProcNumber, actualProcNumber);
 	CPPUNIT_ASSERT_EQUAL(expectedVarNumber, actualVarNumber);
 	CPPUNIT_ASSERT_EQUAL(expectedStmtNumber, actualStmtNumber);
+	CPPUNIT_ASSERT_EQUAL(expectedThenStmtNumber, acttualThenStmtNumber);
 	CPPUNIT_ASSERT_EQUAL(expectedModifyPairNumber, actualModifyPairNumber);
 	CPPUNIT_ASSERT_EQUAL(expectedUsePairNumber, actualUsePairNumber);
 	CPPUNIT_ASSERT_EQUAL(expectedCallPairNumber, actualCallPairNumber);
@@ -143,6 +147,33 @@ void ParserTest::testParseComplexAssign() {
 	int expectedModifyPairNumber = 2;
 	int expectedUsePairNumber = 12;
 	int expectedCallPairNumber = 0;
+
+	int actualProcNumber = parser.getProcNumber();
+	int actualVarNumber = parser.getVarNumber();
+	int actualStmtNumber = parser.getStmtNumber();
+	int actualModifyPairNumber = parser.getModifyPairNumber();
+	int actualUsePairNumber = parser.getUsePairNumber();
+	int actualCallPairNumber = parser.getCallPairNumber();
+
+	CPPUNIT_ASSERT_EQUAL(expectedProcNumber, actualProcNumber);
+	CPPUNIT_ASSERT_EQUAL(expectedVarNumber, actualVarNumber);
+	CPPUNIT_ASSERT_EQUAL(expectedStmtNumber, actualStmtNumber);
+	CPPUNIT_ASSERT_EQUAL(expectedModifyPairNumber, actualModifyPairNumber);
+	CPPUNIT_ASSERT_EQUAL(expectedUsePairNumber, actualUsePairNumber);
+	CPPUNIT_ASSERT_EQUAL(expectedCallPairNumber, actualCallPairNumber);
+}
+
+void ParserTest::testBuildCFG() {
+	Parser parser;
+	parser.parse(testFile_NormalComplex);
+	parser.buildCFG();
+
+	int expectedProcNumber = 9;
+	int expectedVarNumber = 169;
+	int expectedStmtNumber = 74;
+	int expectedModifyPairNumber = 49;
+	int expectedUsePairNumber = 120;
+	int expectedCallPairNumber = 5;
 
 	int actualProcNumber = parser.getProcNumber();
 	int actualVarNumber = parser.getVarNumber();

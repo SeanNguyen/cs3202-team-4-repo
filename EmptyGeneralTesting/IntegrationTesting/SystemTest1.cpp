@@ -2,6 +2,7 @@
 #include "SystemTest1.h"
 
 void SystemTest1::setUp() {
+	PKB::resetPBK();
 }
 
 void SystemTest1::tearDown() {

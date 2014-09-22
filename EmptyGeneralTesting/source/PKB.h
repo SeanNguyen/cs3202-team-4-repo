@@ -22,6 +22,7 @@ class PKB
 {
 	public: 
 	PKB();
+	static void resetPBK();
 
 	//////////////////////////////////AST METHODS/////////////////
 	static TNode * createNode();

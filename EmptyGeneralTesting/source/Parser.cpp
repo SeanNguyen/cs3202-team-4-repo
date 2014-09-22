@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Parser.h"
-
 #include <string>
 #include <iostream>
 
@@ -36,6 +35,7 @@ void Parser::buildPKB() {
 	buildModifyTable();
 	buildParentTable();
 	buildUseTable();
+	buildCFG();
 }
 
 /*
@@ -163,6 +163,13 @@ void Parser::buildCallTable() {
 	}
 }
 
+void Parser::buildCFG() {
+	for (size_t i = 0; i < stmtType.size(); i++) {
+		if (i == 0 || procedureMask[i - 1] != procedureMask[i])
+			buildControlFlowPath(i);
+	}
+}
+
 /*
 * Description: this function look for input file using 
 *				the directory user gives and preprocess the data 
@@ -275,11 +282,17 @@ TNode* Parser::readProcedure() {
 	currentProcessingProc = getNextToken();
 	procName.push_back(currentProcessingProc);
 	this->currentDepth = 0;
+	int startOfProc = stmtType.size();
 
 	// create a node for procedure
 	TNode* procNode = PKB::createNode(Procedure, currentProcessingProc);
 	TNode* stmtListNode = readStmtList();
 	procNode->addChild(stmtListNode);
+
+	int endOfProc = stmtType.size();
+	for (size_t i = startOfProc; i < endOfProc; i++) {
+		this->procedureMask[i] = currentProcessingProc;
+	}
 	return procNode;
 }
 
@@ -290,38 +303,48 @@ TNode* Parser::readStmtList() {
 
 	while (true) {
 		string nextToken = peekForwardToken(1);
-		if (nextToken == KEYWORD_WHILE) {
-			TNode* whileNode = readWhileStmt();
-			stmtListNode->addChild(whileNode);
-		} else if (nextToken == KEYWORD_IF) {
-			TNode* ifNode = readIfStmt();
-			stmtListNode->addChild(ifNode);
-		} else if (nextToken == KEYWORD_CALL) {
-			TNode* callNode = readCallStmt();
-			stmtListNode->addChild(callNode);
-		} else if (nextToken == KEYWORD_CLOSECURLYBRACKET) {
+		if (nextToken == KEYWORD_CLOSECURLYBRACKET)
 			break;
-		} else {
-			TNode* assignNode = readAssignStmt();
-			stmtListNode->addChild(assignNode);
-		}
+		TNode* stmtNode = readStmt();
+		stmtListNode->addChild(stmtNode);
 	}
 
 	match(KEYWORD_CLOSECURLYBRACKET);
-
 	if (stmtListNode->getNumChildren() == 0)
 		error();
-
 	this->currentDepth--;
 	return stmtListNode;
 }
 
+TNode* Parser::readStmt() {
+	this->depthLv.push_back(currentDepth);
+	this->thenStmtFlags.push_back(0);
+	this->CFGNodes.push_back(vector<int>());
+	this->processedCFGStmtFlags.push_back(0);
+	this->procedureMask.push_back("");
+
+	TNode* stmtNode;
+	string nextToken = peekForwardToken(1);
+	if (nextToken == KEYWORD_WHILE) {
+		stmtNode = readWhileStmt();
+	} else if (nextToken == KEYWORD_IF) {
+		stmtNode = readIfStmt();
+	} else if (nextToken == KEYWORD_CALL) {
+		stmtNode = readCallStmt();
+	} else {
+		stmtNode = readAssignStmt();
+	}
+	return stmtNode;
+}
+
 TNode* Parser::readWhileStmt() {
 	match(KEYWORD_WHILE);
+
+	//Stmt
 	TNode* whileNode = PKB::createNode(While);
-	this->depthLv.push_back(currentDepth);
 	this->stmtType.push_back(KEYWORD_WHILE);
 
+	//Variable
 	string conditionVar = getNextToken();
 	TNode* varNode = PKB::createNode(Var, conditionVar);
 	whileNode->addChild(varNode);
@@ -337,7 +360,6 @@ TNode* Parser::readWhileStmt() {
 
 TNode* Parser::readCallStmt () {
 	match(KEYWORD_CALL);
-	this->depthLv.push_back(this->currentDepth);
 	stmtType.push_back(KEYWORD_CALL);
 
 	//create nodes in PKB
@@ -359,7 +381,6 @@ TNode* Parser::readCallStmt () {
 
 TNode* Parser::readIfStmt () {
 	match(KEYWORD_IF);
-	this->depthLv.push_back(currentDepth);
 	stmtType.push_back(KEYWORD_IF);
 
 	//create Node in PKB
@@ -373,8 +394,16 @@ TNode* Parser::readIfStmt () {
 
 	//process stmt list of "then"
 	match(KEYWORD_THEN);
+	size_t startOfThenStmtList = this->stmtType.size();
 	TNode* thenNode = readStmtList();
+	size_t endOfThenStmtList = this->stmtType.size() - 1;
 	ifNode->addChild(thenNode);
+
+	for (size_t i = startOfThenStmtList; i <= endOfThenStmtList; i++) {
+		if (depthLv[i] - 1 == currentDepth)
+			this->thenStmtFlags[i] = 1;
+	}
+
 	//processstmt list of "else"
 	match(KEYWORD_ELSE);
 	TNode* elseNode = readStmtList();
@@ -385,7 +414,6 @@ TNode* Parser::readIfStmt () {
 
 TNode* Parser::readAssignStmt() {
 	TNode* assignNode = PKB::createNode(Assign);
-	this->depthLv.push_back(this->currentDepth);
 	this->stmtType.push_back(KEYWORD_ASSIGN);
 
 	string leftHandSideVar = getNextToken();
@@ -542,8 +570,22 @@ int Parser::getFollowedStmt(int i) {
 	if (i>0) {
 		int lv = depthLv.at(i);
 		for (int j=i-1; j>=0; j--) {
+			if (procedureMask[j] != procedureMask[i]) return -1;
 			if (depthLv.at(j)==lv-1) return -1;
-			if (depthLv.at(j)==lv) return j;
+			if (depthLv.at(j)==lv && thenStmtFlags[i] == thenStmtFlags[j]) return j;
+		}
+	}
+	return -1;
+}
+
+int Parser::getFollowingStmt(int i) {
+	int numberOfStmt = this->stmtType.size();
+	if (i < numberOfStmt - 1) {
+		int lv = depthLv.at(i);
+		for (int j=i + 1; j < numberOfStmt; j++) {
+			if (procedureMask[j] != procedureMask[i]) return -1;
+			if (depthLv.at(j)==lv-1) return -1;
+			if (depthLv.at(j)==lv && thenStmtFlags[i] == thenStmtFlags[j]) return j;
 		}
 	}
 	return -1;
@@ -576,6 +618,81 @@ int Parser::getLastIndexOfTokenNotIndsideBracket (vector<string> tokens, string 
 	return -1;
 }
 
+void Parser::buildControlFlowPath(size_t stmtNo) {
+	if (this->processedCFGStmtFlags[stmtNo] == 1)
+		return;
+	processedCFGStmtFlags[stmtNo] = 1;
+	vector <int> nextStmts = getNextNodeInControlFlow(stmtNo);
+	for (size_t i = 0; i < nextStmts.size(); i++) {
+		int nextStmt = nextStmts[i];
+		CFGNodes[stmtNo].push_back(nextStmt);
+		buildControlFlowPath(nextStmt);
+	}
+}
+
+vector <int> Parser::getNextNodeInControlFlow(int stmtNo) {
+	vector <int> result;
+
+	//consider children stmts
+	string type = stmtType[stmtNo];
+	if (type == KEYWORD_WHILE) {
+		result.push_back(stmtNo + 1);
+	} else if (type == KEYWORD_IF) {
+		vector <int> childrenStmts = getChildrenStmts(stmtNo);
+		int startElseStmtNo;
+		for (size_t i = 0; i < childrenStmts.size(); i++) {
+			int childStmtNo = childrenStmts[i];
+			if (thenStmtFlags[childStmtNo] == 0) {
+				startElseStmtNo = childStmtNo;
+				break;
+			}
+		}
+		result.push_back(stmtNo + 1);
+		result.push_back(startElseStmtNo);
+	}
+
+
+	//consider these are nested stmts
+	int parentStmtNo = getParentStmt(stmtNo);
+	if (parentStmtNo == -1) {
+		int followingStmt = getFollowingStmt(stmtNo);
+		if (followingStmt != -1)
+			result.push_back(followingStmt);
+
+	} else if (stmtType[parentStmtNo] == KEYWORD_WHILE) {
+		int followingStmt = getFollowingStmt(stmtNo);
+		if (followingStmt == -1)
+			result.push_back(parentStmtNo);
+		else
+			result.push_back(followingStmt);
+
+	} else if (stmtType[parentStmtNo] == KEYWORD_IF) {
+		int followingStmt = getFollowingStmt(stmtNo);
+		if (followingStmt > -1)
+			result.push_back(followingStmt);
+		else {
+			vector <int> followingStmts = getNextNodeInControlFlow(parentStmtNo);
+			if (followingStmts.size() == 3)
+				result.push_back(followingStmts.back()); //supposed to be the one that not include children of if stmt
+		}
+	}
+
+	return result;
+}
+
+vector <int> Parser::getChildrenStmts(int stmtNo) {
+	vector <int> result;
+	for (size_t i = stmtNo + 1; i < stmtType.size(); i++) {
+		int parentDepthLv = depthLv[stmtNo];
+		int currentDepthLv = depthLv[i];
+		if (currentDepthLv <= parentDepthLv)
+			break;
+		if (currentDepthLv - 1 == parentDepthLv)
+			result.push_back(i);
+	}
+	return result;
+}
+
 //Testing methods
 int Parser::getProcNumber() {
 	return this->procName.size();
@@ -587,6 +704,15 @@ int Parser::getVarNumber() {
 
 int Parser::getStmtNumber() {
 	return this->stmtType.size();
+}
+
+int Parser::getThenStmtNumber() {
+	int count = 0;
+	for (size_t i = 0; i < this->thenStmtFlags.size(); i++)	{
+		if (this->thenStmtFlags[i] == 1)
+			count++;
+	}
+	return count;
 }
 
 int Parser::getModifyPairNumber() {
