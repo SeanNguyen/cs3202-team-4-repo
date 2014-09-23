@@ -1,4 +1,4 @@
-#include "PKB.h"
+﻿#include "PKB.h"
 #include <string>
 
 AST PKB::astObj;
@@ -410,6 +410,7 @@ bool PKB::isProc(string name) {
 }
 
 ////////////////////////////////////Next METHODS///////////////////////////////
+
 // Method to check if next relationship exists
 bool PKB::isNext(int n1, int n2){
 	return nextObj.isNext(n1, n2);
@@ -426,20 +427,26 @@ bool PKB::insertNext(int n1, int n2){
 }
 
 // Method to check if line numbers are nextStar
-//bool isNextStar(int n1, int n2);
+bool PKB::isNextStar(int n1, int n2) {
+	return nextObj.isNextStar(n1, n2);
+}
 
 //Method to get the first parameter in the NextStar relationship --> Next*(n1, x)
-//std::vector<int> getNextOneStarLine(int n1);
+std::vector<int> PKB::getNextStarStmts(int n1) {
+	return nextObj.getNextStarStmts(n1);
+}
 
 //Method to get the second parameter in the NextStar relationship --> Next*(x, n1)
-//std::vector<int> getNextTwoStarLine(int n1);
+std::vector<int> PKB::getPreviousStarStmts(int n1) {
+	return nextObj.getPreviousStarStmts(n1);
+}
 
 // Method to get the list of line numbers next to n1
-std::vector<int> PKB::getNextOneLine(int n1){
-	return nextObj.getNextOneLine(n1);
+std::vector<int> PKB::getNextStmts(int n1){
+	return nextObj.getNextStmts(n1);
 }
 
 // Method to get the list of line numbers for which the next line number is n1
-std::vector<int> PKB::getNextTwoLine(int n1){
-	return nextObj.getNextTwoLine(n1);
+std::vector<int> PKB::getPreviousStmts(int n1){
+	return nextObj.getPreviousStmts(n1);
 }

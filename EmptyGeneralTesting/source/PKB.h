@@ -234,19 +234,19 @@ class PKB
 	static bool insertNext(int n1, int n2);
 
 	// Method to check if line numbers are nextStar
-	//static bool isNextStar(int n1, int n2);
+	static bool isNextStar(int n1, int n2);
 
 	//Method to get the first parameter in the NextStar relationship --> Next*(n1, x)
-	//static std::vector<int> getNextOneStarLine(int n1);
+	static std::vector<int> getNextStarStmts(int n1);
 
 	//Method to get the second parameter in the NextStar relationship --> Next*(x, n1)
-	//static std::vector<int> getNextTwoStarLine(int n1);
+	static std::vector<int> getPreviousStarStmts(int n1);
 
 	// Method to get the list of line numbers next to n1
-	static std::vector<int> getNextOneLine(int n1);
+	static std::vector<int> getNextStmts(int n1);
 
 	// Method to get the list of line numbers for which the next line number is n1
-	static std::vector<int> getNextTwoLine(int n1);
+	static std::vector<int> getPreviousStmts(int n1);
 
 private:
 	static AST astObj;
