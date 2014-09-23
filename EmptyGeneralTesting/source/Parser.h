@@ -5,6 +5,7 @@
 #include <sstream>
 #include <vector>
 #include <string>
+#include <map>
 
 using namespace std;
 
@@ -32,7 +33,8 @@ private:
 	vector < vector < int > > CFGNodes;
 	vector <int> processedCFGStmtFlags;
 	vector <int> thenStmtFlags;
-	vector <string> procedureMask;
+	map <int, string> mapStartingStmtProc;
+	map <int, string> mapCallingStmtProc;
 
 	bool isDataProcessed;
 	string currentProcessingProc;
@@ -93,4 +95,5 @@ private:
 	void buildControlFlowPath(size_t statementNo);
 	vector <int> getNextNodeInControlFlow(int stmtNo);
 	vector <int> getChildrenStmts(int stmtNo);
+	bool isStartingStmtOfProc(int stmtNo);
 };

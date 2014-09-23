@@ -17,8 +17,7 @@ PKB::PKB()
 {
 }
 
-void PKB::resetPBK() {
-	
+void PKB::resetPKB() {
 	PKB::astObj = AST();
 	PKB::constObj = ConstTable();
 	PKB::followObj = Follow();

@@ -3,6 +3,8 @@
 #include "Parser.h"
 #include <string>
 #include <iostream>
+#include <algorithm>
+#include <map>
 
 //PUBLIC METHODS
 Parser::Parser() {
@@ -165,8 +167,13 @@ void Parser::buildCallTable() {
 
 void Parser::buildCFG() {
 	for (size_t i = 0; i < stmtType.size(); i++) {
-		if (i == 0 || procedureMask[i - 1] != procedureMask[i])
 			buildControlFlowPath(i);
+	}
+	for (size_t i = 0; i < CFGNodes.size(); i++) {
+		vector <int>  nextStmts = CFGNodes[i];
+		for (size_t j = 0; j < nextStmts.size(); j++) {
+			PKB::insertNext(i, nextStmts[j]);
+		}
 	}
 }
 
@@ -282,7 +289,7 @@ TNode* Parser::readProcedure() {
 	currentProcessingProc = getNextToken();
 	procName.push_back(currentProcessingProc);
 	this->currentDepth = 0;
-	int startOfProc = stmtType.size();
+	this->mapStartingStmtProc[this->stmtType.size()] = currentProcessingProc;
 
 	// create a node for procedure
 	TNode* procNode = PKB::createNode(Procedure, currentProcessingProc);
@@ -290,9 +297,6 @@ TNode* Parser::readProcedure() {
 	procNode->addChild(stmtListNode);
 
 	int endOfProc = stmtType.size();
-	for (size_t i = startOfProc; i < endOfProc; i++) {
-		this->procedureMask[i] = currentProcessingProc;
-	}
 	return procNode;
 }
 
@@ -321,7 +325,6 @@ TNode* Parser::readStmt() {
 	this->thenStmtFlags.push_back(0);
 	this->CFGNodes.push_back(vector<int>());
 	this->processedCFGStmtFlags.push_back(0);
-	this->procedureMask.push_back("");
 
 	TNode* stmtNode;
 	string nextToken = peekForwardToken(1);
@@ -366,6 +369,7 @@ TNode* Parser::readCallStmt () {
 	TNode* callNode = PKB::createNode(Calls);
 
 	string calledProcedureName = getNextToken();
+	this->mapCallingStmtProc[stmtType.size() - 1] = calledProcedureName;
 	TNode* calledProcNode = PKB::createNode (Procedure, calledProcedureName);
 	callNode->addChild(calledProcNode);
 	procName.push_back(calledProcedureName);
@@ -570,7 +574,7 @@ int Parser::getFollowedStmt(int i) {
 	if (i>0) {
 		int lv = depthLv.at(i);
 		for (int j=i-1; j>=0; j--) {
-			if (procedureMask[j] != procedureMask[i]) return -1;
+			if (isStartingStmtOfProc(j + 1)) return -1;
 			if (depthLv.at(j)==lv-1) return -1;
 			if (depthLv.at(j)==lv && thenStmtFlags[i] == thenStmtFlags[j]) return j;
 		}
@@ -583,7 +587,7 @@ int Parser::getFollowingStmt(int i) {
 	if (i < numberOfStmt - 1) {
 		int lv = depthLv.at(i);
 		for (int j=i + 1; j < numberOfStmt; j++) {
-			if (procedureMask[j] != procedureMask[i]) return -1;
+			if (isStartingStmtOfProc(j)) return -1;
 			if (depthLv.at(j)==lv-1) return -1;
 			if (depthLv.at(j)==lv && thenStmtFlags[i] == thenStmtFlags[j]) return j;
 		}
@@ -637,6 +641,16 @@ vector <int> Parser::getNextNodeInControlFlow(int stmtNo) {
 	string type = stmtType[stmtNo];
 	if (type == KEYWORD_WHILE) {
 		result.push_back(stmtNo + 1);
+	} else if (type == KEYWORD_CALL) {
+		string calledProc = this->mapCallingStmtProc[stmtNo];
+		int startingStmtOfProc;
+		for (std::map<int, string>::iterator value = mapStartingStmtProc.begin(); value != mapStartingStmtProc.end(); value++) {
+			if (value->second == calledProc) {
+				startingStmtOfProc = value->first;
+				break;
+			}
+		}
+		result.push_back(startingStmtOfProc);
 	} else if (type == KEYWORD_IF) {
 		vector <int> childrenStmts = getChildrenStmts(stmtNo);
 		int startElseStmtNo;
@@ -691,6 +705,10 @@ vector <int> Parser::getChildrenStmts(int stmtNo) {
 			result.push_back(i);
 	}
 	return result;
+}
+
+bool Parser::isStartingStmtOfProc (int stmtNo) {
+	return this->mapStartingStmtProc.count(stmtNo) > 0;
 }
 
 //Testing methods

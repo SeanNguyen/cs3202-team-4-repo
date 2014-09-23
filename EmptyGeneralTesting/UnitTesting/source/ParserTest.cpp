@@ -166,7 +166,7 @@ void ParserTest::testParseComplexAssign() {
 void ParserTest::testBuildCFG() {
 	Parser parser;
 	parser.parse(testFile_NormalComplex);
-	parser.buildCFG();
+	parser.buildPKB();
 
 	int expectedProcNumber = 9;
 	int expectedVarNumber = 169;

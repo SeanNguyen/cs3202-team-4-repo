@@ -15,7 +15,7 @@ int Next::insertNext(int stmt1, int stmt2){
 
 bool Next::isNext(int stmt1, int stmt2){
 	vector <int> n1NextStmts = this->mapNext[stmt1];
-	bool searchResult = std::find(n1NextStmts.begin(), n1NextStmts.end(), stmt2) == n1NextStmts.end();
+	bool searchResult = std::find(n1NextStmts.begin(), n1NextStmts.end(), stmt2) != n1NextStmts.end();
 	return searchResult;
 }
 

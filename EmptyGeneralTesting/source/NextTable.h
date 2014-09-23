@@ -12,9 +12,6 @@ private:
 	map < int, vector <int> > mapPrevious;
 
 public :
-	// Constructor
-	Next();  
-
 	//public methods
 	int insertNext(int stmt1, int stmt2);
 	bool isNext(int stmt1, int stmt2);
