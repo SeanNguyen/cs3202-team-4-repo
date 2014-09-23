@@ -86,7 +86,10 @@ void CallTest::testisCallStar()
 	CPPUNIT_ASSERT_EQUAL(false, callObj.isCallStar(2, 1));
 	CPPUNIT_ASSERT_EQUAL(true, callObj.isCallStar(1, 4));
 	CPPUNIT_ASSERT_EQUAL(true, callObj.isCallStar(2, 4));
-
+	CPPUNIT_ASSERT_EQUAL(true, callObj.isCallStar(1, 3));
+	std::cout << "TEST CALL THIS: " << " ";
+	std::cout <<  callObj.isCallStar(1, 3) << " ";
+	std::cout << std::endl;
 	return;
 }
 
