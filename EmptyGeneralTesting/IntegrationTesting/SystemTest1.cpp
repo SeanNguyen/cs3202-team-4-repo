@@ -11,7 +11,7 @@ void SystemTest1::tearDown() {
 CPPUNIT_TEST_SUITE_REGISTRATION( SystemTest1 );
 
 void SystemTest1::test1() {
-	/*string source = "..\\..\\Tests\\Source1.txt";
+	string source = "..\\..\\Tests\\Source1.txt";
 	string queries = "..\\..\\Tests\\Queries1.txt";
 	Parser parser;
 	QueryProcessor qp(queries);
@@ -27,7 +27,7 @@ void SystemTest1::test1() {
 			cout << results[i][j] << " ";
 		}
 		cout <<endl;
-	}*/
+	}
 
 }
 
@@ -158,7 +158,7 @@ void SystemTest1::test6() {
 }
 
 void SystemTest1::testWithCls() {
-	string source = "..\\..\\Tests\\Source1.txt";
+	/*string source = "..\\..\\Tests\\Source1.txt";
 	string queries = "..\\..\\Tests\\Queries8_1-WithClause.txt";
 	Parser parser;
 	QueryProcessor qp(queries);
@@ -174,5 +174,5 @@ void SystemTest1::testWithCls() {
 			cout << results[i][j] << " ";
 		}
 		cout <<endl;
-	}
+	}*/
 }

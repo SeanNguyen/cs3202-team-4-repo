@@ -72,6 +72,6 @@ Select p1 such that Calls*("Simple4", "Simple2")
 5000
 15 - CallsStar ::
 procedure p1;
-Select p1 such that Calls*("Simple0", "Simple4")
+Select p1 such that Calls*("Simple7", "Simple4")
 
 5000
