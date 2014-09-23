@@ -567,6 +567,39 @@ void QueryEvaluator::checkPatternCondition(TNode patternNode,vector<string> valu
 	TNode child1 = *patternNode.getChildAtIndex(0);
 	string child1Name = child1.getValue();
 	int child1Index = table.getIndex(child1Name);
+	string child1Value = values[child1Index];
+
+	string type1 = table.getType(child1Name);
+	Symbol child1Type = SyntaxHelper::getSymbolType(type1);
+
+	if (child1Value=="-1") {
+		vector<string> child1Values = getAllArgValues(child1Type);
+		if (child1Values.size()==0) {
+			checkQueryCondition(childIndex+1, values, result, false);
+			return;
+		}
+		for (size_t i=0; i<child1Values.size(); i++) {
+			values[child1Index] = child1Values[i];
+			checkPatternCondition(patternNode, values, result, check, childIndex);
+		}
+	} else {
+		switch (child1Type) {
+		case Assign:
+			{
+				break;
+			}
+		case While:
+			{
+				break;
+			}
+		case If:
+			{
+				break;
+			}
+		default:
+			break;
+		}
+	}
 
 	// check if child1 has value stored in "values" list
 	if (values[child1Index]=="-1")	{ // no value stored yet
