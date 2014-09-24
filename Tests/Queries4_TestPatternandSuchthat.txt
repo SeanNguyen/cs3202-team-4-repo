@@ -1,0 +1,67 @@
+13
+cat: All Category 
+1 - Pattern, Typed :: 
+assign a; variable v;
+Select v pattern a(v, _"x + y"_)
+red, z, chocolate
+5000
+2 - Pattern, Typed :: 
+assign a;
+Select a pattern a(_, _"red + white"_)
+2, 15
+5000
+3 - Pattern, Typed :: 
+assign a;
+Select a pattern a(_, _" y + x"_)
+5
+5000
+4 - Pattern, Modifies :: 
+assign a; while w;
+Select w such that Modifies(w, "pink") pattern a("pink", _"red + white"_)
+1, 11, 13, 14
+5000
+5 - Pattern, Uses :: 
+assign a;
+Select a such that Uses(a, "z") pattern a(_, _"red+white"_)
+15
+5000
+6 - Modifies, Pattern :: 
+assign a; while w; variable v;
+Select a such that Modifies(w, v) pattern a(v, _"y + x"_)
+5
+5000
+7 - Typed, Pattern, Uses ::
+assign a; variable v;
+Select v pattern a(v, _) such that Uses(a, v)
+x, y, chocolate
+5000
+8 - Typed, Pattern, Modifies ::
+assign a; while w; variable v;
+Select w pattern a(v, _"chocolate"_) such that Modifies(w, v)
+11, 21, 20, 13
+5000
+9 - Typed, Pattern, Modifies ::
+assign a; constant c; variable v;
+Select a pattern a(v, _) such that Uses(v, c)
+7, 9, 10, 17, 19, 24, 26, 27
+5000
+10 - Typed, Pattern, Parent ::
+while w; assign a; while w;
+Select w pattern a(_, _"sour + pink"_) such that Parent(w, a)
+13
+5000
+11 - Typed, Pattern, Follow ::
+assign a; while w;
+Select a pattern a("chocolate", _"vanilla + red"_) such that Follows(a, w)
+10
+5000
+12 - Typed, Pattern, FollowStar ::
+assign a;
+Select a pattern a(_, _"sour"_) such that Follows*(14, a)
+18, 19
+5000
+13 - Typed, Pattern, ParentStar ::
+assign a;
+Select a pattern a(_, _"188"_) such that Parent*(11, a)
+17
+5000

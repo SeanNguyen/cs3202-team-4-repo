@@ -1,0 +1,32 @@
+6
+cat: All Category
+1 - Follows, ImplStmtLine ::
+stmt s1;
+Select s1 such that Follows(s1, 4)
+3
+5000
+2 - Follows, ImplStmtLine ::
+stmt s2;
+Select s2 such that Follows(7, s2)
+8
+5000
+3 - Follows, ImplStmtLine ::
+stmt s;
+Select s such that Follows(12, 13)
+
+5000
+4 - Follows Star, ImplStmtLine ::
+stmt s2;
+Select s2 such that Follows*(3, s2)
+4, 5, 7, 8, 9, 15, 16, 17
+5000
+5 - Follows Star, ImplStmtLine ::
+stmt s1;
+Select s1 such that Follows*(s1, 25)
+1, 2, 18, 19, 20, 21
+5000
+6 - Follows Star, ImplStmtLine ::
+constant c;
+Select c such that Follows*(19, 21)
+3, 6, 2, 4, 123, 8
+5000

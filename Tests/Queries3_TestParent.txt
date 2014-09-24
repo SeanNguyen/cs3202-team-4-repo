@@ -1,0 +1,47 @@
+8
+cat: All Category
+1 - Parent, ImplStmtLine ::
+while w;
+Select w such that Parent(w, 19)
+
+5000
+2 - Parent, ImplStmtLine ::
+stmt s;
+Select s such that Parent(21, s)
+22, 23, 24
+5000
+3 - Parent, ImplStmtLine ::
+stmt s; 
+Select s such that Parent(25, s)
+
+5000
+4 - Parent Star, ImplStmtLine ::
+while w;
+Select w such that Parent*(w, 12)
+11, 10, 9, 2
+5000
+5 - Parent Star, ImplStmtLine ::
+stmt s;
+Select s such that Parent*(2, s)
+3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17
+5000
+6 - Parent Star, ImplStmtLine ::
+while w;
+Select w such that Parent*(5, 6)
+2, 5, 9, 10, 11, 21, 26
+5000
+7 - Parent, ImplStmtLine ::
+while w1; while w2;
+Select w1 such that Parent(w1, w2)
+2, 9, 10
+5000
+20 - Parent, ImplStmtLine ::
+stmt s; 
+Select s such that Parent(s, 1)
+
+5000
+8 - Parent Star, ImplStmtLine ::
+while w;
+Select w such that Parent*(9, w)
+10, 11
+5000

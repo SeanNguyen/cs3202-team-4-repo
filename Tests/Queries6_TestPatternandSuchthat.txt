@@ -1,0 +1,67 @@
+13
+cat: All Category 
+1 - Pattern, Typed :: 
+assign a; variable v;
+Select a pattern a(v, _"p+q"_)
+35
+5000
+2 - Pattern, Typed :: 
+assign a;
+Select a pattern a(_, _"in + out"_)
+45, 46
+5000
+3 - Pattern, Typed :: 
+assign a;
+Select a pattern a(_, _" lenovo + hp + fuji"_)
+59, 62
+5000
+4 - Pattern, Modifies :: 
+assign a;
+Select a such that Modifies(a, "laptop") pattern a(_, _" dell"_)
+59
+5000
+5 - Pattern, Uses :: 
+assign a;
+Select a such that Uses(a, "fish") pattern a(_, _"fish + frog"_)
+13, 19
+5000
+6 - Modifies, Pattern :: 
+assign a; while w; variable v;
+Select a such that Modifies(w, v) pattern a(v, _"x + y"_)
+29, 38
+5000
+7 - Typed, Pattern, Uses ::
+assign a; variable v;
+Select v pattern a(v, _) such that Uses(a, v)
+s, work, z, x, p, o
+5000
+8 - Typed, Pattern, Modifies ::
+assign a; while w; variable v;
+Select w pattern a(v, _"egg + chicken"_) such that Modifies(w, v)
+21, 25, 26, 31, 33
+5000
+9 - Typed, Pattern, Modifies ::
+while w; variable v; assign a;
+Select v pattern a(v, _) such that Uses(w, "osx")
+mac, os, o
+5000
+10 - Typed, Pattern, Parent ::
+assign a; while w;
+Select a pattern a(_, _"three"_) such that Parent(w, a)
+65
+5000
+11 - Typed, Pattern, Follow ::
+assign a; while w;
+Select a pattern a(_, _"egg + chicken"_) such that Follows(a, w)
+20
+5000
+12 - Typed, Pattern, FollowStar ::
+assign a;
+Select a pattern a(_, _"increase + decrease"_) such that Follows*(3, a)
+50
+5000
+13 - Typed, Pattern, ParentStar ::
+assign a;
+Select a pattern a(_, _"osx"_) such that Parent*(53, a)
+61, 63, 64
+5000

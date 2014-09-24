@@ -1,0 +1,32 @@
+6
+cat: All Category 
+1 - Parent, ImplStmtLine ::
+while w;
+Select w such that Parent(w, 33)
+31
+5000
+2 - Parent, ImplStmtLine ::
+stmt s;
+Select s such that Parent(9, s)
+10, 11
+5000
+3 - Parent, ImplStmtLine ::
+var v; 
+Select v such that Parent(23, 25)
+i, b, c, a, beta, oSCar, tmp, I, k, j1k, chArlie, x, left, right, Romeo, width, delta, w, g, q, shoe, lace, tie, rainbow, colours, stripe, sky, rain, best, golden,  june, holidays, may, july, options, choices, intern, chill, workout, love, Juliet, play, theatre, shakespeare, greek, alpha, lamda
+5000
+4 - Parent Star, ImplStmtLine ::
+while w;
+Select w such that Parent*(w, 13)
+4, 5, 9, 11, 12
+5000
+5 - Parent Star, ImplStmtLine ::
+stmt s;
+Select s such that Parent*(28, s)
+29, 30, 31, 32, 33, 34, 35, 36
+5000
+6 - Parent Star, ImplStmtLine ::
+while w;
+Select w such that Parent*(23, 32)
+4, 5, 7, 9, 11, 12, 16, 23, 25, 28, 31, 33
+5000

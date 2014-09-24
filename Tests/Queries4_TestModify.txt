@@ -1,0 +1,17 @@
+3
+cat: All Category 
+1 - Modifies, ImplStmtLine ::
+assign a;
+Select a such that Modifies(a, "chocolate")
+8, 10, 22
+5000
+2 - Modifies, ImplStmtLine ::
+variable var;
+Select var such that Modifies(13, var)
+pink, x, cream, strawberry, chocolate, white
+5000
+3 - Modifies, ImplStmtLine ::
+while w;
+Select w such that Modifies(w, "z")
+1, 4
+5000

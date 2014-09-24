@@ -181,5 +181,3 @@ procedure  Jake{
 	}
 119	k = b+1;
 }
-procedure Alpha111{
-}

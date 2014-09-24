@@ -228,9 +228,9 @@ void CallTest::testgetCalledByStarProc(){
 	callingStarProc.push_back(6);
 	
 	// verify that the pair exists - Note 7
-	CPPUNIT_ASSERT_EQUAL(callingStarProc.at(0), callObj.getCallingStarProc(6).at(0));
-	CPPUNIT_ASSERT_EQUAL(callingStarProc.at(1), callObj.getCallingStarProc(6).at(1));
-	CPPUNIT_ASSERT_EQUAL(callingStarProc.at(2), callObj.getCallingStarProc(6).at(2));
+	CPPUNIT_ASSERT_EQUAL(callingStarProc.at(0), callObj.getCalledByStarProc(1).at(0));
+	CPPUNIT_ASSERT_EQUAL(callingStarProc.at(1), callObj.getCalledByStarProc(1).at(1));
+	CPPUNIT_ASSERT_EQUAL(callingStarProc.at(2), callObj.getCalledByStarProc(1).at(2));
 
 	//callingStarProc.clear();
 	//callingStarProc.push_back(1);
