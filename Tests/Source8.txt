@@ -181,3 +181,6 @@ procedure  Jake{
 	}
 119	k = b+1;
 }
+procedure Alpha111{
+120	star = (x + c * c *c + ((y - 3))) +3 * (4 - (y + 6));
+}
