@@ -45,7 +45,10 @@ int Call::insertCalls(int proc1, int proc2){
 bool Call::isCallStar(int proc1, int proc2){
 	
 	bool isCallStar = false;
-	if (proc1 >= 1 && proc2 >= 1)
+	if (proc1 < 0 || proc2 < 0){
+		return isCallStar;
+	}
+	else if (proc1 >= 1 && proc2 >= 1)
 	{
 		vector<int> callingStarProc = getCallingStarProc(proc2);
 		for(size_t index=0; index < callingStarProc.size(); index++)
@@ -96,24 +99,36 @@ std::vector<int> Call::getCalledByStarProcHelper(int proc1, std::vector<int> &ac
 std::vector<int> Call::getCallingStarProc(int proc1){
 
 	std::vector<int> callingStar;
-	callingStar = getCallingStarProcHelper(proc1, callingStar);
-
+	if(proc1 < 0){
+		return callingStar;
+	} else {
+		callingStar = getCallingStarProcHelper(proc1, callingStar);
+	}
 	return callingStar;
 
 }
 
 std::vector<int> Call::getCalledByStarProc(int proc1){
 	std::vector<int> calledByStar;
-	calledByStar = getCalledByStarProcHelper(proc1, calledByStar);
+	if(proc1 < 0) {
+		return calledByStar;
+	} else {
+		calledByStar = getCalledByStarProcHelper(proc1, calledByStar);
+	}
 	return calledByStar;
 }
 
 //Method to get the proc called in proc1
 std::vector<int> Call::getCalledByProc(int proc1){
 	vector<int> calledProc;
-	for(std::size_t i = 0; i < callTable.size(); i++){
-		if(callTable[proc1][i] == 1){
-			calledProc.push_back(i);
+	if(proc1 < 0){
+		return calledProc;
+	} else {
+
+		for(std::size_t i = 0; i < callTable.size(); i++){
+			if(callTable[proc1][i] == 1){
+				calledProc.push_back(i);
+			}
 		}
 	}
 	
@@ -124,9 +139,13 @@ std::vector<int> Call::getCalledByProc(int proc1){
 std::vector<int> Call::getCallingProc(int proc1)
 {
 	vector<int> callingProc;
-	for(std::size_t i = 0; i < callTable.size(); i++){
-		if(callTable[i][proc1] == 1){
-			callingProc.push_back(i);
+	if(proc1 < 0){
+		return callingProc;
+	} else {
+		for(std::size_t i = 0; i < callTable.size(); i++){
+			if(callTable[i][proc1] == 1){
+				callingProc.push_back(i);
+			}
 		}
 	}
 	return callingProc;

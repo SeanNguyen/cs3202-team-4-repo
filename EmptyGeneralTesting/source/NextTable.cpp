@@ -3,6 +3,11 @@
 #include <vector>
 
 int Next::insertNext(int stmt1, int stmt2){
+
+	if(stmt1 < 0 || stmt2 < 0){
+		return -1;
+	}
+
 	if(isNext(stmt1, stmt2)){
 		return -1;
 	} else {
@@ -14,12 +19,23 @@ int Next::insertNext(int stmt1, int stmt2){
 }
 
 bool Next::isNext(int stmt1, int stmt2){
+
+	if(stmt1 < 0 || stmt2 < 0){
+		return false;
+	}
+
 	vector <int> n1NextStmts = this->mapNext[stmt1];
 	bool searchResult = std::find(n1NextStmts.begin(), n1NextStmts.end(), stmt2) != n1NextStmts.end();
 	return searchResult;
 }
 
 bool Next::isNextStar (int stmt1, int stmt2) {
+
+	if(stmt1 < 0 || stmt2 < 0){
+		return false;
+	}
+
+
 	vector <int> nextStmts = this->mapNext[stmt1];
 	if (isNext(stmt1, stmt2))
 		return true;
@@ -32,10 +48,22 @@ bool Next::isNextStar (int stmt1, int stmt2) {
 }
 
 vector<int> Next::getNextStmts(int stmtNo){
+
+	if(stmtNo < 0){
+		std::vector<int> emptyvec;
+		return emptyvec;
+	}
+
 	return this->mapNext[stmtNo];
 }
 
 vector<int> Next::getNextStarStmts(int stmtNo){
+
+	if(stmtNo < 0){
+		std::vector<int> emptyvec;
+		return emptyvec;
+	}
+
 	vector <int> result = this->mapNext[stmtNo];
 	for (size_t i = 0; i < this->mapNext[stmtNo].size(); i++) {
 		vector <int> nextStarOfNextStmt = getNextStarStmts(this->mapNext[stmtNo].at(i));
@@ -45,10 +73,22 @@ vector<int> Next::getNextStarStmts(int stmtNo){
 }
 
 vector<int> Next::getPreviousStmts(int stmtNo){
+
+	if(stmtNo < 0){
+		std::vector<int> emptyvec;
+		return emptyvec;
+	}
+
 	return this->mapPrevious[stmtNo];
 }
 
 vector<int> Next::getPreviousStarStmts(int stmtNo){
+
+	if(stmtNo < 0){
+		std::vector<int> emptyvec;
+		return emptyvec;
+	}
+
 	vector <int> result = this->mapPrevious[stmtNo];
 	for (size_t i = 0; i < this->mapPrevious[stmtNo].size(); i++) {
 		vector <int> previousStarOfNextStmt = getPreviousStarStmts(this->mapPrevious[stmtNo].at(i));

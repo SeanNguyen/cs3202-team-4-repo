@@ -5,6 +5,7 @@ ConstTable::ConstTable() {
 }
 
 bool ConstTable::isConst(string value) {
+
 	if (getIndex(value)>=0) {
 		return true;
 	}
