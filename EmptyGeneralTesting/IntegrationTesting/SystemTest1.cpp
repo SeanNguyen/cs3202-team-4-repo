@@ -42,6 +42,15 @@ void SystemTest1::testCallsCallStar() {
 
 	vector<vector<string>> results = qp.Process();
 
+	cout << "TEST ISCALL: Calls(\"Simple1\", \"Simple2\") = ";
+	cout << PKB::isCalls(0, 1) <<endl; 
+
+	cout << "TEST ISCALLSTAR: Calls*(\"Simple1\", \"Simple2\") = ";
+	cout << PKB::isCallStar(0, 1) <<endl; 
+
+	cout << "TEST ISCALLSTAR: Calls*(\"Simple1\", \"Simple3\") = ";
+	cout << PKB::isCallStar(0, 2) <<endl; 
+
 	for (size_t i=0; i<results.size(); i++) {
 		cout << "Query " << i+1 << ": ";
 		for (size_t j=0; j< results[i].size(); j++) {

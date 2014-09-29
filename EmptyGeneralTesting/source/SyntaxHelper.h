@@ -41,6 +41,8 @@ const string MODIFIES_RLT = "Modifies";
 const string USES_RLT = "Uses";
 const string CALLS_RLT = "Calls";
 const string CALLSSTAR_RLT = "Calls*";
+const string NEXT_RLT = "Next";
+const string NEXTSTAR_RLT = "Next*";
 
 enum Symbol {
 	Undefined,
@@ -54,7 +56,7 @@ enum Symbol {
 	Select,
 	QuerySymbol,
 	ResultCls, SuchThatCls, PatternCls, WithCls,
-	Follows, FollowsS, Parent, ParentS, Uses, Modifies, Calls, CallsS,
+	Follows, FollowsS, Parent, ParentS, Uses, Modifies, Calls, CallsS, Next, NextS,
 	
 	Prog_line, Stmt, Underline, No_Underline
 };

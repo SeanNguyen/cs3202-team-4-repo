@@ -711,8 +711,6 @@ void QueryEvaluator::checkWithCondition(TNode withNode, vector<string> values, v
 	string child1Name = child1 -> getValue();
 	string child2Name = child2 -> getValue();
 
-	cout << "checkpoint 011" <<endl;
-
 	switch (child1Type) {
 	case Const:
 		{
