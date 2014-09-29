@@ -51,10 +51,10 @@ Symbol SyntaxHelper::getSymbolType(string type) {
 		return CallsS;
 	}
 	if (type.compare("Next")==0) {
-		return Next;
+		return Nexts;
 	}
 	if (type.compare("Next*")==0) {
-		return NextS;
+		return NextsS;
 	}
 
 	return Undefined;
@@ -119,9 +119,9 @@ string SyntaxHelper::SymbolToString(Symbol symbol) {
 		return CALLS_RLT;
 	case CallsS:
 		return CALLSSTAR_RLT;
-	case Next:
+	case Nexts:
 		return NEXT_RLT;
-	case NextS:
+	case NextsS:
 		return NEXTSTAR_RLT;
 	default:
 		return "Undefined";

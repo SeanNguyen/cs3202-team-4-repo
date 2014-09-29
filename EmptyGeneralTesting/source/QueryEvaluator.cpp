@@ -88,6 +88,7 @@ void QueryEvaluator::findResult(vector<string> values, vector<string>& result) {
 
 void QueryEvaluator::checkQueryCondition(int childIndex, vector<string> values, vector<string>&result, bool check) {
 	if (!check) {
+		//cout << "CHECKPOINT 002" << endl;
 		// return null result list
 		return;
 	}
@@ -96,6 +97,7 @@ void QueryEvaluator::checkQueryCondition(int childIndex, vector<string> values, 
 
 	// if no more condition to check
 	if (childIndex==root.getNumChildren()) {
+		//cout << "CHECKPOINT 003" <<endl;
 		// if all conditions are satisfied
 		if (check) {
 			// get result's value and update result list
@@ -112,6 +114,8 @@ void QueryEvaluator::checkQueryCondition(int childIndex, vector<string> values, 
 
 	// get root's child at index
 	TNode child = *root.getChildAtIndex(childIndex);
+	//cout << "CHECKPOINT 000: " << root.getNumChildren() <<endl;
+	//cout << "CHECKPOINT 001: " << SyntaxHelper::SymbolToString(child.getType()) <<endl;
 	if (child.getType()==SuchThatCls) {
 		// find values satisfying such that condition
 		checkSuchThatCondition(child, values, result, check, childIndex);
@@ -588,16 +592,19 @@ void QueryEvaluator::checkPatternCondition(TNode patternNode,vector<string> valu
 	TNode * arg1Node = child1 -> getChildAtIndex(0);
 	handlePatternLeftHand(child1Value, arg1Node, values,check);
 
-	if (!check) {
+	if (check==false) {
+		//cout << "CHECKPOINT 014" <<endl;
 		checkQueryCondition(childIndex+1, values, result, check);
 		return;
 	}
 
+	//cout << "CHECKPOINT 011" <<endl;
 	// handle right hand side of pattern condition
 	// by definition, only consider pattern of assignment 
 	switch (child1Type) {
 	case Assign:
 		{
+			//cout << "CHECKPOINT 012" <<endl;
 			TNode * arg2Node = child1->getChildAtIndex(1);
 			handlePatternRightHand(child1Value, arg2Node, values, check);
 			break;
@@ -643,11 +650,14 @@ void QueryEvaluator::handlePatternLeftHand(string stmt, TNode * leftNode, vector
 				TNode * child1 = stmtNode->getChildAtIndex(0);
 				string child1Value = child1->getValue();
 				if (child1Value==leftValue) { 
+					//cout << "CHECKPOINT 009: " <<stmt << " " << leftValue <<endl; 
 					check = true;
 				}
-				else {check=false;} 
+				else {
+					check=false;
+				} 
 			}
-			break;
+			return;
 		}
 	case Const:
 		{
@@ -658,7 +668,7 @@ void QueryEvaluator::handlePatternLeftHand(string stmt, TNode * leftNode, vector
 			string child1Value = child1->getValue();
 			if (child1Value==leftName) { check = true; }
 			else {check=false;} 
-			break;
+			return;
 		}
 	default:
 		break;

@@ -32,7 +32,7 @@ void SystemTest1::test1() {
 }
 
 void SystemTest1::testCallsCallStar() {
-	string source = "..\\..\\Tests\\SourceSimpleCall.txt";
+	/*string source = "..\\..\\Tests\\SourceSimpleCall.txt";
 	string queries = "..\\..\\Tests\\QueriesSimpleCall.txt";
 	Parser parser;
 	QueryProcessor qp(queries);
@@ -57,7 +57,7 @@ void SystemTest1::testCallsCallStar() {
 			cout << results[i][j] << " ";
 		}
 		cout <<endl;
-	}
+	}*/
 
 }
 
