@@ -1,0 +1,12 @@
+50
+cat: Relations Attributes compare
+1 - RelAttCom::
+assign a;
+Select a with a.stmt#=1
+56, 64, 77, 74
+5000
+2 - RelAttCom::
+assign a1; constant c;
+Select a1 with a1.stmt#=c.value;
+56, 64, 77, 74
+5000
