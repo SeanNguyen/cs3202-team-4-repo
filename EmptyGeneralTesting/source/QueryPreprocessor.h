@@ -34,12 +34,18 @@ private:
 	TNode * preprocessResultNode(vector<string> list, SymbolTable table, vector<string> & errors, int i);
 	TNode * preprocessSuchThatCondition(vector<string> suchthat, SymbolTable table, vector<string>& errors);
 	TNode * preprocessPatternCondition(vector<string> pattern, SymbolTable table, vector<string>& errors);
+	TNode * preprocessAssignPattern(string name, vector<string> pattern, SymbolTable table, vector<string>& errors);
+	TNode * preprocessWhilePattern(string name, vector<string> pattern, SymbolTable table, vector<string>& errors);
+	TNode * preprocessIfPattern(string name, vector<string> pattern, SymbolTable table, vector<string>& errors);
+	TNode * preprocessExpressionNode(vector<string> pattern, vector<string>& errors);
 	TNode * preprocessWithCondition(vector<string> list, SymbolTable table, vector<string>& errors, int i);
 
 	vector<string> breakStringIntoWords(string str);
 	unsigned int findFirstElement(vector<string> list, unsigned i, string element);
+	unsigned int findLastElement(vector<string> list, unsigned i, string element);
 	bool isNumber(string str);
 	vector<string> subList(vector<string> list, int i, int j);
+	int getLastIndexOfTokenNotInsideBracket(vector<string> list, string token);
 };
 
 #endif

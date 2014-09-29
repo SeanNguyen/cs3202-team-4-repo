@@ -1,0 +1,67 @@
+13
+cat: All Category
+1 - Pattern, Typed :: 
+assign a; variable v;
+Select a pattern a(v, _"o+s"_)
+
+5000
+2 - Pattern, Typed :: 
+assign a;
+Select a pattern a(_, _"r + e"_)
+8, 25
+5000
+3 - Pattern, Typed :: 
+assign a;
+Select a pattern a(_, _" yellow + lily"_)
+19
+5000
+4 - Pattern, Modifies :: 
+assign a;
+Select a such that Modifies(a, "flower") pattern a(_, _" tulip + lily"_)
+13
+5000
+5 - Pattern, Uses :: 
+assign a;
+Select a such that Uses(a, "a") pattern a(_, _"lily + 8"_)
+23
+5000
+6 - Modifies, Pattern :: 
+assign a; while w; variable v;
+Select a such that Modifies(w, v) pattern a(v, _"r + e"_)
+8, 25
+5000
+7 - Typed, Pattern, Uses ::
+assign a; variable v;
+Select v pattern a(v, _) such that Uses(a, v)
+e, flower, o, yellow, l, r
+5000
+8 - Typed, Pattern, Modifies ::
+assign a; while w; variable v;
+Select w pattern a(v, _"rose + lily"_) such that Modifies(w, v)
+2, 9, 10, 11
+5000
+9 - Typed, Pattern, Modifies ::
+assign a; variable v;
+Select a pattern a(v, _) such that Uses(a, "lily")
+12, 13, 19, 23
+5000
+10 - Typed, Pattern, Parent ::
+assign a; while w;
+Select a pattern a(_, _"flower"_) such that Parent(w, a)
+14, 16
+5000
+11 - Typed, Pattern, Follow ::
+assign a; while w;
+Select a pattern a(_, _"8 + carnation"_) such that Follows(a, w)
+20
+5000
+12 - Typed, Pattern, FollowStar ::
+assign a;
+Select a pattern a(_, _"e"_) such that Follows*(3, a)
+4, 8, 17
+5000
+13 - Typed, Pattern, ParentStar ::
+assign a;
+Select a pattern a(_, _"rose+lily"_) such that Parent*(2, a)
+12
+5000

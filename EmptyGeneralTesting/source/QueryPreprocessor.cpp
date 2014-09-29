@@ -215,7 +215,6 @@ void QueryPreprocessor::preprocessQueryPart(QueryTree& tree, SymbolTable table, 
 			TNode * withCls = preprocessWithCondition(list, table, errors, i);
 			root -> addChild(withCls);
 		} else {
-			cout <<  "";
 		}
 	}
 
@@ -305,96 +304,293 @@ TNode * QueryPreprocessor::preprocessPatternCondition(vector<string> list, Symbo
 	// create first node for pattern
 	TNode * pattern = new TNode(PatternCls);
 
-	// expect second element as name of assignment symbol
-	string assignSymbol = list[1];
-	if (table.getType(list[1])!=KEYWORD_ASSIGN) {
-		errors.push_back("Error 009: not a valid symbol for pattern clause: " + list[1]);
+	vector<string> patternContent = subList(list, 2, size-1);
+	string argName = list[1];
+	string argType = table.getType(argName);
+	Symbol type = SyntaxHelper::getSymbolType(argType);
+
+	switch (type) {
+	case Assign:
+		{
+			TNode * assignNode = preprocessAssignPattern(argName, patternContent, table, errors);
+			pattern -> addChild(assignNode);
+			break;
+		}
+	case While:
+		{
+			TNode * whileNode = preprocessWhilePattern(argName, patternContent, table, errors);
+			pattern -> addChild(whileNode);
+			break;
+		}
+	case If:
+		{
+			TNode * ifNode = preprocessIfPattern(argName, patternContent, table, errors);
+			pattern -> addChild(ifNode);
+			break;
+		}
+	default:
+		{
+			errors.push_back("Error 009: not a valid stmt type for pattern clause: " + argName);
+			break;
+		}
 	}
-	TNode * assignNode = new TNode(QuerySymbol, assignSymbol);
-	pattern -> addChild(assignNode);
-
-	// expect bracelets
-	if (list[2]!="(" || list[size-1]!=")") {
-	}
-	
-	// find index of comma used to separate content
-	unsigned index = findFirstElement(list, 2, ",");
-	
-	// process argument 1 of pattern
-	if ((int)index==4) {
-		// expect underline or variable symbol in argument 1.
-		if (list[3]=="_") {
-			TNode * arg1Node = new TNode(Underline);
-			pattern -> addChild(arg1Node);
-		} else {
-			if (table.getType(list[3])!= "variable") {
-				errors.push_back("Error 010: unable to find symbol: " + list[3] + " in pattern");
-			} else {
-				TNode * arg1Node = new TNode(QuerySymbol, list[3]);
-				pattern -> addChild(arg1Node);
-			}
-		}
-	} else if ((int)index==6) {
-		// expect name of variable
-		if (list[3]!="\"" || list[5]!="\"") {
-		}
-		TNode * arg1Node = new TNode (Var, list[4]);
-		pattern -> addChild(arg1Node);
-	}
-
-	// process argument 2 of pattern
-	// NOTE: for now, we just process with argument
-	// of at most 1 plus expression
-	if ((int)(size-index)==3) {
-		// expect underline
-		if (list[index+1]!="_") {
-		}
-		TNode * arg2Node = new TNode(Underline);
-		pattern -> addChild(arg2Node);
-	} else if ((int)(size-index)==7) {
-		// expect one variable name
-		if (list[index+1]!="_" || list[index+2]!="\"" ||
-			list[size-3]!="\"" || list[size-2]!="_") {
-		}
-		string arg2 = list[index+3]; 
-		if (isNumber(arg2)) {
-			TNode * arg2Node = new TNode(Const, arg2);
-			pattern -> addChild(arg2Node);
-		} else {
-			TNode * arg2Node = new TNode(Var, arg2);
-			pattern -> addChild(arg2Node);
-		}
-	}  else if ((int)(size-index)==9) {
-		if (list[index+1]!="_" || list[index+2]!="\"" ||
-			list[size-3]!="\"" || list[size-2]!="_") {
-		}
-		if (list[index+4]!="+") {
-		}
-		TNode * arg2Node = new TNode(Plus);
-		
-		string factor1 = list[index+3];
-		string factor2 = list[index+5];
-
-		if (isNumber(factor1)) {
-			TNode * factor1Node = new TNode(Const, factor1);
-			arg2Node -> addChild(factor1Node);
-		} else {
-			TNode * factor1Node = new TNode(Var, factor1);
-			arg2Node -> addChild(factor1Node);
-		}
-
-		if (isNumber(factor2)) {
-			TNode * factor2Node = new TNode(Const, factor2);
-			arg2Node -> addChild(factor2Node);
-		} else {
-			TNode * factor2Node = new TNode(Var, factor2);
-			arg2Node -> addChild(factor2Node);
-		}
-		pattern -> addChild(arg2Node);
-	} else {
-	} 
 
 	return pattern;
+}
+
+TNode * QueryPreprocessor::preprocessAssignPattern(string name, vector<string> list, SymbolTable table, vector<string>& errors) {
+	TNode * assignNode = new TNode(QuerySymbol, name);
+	unsigned size = list.size();
+	if (list[0]!=KEYWORD_OPENBRACKET || list[size-1]!=KEYWORD_CLOSEBRACKET) {
+		errors.push_back("Error 010: no valid bracket for pattern");
+	}
+	int commaIndex = findFirstElement(list, 0, ",");
+
+	switch (commaIndex) {
+	case 2:
+		{
+			string arg1 = list[1];
+			// expect arg1 of pattern is underline or query symbol
+			if (arg1==KEYWORD_UNDERLINE) {
+				TNode * arg1Node = new TNode(Underline);
+				assignNode -> addChild(arg1Node);
+			} else {
+				if (table.getIndex(arg1)==0) {
+					errors.push_back("Error 011: not a declared symbol: " + arg1);
+				}
+				TNode * arg1Node = new TNode(QuerySymbol, arg1);
+				assignNode -> addChild(arg1Node);
+			}
+			break;
+		}
+	case 4:
+		{
+			// expect a variable name
+			if (list[1]!="\"" || list[3]!="\"") {
+				errors.push_back("Error 012_01: syntax of pattern");
+				return assignNode;
+			}
+			TNode * arg1Node = new TNode(Const, list[2]);
+			assignNode -> addChild(arg1Node);
+			break;
+		}
+	default:
+		break;
+	}
+
+	// preprocess right hand side 
+	switch (size-commaIndex) {
+	case 3:
+		{
+			// expect an underline in the right of the comma
+			if (list[commaIndex+1]!=KEYWORD_UNDERLINE) {
+				errors.push_back("Error 012_02: Syntax of pattern");
+				return assignNode;
+			}
+			TNode * arg2Node = new TNode(Underline);
+			assignNode ->addChild(arg2Node);
+			break;
+		}
+	default:
+		{
+			if (list[commaIndex+1]!=KEYWORD_UNDERLINE || list[size-2]!=KEYWORD_UNDERLINE) {
+				if (list[commaIndex+1]!="\"" || list[size-2]!="\"") {
+					errors.push_back("Error 012_03: Syntax of pattern");
+					return assignNode;
+				}
+				vector<string> expression = subList(list, commaIndex+2, size-3);
+				TNode * arg2Node = new TNode(No_Underline);
+				TNode * eprNode = preprocessExpressionNode(expression, errors);
+				assignNode ->addChild(arg2Node);
+			} else {
+				if (list[commaIndex+2]!="\"" || list[size-3]!="\"") {
+					errors.push_back("Error 012_04: Syntax of pattern");
+					return assignNode;
+				}
+				vector<string> expression = subList(list, commaIndex+3, size-4);
+				TNode * arg2Node = new TNode(Underline);
+				TNode * exprNode = preprocessExpressionNode(expression, errors);
+				arg2Node ->addChild(exprNode);
+				assignNode ->addChild(arg2Node);
+			}
+			break;
+		}
+	}
+	
+	return assignNode;
+}
+
+TNode * QueryPreprocessor::preprocessWhilePattern(string name, vector<string> list, SymbolTable table, vector<string>& errors) {
+	TNode * whileNode = new TNode(QuerySymbol, name);
+	unsigned size = list.size();
+	if (list[0]!=KEYWORD_OPENBRACKET || list[size-1]!=KEYWORD_CLOSEBRACKET) {
+		errors.push_back("Error 010: no valid bracket for pattern");
+	}
+	int commaIndex = findFirstElement(list, 0, ",");
+	
+	switch (commaIndex) {
+	case 2:
+		{
+			string arg1 = list[1];
+			// expect arg1 of pattern is underline or query symbol
+			if (arg1==KEYWORD_UNDERLINE) {
+				TNode * arg1Node = new TNode(Underline);
+				whileNode -> addChild(arg1Node);
+			} else {
+				if (table.getIndex(arg1)==0) {
+					errors.push_back("Error 011: not a declared symbol: " + arg1);
+				}
+				TNode * arg1Node = new TNode(QuerySymbol, arg1);
+				whileNode -> addChild(arg1Node);
+			}
+			break;
+		}
+	case 4:
+		{
+			// expect a variable name
+			if (list[1]!="\"" || list[3]!="\"") {
+				errors.push_back("Error 012_01: syntax of pattern");
+				return whileNode;
+			}
+			TNode * arg1Node = new TNode(Const, list[2]);
+			whileNode -> addChild(arg1Node);
+			break;
+		}
+	default:
+		break;
+	}
+
+	// expect right hand side is underline
+	if (commaIndex>(int)size-2 || list[commaIndex+1]!=KEYWORD_UNDERLINE) {
+		errors.push_back("Error 012_05: syntax of pattern");
+	} else {
+		TNode * arg2Node = new TNode(Underline);
+		whileNode ->addChild(arg2Node);
+	}
+
+	return whileNode;
+}
+
+TNode * QueryPreprocessor::preprocessIfPattern(string name, vector<string> list, SymbolTable table, vector<string>& errors) {
+	TNode * ifNode = new TNode(QuerySymbol, name);
+	unsigned size = list.size();
+	if (list[0]!=KEYWORD_OPENBRACKET || list[size-1]!=KEYWORD_CLOSEBRACKET) {
+		errors.push_back("Error 010: no valid bracket for pattern");
+	}
+	int commaIndex = findFirstElement(list, 0, ",");
+	switch (commaIndex) {
+	case 2:
+		{
+			string arg1 = list[1];
+			// expect arg1 of pattern is underline or query symbol
+			if (arg1==KEYWORD_UNDERLINE) {
+				TNode * arg1Node = new TNode(Underline);
+				ifNode -> addChild(arg1Node);
+			} else {
+				if (table.getIndex(arg1)==0) {
+					errors.push_back("Error 011: not a declared symbol: " + arg1);
+				}
+				TNode * arg1Node = new TNode(QuerySymbol, arg1);
+				ifNode -> addChild(arg1Node);
+			}
+			break;
+		}
+	case 4:
+		{
+			// expect a variable name
+			if (list[1]!="\"" || list[3]!="\"") {
+				errors.push_back("Error 012_01: syntax of pattern");
+				return ifNode;
+			}
+			TNode * arg1Node = new TNode(Const, list[2]);
+			ifNode -> addChild(arg1Node);
+			break;
+		}
+	default:
+		break;
+	}
+
+	// expect right hand side has 2 underline signs
+	if (commaIndex>(int)size-4 || list[commaIndex+1]!=KEYWORD_UNDERLINE) {
+		errors.push_back("Error 012_05: syntax of pattern");
+	} else {
+		TNode * arg2Node = new TNode(Underline);
+		ifNode ->addChild(arg2Node);
+	}
+
+	if (list[size-3]!=KEYWORD_COMMA || list[size-2]!=KEYWORD_UNDERLINE) {
+		errors.push_back("Error 012_06: syntax of pattern");
+	} else {
+		TNode * arg3Node = new TNode(Underline);
+		ifNode ->addChild(arg3Node);
+	}
+
+	return ifNode;
+}
+
+TNode * QueryPreprocessor::preprocessExpressionNode(vector<string> list, vector<string>& errors) {
+	TNode * exprNode = new TNode();
+	unsigned size = list.size();
+	// base case
+	if (size==0) {
+		errors.push_back("Error 013: lack in pattern expression");
+	} else if (size==1) {
+		string expr = list[0];
+		if (expr==KEYWORD_PLUSSIGN || expr==KEYWORD_MINUSSIGN || expr==KEYWORD_MULTIPLYSIGN ||
+			expr==KEYWORD_OPENBRACKET ||expr==KEYWORD_CLOSEBRACKET) {
+			errors.push_back("Error 013: lack in pattern expression");
+		} else {
+			if (isNumber(expr)) {
+				exprNode = new TNode(Const, expr);
+			} else {
+				exprNode = new TNode(Var, expr);
+			}
+		}
+	} else {
+		// find last index of plus/ minus/ multiple outside of bracket
+		int plusSignIndex = getLastIndexOfTokenNotInsideBracket(list, KEYWORD_PLUSSIGN);
+		int minusSignIndex = getLastIndexOfTokenNotInsideBracket(list, KEYWORD_MINUSSIGN);
+		int signIndex = max(plusSignIndex, minusSignIndex);
+		if (signIndex < 0) {
+			int multiplySignIndex = getLastIndexOfTokenNotInsideBracket(list, KEYWORD_MULTIPLYSIGN);
+			// create node for multiply sign and make 2 nodes before/after it its children
+			if (multiplySignIndex > 0) {
+				TNode * multiplyNode = new TNode(Times);
+				vector<string> sublist1 = subList(list, 0, multiplySignIndex-1);
+				vector<string> sublist2 = subList(list, multiplySignIndex+1, size-1);
+				TNode * node1 = preprocessExpressionNode(sublist1, errors);
+				TNode * node2 = preprocessExpressionNode(sublist2, errors);
+				multiplyNode ->addChild(node1);
+				multiplyNode ->addChild(node2);
+				return multiplyNode;
+			} else {
+				// there is a bracket covering all expression
+				if (list[0]==KEYWORD_OPENBRACKET && list[size-1]==KEYWORD_CLOSEBRACKET) {
+					list = subList(list, 1, size-2);
+					return preprocessExpressionNode(list, errors);
+				} else {
+					errors.push_back("Error 013: invalid pattern expression");
+					return exprNode;
+				}
+			}
+		} else {
+			if (plusSignIndex>minusSignIndex) {
+				exprNode = new TNode(Plus);
+			} else {
+				exprNode = new TNode(Minus);
+			}
+			vector<string> sublist1 = subList(list, 0, signIndex-1);
+			vector<string> sublist2 = subList(list, signIndex+1, size-1);
+			TNode * node1 = preprocessExpressionNode(sublist1, errors);
+			TNode * node2 = preprocessExpressionNode(sublist2, errors);
+			exprNode ->addChild(node1);
+			exprNode ->addChild(node2);
+
+			return exprNode;
+		}
+	}
+
+	return exprNode;
 }
 
 TNode * QueryPreprocessor::preprocessWithCondition(vector<string> list, SymbolTable table, vector<string> & errors, int index) {
@@ -416,6 +612,7 @@ TNode * QueryPreprocessor::preprocessWithCondition(vector<string> list, SymbolTa
 		if (arg1Type==KEYWORD_CONST && list[index+3]!="value") {
 			errors.push_back("Error 014: wrong expression: " + arg1 + list[index+2] + list[index+3]);
 		}
+
 		if ((arg1Type==KEYWORD_STMT || arg1Type==KEYWORD_ASSIGN ||
 			arg1Type==KEYWORD_WHILE || arg1Type==KEYWORD_IF || arg1Type == KEYWORD_CALL)
 			&& list[index+3]!="stmt#") {
@@ -446,7 +643,7 @@ TNode * QueryPreprocessor::preprocessWithCondition(vector<string> list, SymbolTa
 			if (arg2Type!=KEYWORD_PROCEDURE && arg2Type==KEYWORD_VAR && arg2Type!=KEYWORD_CALL) {
 				errors.push_back("Error 019: not correct comparison (different attribute type): " + arg1 + " and " + arg2);
 			} else {
-				TNode * arg2Node = new TNode(Const, arg2);
+				TNode * arg2Node = new TNode(QuerySymbol, arg2);
 				withCls -> addChild(arg2Node);
 			}
 		} else {
@@ -455,7 +652,7 @@ TNode * QueryPreprocessor::preprocessWithCondition(vector<string> list, SymbolTa
 			arg2Type!=KEYWORD_IF && arg2Type==KEYWORD_CALL) {
 				errors.push_back("Error 020: not correct comparison (different attribute type): " + arg1 + " and " + arg2);
 			} else {
-				TNode * arg2Node = new TNode(Const, arg2);
+				TNode * arg2Node = new TNode(QuerySymbol, arg2);
 				withCls -> addChild(arg2Node);
 			}
 		}
@@ -548,6 +745,10 @@ vector<string> QueryPreprocessor::breakStringIntoWords(string str) {
 			str = str.replace(i, 1, " > ");
 			i+=2;
 		}
+		if (curChar=='=') {
+			str = str.replace(i, 1, " = ");
+			i+=2;
+		}
 	}
 
 	istringstream ss;
@@ -566,6 +767,15 @@ unsigned int QueryPreprocessor::findFirstElement(vector<string> list, unsigned i
 	}
 	return -1;
 }
+
+unsigned int QueryPreprocessor::findLastElement(vector<string> list, unsigned index, string element) {
+	for (size_t i=index; i>=0; i--) {
+		if (list[i]==element) 
+			return i;
+	}
+	return -1;
+}
+
 
 // Description: this method is to check if a string is a number or not
 bool QueryPreprocessor::isNumber(string str) {
@@ -586,4 +796,23 @@ void QueryPreprocessor::printFileData() {
 			cout << query[1] << endl;
 		}
 	}
+}
+
+int QueryPreprocessor::getLastIndexOfTokenNotInsideBracket(vector<string> list, string token) {
+	vector<int> depth;
+	int nestedLv = 0;
+	
+	for (size_t i=0; i<list.size(); i++) {
+		if (list[i]==KEYWORD_OPENBRACKET) nestedLv++;
+		if (list[i]==KEYWORD_CLOSEBRACKET) nestedLv--;
+		depth.push_back(nestedLv);
+	}
+
+	for (size_t i=list.size()-1; i>0; i--) {
+		if (list[i]==token && depth[i]==0) {
+			return i;
+		}
+	}
+
+	return -1;
 }

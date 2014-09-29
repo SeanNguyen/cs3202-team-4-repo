@@ -1,4 +1,4 @@
-50
+27
 cat: Relations Attributes compare
 1 - RelAttCom::
 procedure p1, p2; assign a1, a2;

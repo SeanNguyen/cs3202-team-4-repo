@@ -1,4 +1,4 @@
-4
+5
 cat: Variable, Statement
 1 - Variable, ImplStmtLine ::
 variable v##;
@@ -19,4 +19,19 @@ Select a
 while w;
 Select w
 2, 4
+5000
+5
+assign a;
+Select a pattern a(_,_)
+
+5000
+5
+assign a;
+Select a pattern a("i",_)
+
+5000
+6 
+assign a; variable v;
+Select a pattern a(v,_) with v.varName = "j"
+
 5000

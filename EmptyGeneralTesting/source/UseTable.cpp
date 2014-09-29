@@ -14,6 +14,10 @@ Use::Use(){
 //  Method to check if modifies relationship exists
 bool Use::isUses(int s1, int varIndex){
 
+	if(s1 < 0 || varIndex < 0){
+		return false;
+	}
+
 	if(UseTable[s1][varIndex] == 1){
 		return true;
 	}
@@ -21,6 +25,10 @@ bool Use::isUses(int s1, int varIndex){
 }
 
 bool Use::isUsesProc(int proc1, int varIndex){
+
+	if(proc1 < 0 || varIndex < 0){
+		return false;
+	}
 	
 	if(UseTableProc[proc1][varIndex] == 1){
 		return true;
@@ -30,6 +38,10 @@ bool Use::isUsesProc(int proc1, int varIndex){
 
 // Method to insert a pair of stmt number and variable
 int Use::insertUses(int s1, int varIndex){
+
+	if(s1 < 0 || varIndex < 0){
+		return false;
+	}
 
 	//If the max size if the 2d vector is reached, the 2d vector is resized to double its size.
 	//The extended set contains all 0 (boolean)
@@ -46,6 +58,11 @@ int Use::insertUses(int s1, int varIndex){
 }
 
 int Use::insertUsesProc(int proc1, int varIndex){
+
+	if(proc1 < 0 || varIndex < 0){
+		return -1;
+	}
+
 		//If the max size if the 2d vector is reached, the 2d vector is resized to double its size.
 	//The extended set contains all 0 (boolean)
 	//Also, update the MAX_SIZE global variable.
@@ -63,6 +80,11 @@ int Use::insertUsesProc(int proc1, int varIndex){
 //Method to get the variables modified in stmt s1
 std::vector<int> Use::getUsedVarAtStmt(int s1){
 	vector<int> usedVar;
+
+	if(s1 < 0){
+		return usedVar;
+	}
+
 	for(std::size_t i = 0; i < UseTable.size(); i++){
 		if(UseTable[s1][i] == 1){
 			usedVar.push_back(i);
@@ -74,6 +96,11 @@ std::vector<int> Use::getUsedVarAtStmt(int s1){
 
 std::vector<int> Use::getUsedVarAtProc(int proc1){
 	vector<int> usedVar;
+
+	if(proc1 < 0){
+		return usedVar;
+	}
+
 	for(std::size_t i = 0; i < UseTableProc.size(); i++){
 		if(UseTableProc[proc1][i] == 1){
 			usedVar.push_back(i);
@@ -87,6 +114,11 @@ std::vector<int> Use::getUsedVarAtProc(int proc1){
 std::vector<int> Use::getStmtUsingVar(int varIndex)
 {
 	vector<int> useStmt;
+
+	if(varIndex < 0){
+		return useStmt;
+	}
+
 	for(std::size_t i = 0; i < UseTable.size(); i++){
 		if(UseTable[i][varIndex] == 1){
 			useStmt.push_back(i);
@@ -99,6 +131,11 @@ std::vector<int> Use::getStmtUsingVar(int varIndex)
 std::vector<int> Use::getProcUsingVar(int varIndex)
 {
 	vector<int> useProc;
+
+	if(varIndex < 0){
+		return useProc;
+	}
+
 	for(std::size_t i = 0; i < UseTable.size(); i++){
 		if(UseTableProc[i][varIndex] == 1){
 			useProc.push_back(i);
@@ -106,52 +143,3 @@ std::vector<int> Use::getProcUsingVar(int varIndex)
 	}
 	return useProc;
 }
-//
-////Method to get all statements modifying some variable
-//std::vector<int> Use::getAllUsingStmt(){
-//	vector<int> stmt;
-//	for(std::size_t i = 0; i < UseTable.size(); i++){
-//		for(std::size_t j = 0; j < UseTable[i].size(); j++){
-//			if(UseTable[i][j] == 1){
-//				stmt.push_back(i);
-//			}
-//		}
-//	}
-//
-//	return stmt;
-//}
-//
-////Method to get all variables being modified 
-//std::vector<int> Use::getAllUsedVar(){
-//	vector<int> var;
-//	for(std::size_t i = 0; i < UseTable.size(); i++){
-//		for(std::size_t j = 0; j < UseTable[i].size(); j++){
-//			if(UseTable[i][j] == 1){
-//				var.push_back(j);
-//			}
-//		}
-//	}
-//
-//	return var;
-//}
-//
-//int Use::getSize()
-//{
-//	return UseTable.size();
-//}
-
-//void Use::printTable()
-//{
-//	for(size_t index=0; index < UseTable.size(); ++index)
-//	{
-//		pair<int, int> thisPair = UseTable.at(index);
-//		cout << thisPair.first << " " << thisPair.second << endl;
-//	}
-//	cout << " " << endl;
-//}
-
-//Private method to  make a pair of stmt numbers
-  //std::pair<int,int> make_pair (int x, int y)
-  //{
-  //  return ( std::pair<int,int>(x,y) );
-  //}

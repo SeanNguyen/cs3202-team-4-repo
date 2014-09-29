@@ -2,7 +2,7 @@
 #include "SystemTest1.h"
 
 void SystemTest1::setUp() {
-	PKB::resetPBK();
+	PKB::resetPKB();
 }
 
 void SystemTest1::tearDown() {
@@ -11,29 +11,8 @@ void SystemTest1::tearDown() {
 CPPUNIT_TEST_SUITE_REGISTRATION( SystemTest1 );
 
 void SystemTest1::test1() {
-	/*string source = "..\\..\\Tests\\Source1.txt";
+	string source = "..\\..\\Tests\\Source1.txt";
 	string queries = "..\\..\\Tests\\Queries1.txt";
-	Parser parser;
-	QueryProcessor qp(queries);
-	
-	parser.parse(source);
-	parser.buildPKB();
-
-	vector<vector<string>> results = qp.Process();
-
-	for (size_t i=0; i<results.size(); i++) {
-		cout << "Query " << i+1 << ": ";
-		for (size_t j=0; j< results[i].size(); j++) {
-			cout << results[i][j] << " ";
-		}
-		cout <<endl;
-	}*/
-
-}
-
-void SystemTest1::testCallsCallStar() {
-	string source = "..\\..\\Tests\\SourceSimpleCall.txt";
-	string queries = "..\\..\\Tests\\QueriesSimpleCall.txt";
 	Parser parser;
 	QueryProcessor qp(queries);
 	
@@ -50,6 +29,27 @@ void SystemTest1::testCallsCallStar() {
 		cout <<endl;
 	}
 
+}
+
+void SystemTest1::testCallsCallStar() {
+	/*string source = "..\\..\\Tests\\SourceSimpleCall.txt";
+	string queries = "..\\..\\Tests\\QueriesSimpleCall.txt";
+	Parser parser;
+	QueryProcessor qp(queries);
+	
+	parser.parse(source);
+	parser.buildPKB();
+
+	vector<vector<string>> results = qp.Process();
+
+	for (size_t i=0; i<results.size(); i++) {
+		cout << "Query " << i+1 << ": ";
+		for (size_t j=0; j< results[i].size(); j++) {
+			cout << results[i][j] << " ";
+		}
+		cout <<endl;
+	}
+*/
 }
 
 void SystemTest1::test2() {
@@ -155,4 +155,24 @@ void SystemTest1::test6() {
 		cout <<endl;
 	}
 */
+}
+
+void SystemTest1::testWithCls() {
+	/*string source = "..\\..\\Tests\\Source1.txt";
+	string queries = "..\\..\\Tests\\Queries8_1-WithClause.txt";
+	Parser parser;
+	QueryProcessor qp(queries);
+	
+	parser.parse(source);
+	parser.buildPKB();
+
+	vector<vector<string>> results = qp.Process();
+
+	for (size_t i=0; i<results.size(); i++) {
+		cout << "Query " << i+1 << ": ";
+		for (size_t j=0; j< results[i].size(); j++) {
+			cout << results[i][j] << " ";
+		}
+		cout <<endl;
+	}*/
 }

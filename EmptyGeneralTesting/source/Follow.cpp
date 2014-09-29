@@ -24,6 +24,10 @@ bool Follow::isFollows(int s1, int s2){
  //     cout << endl;
  //  }
 	
+	if(s1 < 0 || s2 < 0){
+		return false;
+	}
+
 	if(Follow::followTable[s1][s2] == 1){
 		return true;
 	} 
@@ -34,6 +38,11 @@ bool Follow::isFollows(int s1, int s2){
 
 bool Follow::isFollowsStar(int s1, int s2)
 {
+
+	if(s1 < 0 || s2 < 0){
+		return false;
+	}
+
 	bool isFollowStar = false;
 	if (s1 >= 1 && s2 >= 1)
 	{
@@ -52,6 +61,9 @@ bool Follow::isFollowsStar(int s1, int s2)
 // Method to insert a pair of following statement numbers
 int Follow::insertFollows(int s1, int s2){
 
+	if(s1 < 0 || s2 < 0){
+		return -1;
+	}
 
 	//If the max size (100) if the 2d vector is reached, the 2d vector is resized to double its size.
 	//The extended set contains all 0 (boolean)
@@ -72,6 +84,10 @@ int Follow::insertFollows(int s1, int s2){
 
 // Method to get the following statement to statement number s1
 int Follow::getFollowingStmt(int s1){
+
+	if(s1 < 0){
+		return -1;
+	}
 	
 	for(std::size_t i = 0; i < followTable.size(); i++){
 		if(followTable[s1][i] == 1){
@@ -83,6 +99,10 @@ int Follow::getFollowingStmt(int s1){
 
 // Method to get statement which is followed by statement s1
 int Follow::getFollowedStmt(int s1){
+
+	if(s1 < 0){
+		return -1;
+	}
 
 	for(std::size_t i = 0; i < followTable.size(); i++){
 		if(followTable[i][s1] == 1){
@@ -114,7 +134,13 @@ std::vector<int> Follow::getFollowingStarStmtHelper(int s1, std::vector<int> &ac
 //assuming there will be inserts like (1, 2), (1, 3) then a list is better.
 std::vector<int> Follow::getFollowingStarStmt(int s1){
 
+
+
 	std::vector<int> followingStar;
+
+	if(s1 < 0){
+		return followingStar;
+	}
 	followingStar = getFollowingStarStmtHelper(s1, followingStar);
 
 	////get the immediate ones first
@@ -151,6 +177,11 @@ std::vector<int> Follow::getFollowedStarStmtHelper(int s1, std::vector<int> &acc
 std::vector<int> Follow::getFollowedStarStmt(int s1){
 
 	std::vector<int> followedStar;
+
+	if(s1 < 0){
+		return followedStar;
+	}
+
 	followedStar = getFollowedStarStmtHelper(s1, followedStar);
 
 	//for(std::size_t i = 0; i < followTable.size(); i++){

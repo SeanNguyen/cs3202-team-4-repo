@@ -1,0 +1,17 @@
+3
+cat: All Category
+1 - Modifies, ImplStmtLine ::
+assign a;
+Select a such that Modifies(a, "food")
+4, 10, 11, 12, 14
+5000
+2 - Modifies, ImplStmtLine ::
+variable var;
+Select var such that Modifies(24, var)
+work
+5000
+3 - Modifies, ImplStmtLine ::
+stmt s;
+Select s such that Modifies(s, "mayo")
+35, 33, 31, 26, 25, 21
+5000

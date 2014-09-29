@@ -1,0 +1,224 @@
+44
+cat: Affects
+1 - Affects ::
+assign a1;
+Select a1 such that Affects(103, a1)
+103, 104, 113, 114, 119
+5000
+2 - Affects ::
+assign a1;
+Select a1 such that Affects(104, a1)
+103, 113
+5000
+3 - Affects ::
+assign a1;
+Select a1 such that Affects(105, a1)
+103, 104, 118
+5000
+4 - Affects ::
+assign a1;
+Select a1 such that Affects(106, a1)
+none
+5000
+5 - Affects ::
+assign a1;
+Select a1 such that Affects(107, a1)
+103, 107
+5000
+6 - Affects ::
+assign a1;
+Select a1 such that Affects(108, a1)
+103, 108
+5000
+7 - Affects ::
+assign a1;
+Select a1 such that Affects(109, a1)
+109
+5000
+8 - Affects ::
+assign a1;
+Select a1 such that Affects(113, a1)
+114, 115, 116
+5000
+9 - Affects ::
+assign a1;
+Select a1 such that Affects(114, a1)
+103, 113, 114, 115, 119
+5000
+10 - Affects ::
+assign a1;
+Select a1 such that Affects(115, a1)
+103, 104, 116
+5000
+11 - Affects ::
+assign a1;
+Select a1 such that Affects(116, a1)
+103, 113
+5000
+12 - Affects ::
+assign a1;
+Select a1 such that Affects(118, a1)
+105
+5000
+13 - Affects ::
+assign a1;
+Select a1 such that Affects(119, a1)
+none
+5000
+cat: Affects*
+14 - Affects ::
+assign a1;
+Select a1 such that Affects*(103, a1)
+103, 104, 113, 114, 115, 116, 119
+5000
+15 - Affects ::
+assign a1;
+Select a1 such that Affects*(104, a1)
+103, 104, 113, 114, 115, 116, 119
+5000
+16 - Affects ::
+assign a1;
+Select a1 such that Affects*(105, a1)
+103, 104, 105, 113, 114, 115, 116, 118, 119
+5000
+17 - Affects ::
+assign a1;
+Select a1 such that Affects*(106, a1)
+none
+5000
+18 - Affects ::
+assign a1;
+Select a1 such that Affects*(107, a1)
+103, 104, 107, 113, 114, 115, 116, 119
+5000
+19 - Affects ::
+assign a1;
+Select a1 such that Affects*(108, a1)
+103, 104, 108, 113, 114, 115, 116, 119
+5000
+20 - Affects ::
+assign a1;
+Select a1 such that Affects*(109, a1)
+109
+5000
+21 - Affects ::
+assign a1;
+Select a1 such that Affects*(113, a1)
+103, 104, 113, 114, 115, 116, 119
+5000
+22 - Affects ::
+assign a1;
+Select a1 such that Affects*(114, a1)
+103, 104, 113, 114, 115, 116, 119
+5000
+23 - Affects ::
+assign a1;
+Select a1 such that Affects*(115, a1)
+103, 104, 113, 114, 115, 116, 119
+5000
+24 - Affects ::
+assign a1;
+Select a1 such that Affects*(116, a1)
+103, 104, 113, 114, 115, 116, 119
+5000
+25 - Affects ::
+assign a1;
+Select a1 such that Affects*(118, a1)
+103, 104, 105, 113, 114, 115, 116, 118, 119
+5000
+26 - Affects ::
+assign a1;
+Select a1 such that Affects*(119, a1)
+none
+5000
+cat: Affects
+27 - Affects ::
+assign a1;
+Select a1 such that Affects*(a1, 55)
+55, 56, 57, 64, 65, 74, 77
+5000
+28 - Affects ::
+assign a1;
+Select a1 such that Affects*(a1, 56)
+55, 56, 57, 64, 65, 74, 77
+5000
+29 - Affects ::
+assign a1;
+Select a1 such that Affects*(a1, 57)
+55, 56, 57, 64, 65, 74, 77
+5000
+30 - Affects ::
+assign a1;
+Select a1 such that Affects*(a1, 62)
+55, 56, 57, 64, 65, 69, 70, 74, 77
+5000
+31 - Affects ::
+assign a1;
+Select a1 such that Affects*(a1, 64)
+none
+5000
+32 - Affects ::
+assign a1;
+Select a1 such that Affects*(a1, 65)
+none
+5000
+33 - Affects ::
+assign a1;
+Select a1 such that Affects*(a1, 66)
+67, 73, 75
+5000
+34 - Affects ::
+assign a1;
+Select a1 such that Affects*(a1, 67)
+none
+5000
+35 - Affects ::
+assign a1;
+Select a1 such that Affects*(a1, 69)
+55, 56, 57, 64, 65, 69, 70, 74, 77
+5000
+36 - Affects ::
+assign a1;
+Select a1 such that Affects*(a1, 70)
+55, 56, 57, 64, 65, 69, 70, 74, 77
+5000
+37 - Affects ::
+assign a1;
+Select a1 such that Affects*(a1, 71)
+55, 56, 57, 64, 65, 69, 70, 74, 77
+5000
+38 - Affects ::
+assign a1;
+Select a1 such that Affects*(a1, 73)
+67
+5000
+39 - Affects ::
+assign a1;
+Select a1 such that Affects*(a1, 74)
+55, 56, 57,  64, 65, 74, 77
+5000
+40 - Affects ::
+assign a1;
+Select a1 such that Affects*(a1, 75)
+67, 73, 75
+5000
+41 - Affects ::
+assign a1;
+Select a1 such that Affects*(a1, 77)
+55, 56, 57,  64, 65, 74, 77
+5000
+42 - Affects ::
+assign a1;
+Select a1 such that Affects*(a1, 119)
+103, 104, 105, 107, 108, 113, 114, 115, 116, 118
+5000
+43 - Affects ::
+assign a1, a2;
+Select a1 such that Affects*(a1, 118)
+105, 118
+5000
+44 - Affects ::
+procedure p1, p2; assign a1, a2;
+Select a1 such that Affects(a1, a2) with a2.stmt#=55
+56, 64, 74, 77
+5000
