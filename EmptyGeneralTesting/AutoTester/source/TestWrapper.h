@@ -17,7 +17,7 @@
 class TestWrapper : public AbstractWrapper {
  public:
 
-	 static volatile bool GlobalStop;
+	// static volatile bool GlobalStop;
 
   // default constructor
   TestWrapper();
