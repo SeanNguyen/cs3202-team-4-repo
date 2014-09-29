@@ -119,7 +119,7 @@ void QueryEvaluator::checkQueryCondition(int childIndex, vector<string> values, 
 
 	if (child.getType()==PatternCls) {
 		// find values satisfying pattern condition
-		checkPatternCondition(child, values, result, check, childIndex);
+		// checkPatternCondition(child, values, result, check, childIndex);
 	}
 
 	if (child.getType()==WithCls) {

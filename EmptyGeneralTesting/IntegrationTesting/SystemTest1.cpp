@@ -12,7 +12,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION( SystemTest1 );
 
 void SystemTest1::test1() {
 	string source = "..\\..\\Tests\\Source1.txt";
-	string queries = "..\\..\\Tests\\Queries1.txt";
+	string queries = "..\\..\\Tests\\Queries1_TestBasic.txt";
 	Parser parser;
 	QueryProcessor qp(queries);
 	
@@ -32,7 +32,7 @@ void SystemTest1::test1() {
 }
 
 void SystemTest1::testCallsCallStar() {
-	/*string source = "..\\..\\Tests\\SourceSimpleCall.txt";
+	string source = "..\\..\\Tests\\SourceSimpleCall.txt";
 	string queries = "..\\..\\Tests\\QueriesSimpleCall.txt";
 	Parser parser;
 	QueryProcessor qp(queries);
@@ -49,7 +49,7 @@ void SystemTest1::testCallsCallStar() {
 		}
 		cout <<endl;
 	}
-*/
+
 }
 
 void SystemTest1::test2() {
