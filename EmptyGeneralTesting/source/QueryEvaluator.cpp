@@ -123,7 +123,6 @@ void QueryEvaluator::checkQueryCondition(int childIndex, vector<string> values, 
 	}
 
 	if (child.getType()==WithCls) {
-		cout << "checkpoint 009" <<endl;
 		checkWithCondition(child, values, result, check, childIndex);
 	}
 }
@@ -568,10 +567,9 @@ void QueryEvaluator::checkPatternCondition(TNode patternNode,vector<string> valu
 	TNode * child1 = patternNode.getChildAtIndex(0);
 	string child1Name = child1 -> getValue();
 	int child1Index = table.getIndex(child1Name);
+	string type = table.getType(child1Name);
+	Symbol child1Type = SyntaxHelper::getSymbolType(type);
 	string child1Value = values[child1Index];
-
-	string type1 = table.getType(child1Name);
-	Symbol child1Type = SyntaxHelper::getSymbolType(type1);
 
 	if (child1Value=="-1") {
 		vector<string> child1Values = getAllArgValues(child1Type);
@@ -583,38 +581,36 @@ void QueryEvaluator::checkPatternCondition(TNode patternNode,vector<string> valu
 			values[child1Index] = child1Values[i];
 			checkPatternCondition(patternNode, values, result, check, childIndex);
 		}
-	} else {
-		switch (child1Type) {
-		case Assign:
-			{
-				TNode * arg1Node = child1 ->getChildAtIndex(0);
-				TNode * arg2Node = child1 ->getChildAtIndex(1);
-				handlePatternLeftHand(child1Value, arg1Node, values, check);
-				handlePatternRightHand(child1Value, arg1Node, values, check);
-				break;
-			}
-		case While:
-			{
-				TNode * arg1Node = child1 ->getChildAtIndex(0);
-				handlePatternLeftHand(child1Value, arg1Node, values, check);
-				break;
-			}
-		case If:
-			{
-				TNode * arg1Node = child1 ->getChildAtIndex(0);
-				handlePatternLeftHand(child1Value, arg1Node, values, check);
-				break;
-			}
-		default:
+		return;
+	}
+
+	// handle left hand side of pattern condition
+	TNode * arg1Node = child1 -> getChildAtIndex(0);
+	handlePatternLeftHand(child1Value, arg1Node, values,check);
+
+	if (!check) {
+		checkQueryCondition(childIndex+1, values, result, check);
+		return;
+	}
+
+	// handle right hand side of pattern condition
+	// by definition, only consider pattern of assignment 
+	switch (child1Type) {
+	case Assign:
+		{
+			TNode * arg2Node = child1->getChildAtIndex(1);
+			handlePatternRightHand(child1Value, arg2Node, values, check);
 			break;
 		}
-
-		checkQueryCondition(childIndex+1, values, result, check);
+	default:
+		break;
 	}
+
+	checkQueryCondition(childIndex+1, values, result, check);
+
 }
 
 void QueryEvaluator::handlePatternLeftHand(string stmt, TNode * leftNode, vector<string> & values, bool & check) {
-	check = true;
 	Symbol leftType = leftNode->getType();
 	string leftName = leftNode->getValue();
 	int leftIndex = table.getIndex(leftName);
@@ -623,6 +619,7 @@ void QueryEvaluator::handlePatternLeftHand(string stmt, TNode * leftNode, vector
 	case Underline: 
 		{
 			check = true;
+			return;
 		}
 	case QuerySymbol:
 		{
@@ -713,8 +710,6 @@ void QueryEvaluator::checkWithCondition(TNode withNode, vector<string> values, v
 	Symbol child2Type = child2 -> getType();
 	string child1Name = child1 -> getValue();
 	string child2Name = child2 -> getValue();
-
-	cout << "checkpoint 011" <<endl;
 
 	switch (child1Type) {
 	case Const:

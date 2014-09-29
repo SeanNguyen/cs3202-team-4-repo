@@ -50,6 +50,12 @@ Symbol SyntaxHelper::getSymbolType(string type) {
 	if (type.compare("Calls*")==0) {
 		return CallsS;
 	}
+	if (type.compare("Next")==0) {
+		return Next;
+	}
+	if (type.compare("Next*")==0) {
+		return NextS;
+	}
 
 	return Undefined;
 }
@@ -113,6 +119,10 @@ string SyntaxHelper::SymbolToString(Symbol symbol) {
 		return CALLS_RLT;
 	case CallsS:
 		return CALLSSTAR_RLT;
+	case Next:
+		return NEXT_RLT;
+	case NextS:
+		return NEXTSTAR_RLT;
 	default:
 		return "Undefined";
 	}
@@ -127,7 +137,8 @@ bool SyntaxHelper::isRelation(string str) {
 	if (str==USES_RLT) return true;
 	if (str==CALLS_RLT) return true;
 	if (str==CALLSSTAR_RLT) return true;
-	
+	if (str==NEXT_RLT) return true;
+	if (str==NEXTSTAR_RLT) return true;	
 
 	return false;
 }
