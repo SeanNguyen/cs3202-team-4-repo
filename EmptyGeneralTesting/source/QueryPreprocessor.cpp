@@ -191,9 +191,11 @@ void QueryPreprocessor::preprocessQueryPart(QueryTree& tree, SymbolTable table, 
 	TNode * result = preprocessResultNode(list, table, errors, 1);
 	root -> addChild(result);
 
+	Symbol currentCondition = Undefined;
 	// find and preprocess conditions of query
 	for (size_t i=2; i<list.size(); i++) {
 		if (list[i]=="such" && list[i+1]=="that") {
+			currentCondition = SuchThatCls;
 			unsigned index = findFirstElement(list, i, ")");
 			if ((int)index>i) {
 				vector<string> suchThatCondition = subList(list, i, index);
@@ -203,6 +205,7 @@ void QueryPreprocessor::preprocessQueryPart(QueryTree& tree, SymbolTable table, 
 				i = index;
 			}
 		} else if (list[i]=="pattern") {
+			currentCondition = PatternCls;
 			unsigned index = findFirstElement(list, i, ")");
 			if ((int)index>i) {
 				vector<string> patternCondition = subList(list, i, index);
@@ -212,8 +215,47 @@ void QueryPreprocessor::preprocessQueryPart(QueryTree& tree, SymbolTable table, 
 				i = index;
 			}
 		} else if (list[i]=="with") {
+			currentCondition = WithCls;
 			TNode * withCls = preprocessWithCondition(list, table, errors, i);
 			root -> addChild(withCls);
+		} else if (list[i]=="and") {
+			switch (currentCondition) {
+			case SuchThatCls:
+				{
+					unsigned index = findFirstElement(list, i, ")");
+					if ((int)index>i) {
+						vector<string> suchThatCondition = subList(list, i, index);
+						TNode * suchThat = preprocessSuchThatCondition(suchThatCondition, table, errors);
+						root -> addChild(suchThat);
+						// go to element after this condition
+						i = index;
+					}
+					break;
+				}
+			case PatternCls:
+				{
+					unsigned index = findFirstElement(list, i, ")");
+					if ((int)index>i) {
+						vector<string> patternCondition = subList(list, i, index);
+						TNode * pattern = preprocessPatternCondition(patternCondition, table, errors);
+						root -> addChild(pattern);
+						// go to element after this condition
+						i = index;
+					}
+					break;
+				}
+			case WithCls:
+				{
+					currentCondition = WithCls;
+					TNode * withCls = preprocessWithCondition(list, table, errors, i);
+					root -> addChild(withCls);
+				}
+			default:
+				{
+					errors.push_back("Error: find \"and\" with no previous clause");
+					break;
+				}
+			}
 		} else {
 		}
 	}
