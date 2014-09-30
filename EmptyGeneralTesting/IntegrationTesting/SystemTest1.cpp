@@ -186,8 +186,8 @@ void SystemTest1::testWithCls() {
 }
 
 void SystemTest1::testNext() {
-	/*string source = "..\\..\\Tests\\Source8.txt";
-	string queries = "..\\..\\Tests\\Queries8_TestNext.txt";
+	string source = "..\\..\\Tests\\source SIMPLE iter 2 consultaiton.txt";
+	string queries = "..\\..\\Tests\\test queries iter 2 consultaiton.txt";
 	Parser parser;
 	QueryProcessor qp(queries);
 	
@@ -203,5 +203,5 @@ void SystemTest1::testNext() {
 			cout << results[i][j] << " ";
 		}
 		cout <<endl;
-	}*/
+	}
 }

@@ -299,7 +299,7 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 			}
 			case Modifies:
 			{
-				int var2;
+				int var2 = 0;
 				vector<int> stmts;
 
 				if(table.getType(arg1Value)==KEYWORD_PROCEDURE){
