@@ -25,12 +25,12 @@ assign a;
 Select a pattern a(_,_)
 
 5000
-5
+6
 assign a;
 Select a pattern a("i",_)
 
 5000
-6 
+
 assign a; variable v;
 Select a pattern a(v,_) with v.varName = "j"
 

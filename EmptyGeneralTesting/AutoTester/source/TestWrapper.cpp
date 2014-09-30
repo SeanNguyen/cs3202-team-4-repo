@@ -23,16 +23,7 @@ void TestWrapper::parse(std::string filename) {
 	// create a Parser obj
 	Parser parser;
 	parser.parse(filename);
-	parser.buildVarTable();
-	parser.buildStatTable();
-	parser.buildFollowTable();
-	parser.buildParentTable();
-	parser.buildModifyTable();
-	parser.buildUseTable();
-
-	while (true) {
-		cout << "Error! Why can you run?" <<endl;
-	}
+	//parser.buildPKB();
 }
 
 // method to evaluating a query
@@ -43,7 +34,6 @@ void TestWrapper::evaluate(std::string query, std::list<std::string>& results){
   std::vector<std::string> resultVector = queryProcessor.Process(query);
   for (size_t i=0; i<resultVector.size(); i++) {
 	  results.push_back(resultVector[i]);
-	  results.push_back("TESTING");
   }	
   // store the answers to the query in the results list (it is initially empty)
   // each result must be a string.

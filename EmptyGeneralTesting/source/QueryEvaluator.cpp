@@ -361,6 +361,14 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 				break;
 
 			}
+			case Nexts:
+				{
+					break;
+				}
+			case NextsS:
+				{
+					break;
+				}
 			default:
 				break;
 		}
@@ -591,20 +599,17 @@ void QueryEvaluator::checkPatternCondition(TNode patternNode,vector<string> valu
 	// handle left hand side of pattern condition
 	TNode * arg1Node = child1 -> getChildAtIndex(0);
 	handlePatternLeftHand(child1Value, arg1Node, values,check);
-
 	if (check==false) {
 		//cout << "CHECKPOINT 014" <<endl;
 		checkQueryCondition(childIndex+1, values, result, check);
 		return;
 	}
 
-	//cout << "CHECKPOINT 011" <<endl;
 	// handle right hand side of pattern condition
 	// by definition, only consider pattern of assignment 
 	switch (child1Type) {
 	case Assign:
 		{
-			//cout << "CHECKPOINT 012" <<endl;
 			TNode * arg2Node = child1->getChildAtIndex(1);
 			handlePatternRightHand(child1Value, arg2Node, values, check);
 			break;
@@ -632,25 +637,19 @@ void QueryEvaluator::handlePatternLeftHand(string stmt, TNode * leftNode, vector
 		{
 			string leftValue = values[leftIndex];
 			if (leftValue=="-1") {
-				string type = table.getType(leftName);
-				Symbol symbolType = SyntaxHelper::getSymbolType(type);
-				vector<string> leftValues = getAllArgValues(symbolType);
-				if (leftValues.size()==0) 
-				{
-					check = false;
-				}
-				for (size_t i=0; i<leftValues.size(); i++) {
-					values[leftIndex] = leftValues[i];
-					handlePatternLeftHand(stmt, leftNode, values, check);
-				}
+				int stmtNo = atoi(stmt.c_str());
+				TNode * stmtNode = PKB::getNodeOfStmt(stmtNo);
+
+				TNode * child1 = stmtNode->getChildAtIndex(0);
+				string child1Name = child1 -> getValue();
+				values[leftIndex] = child1Name;
 			} else {
 				int stmtNo = atoi(stmt.c_str());
 				TNode * stmtNode = PKB::getNodeOfStmt(stmtNo);
 
 				TNode * child1 = stmtNode->getChildAtIndex(0);
 				string child1Value = child1->getValue();
-				if (child1Value==leftValue) { 
-					//cout << "CHECKPOINT 009: " <<stmt << " " << leftValue <<endl; 
+				if (child1Value==leftValue) {  
 					check = true;
 				}
 				else {
@@ -779,7 +778,6 @@ void QueryEvaluator::checkWithCondition(TNode withNode, vector<string> values, v
 				switch (child2Type) {
 					case Const:
 						{
-							cout << "checkpoint 010" <<endl;
 							check = (child1Value==child2Name);
 							checkQueryCondition(childIndex+1, values, result, check);
 							return;
