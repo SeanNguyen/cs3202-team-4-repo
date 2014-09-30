@@ -260,17 +260,20 @@ void QueryPreprocessor::preprocessQueryPart(QueryTree& tree, SymbolTable table, 
 		}
 	}
 
+	// final step: sort children node of root for better evaluation
+	root -> sortChildrenList();
+
 	tree.setRoot(root);
 }
 
 TNode * QueryPreprocessor::preprocessResultNode(vector<string> list, SymbolTable table, vector<string>& errors, int i) {
 	// FOR ITERATION 1 AND 2: BOOLEAN and single value
 	if (list[i]=="BOOLEAN") {
-		TNode * node = new TNode(ResultCls, "BOOLEAN");
+		TNode * node = new TNode(ResultCls, "a-BOOLEAN");
 		return node;
 	} else {
 		if (table.isSymbol(list[i])) {
-			TNode * node = new TNode(ResultCls, "single");
+			TNode * node = new TNode(ResultCls, "a-single");
 			TNode * nodeChild = new TNode(QuerySymbol, list[i]);
 			node -> addChild(nodeChild);
 			return node;
@@ -285,7 +288,7 @@ TNode * QueryPreprocessor::preprocessResultNode(vector<string> list, SymbolTable
 TNode * QueryPreprocessor::preprocessSuchThatCondition(vector<string> list, SymbolTable table, vector<string>& errors) {
 	unsigned size = list.size();
 	// create first node for such that
-	TNode * suchThatNode = new TNode(SuchThatCls);
+	TNode * suchThatNode = new TNode(SuchThatCls, "c");
 
 	//expect first value to be relationship's name
 	string relation = list[0];
@@ -344,7 +347,7 @@ TNode * QueryPreprocessor::preprocessSuchThatCondition(vector<string> list, Symb
 TNode * QueryPreprocessor::preprocessPatternCondition(vector<string> list, SymbolTable table, vector<string>& errors) {
 	unsigned size = list.size();
 	// create first node for pattern
-	TNode * pattern = new TNode(PatternCls);
+	TNode * pattern = new TNode(PatternCls, "d");
 
 	vector<string> patternContent = subList(list, 1, size-1);
 	string argName = list[0];
@@ -636,7 +639,7 @@ TNode * QueryPreprocessor::preprocessExpressionNode(vector<string> list, vector<
 }
 
 TNode * QueryPreprocessor::preprocessWithCondition(vector<string> list, SymbolTable table, vector<string> & errors, int index) {
-	TNode * withCls = new TNode(WithCls);
+	TNode * withCls = new TNode(WithCls, "b");
 
 	string arg1 = list[index+1];
 	string arg1Type = table.getType(arg1);

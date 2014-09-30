@@ -926,7 +926,7 @@ void QueryEvaluator::updateResultList(vector<string> values, vector<string>& res
 	Symbol paramType = child.getType();
 	string paramName = child.getValue();
 
-	if (child1Name=="BOOLEAN") { // BOOLEAN query
+	if (child1Name=="a-BOOLEAN") { // BOOLEAN query
 		result.push_back("true");
 		return;
 	}
