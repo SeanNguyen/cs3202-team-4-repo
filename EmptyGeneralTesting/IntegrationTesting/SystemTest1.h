@@ -16,6 +16,7 @@ class SystemTest1 : public CPPUNIT_NS::TestFixture {
 	CPPUNIT_TEST( test6 );
 	CPPUNIT_TEST( testCallsCallStar );
 	CPPUNIT_TEST( testWithCls );
+	CPPUNIT_TEST( testNext );
 	//CPPUNIT_TEST( TestModifyUsesProc );
 	CPPUNIT_TEST_SUITE_END();
 public:
@@ -30,5 +31,6 @@ private:
 	void test6();
 	void testCallsCallStar();
 	void testWithCls();
+	void testNext();
 	//void TestModifyUsesProc();
 };
