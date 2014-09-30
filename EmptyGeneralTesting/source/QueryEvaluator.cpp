@@ -268,7 +268,7 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 				if (result!=-1) {
 					resultList.push_back(intToString(result));
 				}
-				return resultList;
+				break;
 			}
 			case FollowsS:
 			{
@@ -277,7 +277,7 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 				for (size_t i=0; i<stmts.size(); i++) {
 					resultList.push_back(intToString(stmts[i]));
 				}
-				return resultList;
+				break;
 			}
 			case Parent:
 			{
@@ -286,7 +286,7 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 				if (result!=-1) {
 					resultList.push_back(intToString(result));
 				}
-				return resultList;
+				break;
 			}
 			case ParentS:
 			{
@@ -295,7 +295,7 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 				for (size_t i=0; i<stmts.size(); i++) {
 					resultList.push_back(intToString(stmts[i]));
 				}
-				return resultList;
+				break;
 			}
 			case Modifies:
 			{
@@ -313,7 +313,7 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 				for (size_t i=0; i<stmts.size(); i++) {
 					resultList.push_back(intToString(stmts[i]));
 				}
-				return resultList;
+				break;
 			}
 			case Uses:
 			{
@@ -363,10 +363,20 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 			}
 			case Nexts:
 				{
+					int stmt2 = atoi(arg2Value.c_str());
+					vector<int> arg1Values = PKB::getPreviousStmts(stmt2);
+					for (size_t i=0; i<arg1Values.size(); i++) {
+						resultList.push_back(intToString(arg1Values[i]));
+					}
 					break;
 				}
 			case NextsS:
 				{
+					int stmt2 = atoi(arg2Value.c_str());
+					vector<int> arg1Values = PKB::getPreviousStarStmts(stmt2);
+					for (size_t i=0; i<arg1Values.size(); i++) {
+						resultList.push_back(intToString(arg1Values[i]));
+					}
 					break;
 				}
 			default:
@@ -470,7 +480,24 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 					}
 				}
 				break;
-				
+			}
+			case Nexts:
+			{
+				int stmt1 = atoi(arg2Value.c_str());
+				vector<int> arg2Values = PKB::getNextStmts(stmt1);
+				for (size_t i=0; i<arg2Values.size(); i++) {
+					resultList.push_back(intToString(arg2Values[i]));
+				}
+				break;
+			}
+			case NextsS:
+			{
+				int stmt1 = atoi(arg2Value.c_str());
+				vector<int> arg2Values = PKB::getNextStarStmts(stmt1);
+				for (size_t i=0; i<arg2Values.size(); i++) {
+					resultList.push_back(intToString(arg2Values[i]));
+				}
+				break;
 			}
 			default:
 				break;
@@ -563,6 +590,18 @@ bool QueryEvaluator::isRelation(Symbol relation, string arg1Value, string arg2Va
 			proc2 = PKB::getProcIndex(arg2Value).front();
 		}
 		return PKB::isCallStar(proc1, proc2);
+	}
+	case Nexts:
+	{
+		int stmt1 = atoi(arg1Value.c_str());
+		int stmt2 = atoi(arg2Value.c_str());
+		return PKB::isNext(stmt1, stmt2);
+	}
+	case NextsS:
+	{
+		int stmt1 = atoi(arg1Value.c_str());
+		int stmt2 = atoi(arg2Value.c_str());
+		return PKB::isNextStar(stmt1, stmt2);
 	}
 	default:
 		return false;
