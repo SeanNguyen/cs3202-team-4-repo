@@ -53,3 +53,52 @@ void TNode::printTNode(int depth) {
 		child.printTNode(depth+1);
 	}
 }
+
+// sort the list of children based on their values
+// from lowest to highest
+// apply merge sort
+void TNode::sortChildrenList() {
+	int size = getNumChildren();
+	children = sortChildrenList(0, size-1);
+}
+
+vector<TNode *> TNode::sortChildrenList(int start, int end) {
+	vector<TNode *> list;
+	if (start>end) {
+		return list;
+	}
+	if (start==end) {
+		list.push_back(children[start]);
+		return list;
+	}
+	int midpoint = (start+end)/2;
+	vector<TNode *> firstHalf = sortChildrenList(start, midpoint);
+	vector<TNode *> secondHalf = sortChildrenList(midpoint+1, end);
+	list = mergeList(firstHalf, secondHalf);
+	return list;
+}
+
+vector<TNode *> TNode::mergeList(vector<TNode *> list1, vector<TNode *> list2) {
+	vector<TNode *> list;
+	unsigned int i=0; unsigned int j=0;
+	while (i<list1.size() && j<list2.size()) {
+		string val1 = list1[i] ->getValue();
+		string val2 = list2[j] ->getValue();
+		if (val1<val2) {
+			list.push_back(list1[i]);
+			i++;
+		} else {
+			list.push_back(list2[j]);
+			j++;
+		}
+	}
+	while(i<list1.size()) {
+		list.push_back(list1[i]);
+		i++;
+	}
+	while(j<list2.size()) {
+		list.push_back(list2[j]);
+		j++;
+	}
+	return list;
+}
