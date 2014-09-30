@@ -88,6 +88,7 @@ void QueryEvaluator::findResult(vector<string> values, vector<string>& result) {
 
 void QueryEvaluator::checkQueryCondition(int childIndex, vector<string> values, vector<string>&result, bool check) {
 	if (!check) {
+		//cout << "CHECKPOINT 002" << endl;
 		// return null result list
 		return;
 	}
@@ -96,6 +97,7 @@ void QueryEvaluator::checkQueryCondition(int childIndex, vector<string> values, 
 
 	// if no more condition to check
 	if (childIndex==root.getNumChildren()) {
+		//cout << "CHECKPOINT 003" <<endl;
 		// if all conditions are satisfied
 		if (check) {
 			// get result's value and update result list
@@ -112,6 +114,8 @@ void QueryEvaluator::checkQueryCondition(int childIndex, vector<string> values, 
 
 	// get root's child at index
 	TNode child = *root.getChildAtIndex(childIndex);
+	//cout << "CHECKPOINT 000: " << root.getNumChildren() <<endl;
+	//cout << "CHECKPOINT 001: " << SyntaxHelper::SymbolToString(child.getType()) <<endl;
 	if (child.getType()==SuchThatCls) {
 		// find values satisfying such that condition
 		checkSuchThatCondition(child, values, result, check, childIndex);
@@ -123,7 +127,6 @@ void QueryEvaluator::checkQueryCondition(int childIndex, vector<string> values, 
 	}
 
 	if (child.getType()==WithCls) {
-		cout << "checkpoint 009" <<endl;
 		checkWithCondition(child, values, result, check, childIndex);
 	}
 }
@@ -265,7 +268,7 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 				if (result!=-1) {
 					resultList.push_back(intToString(result));
 				}
-				return resultList;
+				break;
 			}
 			case FollowsS:
 			{
@@ -274,7 +277,7 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 				for (size_t i=0; i<stmts.size(); i++) {
 					resultList.push_back(intToString(stmts[i]));
 				}
-				return resultList;
+				break;
 			}
 			case Parent:
 			{
@@ -283,7 +286,7 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 				if (result!=-1) {
 					resultList.push_back(intToString(result));
 				}
-				return resultList;
+				break;
 			}
 			case ParentS:
 			{
@@ -292,7 +295,7 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 				for (size_t i=0; i<stmts.size(); i++) {
 					resultList.push_back(intToString(stmts[i]));
 				}
-				return resultList;
+				break;
 			}
 			case Modifies:
 			{
@@ -310,7 +313,7 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 				for (size_t i=0; i<stmts.size(); i++) {
 					resultList.push_back(intToString(stmts[i]));
 				}
-				return resultList;
+				break;
 			}
 			case Uses:
 			{
@@ -358,6 +361,24 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 				break;
 
 			}
+			case Nexts:
+				{
+					int stmt2 = atoi(arg2Value.c_str());
+					vector<int> arg1Values = PKB::getPreviousStmts(stmt2);
+					for (size_t i=0; i<arg1Values.size(); i++) {
+						resultList.push_back(intToString(arg1Values[i]));
+					}
+					break;
+				}
+			case NextsS:
+				{
+					int stmt2 = atoi(arg2Value.c_str());
+					vector<int> arg1Values = PKB::getPreviousStarStmts(stmt2);
+					for (size_t i=0; i<arg1Values.size(); i++) {
+						resultList.push_back(intToString(arg1Values[i]));
+					}
+					break;
+				}
 			default:
 				break;
 		}
@@ -459,7 +480,24 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 					}
 				}
 				break;
-				
+			}
+			case Nexts:
+			{
+				int stmt1 = atoi(arg2Value.c_str());
+				vector<int> arg2Values = PKB::getNextStmts(stmt1);
+				for (size_t i=0; i<arg2Values.size(); i++) {
+					resultList.push_back(intToString(arg2Values[i]));
+				}
+				break;
+			}
+			case NextsS:
+			{
+				int stmt1 = atoi(arg2Value.c_str());
+				vector<int> arg2Values = PKB::getNextStarStmts(stmt1);
+				for (size_t i=0; i<arg2Values.size(); i++) {
+					resultList.push_back(intToString(arg2Values[i]));
+				}
+				break;
 			}
 			default:
 				break;
@@ -553,6 +591,18 @@ bool QueryEvaluator::isRelation(Symbol relation, string arg1Value, string arg2Va
 		}
 		return PKB::isCallStar(proc1, proc2);
 	}
+	case Nexts:
+	{
+		int stmt1 = atoi(arg1Value.c_str());
+		int stmt2 = atoi(arg2Value.c_str());
+		return PKB::isNext(stmt1, stmt2);
+	}
+	case NextsS:
+	{
+		int stmt1 = atoi(arg1Value.c_str());
+		int stmt2 = atoi(arg2Value.c_str());
+		return PKB::isNextStar(stmt1, stmt2);
+	}
 	default:
 		return false;
 	}
@@ -568,10 +618,9 @@ void QueryEvaluator::checkPatternCondition(TNode patternNode,vector<string> valu
 	TNode * child1 = patternNode.getChildAtIndex(0);
 	string child1Name = child1 -> getValue();
 	int child1Index = table.getIndex(child1Name);
+	string type = table.getType(child1Name);
+	Symbol child1Type = SyntaxHelper::getSymbolType(type);
 	string child1Value = values[child1Index];
-
-	string type1 = table.getType(child1Name);
-	Symbol child1Type = SyntaxHelper::getSymbolType(type1);
 
 	if (child1Value=="-1") {
 		vector<string> child1Values = getAllArgValues(child1Type);
@@ -583,38 +632,36 @@ void QueryEvaluator::checkPatternCondition(TNode patternNode,vector<string> valu
 			values[child1Index] = child1Values[i];
 			checkPatternCondition(patternNode, values, result, check, childIndex);
 		}
-	} else {
-		switch (child1Type) {
-		case Assign:
-			{
-				TNode * arg1Node = child1 ->getChildAtIndex(0);
-				TNode * arg2Node = child1 ->getChildAtIndex(1);
-				handlePatternLeftHand(child1Value, arg1Node, values, check);
-				handlePatternRightHand(child1Value, arg1Node, values, check);
-				break;
-			}
-		case While:
-			{
-				TNode * arg1Node = child1 ->getChildAtIndex(0);
-				handlePatternLeftHand(child1Value, arg1Node, values, check);
-				break;
-			}
-		case If:
-			{
-				TNode * arg1Node = child1 ->getChildAtIndex(0);
-				handlePatternLeftHand(child1Value, arg1Node, values, check);
-				break;
-			}
-		default:
+		return;
+	}
+
+	// handle left hand side of pattern condition
+	TNode * arg1Node = child1 -> getChildAtIndex(0);
+	handlePatternLeftHand(child1Value, arg1Node, values,check);
+	if (check==false) {
+		//cout << "CHECKPOINT 014" <<endl;
+		checkQueryCondition(childIndex+1, values, result, check);
+		return;
+	}
+
+	// handle right hand side of pattern condition
+	// by definition, only consider pattern of assignment 
+	switch (child1Type) {
+	case Assign:
+		{
+			TNode * arg2Node = child1->getChildAtIndex(1);
+			handlePatternRightHand(child1Value, arg2Node, values, check);
 			break;
 		}
-
-		checkQueryCondition(childIndex+1, values, result, check);
+	default:
+		break;
 	}
+
+	checkQueryCondition(childIndex+1, values, result, check);
+
 }
 
 void QueryEvaluator::handlePatternLeftHand(string stmt, TNode * leftNode, vector<string> & values, bool & check) {
-	check = true;
 	Symbol leftType = leftNode->getType();
 	string leftName = leftNode->getValue();
 	int leftIndex = table.getIndex(leftName);
@@ -623,34 +670,32 @@ void QueryEvaluator::handlePatternLeftHand(string stmt, TNode * leftNode, vector
 	case Underline: 
 		{
 			check = true;
+			return;
 		}
 	case QuerySymbol:
 		{
 			string leftValue = values[leftIndex];
 			if (leftValue=="-1") {
-				string type = table.getType(leftName);
-				Symbol symbolType = SyntaxHelper::getSymbolType(type);
-				vector<string> leftValues = getAllArgValues(symbolType);
-				if (leftValues.size()==0) 
-				{
-					check = false;
-				}
-				for (size_t i=0; i<leftValues.size(); i++) {
-					values[leftIndex] = leftValues[i];
-					handlePatternLeftHand(stmt, leftNode, values, check);
-				}
+				int stmtNo = atoi(stmt.c_str());
+				TNode * stmtNode = PKB::getNodeOfStmt(stmtNo);
+
+				TNode * child1 = stmtNode->getChildAtIndex(0);
+				string child1Name = child1 -> getValue();
+				values[leftIndex] = child1Name;
 			} else {
 				int stmtNo = atoi(stmt.c_str());
 				TNode * stmtNode = PKB::getNodeOfStmt(stmtNo);
 
 				TNode * child1 = stmtNode->getChildAtIndex(0);
 				string child1Value = child1->getValue();
-				if (child1Value==leftValue) { 
+				if (child1Value==leftValue) {  
 					check = true;
 				}
-				else {check=false;} 
+				else {
+					check=false;
+				} 
 			}
-			break;
+			return;
 		}
 	case Const:
 		{
@@ -661,7 +706,7 @@ void QueryEvaluator::handlePatternLeftHand(string stmt, TNode * leftNode, vector
 			string child1Value = child1->getValue();
 			if (child1Value==leftName) { check = true; }
 			else {check=false;} 
-			break;
+			return;
 		}
 	default:
 		break;
@@ -713,8 +758,6 @@ void QueryEvaluator::checkWithCondition(TNode withNode, vector<string> values, v
 	Symbol child2Type = child2 -> getType();
 	string child1Name = child1 -> getValue();
 	string child2Name = child2 -> getValue();
-
-	cout << "checkpoint 011" <<endl;
 
 	switch (child1Type) {
 	case Const:
@@ -774,7 +817,6 @@ void QueryEvaluator::checkWithCondition(TNode withNode, vector<string> values, v
 				switch (child2Type) {
 					case Const:
 						{
-							cout << "checkpoint 010" <<endl;
 							check = (child1Value==child2Name);
 							checkQueryCondition(childIndex+1, values, result, check);
 							return;
@@ -884,7 +926,7 @@ void QueryEvaluator::updateResultList(vector<string> values, vector<string>& res
 	Symbol paramType = child.getType();
 	string paramName = child.getValue();
 
-	if (child1Name=="BOOLEAN") { // BOOLEAN query
+	if (child1Name=="a-BOOLEAN") { // BOOLEAN query
 		result.push_back("true");
 		return;
 	}

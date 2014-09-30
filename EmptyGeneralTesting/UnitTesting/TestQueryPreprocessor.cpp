@@ -31,9 +31,8 @@ void QueryPreprocessorTest::testBuildTree() {
 	CPPUNIT_ASSERT_EQUAL(1, size);
 	Tree tree = QueryRepresentator::getQueryTree(0);
 	TNode * root = tree.getRoot();
-	cout << endl << "TEST BUILD TREE: Query: stmt s1; Select s1" <<endl;
-	root -> printTNode();
-	//cout <<endl<< SyntaxHelper::SymbolToString(root.getType()) << endl;
+	// cout << endl << "TEST BUILD TREE: Query: stmt s1; Select s1" <<endl;
+	// root -> printTNode();
 }
 
 void QueryPreprocessorTest::testBuildSuchThatCls() {
@@ -44,8 +43,8 @@ void QueryPreprocessorTest::testBuildSuchThatCls() {
 
 	Tree tree = QueryRepresentator::getQueryTree(0);
 	TNode * root = tree.getRoot();
-	cout << endl << "TEST BUILD TREE: Query: procedure p, q; Select p such that Calls*(p, q)" <<endl;
-	root -> printTNode();
+	 cout << endl << "TEST BUILD TREE: Query: procedure p, q; Select p such that Calls*(p, q)" <<endl;
+	 root -> printTNode();
 }
 
 void QueryPreprocessorTest::testBuildPatternCls() {
@@ -56,8 +55,8 @@ void QueryPreprocessorTest::testBuildPatternCls() {
 
 	Tree tree = QueryRepresentator::getQueryTree(0);
 	TNode * root = tree.getRoot();
-	cout << endl << "TEST BUILD TREE: Query: assign a; Select a pattern a(_,_)" <<endl;
-	root -> printTNode();
+	// cout << endl << "TEST BUILD TREE: Query: assign a; Select a pattern a(_,_)" <<endl;
+	// root -> printTNode();
 }
 
 void QueryPreprocessorTest::testBuildWithCls() {
@@ -68,18 +67,18 @@ void QueryPreprocessorTest::testBuildWithCls() {
 
 	Tree tree = QueryRepresentator::getQueryTree(0);
 	TNode * root = tree.getRoot();
-	cout << endl << "TEST BUILD TREE: Query: procedure p; Select p with p.procName = \"Nothing\"" <<endl;
-	root -> printTNode();
+	// cout << endl << "TEST BUILD TREE: Query: procedure p; Select p with p.procName = \"Nothing\"" <<endl;
+	// root -> printTNode();
 }
 
 void QueryPreprocessorTest::testBuildComplexQuery1() {
 	QueryPreprocessor qp;
-	string query = "assign s; while w; Select BOOLEAN such that Parent(w, s) pattern s(\"x\", _\"x+y+z\"_)";
+	string query = "assign a1, a2; while w1, w2; Select a2 pattern a1(\"x\",_) and a2(\"x\",_\"x\"_) such that Affects(a1, a2) and Parent*(w2, a2) and Parent*(w1, w2)";
 	QueryRepresentator::reset();
 	qp.Preprocess(query);
 
 	Tree tree = QueryRepresentator::getQueryTree(0);
 	TNode * root = tree.getRoot();
-	cout << endl << "TEST BUILD TREE: Query: assign s; while w; Select BOOLEAN such that Parent(w, s) pattern s(\"x\", _\"x+y+z\"_)" <<endl;
+	cout << endl << "TEST BUILD TREE: Query: assign a1, a2; while w1, w2; Select a2 pattern a1(\"x\",_) and a2(\"x\",_\"x\"_) such that Affects(a1, a2) and Parent*(w2, a2) and Parent*(w1, w2)" <<endl;
 	root -> printTNode();
 } 

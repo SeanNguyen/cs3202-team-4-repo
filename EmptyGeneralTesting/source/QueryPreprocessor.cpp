@@ -191,32 +191,77 @@ void QueryPreprocessor::preprocessQueryPart(QueryTree& tree, SymbolTable table, 
 	TNode * result = preprocessResultNode(list, table, errors, 1);
 	root -> addChild(result);
 
+	Symbol currentCondition = Undefined;
 	// find and preprocess conditions of query
 	for (size_t i=2; i<list.size(); i++) {
 		if (list[i]=="such" && list[i+1]=="that") {
+			currentCondition = SuchThatCls;
 			unsigned index = findFirstElement(list, i, ")");
 			if ((int)index>i) {
-				vector<string> suchThatCondition = subList(list, i, index);
+				vector<string> suchThatCondition = subList(list, i+2, index);
 				TNode * suchThat = preprocessSuchThatCondition(suchThatCondition, table, errors);
 				root -> addChild(suchThat);
 				// go to element after this condition
 				i = index;
 			}
 		} else if (list[i]=="pattern") {
+			currentCondition = PatternCls;
 			unsigned index = findFirstElement(list, i, ")");
 			if ((int)index>i) {
-				vector<string> patternCondition = subList(list, i, index);
+				vector<string> patternCondition = subList(list, i+1, index);
 				TNode * pattern = preprocessPatternCondition(patternCondition, table, errors);
 				root -> addChild(pattern);
 				// go to element after this condition
 				i = index;
 			}
 		} else if (list[i]=="with") {
+			currentCondition = WithCls;
 			TNode * withCls = preprocessWithCondition(list, table, errors, i);
 			root -> addChild(withCls);
+		} else if (list[i]=="and") {
+			switch (currentCondition) {
+			case SuchThatCls:
+				{
+					unsigned index = findFirstElement(list, i, ")");
+					if ((int)index>i) {
+						vector<string> suchThatCondition = subList(list, i+1, index);
+						TNode * suchThat = preprocessSuchThatCondition(suchThatCondition, table, errors);
+						root -> addChild(suchThat);
+						// go to element after this condition
+						i = index;
+					}
+					break;
+				}
+			case PatternCls:
+				{
+					unsigned index = findFirstElement(list, i, ")");
+					if ((int)index>i) {
+						vector<string> patternCondition = subList(list, i+1, index);
+						TNode * pattern = preprocessPatternCondition(patternCondition, table, errors);
+						root -> addChild(pattern);
+						// go to element after this condition
+						i = index;
+					}
+					break;
+				}
+			case WithCls:
+				{
+					currentCondition = WithCls;
+					TNode * withCls = preprocessWithCondition(list, table, errors, i);
+					root -> addChild(withCls);
+				}
+			default:
+				{
+					errors.push_back("Error: find \"and\" with no previous clause");
+					break;
+				}
+			}
 		} else {
 		}
 	}
+
+	// final step: sort children node of root for better evaluation
+	root -> sortChildrenList();
 
 	tree.setRoot(root);
 }
@@ -224,11 +269,11 @@ void QueryPreprocessor::preprocessQueryPart(QueryTree& tree, SymbolTable table, 
 TNode * QueryPreprocessor::preprocessResultNode(vector<string> list, SymbolTable table, vector<string>& errors, int i) {
 	// FOR ITERATION 1 AND 2: BOOLEAN and single value
 	if (list[i]=="BOOLEAN") {
-		TNode * node = new TNode(ResultCls, "BOOLEAN");
+		TNode * node = new TNode(ResultCls, "a-BOOLEAN");
 		return node;
 	} else {
 		if (table.isSymbol(list[i])) {
-			TNode * node = new TNode(ResultCls, "single");
+			TNode * node = new TNode(ResultCls, "a-single");
 			TNode * nodeChild = new TNode(QuerySymbol, list[i]);
 			node -> addChild(nodeChild);
 			return node;
@@ -243,22 +288,22 @@ TNode * QueryPreprocessor::preprocessResultNode(vector<string> list, SymbolTable
 TNode * QueryPreprocessor::preprocessSuchThatCondition(vector<string> list, SymbolTable table, vector<string>& errors) {
 	unsigned size = list.size();
 	// create first node for such that
-	TNode * suchThatNode = new TNode(SuchThatCls);
+	TNode * suchThatNode = new TNode(SuchThatCls, "c");
 
-	//expect second node to be relationship's name
-	string relation = list[2];
+	//expect first value to be relationship's name
+	string relation = list[0];
 
 	if (SyntaxHelper::isRelation(relation)) {
 		TNode * relationNode = new TNode(SyntaxHelper::getSymbolType(relation));
 		
-		if (list[3]!="(") {
+		if (list[1]!="(") {
 			errors.push_back("Error 006: expect symbol ( after relation name");
 		}
 
 		int commaIndex=0;
-		if (list[5]==",") {
-			commaIndex=5;
-			string arg1 = list[4];
+		if (list[3]==",") {
+			commaIndex=3;
+			string arg1 = list[2];
 			if (isNumber(arg1)) {
 				TNode * arg1Node = new TNode(Const, arg1);
 				relationNode -> addChild(arg1Node);
@@ -266,10 +311,10 @@ TNode * QueryPreprocessor::preprocessSuchThatCondition(vector<string> list, Symb
 				TNode * arg1Node = new TNode(QuerySymbol, arg1);
 				relationNode -> addChild(arg1Node);
 			}
-		} else if (list[7]==",") {
-			commaIndex = 7;
+		} else if (list[5]==",") {
+			commaIndex = 5;
 			// expect a procedure name
-			TNode * arg1Node = new TNode(Const, list[5]);
+			TNode * arg1Node = new TNode(Const, list[3]);
 			relationNode -> addChild(arg1Node);
 		}
 
@@ -302,10 +347,10 @@ TNode * QueryPreprocessor::preprocessSuchThatCondition(vector<string> list, Symb
 TNode * QueryPreprocessor::preprocessPatternCondition(vector<string> list, SymbolTable table, vector<string>& errors) {
 	unsigned size = list.size();
 	// create first node for pattern
-	TNode * pattern = new TNode(PatternCls);
+	TNode * pattern = new TNode(PatternCls, "d");
 
-	vector<string> patternContent = subList(list, 2, size-1);
-	string argName = list[1];
+	vector<string> patternContent = subList(list, 1, size-1);
+	string argName = list[0];
 	string argType = table.getType(argName);
 	Symbol type = SyntaxHelper::getSymbolType(argType);
 
@@ -594,7 +639,7 @@ TNode * QueryPreprocessor::preprocessExpressionNode(vector<string> list, vector<
 }
 
 TNode * QueryPreprocessor::preprocessWithCondition(vector<string> list, SymbolTable table, vector<string> & errors, int index) {
-	TNode * withCls = new TNode(WithCls);
+	TNode * withCls = new TNode(WithCls, "b");
 
 	string arg1 = list[index+1];
 	string arg1Type = table.getType(arg1);
