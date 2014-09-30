@@ -56,7 +56,12 @@ Symbol SyntaxHelper::getSymbolType(string type) {
 	if (type.compare("Next*")==0) {
 		return NextsS;
 	}
-
+	if (type.compare("Affects")==0) {
+		return Affects;
+	}
+	if (type.compare("Affects*")==0) {
+		return AffectsS;
+	}
 	return Undefined;
 }
 
@@ -123,6 +128,10 @@ string SyntaxHelper::SymbolToString(Symbol symbol) {
 		return NEXT_RLT;
 	case NextsS:
 		return NEXTSTAR_RLT;
+	case Affects:
+		return AFFECTS_RLT;
+	case AffectsS:
+		return AFFECTSSTAR_RLT;
 	default:
 		return "Undefined";
 	}
@@ -139,6 +148,8 @@ bool SyntaxHelper::isRelation(string str) {
 	if (str==CALLSSTAR_RLT) return true;
 	if (str==NEXT_RLT) return true;
 	if (str==NEXTSTAR_RLT) return true;	
+	if (str==AFFECTS_RLT) return true;	
+	if (str==AFFECTSSTAR_RLT) return true;	
 
 	return false;
 }

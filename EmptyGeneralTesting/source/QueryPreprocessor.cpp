@@ -198,7 +198,7 @@ void QueryPreprocessor::preprocessQueryPart(QueryTree& tree, SymbolTable table, 
 			currentCondition = SuchThatCls;
 			unsigned index = findFirstElement(list, i, ")");
 			if ((int)index>i) {
-				vector<string> suchThatCondition = subList(list, i, index);
+				vector<string> suchThatCondition = subList(list, i+2, index);
 				TNode * suchThat = preprocessSuchThatCondition(suchThatCondition, table, errors);
 				root -> addChild(suchThat);
 				// go to element after this condition
@@ -208,7 +208,7 @@ void QueryPreprocessor::preprocessQueryPart(QueryTree& tree, SymbolTable table, 
 			currentCondition = PatternCls;
 			unsigned index = findFirstElement(list, i, ")");
 			if ((int)index>i) {
-				vector<string> patternCondition = subList(list, i, index);
+				vector<string> patternCondition = subList(list, i+1, index);
 				TNode * pattern = preprocessPatternCondition(patternCondition, table, errors);
 				root -> addChild(pattern);
 				// go to element after this condition
@@ -224,7 +224,7 @@ void QueryPreprocessor::preprocessQueryPart(QueryTree& tree, SymbolTable table, 
 				{
 					unsigned index = findFirstElement(list, i, ")");
 					if ((int)index>i) {
-						vector<string> suchThatCondition = subList(list, i, index);
+						vector<string> suchThatCondition = subList(list, i+1, index);
 						TNode * suchThat = preprocessSuchThatCondition(suchThatCondition, table, errors);
 						root -> addChild(suchThat);
 						// go to element after this condition
@@ -236,7 +236,7 @@ void QueryPreprocessor::preprocessQueryPart(QueryTree& tree, SymbolTable table, 
 				{
 					unsigned index = findFirstElement(list, i, ")");
 					if ((int)index>i) {
-						vector<string> patternCondition = subList(list, i, index);
+						vector<string> patternCondition = subList(list, i+1, index);
 						TNode * pattern = preprocessPatternCondition(patternCondition, table, errors);
 						root -> addChild(pattern);
 						// go to element after this condition
@@ -287,20 +287,20 @@ TNode * QueryPreprocessor::preprocessSuchThatCondition(vector<string> list, Symb
 	// create first node for such that
 	TNode * suchThatNode = new TNode(SuchThatCls);
 
-	//expect second node to be relationship's name
-	string relation = list[2];
+	//expect first value to be relationship's name
+	string relation = list[0];
 
 	if (SyntaxHelper::isRelation(relation)) {
 		TNode * relationNode = new TNode(SyntaxHelper::getSymbolType(relation));
 		
-		if (list[3]!="(") {
+		if (list[1]!="(") {
 			errors.push_back("Error 006: expect symbol ( after relation name");
 		}
 
 		int commaIndex=0;
-		if (list[5]==",") {
-			commaIndex=5;
-			string arg1 = list[4];
+		if (list[3]==",") {
+			commaIndex=3;
+			string arg1 = list[2];
 			if (isNumber(arg1)) {
 				TNode * arg1Node = new TNode(Const, arg1);
 				relationNode -> addChild(arg1Node);
@@ -308,10 +308,10 @@ TNode * QueryPreprocessor::preprocessSuchThatCondition(vector<string> list, Symb
 				TNode * arg1Node = new TNode(QuerySymbol, arg1);
 				relationNode -> addChild(arg1Node);
 			}
-		} else if (list[7]==",") {
-			commaIndex = 7;
+		} else if (list[5]==",") {
+			commaIndex = 5;
 			// expect a procedure name
-			TNode * arg1Node = new TNode(Const, list[5]);
+			TNode * arg1Node = new TNode(Const, list[3]);
 			relationNode -> addChild(arg1Node);
 		}
 
@@ -346,8 +346,8 @@ TNode * QueryPreprocessor::preprocessPatternCondition(vector<string> list, Symbo
 	// create first node for pattern
 	TNode * pattern = new TNode(PatternCls);
 
-	vector<string> patternContent = subList(list, 2, size-1);
-	string argName = list[1];
+	vector<string> patternContent = subList(list, 1, size-1);
+	string argName = list[0];
 	string argType = table.getType(argName);
 	Symbol type = SyntaxHelper::getSymbolType(argType);
 

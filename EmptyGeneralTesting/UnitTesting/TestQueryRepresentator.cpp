@@ -92,9 +92,9 @@ void QueryRepresentatorTest::testQueryTree() {
 	TNode root1 = *tree1.getRoot();
 
 	//CPPUNIT_ASSERT_EQUAL(1, root1.getNumChildren());
-	cout<< endl;
+	/*cout<< endl;
 	tree1.printTree();
-	cout <<endl;
+	cout <<endl;*/
 }
 
 CPPUNIT_TEST_SUITE_REGISTRATION( QueryRepresentatorTest );
