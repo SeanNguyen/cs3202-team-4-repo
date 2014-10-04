@@ -58,7 +58,8 @@ enum Symbol {
 	Select,
 	QuerySymbol,
 	ResultCls, SuchThatCls, PatternCls, WithCls,
-	Follows, FollowsS, Parent, ParentS, Uses, Modifies, Calls, CallsS, Nexts, NextsS, Affects, AffectsS,
+	Follows, FollowsS, Parent, ParentS, Uses, Modifies, 
+	Calls, CallsS, Nexts, NextsS, Affects, AffectsS,
 	
 	Prog_line, Stmt, Underline, No_Underline
 };

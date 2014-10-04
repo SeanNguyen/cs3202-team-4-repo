@@ -28,5 +28,5 @@ Select s such that Parent*(16, s)
 6 - Parent Star, ImplStmtLine ::
 while w;
 Select w such that Parent*(16, 17)
-2, 4, 8, 10, 12, 14, 16, 18, 21, 24
+2, 4, 5, 8, 10, 12, 14, 16, 18, 21, 24
 5000

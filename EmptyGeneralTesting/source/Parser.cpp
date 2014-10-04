@@ -369,7 +369,7 @@ TNode* Parser::readCallStmt () {
 	stmtType.push_back(KEYWORD_CALL);
 
 	//create nodes in PKB
-	TNode* callNode = PKB::createNode(Calls);
+	TNode* callNode = PKB::createNode(CallStmt);
 
 	string calledProcedureName = getNextToken();
 	this->mapCallingStmtProc[stmtType.size() - 1] = calledProcedureName;
