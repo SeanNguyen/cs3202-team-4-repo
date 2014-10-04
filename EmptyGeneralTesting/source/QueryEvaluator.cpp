@@ -299,7 +299,7 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 			}
 			case Modifies:
 			{
-				int var2 = 0;
+				int var2 = PKB::getVarIndex(arg2Value);
 				vector<int> stmts;
 
 				if(table.getType(arg1Value)==KEYWORD_PROCEDURE){
@@ -317,7 +317,7 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 			}
 			case Uses:
 			{
-				int var2;
+				int var2 = PKB::getVarIndex(arg2Value);
 				vector<int> stmts;
 				if(table.getType(arg1Value)==KEYWORD_PROCEDURE){ // FIX
 					//var2=PKB::getProcIndex(arg2Value);
@@ -457,7 +457,6 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 			{
 				if (PKB::getProcIndex(arg1Value).size()!=0) {
 					int proc1 = PKB::getProcIndex(arg1Value).front();
-					cout << proc1 <<endl;
 					//int var2=PKB::getProcIndex(arg1Value);
 					vector<int> stmts=PKB::getCalledByProc(proc1);
 					for(size_t i=0;i<stmts.size();i++){
@@ -639,7 +638,6 @@ void QueryEvaluator::checkPatternCondition(TNode patternNode,vector<string> valu
 	TNode * arg1Node = child1 -> getChildAtIndex(0);
 	handlePatternLeftHand(child1Value, arg1Node, values,check);
 	if (check==false) {
-		//cout << "CHECKPOINT 014" <<endl;
 		checkQueryCondition(childIndex+1, values, result, check);
 		return;
 	}
@@ -717,11 +715,11 @@ void QueryEvaluator::handlePatternLeftHand(string stmt, TNode * leftNode, vector
 void QueryEvaluator::handlePatternRightHand(string stmt, TNode * leftNode, vector<string> & values, bool & check) {
 	Symbol leftType = leftNode->getType();
 	string leftName = leftNode->getValue();
-	int leftIndex = table.getIndex(leftName);
 
 	switch (leftType) {
 	case Underline:
 		{
+			int leftIndex = table.getIndex(leftName);
 			if (leftNode->getNumChildren()==0) {
 				check = true;
 			} else {
@@ -736,15 +734,21 @@ void QueryEvaluator::handlePatternRightHand(string stmt, TNode * leftNode, vecto
 		}
 	case No_Underline:
 		{
+			int leftIndex = table.getIndex(leftName);
 			TNode * node = leftNode->getChildAtIndex(0); 
 			int stmtNo = atoi(stmt.c_str());
+			//cout << "checkpoint 008: stmt index= " << stmtNo <<endl;
 			TNode * stmtNode = PKB::getNodeOfStmt(stmtNo);
+			//stmtNode->printTNode();
+			TNode * rightSideStmtNode = stmtNode ->getChildAtIndex(1);
 			Tree tree1; tree1.setRoot(node);
-			AST tree2; tree2.setRoot(stmtNode);
+			AST tree2; tree2.setRoot(rightSideStmtNode);
 			check = tree2.isSameTree(tree1);
+			//cout << "checkpoint 009: check =" << check <<endl;
 			break;
 		}
 	default:
+		check = false;
 		break;
 	}
 
