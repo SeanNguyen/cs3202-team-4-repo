@@ -325,7 +325,7 @@ TNode * QueryPreprocessor::preprocessSuchThatCondition(vector<string> list, Symb
 					break;
 				case Uses:
 				case Modifies:
-					if (arg1Type!=KEYWORD_PROCEDURE || 
+					if (arg1Type!=KEYWORD_PROCEDURE && 
 						arg1Type!=KEYWORD_STMT && arg1Type!=KEYWORD_PROG_LINE &&
 						arg1Type!=KEYWORD_ASSIGN && arg1Type!= KEYWORD_WHILE &&
 						arg1Type!=KEYWORD_CALL && arg1Type!=KEYWORD_IF) {

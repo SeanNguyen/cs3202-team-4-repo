@@ -145,8 +145,8 @@ void SystemTest1::test5() {
 }
 
 void SystemTest1::test6() {
-	/*string source = "..\\..\\Tests\\Source6.txt";
-	string queries = "..\\..\\Tests\\Queries6.txt";
+	string source = "..\\..\\Tests\\Source6.txt";
+	string queries = "..\\..\\Tests\\Queries6_TestUses.txt";
 	Parser parser;
 	QueryProcessor qp(queries);
 	
@@ -162,7 +162,7 @@ void SystemTest1::test6() {
 		}
 		cout <<endl;
 	}
-*/
+
 }
 
 void SystemTest1::testWithCls() {

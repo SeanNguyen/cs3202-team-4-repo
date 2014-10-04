@@ -12,11 +12,11 @@ class SystemTest1 : public CPPUNIT_NS::TestFixture {
 	CPPUNIT_TEST( test2 );
 	CPPUNIT_TEST( test3 );
 	CPPUNIT_TEST( test4 );
-	CPPUNIT_TEST( test5 );
+	CPPUNIT_TEST( test5 );*/
 	CPPUNIT_TEST( test6 );
-	CPPUNIT_TEST( testCallsCallStar );
-	CPPUNIT_TEST( testWithCls );*/
-	CPPUNIT_TEST( testNext );
+	/*CPPUNIT_TEST( testCallsCallStar );
+	CPPUNIT_TEST( testWithCls );
+	CPPUNIT_TEST( testNext );*/
 	//CPPUNIT_TEST( TestModifyUsesProc );
 	CPPUNIT_TEST_SUITE_END();
 public:
