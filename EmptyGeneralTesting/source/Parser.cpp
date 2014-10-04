@@ -81,6 +81,9 @@ void Parser::buildModifyTable()
 	{
 		int stmt = modifies.at(index).first - 1;
 		int varIndex = pkb.getVarIndex(modifies.at(index).second);
+		string parentProc = getParentProc (stmt);
+		int procIndex = pkb.getProcIndex (parentProc).front();
+		pkb.insertModifiesProc (procIndex, varIndex);
 
 		while (stmt >= 0)
 		{
@@ -452,8 +455,8 @@ TNode* Parser::readAssignStmt() {
 }
 
 TNode* Parser::readExpression(vector<string> expressionTokens) {
-	int lastPlusSignIndex = getLastIndexOfTokenNotIndsideBracket(expressionTokens, KEYWORD_PLUSSIGN);
-	int lastMinusSignIndex = getLastIndexOfTokenNotIndsideBracket(expressionTokens, KEYWORD_MINUSSIGN);
+	int lastPlusSignIndex = getLastIndexOfTokenNotInsideBracket(expressionTokens, KEYWORD_PLUSSIGN);
+	int lastMinusSignIndex = getLastIndexOfTokenNotInsideBracket(expressionTokens, KEYWORD_MINUSSIGN);
 	int lastSignIndex = max(lastPlusSignIndex, lastMinusSignIndex);
 
 	if (lastSignIndex < 0) {
@@ -476,7 +479,7 @@ TNode* Parser::readExpression(vector<string> expressionTokens) {
 }
 
 TNode* Parser::readTerm(vector<string> termTokens) {
-	size_t lastMulSignIndex = getLastIndexOfTokenNotIndsideBracket(termTokens, KEYWORD_MULTIPLYSIGN);
+	size_t lastMulSignIndex = getLastIndexOfTokenNotInsideBracket(termTokens, KEYWORD_MULTIPLYSIGN);
 	if (lastMulSignIndex > 0 && lastMulSignIndex < termTokens.size() - 1) {
 		vector<string> subTermTokens;
 		vector<string> factorTokens;
@@ -605,7 +608,7 @@ int Parser::getParentStmt(int i) {
 	return -1;
 }
 
-int Parser::getLastIndexOfTokenNotIndsideBracket (vector<string> tokens, string token) {
+int Parser::getLastIndexOfTokenNotInsideBracket (vector<string> tokens, string token) {
 	int nestedLv = 0;
 	vector <int> tokenNestedLvs(tokens.size());
 	for (size_t i = 0; i < tokens.size(); i++) {
@@ -642,7 +645,8 @@ vector <int> Parser::getNextNodeInControlFlow(int stmtNo) {
 	if (type == KEYWORD_WHILE) {
 		result.push_back(stmtNo + 1);
 	} else if (type == KEYWORD_CALL) {
-		string calledProc = this->mapCallingStmtProc[stmtNo];
+		//In this case we consider stmt after call is not count, uncomment when we consider it again
+		/*string calledProc = this->mapCallingStmtProc[stmtNo];
 		int startingStmtOfProc;
 		for (std::map<int, string>::iterator value = mapStartingStmtProc.begin(); value != mapStartingStmtProc.end(); value++) {
 			if (value->second == calledProc) {
@@ -650,7 +654,7 @@ vector <int> Parser::getNextNodeInControlFlow(int stmtNo) {
 				break;
 			}
 		}
-		result.push_back(startingStmtOfProc);
+		result.push_back(startingStmtOfProc);*/
 	} else if (type == KEYWORD_IF) {
 		vector <int> childrenStmts = getChildrenStmts(stmtNo);
 		int startElseStmtNo;
@@ -709,6 +713,16 @@ vector <int> Parser::getChildrenStmts(int stmtNo) {
 
 bool Parser::isStartingStmtOfProc (int stmtNo) {
 	return this->mapStartingStmtProc.count(stmtNo) > 0;
+}
+
+string Parser::getParentProc (int stmt) {
+	int result = -1;
+	for (map <int, string>::iterator i = mapStartingStmtProc.begin(); i != mapStartingStmtProc.end(); i++)	{
+		int statingStmt = i->first;
+		if (stmt >= statingStmt && (result == -1 || result < statingStmt))
+			result = statingStmt;
+	}
+	return this->mapStartingStmtProc[result];
 }
 
 //Testing methods

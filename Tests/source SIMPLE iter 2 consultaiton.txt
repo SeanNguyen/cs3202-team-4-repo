@@ -1,39 +1,39 @@
 procedure Fern {
-	y = 10;												\\1
-	x = y + 5;											\\2
-	z = x * y + 4;										\\3
-	v = x + z * 12;											\\4
-	call Tulip; 											\\5
-	v = v + y + x;											\\6
-	call Lily;											\\7
-	t = v + y * x;											\\8
-	while idx {											\\9
-		t = x - z;											\\10
-		if y then {											\\11
-			z = z + y;											\\12
-			idx = z + 1; }											\\13
-		else {
-			x = z + y; 											\\14
-			call Lily;											\\15
-			idx = idx - 16; }											\\16
-		x = z + y; }											\\17
-	call Orchid; }											\\18
+	y = 10;										\\1
+	x = y + 5;									\\2
+	z = x * y + 4;								\\3
+	v = x + z * 12;								\\4
+	call Tulip; 								\\5
+	v = v + y + x;								\\6
+	call Lily;									\\7
+	t = v + y * x;								\\8
+	while idx {									\\9
+		t = x - z;								\\10
+		if y then {								\\11
+			z = z + y;							\\12
+			idx = z + 1; }						\\13
+		else {					
+			x = z + y; 							\\14
+			call Lily;							\\15
+			idx = idx - 16; }					\\16
+		x = z + y; }							\\17
+	call Orchid; }								\\18
 
 procedure Orchid {
-	while idx {											\\19
-		y = z*3 + 2*x;											\\20
-		call Tulip;											\\21
-		idx = idx - 1; }											\\22
-	z = z + y + idx; }											\\23
+	while idx {									\\19
+		y = z*3 + 2*x;							\\20
+		call Tulip;								\\21
+		idx = idx - 1; }						\\22
+	z = z + y + idx; }							\\23
 
 procedure Lily {
-	while v {											\\24
-		y = x + y; }											\\25
-	x = y + x; } 											\\26
+	while v {									\\24
+		y = x + y; }							\\25
+	x = y + x; } 								\\26
 
 procedure Tulip {
-	while t {											\\27
-		if idx then {											\\28
-			x = y + 80; }											\\29
+	while t {									\\27
+		if idx then {							\\28
+			x = y + 80; }						\\29
 		else {
-			y = y * x + z + t * v; } } }											\\30
+			y = y * x + z + t * v; } } }		\\30
