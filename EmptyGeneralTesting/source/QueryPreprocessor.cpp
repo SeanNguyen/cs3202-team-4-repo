@@ -445,7 +445,8 @@ TNode * QueryPreprocessor::preprocessAssignPattern(string name, vector<string> l
 				}
 				vector<string> expression = subList(list, commaIndex+2, size-3);
 				TNode * arg2Node = new TNode(No_Underline);
-				TNode * eprNode = preprocessExpressionNode(expression, errors);
+				TNode * exprNode = preprocessExpressionNode(expression, errors);
+				arg2Node ->addChild(exprNode);
 				assignNode ->addChild(arg2Node);
 			} else {
 				if (list[commaIndex+2]!="\"" || list[size-3]!="\"") {

@@ -196,7 +196,7 @@ void SystemTest1::testNext() {
 
 	vector<vector<string>> results = qp.Process();
 
-	cout << endl << "----TEST NEXT - NEXT STAR ----" <<endl;
+	cout << endl << "----TEST----" <<endl;
 	for (size_t i=0; i<results.size(); i++) {
 		cout << "Query " << i+1 << ": ";
 		for (size_t j=0; j< results[i].size(); j++) {
@@ -204,4 +204,5 @@ void SystemTest1::testNext() {
 		}
 		cout <<endl;
 	}
+	
 }

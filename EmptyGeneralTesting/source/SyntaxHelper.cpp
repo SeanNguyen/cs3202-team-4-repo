@@ -83,6 +83,8 @@ string SyntaxHelper::SymbolToString(Symbol symbol) {
 		return KEYWORD_WHILE;
 	case If:
 		return KEYWORD_IF;
+	case CallStmt:
+		return KEYWORD_CALL;
 	case Var:
 		return KEYWORD_VAR;
 	case Const:
@@ -108,6 +110,8 @@ string SyntaxHelper::SymbolToString(Symbol symbol) {
 		return "QuerySymbol";
 	case Underline:
 		return "Underline";
+	case No_Underline:
+		return "No underline";
 	case Follows:
 		return FOLLOWS_RLT;
 	case FollowsS:
