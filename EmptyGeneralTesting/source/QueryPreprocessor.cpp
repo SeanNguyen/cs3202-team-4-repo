@@ -294,7 +294,8 @@ TNode * QueryPreprocessor::preprocessSuchThatCondition(vector<string> list, Symb
 	string relation = list[0];
 
 	if (SyntaxHelper::isRelation(relation)) {
-		TNode * relationNode = new TNode(SyntaxHelper::getSymbolType(relation));
+		Symbol relationType = SyntaxHelper::getSymbolType(relation);
+		TNode * relationNode = new TNode(relationType);
 		
 		if (list[1]!="(") {
 			errors.push_back("Error 006: expect symbol ( after relation name");
@@ -308,12 +309,61 @@ TNode * QueryPreprocessor::preprocessSuchThatCondition(vector<string> list, Symb
 				TNode * arg1Node = new TNode(Const, arg1);
 				relationNode -> addChild(arg1Node);
 			} else {
+				// expect a symbol of type procedure or any stmt type
+				// depending on relation's type
+				string arg1Type = table.getType(arg1);
+				switch (relationType) {
+				case Follows:
+				case FollowsS:
+				case Parent:
+				case ParentS:
+					if (arg1Type!=KEYWORD_STMT && arg1Type!=KEYWORD_PROG_LINE &&
+						arg1Type!=KEYWORD_ASSIGN && arg1Type!= KEYWORD_WHILE &&
+						arg1Type!=KEYWORD_CALL && arg1Type!=KEYWORD_IF) {
+							errors.push_back("Error 000: not a valid symbol: " + arg1 + " for relation: " + relation);
+					}
+					break;
+				case Uses:
+				case Modifies:
+					if (arg1Type!=KEYWORD_PROCEDURE || 
+						arg1Type!=KEYWORD_STMT && arg1Type!=KEYWORD_PROG_LINE &&
+						arg1Type!=KEYWORD_ASSIGN && arg1Type!= KEYWORD_WHILE &&
+						arg1Type!=KEYWORD_CALL && arg1Type!=KEYWORD_IF) {
+							errors.push_back("Error 000: not a valid symbol: " + arg1 + " for relation: " + relation);
+					}
+					break;
+				case Calls:
+				case CallsS:
+					if (arg1Type!=KEYWORD_PROCEDURE) {
+						errors.push_back("Error 000: not a valid symbol: " + arg1 + " for relation: " + relation);
+					}
+					break;
+				case Nexts:
+				case NextsS:
+					if (arg1Type!=KEYWORD_PROG_LINE) {
+						errors.push_back("Error 000: not a valid symbol: " + arg1 + " for relation: " + relation);
+					}
+					break;
+					break;
+				default:
+					break;
+				}
 				TNode * arg1Node = new TNode(QuerySymbol, arg1);
 				relationNode -> addChild(arg1Node);
 			}
 		} else if (list[5]==",") {
 			commaIndex = 5;
 			// expect a procedure name
+			switch (relationType) {
+			case Modifies:
+			case Uses:
+			case Calls:
+			case CallsS:
+				break;
+			default:
+				errors.push_back("Error 000: invalid use of: " + list[3] + " for relation: " + relation);
+				break;
+			}
 			TNode * arg1Node = new TNode(Const, list[3]);
 			relationNode -> addChild(arg1Node);
 		}
@@ -324,11 +374,56 @@ TNode * QueryPreprocessor::preprocessSuchThatCondition(vector<string> list, Symb
 				TNode * arg2Node = new TNode(Const, arg2);
 				relationNode -> addChild(arg2Node);
 			} else {
+				string arg2Type = table.getType(arg2);
+				// expect a valid symbol's type
+				switch (relationType) {
+				case Follows:
+				case FollowsS:
+				case Parent:
+				case ParentS:
+					if (arg2Type!=KEYWORD_PROG_LINE && arg2Type!=KEYWORD_STMT &&
+						arg2Type!=KEYWORD_ASSIGN && arg2Type!=KEYWORD_WHILE &&
+						arg2Type!= KEYWORD_CALL && arg2Type!=KEYWORD_IF) {
+						errors.push_back("Error 000: not a valid symbol: " + arg2 + " for relation: " + relation);
+					}
+					break;
+				case Modifies:
+				case Uses:
+					if (arg2Type!=KEYWORD_VAR) {
+						errors.push_back("Error 000: not a valid symbol: " + arg2 + " for relation: " + relation);
+					}
+					break;
+				case Calls:
+				case CallsS:
+					if (arg2Type!=KEYWORD_PROCEDURE) {
+						errors.push_back("Error 000: not a valid symbol: " + arg2 + " for relation: " + relation);
+					}
+					break;
+				case Nexts:
+				case NextsS:
+					if (arg2Type!=KEYWORD_PROG_LINE) {
+						errors.push_back("Error 000: not a valid symbol: " + arg2 + " for relation: " + relation);
+					}
+					break;
+				default:
+					errors.push_back("Error 000: invalid use of: " + list[3] + " for relation: " + relation);
+					break;
+				}
 				TNode * arg2Node = new TNode(QuerySymbol, arg2);
 				relationNode -> addChild(arg2Node);
 			}
 		} else if (list[commaIndex+4]==")") {
-			// expect a name
+			// expect a name for variable or procedure
+			string arg2Value = list[commaIndex+2];
+			switch (relationType) {
+			case Uses:
+			case Modifies:
+			case Calls:
+			case CallsS:
+				break;
+			default:
+				break;
+			}
 			TNode * arg2Node = new TNode(Const, list[commaIndex+2]);
 			relationNode -> addChild(arg2Node);
 		} else {
