@@ -23,12 +23,12 @@ Select s such that Parent(s1, s) with s1.stmt#=58
 5 - RelAttCom::
 procedure p1, p2; assign a1, a2; variable v; stmt s, s1;
 Select s such that Follows(a1, s) with a1.stmt#=58
-none
+
 5000
 6 - RelAttCom::
 procedure p1, p2; assign a1, a2; variable v; stmt s, s1;
 Select s such that Follows*(a1, s) with a1.stmt#=60
-none
+
 5000
 7 - RelAttCom::
 procedure p1, p2; assign a1, a2; variable v; stmt s, s1;
@@ -78,22 +78,22 @@ true
 16 - RelAttCom::
 procedure p1, p2; assign a1, a2; variable v; stmt s, s1; if i1;
 Select a1 such that Follows*(a1,a2) with a2.stmt#=85
-none
+
 5000
 17 - RelAttCom::
 procedure p1, p2; assign a1, a2; variable v; stmt s, s1; if i1;
 Select a1 such that Follows*(a1,a2) with a1.stmt#=85
-none
+
 5000
 18 - RelAttCom::
 procedure p1, p2; assign a1, a2; variable v; stmt s, s1; if i1;
 Select a1 such that Follows*(a1,a2) with a1.stmt#=86
-none
+
 5000
 19 - RelAttCom::
 procedure p1, p2; assign a1, a2; variable v; stmt s, s1; if i1;
 Select a1 such that Parent*(a1,a2) with a2.stmt#=86
-none
+
 5000
 20 - RelAttCom::
 procedure p1, p2; assign a1, a2; variable v; stmt s, s1;
@@ -103,7 +103,7 @@ b, c, a, x, y, z, t, idx, test, k, i
 21 - RelAttCom::
 procedure p1, p2; assign a1, a2; variable v; stmt s, s1; if i1;
 Select a2 such that Parent*(a1,a2) with a1.stmt#=85
-none
+
 5000
 22 - RelAttCom::
 procedure p1, p2; assign a1, a2; variable v; stmt s, s1; if i1;

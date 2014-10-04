@@ -1,5 +1,5 @@
 3
-cat: All Category
+cat: Modifies Basic
 1 - Modifies, ImplStmtLine ::
 assign a;
 Select a such that Modifies(a, "food")

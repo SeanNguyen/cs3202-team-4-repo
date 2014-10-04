@@ -48,7 +48,7 @@ bool Call::isCallStar(int proc1, int proc2){
 	if (proc1 < 0 || proc2 < 0){
 		return isCallStar;
 	}
-	else if (proc1 >= 1 && proc2 >= 1)
+	else if (proc1 >= 0 && proc2 >= 0)
 	{
 		vector<int> callingStarProc = getCallingStarProc(proc2);
 		for(size_t index=0; index < callingStarProc.size(); index++)

@@ -198,12 +198,12 @@ Select n1 such that Next(39, n1)
 40 - Next ::
 assign a1; prog_line n1, n2;
 Select n1 such that Next(40, n1)
-none
+
 5000
 41 - Next ::
 assign a1; prog_line n1, n2;
 Select n1 such that Next(41, n1)
-none
+
 5000
 42 - Next ::
 assign a1; prog_line n1, n2;
@@ -258,12 +258,12 @@ Select n1 such that Next(51, n1)
 52 - Next ::
 assign a1; prog_line n1, n2;
 Select n1 such that Next(52, n1)
-none
+
 5000
 53 - Next ::
 assign a1; prog_line n1, n2;
 Select n1 such that Next(53, n1)
-none
+
 5000
 54 - Next ::
 assign a1; prog_line n1, n2;
@@ -418,7 +418,7 @@ Select n1 such that Next(82, n1)
 83 - Next ::
 assign a1; prog_line n1, n2;
 Select n1 such that Next(83, n1)
-none
+
 5000
 84 - Next ::
 assign a1; prog_line n1, n2;
@@ -483,10 +483,10 @@ Select n1 such that Next(96, n1)
 97 - Next ::
 assign a1; prog_line n1, n2;
 Select n1 such that Next(97, n1)
-none
+
 5000
 98 - Next ::
 assign a1; prog_line n1, n2;
 Select n1 such that Next(98, n1)
-none
+
 5000
