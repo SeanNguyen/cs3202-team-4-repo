@@ -96,4 +96,5 @@ private:
 	vector <int> getNextNodeInControlFlow(int stmtNo);
 	vector <int> getChildrenStmts(int stmtNo);
 	bool isStartingStmtOfProc(int stmtNo);
+	string getParentProc (int stmt);
 };

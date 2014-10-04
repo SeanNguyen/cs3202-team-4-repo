@@ -81,6 +81,9 @@ void Parser::buildModifyTable()
 	{
 		int stmt = modifies.at(index).first - 1;
 		int varIndex = pkb.getVarIndex(modifies.at(index).second);
+		string parentProc = getParentProc (stmt);
+		int procIndex = pkb.getProcIndex (parentProc).front();
+		pkb.insertModifiesProc (procIndex, varIndex);
 
 		while (stmt >= 0)
 		{
@@ -710,6 +713,16 @@ vector <int> Parser::getChildrenStmts(int stmtNo) {
 
 bool Parser::isStartingStmtOfProc (int stmtNo) {
 	return this->mapStartingStmtProc.count(stmtNo) > 0;
+}
+
+string Parser::getParentProc (int stmt) {
+	int result = -1;
+	for (map <int, string>::iterator i = mapStartingStmtProc.begin(); i != mapStartingStmtProc.end(); i++)	{
+		int statingStmt = i->first;
+		if (stmt >= statingStmt && (result == -1 || result < statingStmt))
+			result = statingStmt;
+	}
+	return this->mapStartingStmtProc[result];
 }
 
 //Testing methods
