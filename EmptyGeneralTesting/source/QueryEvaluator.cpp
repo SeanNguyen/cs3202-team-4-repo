@@ -97,7 +97,6 @@ void QueryEvaluator::checkQueryCondition(int childIndex, vector<string> values, 
 
 	// if no more condition to check
 	if (childIndex==root.getNumChildren()) {
-		//cout << "CHECKPOINT 003" <<endl;
 		// if all conditions are satisfied
 		if (check) {
 			// get result's value and update result list
@@ -114,7 +113,6 @@ void QueryEvaluator::checkQueryCondition(int childIndex, vector<string> values, 
 
 	// get root's child at index
 	TNode child = *root.getChildAtIndex(childIndex);
-	//cout << "CHECKPOINT 000: " << root.getNumChildren() <<endl;
 	//cout << "CHECKPOINT 001: " << SyntaxHelper::SymbolToString(child.getType()) <<endl;
 	if (child.getType()==SuchThatCls) {
 		// find values satisfying such that condition
@@ -160,8 +158,7 @@ void QueryEvaluator::handleRelationNode(TNode & relationNode, vector<string> val
 		//call back to checkQueryCondition
 		checkQueryCondition(childIndex+1, values, result, check);
 		return;
-	}
-	if (arg1Type == Const && arg2Type == QuerySymbol) {
+	} else if (arg1Type == Const && arg2Type == QuerySymbol) {
 		string arg2Value = getStoredValue(values, arg2Name);
 		if (arg2Value!="-1") {
 			check = isRelation(relation, arg1Name, arg2Value);	
@@ -181,8 +178,7 @@ void QueryEvaluator::handleRelationNode(TNode & relationNode, vector<string> val
 			}
 			return;
 		}
-	}
-	if (arg1Type == QuerySymbol && arg2Type == Const) {
+	} else if (arg1Type == QuerySymbol && arg2Type == Const) {
 		string arg1Value=getStoredValue(values, arg1Name);
 		if(arg1Value!="-1"){
 			check=isRelation(relation,arg1Value, arg2Name);
@@ -203,9 +199,8 @@ void QueryEvaluator::handleRelationNode(TNode & relationNode, vector<string> val
 			}
 			return;
 		}
-	}
-	if (arg1Type == QuerySymbol && arg2Type == QuerySymbol) {
-		string arg1Value=getStoredValue(values, arg1Name);
+	} else {
+		string arg1Value = getStoredValue(values, arg1Name);
 		string arg2Value = getStoredValue(values, arg2Name);
 
 		if(arg1Value!="-1" & arg2Value!="-1"){
@@ -241,10 +236,12 @@ void QueryEvaluator::handleRelationNode(TNode & relationNode, vector<string> val
 		} else{
 			//brute force method
 			string type = table.getType(arg1Name);
+			//cout << "checkpoint 001: arg1Type = " << type <<endl;
 			vector<string> arg1Value = getAllArgValues(SyntaxHelper::getSymbolType(type));
 			// for each valu of arg1 we call checkQueryCondition again
 			for (size_t i=0; i<arg1Value.size(); i++) {
 				int arg1Index = table.getIndex(arg1Name);
+				//cout << arg1Index << " " << arg1Value[i]<< " " <<endl;
 				values[arg1Index] = arg1Value[i];
 				checkQueryCondition(childIndex, values, result, check);
 			}
@@ -726,8 +723,9 @@ void QueryEvaluator::handlePatternRightHand(string stmt, TNode * leftNode, vecto
 				TNode * node = leftNode->getChildAtIndex(0); 
 				int stmtNo = atoi(stmt.c_str());
 				TNode * stmtNode = PKB::getNodeOfStmt(stmtNo);
+				TNode * rightSideStmtNode = stmtNode ->getChildAtIndex(1);
 				Tree tree1; tree1.setRoot(node);
-				AST tree2; tree2.setRoot(stmtNode);
+				AST tree2; tree2.setRoot(rightSideStmtNode);
 				check = tree2.hasSubTree(tree1);
 			}
 			break;
@@ -879,6 +877,7 @@ vector<string> QueryEvaluator::getAllArgValues(Symbol type) {
 		break;
 	case Stmt:
 	case Prog_line:
+		cout << "checkpoint 001a" <<endl;
 		for (int i=0; i<PKB::getStatTableSize(); i++) {
 			result.push_back(intToString(i+1));
 		}
