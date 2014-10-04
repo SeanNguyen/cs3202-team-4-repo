@@ -1,9 +1,9 @@
 3
-cat: All Category
+cat: Modifies Basic
 1 - Modifies, ImplStmtLine ::
 assign a;
 Select a such that Modifies(a, "food")
-4, 10, 11, 12, 14
+14
 5000
 2 - Modifies, ImplStmtLine ::
 variable var;

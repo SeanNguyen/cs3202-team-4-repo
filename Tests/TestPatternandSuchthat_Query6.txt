@@ -43,7 +43,7 @@ Select w pattern a(v, _"egg + chicken"_) such that Modifies(w, v)
 9 - Typed, Pattern, Modifies ::
 while w; variable v; assign a;
 Select v pattern a(v, _) such that Uses(w, "osx")
-mac, os, o
+bird, brand, bright, cat, chicken, code, d, deck, dinner, egg, enemy, fish, food, fresh, frog, fun, g, hen, in, laptop, mayo, mee, out, p, q, s, sandwich, w, window, work, write, x, y, year, z, mac, os, o
 5000
 10 - Typed, Pattern, Parent ::
 assign a; while w;
