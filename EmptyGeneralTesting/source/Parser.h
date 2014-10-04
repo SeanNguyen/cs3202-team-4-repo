@@ -91,7 +91,7 @@ private:
 	int getFollowedStmt(int i);
 	int getFollowingStmt(int i);
 	int getParentStmt(int i);
-	int getLastIndexOfTokenNotIndsideBracket (vector<string> tokens, string token);
+	int getLastIndexOfTokenNotInsideBracket (vector<string> tokens, string token);
 	void buildControlFlowPath(size_t statementNo);
 	vector <int> getNextNodeInControlFlow(int stmtNo);
 	vector <int> getChildrenStmts(int stmtNo);
