@@ -723,8 +723,9 @@ void QueryEvaluator::handlePatternRightHand(string stmt, TNode * leftNode, vecto
 				TNode * node = leftNode->getChildAtIndex(0); 
 				int stmtNo = atoi(stmt.c_str());
 				TNode * stmtNode = PKB::getNodeOfStmt(stmtNo);
+				TNode * rightSideStmtNode = stmtNode ->getChildAtIndex(1);
 				Tree tree1; tree1.setRoot(node);
-				AST tree2; tree2.setRoot(stmtNode);
+				AST tree2; tree2.setRoot(rightSideStmtNode);
 				check = tree2.hasSubTree(tree1);
 			}
 			break;

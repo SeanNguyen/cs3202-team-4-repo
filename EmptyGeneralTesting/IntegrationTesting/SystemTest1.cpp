@@ -194,7 +194,7 @@ void SystemTest1::testNext() {
 	parser.parse(source);
 	parser.buildPKB();
 
-	cout << "Test Next Star: isNextStar(1, 1) = " << PKB::isNextStar(1, 1) <<endl;
+	//cout << "Test Next Star: isNextStar(1, 1) = " << PKB::isNextStar(1, 1) <<endl;
 
 	vector<vector<string>> results = qp.Process();
 
