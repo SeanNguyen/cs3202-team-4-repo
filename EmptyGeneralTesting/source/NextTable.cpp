@@ -50,7 +50,7 @@ bool Next::isNextStarInternal (int stmt1, int stmt2) {
 		return true;
 	//apply depth first search here
 	for (size_t i = 0; i < this->mapNext[stmt1].size(); i++) {
-		if (isNextStar(nextStmts[i], stmt2))
+		if (isNextStarInternal(nextStmts[i], stmt2))
 			return true;
 	}
 	return false;
