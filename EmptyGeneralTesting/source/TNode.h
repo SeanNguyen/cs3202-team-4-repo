@@ -20,10 +20,13 @@ public:
 	TNode * getChildAtIndex(int i);
 	int addChild(TNode * child);
 	void printTNode();
+	void sortChildrenList();
 private:
 	Symbol type;
 	string value;
 	vector<TNode*> children;
 
 	void printTNode(int depth);
+	vector<TNode *> sortChildrenList(int start, int end);
+	vector<TNode *> mergeList(vector<TNode *> list1, vector<TNode *> list2);
 };

@@ -53,25 +53,29 @@ bool AST::isSameTree(Tree tree) {
 }
 
 TNode * AST::findNodeOfStmt(TNode * node, int& count, int index) {
+	Symbol type = node ->getType();
 	// only update *count if encounting those following nodes
-	if (node -> getType()==While || node -> getType()==Assign) {
+	if (node -> getType()==While || node -> getType()==Assign ||
+		node -> getType()==If || node -> getType()==CallStmt) {
 		count++;
 	}
 	// base case
 	if (count == index) {
 		return node;
 	} else {
-		int size = node -> getNumChildren();
-		if (size!=0) {
-			for (int i=0; i<size; i++) {
-				TNode * child = node -> getChildAtIndex(i);
-				TNode * result = findNodeOfStmt(child, count, index);
-				if (result -> getType()!=Undefined) {
-					return result;
+		if (type==While || type==If || type==CallStmt || type==StmtList ||
+			type==Procedure || type==Program) {
+			int size = node -> getNumChildren();
+			if (size!=0) {
+				for (int i=0; i<size; i++) {
+					TNode * child = node -> getChildAtIndex(i);
+					TNode * result = findNodeOfStmt(child, count, index);
+					if (result -> getType()!=Undefined) {
+						return result;
+					}
 				}
 			}
-		}
-		
+		}		
 	}
 
 	// return a null value here

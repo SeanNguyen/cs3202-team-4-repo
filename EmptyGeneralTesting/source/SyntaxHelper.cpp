@@ -51,12 +51,17 @@ Symbol SyntaxHelper::getSymbolType(string type) {
 		return CallsS;
 	}
 	if (type.compare("Next")==0) {
-		return Next;
+		return Nexts;
 	}
 	if (type.compare("Next*")==0) {
-		return NextS;
+		return NextsS;
 	}
-
+	if (type.compare("Affects")==0) {
+		return Affects;
+	}
+	if (type.compare("Affects*")==0) {
+		return AffectsS;
+	}
 	return Undefined;
 }
 
@@ -78,6 +83,8 @@ string SyntaxHelper::SymbolToString(Symbol symbol) {
 		return KEYWORD_WHILE;
 	case If:
 		return KEYWORD_IF;
+	case CallStmt:
+		return KEYWORD_CALL;
 	case Var:
 		return KEYWORD_VAR;
 	case Const:
@@ -103,6 +110,8 @@ string SyntaxHelper::SymbolToString(Symbol symbol) {
 		return "QuerySymbol";
 	case Underline:
 		return "Underline";
+	case No_Underline:
+		return "No underline";
 	case Follows:
 		return FOLLOWS_RLT;
 	case FollowsS:
@@ -119,10 +128,14 @@ string SyntaxHelper::SymbolToString(Symbol symbol) {
 		return CALLS_RLT;
 	case CallsS:
 		return CALLSSTAR_RLT;
-	case Next:
+	case Nexts:
 		return NEXT_RLT;
-	case NextS:
+	case NextsS:
 		return NEXTSTAR_RLT;
+	case Affects:
+		return AFFECTS_RLT;
+	case AffectsS:
+		return AFFECTSSTAR_RLT;
 	default:
 		return "Undefined";
 	}
@@ -139,6 +152,8 @@ bool SyntaxHelper::isRelation(string str) {
 	if (str==CALLSSTAR_RLT) return true;
 	if (str==NEXT_RLT) return true;
 	if (str==NEXTSTAR_RLT) return true;	
+	if (str==AFFECTS_RLT) return true;	
+	if (str==AFFECTSSTAR_RLT) return true;	
 
 	return false;
 }

@@ -145,3 +145,25 @@ void TNodeTest::testPrintNode() {
 	cout <<endl;
 	// root.printTNode();
 }
+
+void TNodeTest::testSortChildren() {
+	TNode * root = populateData();
+	root->sortChildrenList();
+	root ->printTNode();
+}
+
+TNode * TNodeTest::populateData() {
+	TNode * root = new TNode();
+	TNode * node1 = new TNode(Program, "a");
+	TNode * node2 = new TNode(StmtList, "b");
+	TNode * node3 = new TNode(While, "e");
+	TNode * node4 = new TNode(If, "h");
+	TNode * node5 = new TNode(Var, "x");
+	TNode * node6 = new TNode(Const, "z");
+	TNode * node1_1 = new TNode();
+	TNode * node2_1 = new TNode();
+	node1->addChild(node1_1); node2->addChild(node2_1);
+	root->addChild(node6); root->addChild(node2); root->addChild(node3); 
+	root->addChild(node4); root->addChild(node5); root->addChild(node1);
+	return root;
+}

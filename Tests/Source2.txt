@@ -12,7 +12,7 @@ procedure spacersoul{
 				m = 3; 					\\9
 				while da{				\\10
 					plain = boring;		\\11
-					while boring{		\12
+					while boring{		\\12
 						a = a + 42;		\\13
 						while q			\\14
 						{

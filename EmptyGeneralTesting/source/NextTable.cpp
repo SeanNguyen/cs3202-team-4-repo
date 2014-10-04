@@ -30,11 +30,20 @@ bool Next::isNext(int stmt1, int stmt2){
 }
 
 bool Next::isNextStar (int stmt1, int stmt2) {
+	this->isProcessed.clear();
+	return isNextStarInternal(stmt1, stmt2);
+}
+
+bool Next::isNextStarInternal (int stmt1, int stmt2) {
 
 	if(stmt1 < 0 || stmt2 < 0){
 		return false;
 	}
 
+	if (isProcessed.count(stmt1) != 0 || isProcessed[stmt1] == true)
+		return false;
+	else
+		isProcessed[stmt1] = true;
 
 	vector <int> nextStmts = this->mapNext[stmt1];
 	if (isNext(stmt1, stmt2))

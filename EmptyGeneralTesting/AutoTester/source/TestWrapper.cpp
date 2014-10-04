@@ -21,30 +21,23 @@ void TestWrapper::parse(std::string filename) {
   // ...rest of your code...
 	
 	// create a Parser obj
-	Parser parser;
+	/*Parser parser;
 	parser.parse(filename);
-	parser.buildVarTable();
-	parser.buildStatTable();
-	parser.buildFollowTable();
-	parser.buildParentTable();
-	parser.buildModifyTable();
-	parser.buildUseTable();
-
-	while (true) {
-		cout << "Error! Why can you run?" <<endl;
-	}
+	parser.buildPKB();*/
+	cout << "checkpoint 01" <<endl;
 }
 
 // method to evaluating a query
 void TestWrapper::evaluate(std::string query, std::list<std::string>& results){
 // call your evaluator to evaluate the query here
   // ...code to evaluate query...
-  QueryProcessor queryProcessor;
-  std::vector<std::string> resultVector = queryProcessor.Process(query);
+  cout << "checkpoint 02" <<endl;
+  /*QueryProcessor queryProcessor;*/
+  cout << "checkpoint 03" <<endl;
+  /*std::vector<std::string> resultVector = queryProcessor.Process(query);
   for (size_t i=0; i<resultVector.size(); i++) {
 	  results.push_back(resultVector[i]);
-	  results.push_back("TESTING");
-  }	
+  }	*/
   // store the answers to the query in the results list (it is initially empty)
   // each result must be a string.
 }

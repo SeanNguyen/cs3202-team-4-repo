@@ -32,7 +32,7 @@ void SystemTest1::test1() {
 }
 
 void SystemTest1::testCallsCallStar() {
-	string source = "..\\..\\Tests\\SourceSimpleCall.txt";
+	/*string source = "..\\..\\Tests\\SourceSimpleCall.txt";
 	string queries = "..\\..\\Tests\\QueriesSimpleCall.txt";
 	Parser parser;
 	QueryProcessor qp(queries);
@@ -58,11 +58,11 @@ void SystemTest1::testCallsCallStar() {
 		}
 		cout <<endl;
 	}
-
+*/
 }
 
 void SystemTest1::test2() {
-	/*string source = "..\\..\\Tests\\Source2.txt";
+	string source = "..\\..\\Tests\\Source2.txt";
 	string queries = "..\\..\\Tests\\Queries2_1.txt";
 	Parser parser;
 	QueryProcessor qp(queries);
@@ -78,13 +78,13 @@ void SystemTest1::test2() {
 			cout << results[i][j] << " ";
 		}
 		cout <<endl;
-	}*/
+	}
 
 }
 
 void SystemTest1::test3() {
-	/*string source = "..\\..\\Tests\\Source3.txt";
-	string queries = "..\\..\\Tests\\Queries3.txt";
+	string source = "..\\..\\Tests\\Source3.txt";
+	string queries = "..\\..\\Tests\\Queries3_TestFollows.txt";
 	Parser parser;
 	QueryProcessor qp(queries);
 	
@@ -100,7 +100,6 @@ void SystemTest1::test3() {
 		}
 		cout <<endl;
 	}
-*/
 }
 
 void SystemTest1::test4() {
@@ -184,4 +183,26 @@ void SystemTest1::testWithCls() {
 		}
 		cout <<endl;
 	}*/
+}
+
+void SystemTest1::testNext() {
+	string source = "..\\..\\Tests\\source SIMPLE iter 2 consultaiton.txt";
+	string queries = "..\\..\\Tests\\test queries iter 2 consultaiton.txt";
+	Parser parser;
+	QueryProcessor qp(queries);
+	
+	parser.parse(source);
+	parser.buildPKB();
+
+	vector<vector<string>> results = qp.Process();
+
+	cout << endl << "----TEST----" <<endl;
+	for (size_t i=0; i<results.size(); i++) {
+		cout << "Query " << i+1 << ": ";
+		for (size_t j=0; j< results[i].size(); j++) {
+			cout << results[i][j] << " ";
+		}
+		cout <<endl;
+	}
+	
 }

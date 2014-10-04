@@ -88,6 +88,7 @@ void QueryEvaluator::findResult(vector<string> values, vector<string>& result) {
 
 void QueryEvaluator::checkQueryCondition(int childIndex, vector<string> values, vector<string>&result, bool check) {
 	if (!check) {
+		//cout << "CHECKPOINT 002" << endl;
 		// return null result list
 		return;
 	}
@@ -96,6 +97,7 @@ void QueryEvaluator::checkQueryCondition(int childIndex, vector<string> values, 
 
 	// if no more condition to check
 	if (childIndex==root.getNumChildren()) {
+		//cout << "CHECKPOINT 003" <<endl;
 		// if all conditions are satisfied
 		if (check) {
 			// get result's value and update result list
@@ -112,6 +114,8 @@ void QueryEvaluator::checkQueryCondition(int childIndex, vector<string> values, 
 
 	// get root's child at index
 	TNode child = *root.getChildAtIndex(childIndex);
+	//cout << "CHECKPOINT 000: " << root.getNumChildren() <<endl;
+	//cout << "CHECKPOINT 001: " << SyntaxHelper::SymbolToString(child.getType()) <<endl;
 	if (child.getType()==SuchThatCls) {
 		// find values satisfying such that condition
 		checkSuchThatCondition(child, values, result, check, childIndex);
@@ -264,7 +268,7 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 				if (result!=-1) {
 					resultList.push_back(intToString(result));
 				}
-				return resultList;
+				break;
 			}
 			case FollowsS:
 			{
@@ -273,7 +277,7 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 				for (size_t i=0; i<stmts.size(); i++) {
 					resultList.push_back(intToString(stmts[i]));
 				}
-				return resultList;
+				break;
 			}
 			case Parent:
 			{
@@ -282,7 +286,7 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 				if (result!=-1) {
 					resultList.push_back(intToString(result));
 				}
-				return resultList;
+				break;
 			}
 			case ParentS:
 			{
@@ -291,11 +295,11 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 				for (size_t i=0; i<stmts.size(); i++) {
 					resultList.push_back(intToString(stmts[i]));
 				}
-				return resultList;
+				break;
 			}
 			case Modifies:
 			{
-				int var2;
+				int var2 = PKB::getVarIndex(arg2Value);
 				vector<int> stmts;
 
 				if(table.getType(arg1Value)==KEYWORD_PROCEDURE){
@@ -309,11 +313,11 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 				for (size_t i=0; i<stmts.size(); i++) {
 					resultList.push_back(intToString(stmts[i]));
 				}
-				return resultList;
+				break;
 			}
 			case Uses:
 			{
-				int var2;
+				int var2 = PKB::getVarIndex(arg2Value);
 				vector<int> stmts;
 				if(table.getType(arg1Value)==KEYWORD_PROCEDURE){ // FIX
 					//var2=PKB::getProcIndex(arg2Value);
@@ -357,6 +361,24 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 				break;
 
 			}
+			case Nexts:
+				{
+					int stmt2 = atoi(arg2Value.c_str());
+					vector<int> arg1Values = PKB::getPreviousStmts(stmt2);
+					for (size_t i=0; i<arg1Values.size(); i++) {
+						resultList.push_back(intToString(arg1Values[i]));
+					}
+					break;
+				}
+			case NextsS:
+				{
+					int stmt2 = atoi(arg2Value.c_str());
+					vector<int> arg1Values = PKB::getPreviousStarStmts(stmt2);
+					for (size_t i=0; i<arg1Values.size(); i++) {
+						resultList.push_back(intToString(arg1Values[i]));
+					}
+					break;
+				}
 			default:
 				break;
 		}
@@ -435,7 +457,6 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 			{
 				if (PKB::getProcIndex(arg1Value).size()!=0) {
 					int proc1 = PKB::getProcIndex(arg1Value).front();
-					cout << proc1 <<endl;
 					//int var2=PKB::getProcIndex(arg1Value);
 					vector<int> stmts=PKB::getCalledByProc(proc1);
 					for(size_t i=0;i<stmts.size();i++){
@@ -458,7 +479,24 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 					}
 				}
 				break;
-				
+			}
+			case Nexts:
+			{
+				int stmt1 = atoi(arg2Value.c_str());
+				vector<int> arg2Values = PKB::getNextStmts(stmt1);
+				for (size_t i=0; i<arg2Values.size(); i++) {
+					resultList.push_back(intToString(arg2Values[i]));
+				}
+				break;
+			}
+			case NextsS:
+			{
+				int stmt1 = atoi(arg2Value.c_str());
+				vector<int> arg2Values = PKB::getNextStarStmts(stmt1);
+				for (size_t i=0; i<arg2Values.size(); i++) {
+					resultList.push_back(intToString(arg2Values[i]));
+				}
+				break;
 			}
 			default:
 				break;
@@ -552,6 +590,18 @@ bool QueryEvaluator::isRelation(Symbol relation, string arg1Value, string arg2Va
 		}
 		return PKB::isCallStar(proc1, proc2);
 	}
+	case Nexts:
+	{
+		int stmt1 = atoi(arg1Value.c_str());
+		int stmt2 = atoi(arg2Value.c_str());
+		return PKB::isNext(stmt1, stmt2);
+	}
+	case NextsS:
+	{
+		int stmt1 = atoi(arg1Value.c_str());
+		int stmt2 = atoi(arg2Value.c_str());
+		return PKB::isNextStar(stmt1, stmt2);
+	}
 	default:
 		return false;
 	}
@@ -587,8 +637,7 @@ void QueryEvaluator::checkPatternCondition(TNode patternNode,vector<string> valu
 	// handle left hand side of pattern condition
 	TNode * arg1Node = child1 -> getChildAtIndex(0);
 	handlePatternLeftHand(child1Value, arg1Node, values,check);
-
-	if (!check) {
+	if (check==false) {
 		checkQueryCondition(childIndex+1, values, result, check);
 		return;
 	}
@@ -625,29 +674,26 @@ void QueryEvaluator::handlePatternLeftHand(string stmt, TNode * leftNode, vector
 		{
 			string leftValue = values[leftIndex];
 			if (leftValue=="-1") {
-				string type = table.getType(leftName);
-				Symbol symbolType = SyntaxHelper::getSymbolType(type);
-				vector<string> leftValues = getAllArgValues(symbolType);
-				if (leftValues.size()==0) 
-				{
-					check = false;
-				}
-				for (size_t i=0; i<leftValues.size(); i++) {
-					values[leftIndex] = leftValues[i];
-					handlePatternLeftHand(stmt, leftNode, values, check);
-				}
+				int stmtNo = atoi(stmt.c_str());
+				TNode * stmtNode = PKB::getNodeOfStmt(stmtNo);
+
+				TNode * child1 = stmtNode->getChildAtIndex(0);
+				string child1Name = child1 -> getValue();
+				values[leftIndex] = child1Name;
 			} else {
 				int stmtNo = atoi(stmt.c_str());
 				TNode * stmtNode = PKB::getNodeOfStmt(stmtNo);
 
 				TNode * child1 = stmtNode->getChildAtIndex(0);
 				string child1Value = child1->getValue();
-				if (child1Value==leftValue) { 
+				if (child1Value==leftValue) {  
 					check = true;
 				}
-				else {check=false;} 
+				else {
+					check=false;
+				} 
 			}
-			break;
+			return;
 		}
 	case Const:
 		{
@@ -658,7 +704,7 @@ void QueryEvaluator::handlePatternLeftHand(string stmt, TNode * leftNode, vector
 			string child1Value = child1->getValue();
 			if (child1Value==leftName) { check = true; }
 			else {check=false;} 
-			break;
+			return;
 		}
 	default:
 		break;
@@ -669,11 +715,11 @@ void QueryEvaluator::handlePatternLeftHand(string stmt, TNode * leftNode, vector
 void QueryEvaluator::handlePatternRightHand(string stmt, TNode * leftNode, vector<string> & values, bool & check) {
 	Symbol leftType = leftNode->getType();
 	string leftName = leftNode->getValue();
-	int leftIndex = table.getIndex(leftName);
 
 	switch (leftType) {
 	case Underline:
 		{
+			int leftIndex = table.getIndex(leftName);
 			if (leftNode->getNumChildren()==0) {
 				check = true;
 			} else {
@@ -688,15 +734,21 @@ void QueryEvaluator::handlePatternRightHand(string stmt, TNode * leftNode, vecto
 		}
 	case No_Underline:
 		{
+			int leftIndex = table.getIndex(leftName);
 			TNode * node = leftNode->getChildAtIndex(0); 
 			int stmtNo = atoi(stmt.c_str());
+			//cout << "checkpoint 008: stmt index= " << stmtNo <<endl;
 			TNode * stmtNode = PKB::getNodeOfStmt(stmtNo);
+			//stmtNode->printTNode();
+			TNode * rightSideStmtNode = stmtNode ->getChildAtIndex(1);
 			Tree tree1; tree1.setRoot(node);
-			AST tree2; tree2.setRoot(stmtNode);
+			AST tree2; tree2.setRoot(rightSideStmtNode);
 			check = tree2.isSameTree(tree1);
+			//cout << "checkpoint 009: check =" << check <<endl;
 			break;
 		}
 	default:
+		check = false;
 		break;
 	}
 
@@ -769,7 +821,6 @@ void QueryEvaluator::checkWithCondition(TNode withNode, vector<string> values, v
 				switch (child2Type) {
 					case Const:
 						{
-							cout << "checkpoint 010" <<endl;
 							check = (child1Value==child2Name);
 							checkQueryCondition(childIndex+1, values, result, check);
 							return;
@@ -879,7 +930,7 @@ void QueryEvaluator::updateResultList(vector<string> values, vector<string>& res
 	Symbol paramType = child.getType();
 	string paramName = child.getValue();
 
-	if (child1Name=="BOOLEAN") { // BOOLEAN query
+	if (child1Name=="a-BOOLEAN") { // BOOLEAN query
 		result.push_back("true");
 		return;
 	}

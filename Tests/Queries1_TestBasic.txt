@@ -1,4 +1,4 @@
-5
+6
 cat: Variable, Statement
 1 - Variable, ImplStmtLine ::
 variable v##;
@@ -23,15 +23,15 @@ Select w
 5
 assign a;
 Select a pattern a(_,_)
-
+1,3,5,6
 5000
-5
+6
 assign a;
 Select a pattern a("i",_)
-
+1
 5000
-6 
+7
 assign a; variable v;
 Select a pattern a(v,_) with v.varName = "j"
-
+3
 5000
