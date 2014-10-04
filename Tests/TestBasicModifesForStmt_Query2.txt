@@ -8,7 +8,7 @@ Select a such that Modifies(a, "buggy")
 2 - Modifies, ImplStmtLine ::
 variable var;
 Select var such that Modifies(24, var)
-
+busy
 5000
 3 - Modifies, ImplStmtLine ::
 stmt s;
