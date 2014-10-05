@@ -1,0 +1,49 @@
+#ifndef Call_h
+#define Call_h
+
+#include <vector>
+#include <utility>
+#include <iostream>
+
+using namespace std;
+
+class Call
+{
+public :
+
+	std::vector<std::vector<bool>> callTable;
+	
+
+	// Constructor
+	Call();  
+  
+	// Method to check if calls relationship exists
+	bool isCalls(int proc1, int proc2);
+  
+	// Method to insert a pair of proc
+	int insertCalls(int proc1, int proc2);
+
+	// Method to check if procedures are callStar
+	bool isCallStar(int proc1, int proc2);
+
+	std::vector<int> getCallingStarProc(int proc1);
+
+	std::vector<int> getCalledByStarProc(int proc1);
+
+	// Method to get the list of proc called by proc1
+	std::vector<int> getCalledByProc(int proc1);
+
+	// Method to get the list of proc calling proc1
+	std::vector<int> getCallingProc(int proc1);
+
+	//Method to get the number of records in the table.
+
+	//Method for debugging - will be removed when submit.
+	//void printTable();
+
+private:
+	std::vector<int> getCalledByStarProcHelper(int proc1, std::vector<int> &accumulated_result);
+	std::vector<int> getCallingStarProcHelper(int proc1, std::vector<int> &accumulated_result);
+	int MAX_SIZE;
+};
+#endif
