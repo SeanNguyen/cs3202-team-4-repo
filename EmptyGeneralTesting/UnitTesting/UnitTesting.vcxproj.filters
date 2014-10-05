@@ -37,6 +37,12 @@
     <ClCompile Include="source\UnitTest.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
+    <ClCompile Include="ListTableTest.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MapTableTest.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\ParserTest.h">
@@ -64,6 +70,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\TestUseTable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ListTableTest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MapTableTest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

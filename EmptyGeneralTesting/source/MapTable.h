@@ -1,7 +1,6 @@
-#pragma once
-
 #include <map>
 #include <vector>
+#include <algorithm>
 #include "Table.h"
 
 using namespace std;
@@ -10,75 +9,73 @@ template <typename T>
 class MapTable : public Table {
 
 private:
-	map <T, vector<T>> primaryMap;
-	map <T, vector <T>> reversedMap;
-	map <T, bool> isProcessed;
-	bool isInMiddleOfSearch = false;
+	map <T, vector<T>> keyValueMap;
+	map <T, bool> processedFlags;
+
 public:
-	MapTable(void);
-	~MapTable(void);
+	MapTable(void) {}
+	~MapTable(void) {}
 
-	int insert (T key, T value);
-	bool isMapped (T key, T value);
-	bool isMappedStar (T key, T value);
-	vector<T> getValues (T key);
-	vector<T> getValuesStar (T key);
-	vector <T> getKeys (T value);
-	vector <T> getKeysStar (T value);
-};
-
-template <typename T>
-void MapTable <T>::insert(T key, T value) {
-	if (isMapped(key, value))
-		return;
-	if (primaryMap[key] == null)
-		primaryMap[key] = vector <T>();
-	if (reversedMap[value] == null)
-		reversedMap[value] = vector <T>();
-
-	primaryMap[key].push_back(value);
-	reversedMap[value].push_back(key);
-}
-
-template <typename T>
-bool MapTable <T>::isMapped (T key, T value) {
-	vector <T> values = primaryMap[key];
-	return find(values.begin(), values.end(), stmt2) != values.end();
-}
-
-template <typename T>
-bool MapTable <T>::isMappedStar (T key, T value) {
-	if (!isInMiddleOfSearch) {
-		isProcessed.clear();
-		isInMiddleOfSearch = true;
+	void insert (T key, T value) {
+		if (isMapped(key, value))
+			return;
+		keyValueMap[key].push_back(value);
 	}
 
-	if (isProcessed.count(key) != 0 || isProcessed[key] == true)
-		return false;
-	else
-		isProcessed[key] = true;
-
-	vector <int> values = primaryMap[key];
-	if (isNext(stmt1, stmt2)) {
-		isInMiddleOfSearch = false;
-		return true;
+	bool isMapped (T key, T value) {
+		vector <T> values = keyValueMap[key];
+		return find(values.begin(), values.end(), value) != values.end();
 	}
-	//apply depth first search here
-	for (size_t i = 0; i < this->mapNext[stmt1].size(); i++) {
-		if (isNextStarInternal(nextStmts[i], stmt2)) {
-			isInMiddleOfSearch = false;
+
+	bool isMappedStar (T key, T value, bool isStartingPoint) {
+		if (isStartingPoint)
+			processedFlags.clear();
+
+		if (processedFlags.count(key) != 0 && processedFlags[key] == true)
+			return false;
+		else
+			processedFlags[key] = true;
+
+		if (isMapped(key, value)) {
 			return true;
 		}
+
+		vector <T> values = keyValueMap[key];
+		//apply depth first search here
+		for (size_t i = 0; i < values.size(); i++) {
+			if (isMappedStar(values[i], value, false)) {
+				return true;
+			}
+		}
+		return false;
 	}
-	return false;
-}
 
-template <typename T>
-vector<T> MapTable <T>::getValues (T key) {
-	return primaryMap[key];
-}
+	vector<T> getValues (T key) {
+		return keyValueMap[key];
+	}
 
-template <typename T>
-vector<T> MapTable <T>::getValuesStar (T key) {
-	
-}
+	vector<T> getValuesStar (T key, bool isStartingPoint) {
+		if (isStartingPoint)
+			processedFlags.clear();
+
+		vector <T> results;
+		if (processedFlags.count(key) != 0 && processedFlags[key] == true) {
+			return results;
+		} else if (!isStartingPoint) {
+			results.push_back(key);
+			processedFlags[key] = true;
+		}
+
+		vector <T> values = keyValueMap[key];
+		//apply depth first search here
+		for (size_t i = 0; i < values.size(); i++) {
+			vector <T> tempList = getValuesStar(values.at(i), false);
+			results.insert(results.end(), tempList.begin(), tempList.end());
+		}
+		return results;
+	}
+
+	int getSize() {
+		return keyValueMap.size();
+	}
+};
