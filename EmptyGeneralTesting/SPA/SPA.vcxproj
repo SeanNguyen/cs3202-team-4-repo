@@ -14,7 +14,6 @@
     <ClCompile Include="..\source\AST.cpp" />
     <ClCompile Include="..\source\CallTable.cpp" />
     <ClCompile Include="..\source\ConstTable.cpp" />
-    <ClCompile Include="..\source\DesignExtractor.cpp" />
     <ClCompile Include="..\source\Follow.cpp" />
     <ClCompile Include="..\source\ModifyTable.cpp" />
     <ClCompile Include="..\source\NextTable.cpp" />

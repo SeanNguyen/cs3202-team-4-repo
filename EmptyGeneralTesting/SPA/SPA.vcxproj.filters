@@ -55,9 +55,6 @@
     <ClCompile Include="..\source\QueryTree.cpp">
       <Filter>Resource Files\QueryProcessor</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\DesignExtractor.cpp">
-      <Filter>Resource Files\QueryProcessor</Filter>
-    </ClCompile>
     <ClCompile Include="..\source\PKB.cpp">
       <Filter>Resource Files\PKB</Filter>
     </ClCompile>
