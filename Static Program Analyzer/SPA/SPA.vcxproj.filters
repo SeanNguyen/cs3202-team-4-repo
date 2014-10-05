@@ -17,14 +17,14 @@
     <Filter Include="PKB\AST">
       <UniqueIdentifier>{bb7c2bd1-cfbf-462a-b46f-e800ff3552ec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PKB\Old PKB">
+      <UniqueIdentifier>{d0a721a6-6d8f-48c4-b8c2-130b6e069009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PKB\Table">
+      <UniqueIdentifier>{000bfc62-d4cc-4e17-8e09-7ad20ae0765e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\source\ListTable.h">
-      <Filter>PKB</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\MapTable.h">
-      <Filter>PKB</Filter>
-    </ClInclude>
     <ClInclude Include="..\source\PKB.h">
       <Filter>PKB</Filter>
     </ClInclude>
@@ -52,9 +52,6 @@
     <ClInclude Include="..\source\SyntaxHelper.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\Table.h">
-      <Filter>PKB</Filter>
-    </ClInclude>
     <ClInclude Include="..\source\AST.h">
       <Filter>PKB\AST</Filter>
     </ClInclude>
@@ -65,7 +62,16 @@
       <Filter>PKB\AST</Filter>
     </ClInclude>
     <ClInclude Include="..\source\SymbolTable.h">
-      <Filter>PKB</Filter>
+      <Filter>PKB\Old PKB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\ListTable.h">
+      <Filter>PKB\Table</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\MapTable.h">
+      <Filter>PKB\Table</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Table.h">
+      <Filter>PKB\Table</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -93,9 +99,6 @@
     <ClCompile Include="..\source\SyntaxHelper.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\Table.cpp">
-      <Filter>PKB</Filter>
-    </ClCompile>
     <ClCompile Include="..\source\AST.cpp">
       <Filter>PKB\AST</Filter>
     </ClCompile>
@@ -106,7 +109,10 @@
       <Filter>PKB\AST</Filter>
     </ClCompile>
     <ClCompile Include="..\source\SymbolTable.cpp">
-      <Filter>PKB</Filter>
+      <Filter>PKB\Old PKB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Table.cpp">
+      <Filter>PKB\Table</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
