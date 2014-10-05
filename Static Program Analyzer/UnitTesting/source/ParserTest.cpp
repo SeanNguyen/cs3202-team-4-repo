@@ -9,13 +9,13 @@
 
 using namespace std;
 
-string testFile_EmptyProcedure = "..\\UnitTesting\\test cases\\ParserTest_EmptyProceure.txt";
-string testFile_Call = "..\\UnitTesting\\test cases\\ParserTest_Call.txt";
-string testFile_While = "..\\UnitTesting\\test cases\\ParserTest_While.txt";
-string testFile_If = "..\\UnitTesting\\test cases\\ParserTest_If.txt";
-string testFile_SimpleAssign = "..\\UnitTesting\\test cases\\ParserTest_SimpleAssign.txt";
-string testFile_ComplexAssign = "..\\UnitTesting\\test cases\\ParserTest_ComplexAssign.txt";
-string testFile_NormalComplex = "..\\UnitTesting\\test cases\\ParserTest_NormalComplex.txt";
+string testFile_EmptyProcedure = ".\\test cases\\ParserTest_EmptyProceure.txt";
+string testFile_Call = ".\\test cases\\ParserTest_Call.txt";
+string testFile_While = ".\\test cases\\ParserTest_While.txt";
+string testFile_If = ".\\test cases\\ParserTest_If.txt";
+string testFile_SimpleAssign = ".\\test cases\\ParserTest_SimpleAssign.txt";
+string testFile_ComplexAssign = ".\\test cases\\ParserTest_ComplexAssign.txt";
+string testFile_NormalComplex = ".\\test cases\\ParserTest_NormalComplex.txt";
 
 void ParserTest::setUp() {
 }
