@@ -43,7 +43,7 @@ Select w pattern a(v, _"chocolate"_) such that Modifies(w, v)
 9 - Typed, Pattern, Modifies ::
 assign a; constant c; variable v;
 Select a pattern a(v, _) such that Uses(v, c)
-7, 9, 10, 17, 19, 24, 26, 27
+
 5000
 10 - Typed, Pattern, Parent ::
 while w; assign a; while w;
