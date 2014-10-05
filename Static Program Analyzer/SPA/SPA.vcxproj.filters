@@ -14,51 +14,18 @@
     <Filter Include="QueryProcessor">
       <UniqueIdentifier>{1f78c42e-cb83-45de-a5be-d6d19aacc1fb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PKB\AST">
+      <UniqueIdentifier>{bb7c2bd1-cfbf-462a-b46f-e800ff3552ec}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\source\CallTable.h">
-      <Filter>PKB</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\ConstTable.h">
-      <Filter>PKB</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\Follow.h">
-      <Filter>PKB</Filter>
-    </ClInclude>
     <ClInclude Include="..\source\ListTable.h">
       <Filter>PKB</Filter>
     </ClInclude>
     <ClInclude Include="..\source\MapTable.h">
       <Filter>PKB</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\ModifyTable.h">
-      <Filter>PKB</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\NextTable.h">
-      <Filter>PKB</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\ParentTable.h">
-      <Filter>PKB</Filter>
-    </ClInclude>
     <ClInclude Include="..\source\PKB.h">
-      <Filter>PKB</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\ProcTable.h">
-      <Filter>PKB</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\StatTable.h">
-      <Filter>PKB</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\SymbolTable.h">
-      <Filter>PKB</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\Table.h">
-      <Filter>PKB</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\UseTable.h">
-      <Filter>PKB</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\VarTable.h">
       <Filter>PKB</Filter>
     </ClInclude>
     <ClInclude Include="..\source\Parser.h">
@@ -79,60 +46,30 @@
     <ClInclude Include="..\source\QueryTree.h">
       <Filter>QueryProcessor</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\Tree.h">
-      <Filter>PKB</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\AST.h">
-      <Filter>PKB</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\TNode.h">
-      <Filter>PKB</Filter>
-    </ClInclude>
     <ClInclude Include="..\source\Constants.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
     <ClInclude Include="..\source\SyntaxHelper.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\source\Table.h">
+      <Filter>PKB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\AST.h">
+      <Filter>PKB\AST</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\TNode.h">
+      <Filter>PKB\AST</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Tree.h">
+      <Filter>PKB\AST</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\SymbolTable.h">
+      <Filter>PKB</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\source\CallTable.cpp">
-      <Filter>PKB</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\ConstTable.cpp">
-      <Filter>PKB</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\ModifyTable.cpp">
-      <Filter>PKB</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\NextTable.cpp">
-      <Filter>PKB</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\ParentTable.cpp">
-      <Filter>PKB</Filter>
-    </ClCompile>
     <ClCompile Include="..\source\PKB.cpp">
-      <Filter>PKB</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\ProcTable.cpp">
-      <Filter>PKB</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\StatTable.cpp">
-      <Filter>PKB</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\SymbolTable.cpp">
-      <Filter>PKB</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\Table.cpp">
-      <Filter>PKB</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\UseTable.cpp">
-      <Filter>PKB</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\VarTable.cpp">
-      <Filter>PKB</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\Follow.cpp">
       <Filter>PKB</Filter>
     </ClCompile>
     <ClCompile Include="..\source\Parser.cpp">
@@ -153,17 +90,23 @@
     <ClCompile Include="..\source\QueryTree.cpp">
       <Filter>QueryProcessor</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\AST.cpp">
-      <Filter>PKB</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\TNode.cpp">
-      <Filter>PKB</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\Tree.cpp">
-      <Filter>PKB</Filter>
-    </ClCompile>
     <ClCompile Include="..\source\SyntaxHelper.cpp">
       <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Table.cpp">
+      <Filter>PKB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\AST.cpp">
+      <Filter>PKB\AST</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\TNode.cpp">
+      <Filter>PKB\AST</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Tree.cpp">
+      <Filter>PKB\AST</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\SymbolTable.cpp">
+      <Filter>PKB</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

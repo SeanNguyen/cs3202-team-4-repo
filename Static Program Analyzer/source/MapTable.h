@@ -10,16 +10,18 @@ class MapTable : public Table {
 
 private:
 	map <T, vector<T>> keyValueMap;
+	map <T, vector<T>> reversedKeyValueMap;
 	map <T, bool> processedFlags;
 
 public:
 	MapTable(void) {}
 	~MapTable(void) {}
 
-	void insert (T key, T value) {
+	bool insert (T key, T value) {
 		if (isMapped(key, value))
-			return;
+			return true;
 		keyValueMap[key].push_back(value);
+		return true;
 	}
 
 	bool isMapped (T key, T value) {
@@ -70,6 +72,31 @@ public:
 		//apply depth first search here
 		for (size_t i = 0; i < values.size(); i++) {
 			vector <T> tempList = getValuesStar(values.at(i), false);
+			results.insert(results.end(), tempList.begin(), tempList.end());
+		}
+		return results;
+	}
+
+	vector<T> getIndexes (T value) {
+		return reversedKeyValueMap[value];
+	}
+
+	vector<T> getIndexesStar (T value, bool isStartingPoint) {
+		if (isStartingPoint)
+			processedFlags.clear();
+
+		vector <T> results;
+		if (processedFlags.count(value) != 0 && processedFlags[value] == true) {
+			return results;
+		} else if (!isStartingPoint) {
+			results.push_back(value);
+			processedFlags[value] = true;
+		}
+
+		vector <T> values = keyValueMap[value];
+		//apply depth first search here
+		for (size_t i = 0; i < values.size(); i++) {
+			vector <T> tempList = getIndexesStar(values.at(i), false);
 			results.insert(results.end(), tempList.begin(), tempList.end());
 		}
 		return results;

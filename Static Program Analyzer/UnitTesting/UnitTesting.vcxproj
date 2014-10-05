@@ -14,30 +14,20 @@
     <ClCompile Include="source\ListTableTest.cpp" />
     <ClCompile Include="source\MapTableTest.cpp" />
     <ClCompile Include="source\ParserTest.cpp" />
-    <ClCompile Include="source\TestCall.cpp" />
-    <ClCompile Include="source\TestFollow.cpp" />
-    <ClCompile Include="source\TestModify.cpp" />
-    <ClCompile Include="source\TestParentTable.cpp" />
     <ClCompile Include="source\TestQueryPreprocessor.cpp" />
     <ClCompile Include="source\TestQueryRepresentator.cpp" />
     <ClCompile Include="source\TestTNode.cpp" />
     <ClCompile Include="source\TestTree.cpp" />
-    <ClCompile Include="source\TestUseTable.cpp" />
     <ClCompile Include="source\UnitTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\ListTableTest.h" />
     <ClInclude Include="source\MapTableTest.h" />
     <ClInclude Include="source\ParserTest.h" />
-    <ClInclude Include="source\TestCall.h" />
-    <ClInclude Include="source\TestFollow.h" />
-    <ClInclude Include="source\TestModify.h" />
-    <ClInclude Include="source\TestParentTable.h" />
     <ClInclude Include="source\TestQueryPreprocessor.h" />
     <ClInclude Include="source\TestQueryRepresentator.h" />
     <ClInclude Include="source\TestTNode.h" />
     <ClInclude Include="source\TestTree.h" />
-    <ClInclude Include="source\TestUseTable.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{353E6B76-DB90-4258-AC06-2DF35773532C}</ProjectGuid>

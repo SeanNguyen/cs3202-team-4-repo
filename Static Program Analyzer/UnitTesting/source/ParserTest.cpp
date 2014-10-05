@@ -3,7 +3,6 @@
 
 #include "ParserTest.h"
 #include "Parser.h"
-#include "PKB.h"
 #include <iostream>
 #include <algorithm>
 
