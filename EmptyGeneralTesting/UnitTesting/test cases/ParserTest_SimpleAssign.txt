@@ -1,4 +1,0 @@
-procedure OhSimple
-{
-	i = i + j + h+ f + w+ k;
-	}
