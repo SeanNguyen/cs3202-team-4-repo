@@ -11,36 +11,29 @@ private:
 	vector <T> list;
 
 public:
-	ListTable(void);
-	~ListTable(void);
+	ListTable(void) {}
+	~ListTable(void) {}
 
-	template<typename T>
-	int insert (T element) {
+	void insert (T element) {
 		list.push_back (element);
-		return list.size();
 	}
 
-	template<typename T>
-	int getIndexes (T value) {
-		vector<int> indexes;
-
-		for(size_t i=0; i < statTable.size(); i++) {
-			if(statTable.at(i) == name)
-				indexes.push_back(i);
+	vector <int> getIndexes (T value) {
+		vector <int> result;
+		for (int i = 0; i < list.size(); i++) {
+			if (value == list.at(i))
+				result.push_back(i);
 		}
-		return indexes ;
+		return result;
 	}
 
-	template<typename T>
 	T getValue (int index) {
-		if (index < 0 || index > list.size())
+		if (index < 0 || index >= list.size())
 			return NULL;
 		return list.at(index);
 	}
 
-	template<typename T>
 	int getSize () {
 		return list.size();
 	}
 };
-
