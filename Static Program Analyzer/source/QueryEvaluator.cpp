@@ -886,7 +886,7 @@ vector<string> QueryEvaluator::getAllArgValues(Symbol type) {
 		{
 			vector<int> assignStmts = PKB::getStmtIndex(KEYWORD_ASSIGN);
 			for (size_t i=0; i<assignStmts.size(); i++) {
-				result.push_back(intToString(assignStmts[i]));
+				result.push_back(intToString(assignStmts[i]+1));
 			}
 			break;
 		}
@@ -894,7 +894,7 @@ vector<string> QueryEvaluator::getAllArgValues(Symbol type) {
 		{
 			vector<int> whileStmts = PKB::getStmtIndex(KEYWORD_WHILE);
 			for (size_t i=0; i<whileStmts.size(); i++) {
-				result.push_back(intToString(whileStmts[i]));
+				result.push_back(intToString(whileStmts[i]+1));
 			}
 			break;
 		}
@@ -902,14 +902,14 @@ vector<string> QueryEvaluator::getAllArgValues(Symbol type) {
 		{
 			vector<int> IfStmts = PKB::getStmtIndex(KEYWORD_IF);
 			for (size_t i=0; i<IfStmts.size(); i++) {
-				result.push_back(intToString(IfStmts[i]));
+				result.push_back(intToString(IfStmts[i]+1));
 			}
 			break;
 		}
 	case CallStmt: {
 			vector<int> callStmts = PKB::getStmtIndex(KEYWORD_CALL);
 			for (size_t i=0; i<callStmts.size(); i++) {
-				result.push_back(intToString(callStmts[i]));
+				result.push_back(intToString(callStmts[i]+1));
 			}
 			break;
 		}
@@ -964,7 +964,7 @@ void QueryEvaluator::updateResultList(vector<string> values, vector<string>& res
 		} else if (paramType==KEYWORD_ASSIGN) {
 			vector<int> paramList = PKB::getStmtIndex(KEYWORD_ASSIGN);
 			for (size_t i=0; i<paramList.size(); i++) {
-				paramVal = intToString(paramList[i]);
+				paramVal = intToString(paramList[i]+1);
 				if (!isResult(paramVal, result)) {
 					// add new result to list
 					result.push_back(paramVal);
@@ -973,7 +973,7 @@ void QueryEvaluator::updateResultList(vector<string> values, vector<string>& res
 		} else if (paramType==KEYWORD_WHILE) {
 			vector<int> paramList = PKB::getStmtIndex(KEYWORD_WHILE);
 			for (size_t i=0; i<paramList.size(); i++) {
-				paramVal = intToString(paramList[i]);
+				paramVal = intToString(paramList[i]+1);
 				if (!isResult(paramVal, result)) {
 					// add new result to list
 					result.push_back(paramVal);
@@ -982,7 +982,7 @@ void QueryEvaluator::updateResultList(vector<string> values, vector<string>& res
 		} else if (paramType==KEYWORD_IF) {
 			vector<int> paramList = PKB::getStmtIndex(KEYWORD_IF);
 			for (size_t i=0; i<paramList.size(); i++) {
-				paramVal = intToString(paramList[i]);
+				paramVal = intToString(paramList[i]+1);
 				if (!isResult(paramVal, result)) {
 					// add new result to list
 					result.push_back(paramVal);
@@ -991,7 +991,7 @@ void QueryEvaluator::updateResultList(vector<string> values, vector<string>& res
 		} else if (paramType==KEYWORD_CALL) {
 			vector<int> paramList = PKB::getStmtIndex(KEYWORD_CALL);
 			for (size_t i=0; i<paramList.size(); i++) {
-				paramVal = intToString(paramList[i]);
+				paramVal = intToString(paramList[i]+1);
 				if (!isResult(paramVal, result)) {
 					// add new result to list
 					result.push_back(paramVal);

@@ -11,23 +11,23 @@ void SystemTest1::tearDown() {
 CPPUNIT_TEST_SUITE_REGISTRATION( SystemTest1 );
 
 void SystemTest1::test1() {
-	//string source = "..\\..\\Tests\\Source1.txt";
-	//string queries = "..\\..\\Tests\\Queries1_TestBasic.txt";
-	//Parser parser;
-	//QueryProcessor qp(queries);
-	//
-	//parser.parse(source);
-	//parser.buildPKB();
+	string source = "..\\..\\Tests\\Source1.txt";
+	string queries = "..\\..\\Tests\\Queries1_TestBasic.txt";
+	Parser parser;
+	QueryProcessor qp(queries);
+	
+	parser.parse(source);
+	parser.buildPKB();
 
-	//vector<vector<string>> results = qp.Process();
+	vector<vector<string>> results = qp.Process();
 
-	//for (size_t i=0; i<results.size(); i++) {
-	//	cout << "Query " << i+1 << ": ";
-	//	for (size_t j=0; j< results[i].size(); j++) {
-	//		cout << results[i][j] << " ";
-	//	}
-	//	cout <<endl;
-	//}
+	for (size_t i=0; i<results.size(); i++) {
+		cout << "Query " << i+1 << ": ";
+		for (size_t j=0; j< results[i].size(); j++) {
+			cout << results[i][j] << " ";
+		}
+		cout <<endl;
+	}
 
 }
 
@@ -146,7 +146,7 @@ void SystemTest1::test5() {
 
 void SystemTest1::test6() {
 	string source = "..\\..\\Tests\\Source6.txt";
-	string queries = "..\\..\\Tests\\Queries6_TestUses.txt";
+	string queries = "..\\..\\Tests\\TestBasicUses_Queries6.txt";
 	Parser parser;
 	QueryProcessor qp(queries);
 	
