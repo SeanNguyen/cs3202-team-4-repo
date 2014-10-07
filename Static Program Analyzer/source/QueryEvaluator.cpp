@@ -19,7 +19,6 @@ void QueryEvaluator::Evaluate() {
 	}
 }
 
-
 // Description: this function is to get result of query at index "index"
 vector<string> QueryEvaluator::getResult(int index) { 
 	if (resultList.size()==0) {
@@ -37,7 +36,6 @@ vector<vector<string>> QueryEvaluator::getAllResult() {
 }
 
 /* PRIVATE FUNCTION */
-
 // Description: this function is to evaluate query one by one
 void QueryEvaluator::evaluateQuery() {
 	vector<string> symbolValues;
@@ -88,7 +86,6 @@ void QueryEvaluator::findResult(vector<string> values, vector<string>& result) {
 
 void QueryEvaluator::checkQueryCondition(int childIndex, vector<string> values, vector<string>&result, bool check) {
 	if (!check) {
-		//cout << "CHECKPOINT 002" << endl;
 		// return null result list
 		return;
 	}
@@ -113,7 +110,6 @@ void QueryEvaluator::checkQueryCondition(int childIndex, vector<string> values, 
 
 	// get root's child at index
 	TNode child = *root.getChildAtIndex(childIndex);
-	//cout << "CHECKPOINT 001: " << SyntaxHelper::SymbolToString(child.getType()) <<endl;
 	if (child.getType()==SuchThatCls) {
 		// find values satisfying such that condition
 		checkSuchThatCondition(child, values, result, check, childIndex);
@@ -236,7 +232,6 @@ void QueryEvaluator::handleRelationNode(TNode & relationNode, vector<string> val
 		} else{
 			//brute force method
 			string type = table.getType(arg1Name);
-			//cout << "checkpoint 001: arg1Type = " << type <<endl;
 			vector<string> arg1Value = getAllArgValues(SyntaxHelper::getSymbolType(type));
 			// for each valu of arg1 we call checkQueryCondition again
 			for (size_t i=0; i<arg1Value.size(); i++) {
@@ -735,14 +730,12 @@ void QueryEvaluator::handlePatternRightHand(string stmt, TNode * leftNode, vecto
 			int leftIndex = table.getIndex(leftName);
 			TNode * node = leftNode->getChildAtIndex(0); 
 			int stmtNo = atoi(stmt.c_str());
-			//cout << "checkpoint 008: stmt index= " << stmtNo <<endl;
 			TNode * stmtNode = PKB::getNodeOfStmt(stmtNo);
 			//stmtNode->printTNode();
 			TNode * rightSideStmtNode = stmtNode ->getChildAtIndex(1);
 			Tree tree1; tree1.setRoot(node);
 			AST tree2; tree2.setRoot(rightSideStmtNode);
 			check = tree2.isSameTree(tree1);
-			//cout << "checkpoint 009: check =" << check <<endl;
 			break;
 		}
 	default:
@@ -877,7 +870,6 @@ vector<string> QueryEvaluator::getAllArgValues(Symbol type) {
 		break;
 	case Stmt:
 	case Prog_line:
-		cout << "checkpoint 001a" <<endl;
 		for (int i=0; i<PKB::getStatTableSize(); i++) {
 			result.push_back(intToString(i+1));
 		}
@@ -940,7 +932,8 @@ void QueryEvaluator::updateResultList(vector<string> values, vector<string>& res
 	// check if paramVal is null value or not
 	if (paramVal!="-1") {
 		// check if paramVal has same type as in paramType
-		if (!isDeclaredType(paramVal, paramName, "")) { // need fix
+		string type = table.getType(paramName);
+		if (!isDeclaredType(paramVal, paramName, type)) { 
 			return;
 		}
 
@@ -1033,25 +1026,25 @@ vector<string> QueryEvaluator::removeInvalidValues(vector<string> list, Symbol t
 			}
 		case Assign:
 			{
-				int stmt = atoi(value.c_str());
+				int stmt = atoi(value.c_str())-1;
 				if (PKB::getStmtName(stmt)==KEYWORD_ASSIGN ) { result.push_back(value);}
 				break;
 			}
 		case While:
 			{
-				int stmt = atoi(value.c_str());
+				int stmt = atoi(value.c_str())-1;
 				if (PKB::getStmtName(stmt)==KEYWORD_WHILE ) { result.push_back(value);}
 				break;
 			}
 		case If:
 			{
-				int stmt = atoi(value.c_str());
+				int stmt = atoi(value.c_str())-1;
 				if (PKB::getStmtName(stmt)==KEYWORD_IF ) { result.push_back(value);}
 				break;
 			}
 		case CallStmt:
 			{
-				int stmt = atoi(value.c_str());
+				int stmt = atoi(value.c_str())-1;
 				if (PKB::getStmtName(stmt)==KEYWORD_CALL ) { result.push_back(value);}
 				break;
 			}
@@ -1085,13 +1078,13 @@ bool QueryEvaluator::isDeclaredType(string val, string name, string type) {
 	} else if (type=="variable") {
 		if (PKB::getVarIndex(val)==-1) return false;
 	} else if (type=="procedure") {
-		// implement here
+		if (PKB::getProcIndex(val).size()==0) return false;
 	} else {
 		// search in StmtTable for this case
 		if (table.getType(name)!= "prog_line" && table.getType(name)!= "stmt") {
-			string stmtType = PKB::getStmtName(atoi(val.c_str()));
-			if (stmtType=="assignment" && table.getType(name)!="assign") return false; 
-			if (stmtType=="while:stmtList" && table.getType(name)!="while") return false;
+			string stmtType = PKB::getStmtName(atoi(val.c_str())-1);
+			if (stmtType==KEYWORD_ASSIGN && table.getType(name)!="assign") return false; 
+			if (stmtType=="while" && table.getType(name)!="while") return false;
 			// implement further for call, etc.
 		} else return true;
 	}
