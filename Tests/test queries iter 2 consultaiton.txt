@@ -1,5 +1,50 @@
 9
 cat: All Category
+1 - ParentStar ::
+stmt s, s1; assign a, a1, a2; while w; if ifstat; procedure p; variable v; constant c; prog_line n, n1, n2;
+Select s such that Parent* (s, 16)
+9,11
+5000
+2 - FollowsStar ::
+stmt s, s1; assign a, a1, a2; while w; if ifstat; procedure p; variable v; constant c; prog_line n, n1, n2;
+Select w such that Follows* (w, s)
+9,19,24
+5000
+3 - FollowsStar ::
+stmt s, s1; assign a, a1, a2; while w; if ifstat; procedure p; variable v; constant c; prog_line n, n1, n2;
+Select a such that Follows* (a, 7)
+1,2,3,4,6
+5000
+4 - Modifies ::
+stmt s, s1; assign a, a1, a2; while w; if ifstat; procedure p; variable v; constant c; prog_line n, n1, n2;
+Select v such that Modifies (11, v)
+idx,x,y,z
+5000
+5 - Modifies, Uses ::
+stmt s, s1; assign a, a1, a2; while w; if ifstat; procedure p; variable v; constant c; prog_line n, n1, n2;
+Select a such that Modifies (a, "y") and Uses (a, "y")
+25,30
+5000
+6 - CallsStar ::
+stmt s, s1; assign a, a1, a2; while w; if ifstat; procedure p; variable v; constant c; prog_line n, n1, n2;
+Select p such that Calls* ("Fern", p) and Modifies (p, "z")
+Orchid
+5000
+7 -Pattern ::
+stmt s, s1; assign a, a1, a2; while w; if ifstat; procedure p; variable v; constant c; prog_line n, n1, n2;
+Select a pattern a (_,"z  1")
+13
+5000
+8 - NextStar ::
+stmt s, s1; assign a, a1, a2; while w; if ifstat; procedure p; variable v; constant c; prog_line n, n1, n2;
+Select n such that Next* (n, n)
+9,10,11,12,13,14,15,16,17,19,20,21,22,24,25,27,28,29,30
+5000
+9 - Modifies, Uses, Follows, ParentStar :: Tests multiple clauses (it is not in Assignment 1).
+stmt s, s1; assign a, a1, a2; while w; if ifstat; procedure p; variable v; constant c; prog_line n, n1, n2;
+Select a such that Modifies (a, "y") and Uses (a, "y") and Parent* (w, a)
+25,30
+5000
 10
 assign a;
 Select a pattern a(_, _"x"_)

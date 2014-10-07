@@ -317,12 +317,14 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 
 				}
 				else{
-					var2 = PKB::getVarIndex(arg2Value);
+					cout << "checkpoint 001 " <<var2 << " " << arg2Value <<endl;
 					stmts = PKB::getStmtUsingVar(var2);
+					cout << "checkpoint 002 " << stmts.size() <<endl;
 				}
-				
+
 				for (size_t i=0; i<stmts.size(); i++) {
-					resultList.push_back(intToString(stmts[i]));
+					cout << "checkpoint " << stmts[i] <<endl;
+					resultList.push_back(intToString(stmts[i]+1));
 				}
 				break;
 			}

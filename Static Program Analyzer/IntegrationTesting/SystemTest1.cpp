@@ -146,7 +146,7 @@ void SystemTest1::test5() {
 
 void SystemTest1::test6() {
 	string source = "..\\..\\Tests\\Source6.txt";
-	string queries = "..\\..\\Tests\\TestBasicUses_Queries6.txt";
+	string queries = "..\\..\\Tests\\TestBasicUses_Query6.txt";
 	Parser parser;
 	QueryProcessor qp(queries);
 	
@@ -208,3 +208,45 @@ void SystemTest1::testNext() {
 	}
 	
 }
+
+void SystemTest1::test7() {
+	string source = "..\\..\\Tests\\Source7.txt";
+	string queries = "..\\..\\Tests\\TestBasicFollows_Query7.txt";
+	Parser parser;
+	QueryProcessor qp(queries);
+	
+	parser.parse(source);
+	parser.buildPKB();
+
+	vector<vector<string>> results = qp.Process();
+
+	cout << endl << "----TEST 7----" <<endl;
+	for (size_t i=0; i<results.size(); i++) {
+		cout << "Query " << i+1 << ": ";
+		for (size_t j=0; j< results[i].size(); j++) {
+			cout << results[i][j] << " ";
+		}
+		cout <<endl;
+	}
+}
+
+void SystemTest1::test8() {
+	string source = "..\\..\\Tests\\Source8.txt";
+	string queries = "..\\..\\Tests\\Queries8_1-WithClause.txt";
+	Parser parser;
+	QueryProcessor qp(queries);
+	
+	parser.parse(source);
+	parser.buildPKB();
+
+	vector<vector<string>> results = qp.Process();
+
+	cout << endl << "----TEST 7----" <<endl;
+	for (size_t i=0; i<results.size(); i++) {
+		cout << "Query " << i+1 << ": ";
+		for (size_t j=0; j< results[i].size(); j++) {
+			cout << results[i][j] << " ";
+		}
+		cout <<endl;
+	}
+} 
