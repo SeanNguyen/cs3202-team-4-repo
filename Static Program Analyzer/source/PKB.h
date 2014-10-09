@@ -50,49 +50,37 @@ public:
 	static std::string getConstName(int index);
 	static int getConstTableSize();
 
-	////////////////FOLLOWS METHODS///////////////////////
-	
-	// Method to return if 2 statement number s1 is followed by s2
-	static bool isFollows(int s1, int s2);
-	// Method to check Follows*(s1, s2) holds.
-	static bool isFollowsStar(int s1, int s2);
-	// Method to insert a pair of following statement numbers
-	static bool insertFollows(int s1, int s2);
-	// Method to get the following statement to statement number s1
-	static int getFollowingStmt(int s1);
-	// Method to get statement which is followed by statement s1
-	static int getFollowedStmt(int s1);
-	// Method to get the following statement to statement number s1
-	static std::vector<int> getFollowingStarStmt(int s1);
-	//  Method to get statement which is followed star by statement s1
-	static std::vector<int> getFollowedStarStmt(int s1);
-	//  Method to get statement which is followed star by statement s1
-	static std::vector<int> getAllFollowingStmt();
-	//  Method to get statement which is followed star by statement s1
-	static std::vector<int> getAllFollowedStmt();
-	static int getFollowTableSize();
-
-	////////////////MODIFY METHODS///////////////////////////////
-
-	// Method to check if modifies relationship exists
-	static bool isModifies(int s1, int varIndex);
-	// Method to insert a pair of following stmt number and variable
-	static bool insertModifies(int s1, int varIndex);
-	// Method to get the variables modified in stmt s1
-	static std::vector<int> getModifiedVarAtStmt(int s1);
-	// Method to get the list of stmt modifying var
-	static std::vector<int> getStmtModifyingVar(int varIndex);
-	static bool isModifiesProc(int proc1, int varIndex);
-	static int insertModifiesProc(int proc1, int varIndex);     
-	static std::vector<int> getModifiedVarAtProc(int proc1);
-	static std::vector<int> getProcModifyingVar(int varIndex);
-
 	////////////////////VARTABLE METHODS////////////////////////
 
 	static int insertVar(std::string name);
 	static int getVarIndex(std::string name);
 	static std::string getVarName(int index);
 	static int getVarTableSize();
+
+	///////////////STATEMENT TABLE METHODS////////////////////////
+
+	static bool insertStmt(string name);
+	static vector<int> getStmtIndex(string name);
+	static string getStmtName(int index);
+	static int getStatTableSize();
+
+	///////////////////////////////PROCTABLE///////////////////////
+
+	static bool insertProc(string name);
+	static vector<int> getProcIndex(string name);
+	static string getProcName(int index);
+	static int getProcTableSize();
+	static bool isProc(string name);
+
+	////////////////FOLLOWS METHODS///////////////////////
+	
+	static bool isFollows(int s1, int s2);
+	static bool isFollowsStar(int s1, int s2);
+	static bool insertFollows(int s1, int s2);
+	static int getFollowingStmt(int s1);
+	static int getFollowedStmt(int s1);
+	static std::vector<int> getFollowingStarStmt(int s1);
+	static std::vector<int> getFollowedStarStmt(int s1);
 
 	////////////////////PARENT TABLE METHODS//////////////////////////
 
@@ -103,35 +91,7 @@ public:
 	static std::vector<int> getChildStmt(int parentStmt);
 	static std::vector<int> getParentStarStmt(int childStmt);
 	static std::vector<int> getChildStarStmt(int parentStmt);
-	static std::vector<int> getAllParentStmt();
-	static std::vector<int> getAllChildStmt();
 	static int getParentTableSize();
-
-	///////////////STATEMENT TABLE METHODS////////////////////////
-
-	static bool insertStmt(string name);
-	static vector<int> getStmtIndex(string name);
-	static string getStmtName(int index);
-	static int getStatTableSize();
-	
-	/////////////////////////////USE TABLE METHODS//////////////////
-
-	// Method to check if uses relationship exists
-	static bool isUses(int s1, int varIndex);
-	// Method to insert a pair of following stmt number and variable
-	static bool insertUses(int s1, int varIndex);
-	// Method to get the variables used in stmt s1
-	static std::vector<int> getUsedVarAtStmt(int s1);
-	// Method to get the list of stmt using var
-	static std::vector<int> getStmtUsingVar(int varIndex);
-	// Method to check if uses relationship exists
-	static bool isUsesProc(int proc1, int varIndex);
-	// Method to insert a pair of uses proc number and variable
-	static int insertUsesProc(int proc1, int varIndex);
-	// Method to get the variables used in proc proc1
-	static std::vector<int> getUsedVarAtProc(int proc1);
-	// Method to get the list of proc using var
-	static std::vector<int> getProcUsingVar(int varIndex);
 
 	/////////////////////////CALL TABLE/////////////////////////////////////////
 
@@ -143,29 +103,36 @@ public:
 	static std::vector<int> getCalledByProc(int proc1);
 	static std::vector<int> getCallingProc(int proc1);
 
-	///////////////////////////////PROCTABLE////////////////////////////////////
+	////////////////MODIFY METHODS///////////////////////////////
 
-	static bool insertProc(string name);
-	static vector<int> getProcIndex(string name);
-	static string getProcName(int index);
-	static int getProcTableSize();
-	static bool isProc(string name);
+	static bool isModifies(int s1, int varIndex);
+	static bool insertModifies(int s1, int varIndex);
+	static std::vector<int> getModifiedVarAtStmt(int s1);
+	static std::vector<int> getStmtModifyingVar(int varIndex);
+	static bool isModifiesProc(int proc1, int varIndex);
+	static int insertModifiesProc(int proc1, int varIndex);     
+	static std::vector<int> getModifiedVarAtProc(int proc1);
+	static std::vector<int> getProcModifyingVar(int varIndex);
+
+	/////////////////////////////USE TABLE METHODS//////////////////
+
+	static bool isUses(int s1, int varIndex);
+	static bool insertUses(int s1, int varIndex);
+	static std::vector<int> getUsedVarAtStmt(int s1);
+	static std::vector<int> getStmtUsingVar(int varIndex);
+	static bool isUsesProc(int proc1, int varIndex);
+	static int insertUsesProc(int proc1, int varIndex);
+	static std::vector<int> getUsedVarAtProc(int proc1);
+	static std::vector<int> getProcUsingVar(int varIndex);
 
 	///////////////////////NEXTTABLE////////////////////////////////////
 
-	// Method to check if next relationship exists
 	static bool isNext(int n1, int n2);
-	// Method to insert a pair of line numbers
 	static bool insertNext(int n1, int n2);
-	// Method to check if line numbers are nextStar
 	static bool isNextStar(int n1, int n2);
-	//Method to get the first parameter in the NextStar relationship --> Next*(n1, x)
 	static std::vector<int> getNextStarStmts(int n1);
-	//Method to get the second parameter in the NextStar relationship --> Next*(x, n1)
 	static std::vector<int> getPreviousStarStmts(int n1);
-	// Method to get the list of line numbers next to n1
 	static std::vector<int> getNextStmts(int n1);
-	// Method to get the list of line numbers for which the next line number is n1
 	static std::vector<int> getPreviousStmts(int n1);
 };
 #endif

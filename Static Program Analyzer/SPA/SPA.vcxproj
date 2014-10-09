@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClInclude Include="..\source\AST.h" />
     <ClInclude Include="..\source\Constants.h" />
+    <ClInclude Include="..\source\DesignExtractor.h" />
     <ClInclude Include="..\source\ListTable.h" />
     <ClInclude Include="..\source\MapTable.h" />
     <ClInclude Include="..\source\Parser.h" />
@@ -30,6 +31,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\AST.cpp" />
+    <ClCompile Include="..\source\DesignExtractor.cpp" />
     <ClCompile Include="..\source\Parser.cpp" />
     <ClCompile Include="..\source\PKB.cpp" />
     <ClCompile Include="..\source\QueryEvaluator.cpp" />

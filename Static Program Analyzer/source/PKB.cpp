@@ -115,6 +115,9 @@ int PKB::getVarTableSize() {
 
 ////////////////////////STATEMENT METHODS//////////////
 bool PKB::insertStmt(std::string name) {
+	//if there is nothing yet, insert a dummy element
+	if (stmtTable.getSize() == 0)
+		stmtTable.insert("dummy");
 	return stmtTable.insert(name);
 }
 
@@ -186,53 +189,6 @@ std::vector<int> PKB::getFollowedStarStmt(int s1){
 	return followTable.getIndexesStar(s1, true);
 }
 
-/////////////////MODIFY METHODS/////////////////////////////////
-bool PKB::isModifies(int s1, int varIndex){
-	return modifyStmtTable.isMapped(s1, varIndex);
-}
-
-bool PKB::insertModifies(int s1, int varIndex){
-	return modifyStmtTable.insert(s1, varIndex);
-}
-
-std::vector<int> PKB::getModifiedVarAtStmt(int s1){
-	return modifyStmtTable.getValues(s1);
-}
-
-std::vector<int> PKB::getStmtModifyingVar(int varIndex){
-	return modifyStmtTable.getIndexes(varIndex);
-}
-
-bool PKB::isModifiesProc(int proc1, int varIndex){
-	return modifyProcTable.isMapped(proc1, varIndex);
-}
-
-int PKB::insertModifiesProc(int proc1, int varIndex){
-	return modifyProcTable.insert(proc1, varIndex);
-}
-
-std::vector<int> PKB::getModifiedVarAtProc(int proc1){
-	return modifyProcTable.getValues(proc1);
-}
-
-std::vector<int> PKB::getProcModifyingVar(int varIndex){
-	return modifyProcTable.getIndexes(varIndex);
-}
-
-//std::vector<int> PKB::getAllModifyingStmt(){
-//	return modifyStmtTable.getAllModifyingStmt();
-//}
-//
-//std::vector<int> PKB::getAllModifiedVar(){
-//	return modifyStmtTable.getAllModifiedVar();
-//}
-//
-//int PKB::getModifyTableSize()
-//{
-//	return modifyStmtTable.getSize();
-//}
-
-
 ///////////////////////PARENT TABLE//////////////////////////////
 bool PKB::isParent(int parentStmt, int childStmt){
 	return parentTable.isMapped(parentStmt, childStmt);
@@ -268,43 +224,6 @@ int PKB::getParentTableSize()
 	return parentTable.getSize();
 }
 
-//////////////////////USE TABLE METHODS/////////////////////
-bool PKB::isUses(int s1, int varIndex){
-	return useStmtTable.isMapped(s1, varIndex);
-}
-
-bool PKB::insertUses(int s1, int varIndex){
-	return useStmtTable.insert(s1, varIndex);
-}
-
-std::vector<int> PKB::getUsedVarAtStmt(int s1){
-	return useStmtTable.getValues(s1);
-}
-
-std::vector<int> PKB::getStmtUsingVar(int varIndex){
-	return useStmtTable.getIndexes(varIndex);
-}
-
-// Method to check if uses relationship exists
-bool PKB::isUsesProc(int proc1, int varIndex){
-	return useProcTable.isMapped(proc1, varIndex);
-}
-
-// Method to insert a pair of uses proc number and variable
-int PKB::insertUsesProc(int proc1, int varIndex){
-	return useProcTable.insert (proc1, varIndex);
-}
-
-// Method to get the variables used in proc proc1
-std::vector<int> PKB::getUsedVarAtProc(int proc1){
-	return useProcTable.getValues(proc1);
-}
-
-// Method to get the list of proc using var
-std::vector<int> PKB::getProcUsingVar(int varIndex){
-	return useProcTable.getValues(varIndex);
-}
-
 ///////////////////////CALL TABLE////////////////////////
 bool PKB::isCalls(int proc1, int proc2){
 	return callStmtTable.isMapped(proc1, proc2);
@@ -334,7 +253,71 @@ std::vector<int> PKB::getCallingProc(int proc1){
 	return callProcTable.getValues(proc1);
 }
 
+/////////////////MODIFY METHODS/////////////////////////////////
+bool PKB::isModifies(int s1, int varIndex){
+	return modifyStmtTable.isMapped(s1, varIndex);
+}
 
+bool PKB::insertModifies(int s1, int varIndex){
+	return modifyStmtTable.insert(s1, varIndex);
+}
+
+std::vector<int> PKB::getModifiedVarAtStmt(int s1){
+	return modifyStmtTable.getValues(s1);
+}
+
+std::vector<int> PKB::getStmtModifyingVar(int varIndex){
+	return modifyStmtTable.getIndexes(varIndex);
+}
+
+bool PKB::isModifiesProc(int proc1, int varIndex){
+	return modifyProcTable.isMapped(proc1, varIndex);
+}
+
+int PKB::insertModifiesProc(int proc1, int varIndex){
+	return modifyProcTable.insert(proc1, varIndex);
+}
+
+std::vector<int> PKB::getModifiedVarAtProc(int proc1){
+	return modifyProcTable.getValues(proc1);
+}
+
+std::vector<int> PKB::getProcModifyingVar(int varIndex){
+	return modifyProcTable.getIndexes(varIndex);
+}
+
+//////////////////////USE TABLE METHODS/////////////////////
+bool PKB::isUses(int s1, int varIndex){
+	return useStmtTable.isMapped(s1, varIndex);
+}
+
+bool PKB::insertUses(int s1, int varIndex){
+	return useStmtTable.insert(s1, varIndex);
+}
+
+std::vector<int> PKB::getUsedVarAtStmt(int s1){
+	return useStmtTable.getValues(s1);
+}
+
+std::vector<int> PKB::getStmtUsingVar(int varIndex){
+	return useStmtTable.getIndexes(varIndex);
+}
+
+bool PKB::isUsesProc(int proc1, int varIndex){
+	return useProcTable.isMapped(proc1, varIndex);
+}
+
+int PKB::insertUsesProc(int proc1, int varIndex){
+	return useProcTable.insert (proc1, varIndex);
+}
+
+std::vector<int> PKB::getUsedVarAtProc(int proc1){
+	return useProcTable.getValues(proc1);
+}
+
+std::vector<int> PKB::getProcUsingVar(int varIndex){
+	return useProcTable.getValues(varIndex);
+}
 
 ////////////////////////////////////Next METHODS///////////////////////////////
 

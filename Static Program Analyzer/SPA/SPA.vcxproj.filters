@@ -73,6 +73,9 @@
     <ClInclude Include="..\source\Table.h">
       <Filter>PKB\Table</Filter>
     </ClInclude>
+    <ClInclude Include="..\source\DesignExtractor.h">
+      <Filter>Parser</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\PKB.cpp">
@@ -113,6 +116,9 @@
     </ClCompile>
     <ClCompile Include="..\source\Table.cpp">
       <Filter>PKB\Table</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\DesignExtractor.cpp">
+      <Filter>Parser</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
