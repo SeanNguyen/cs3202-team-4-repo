@@ -40,6 +40,13 @@ void PKB::resetPKB() {
 	PKB::nextTable = MapTable <int>();
 }
 
+void PKB::preCalculateStarTables() {
+	followTable.preCalculateStarTable();
+	parentTable.preCalculateStarTable();
+	callStmtTable.preCalculateStarTable();
+	nextTable.preCalculateStarTable();
+}
+
 ////////////////////////////////AST METHODS/////////////////
 TNode * PKB::createNode() {
 	return ast.createNode();
@@ -183,11 +190,11 @@ int PKB::getFollowedStmt(int s1){
 }
 
 std::vector<int> PKB::getFollowingStarStmt(int s1){
-	return followTable.getValuesStar(s1, true);
+	return followTable.getValuesStar(s1);
 }
 
 std::vector<int> PKB::getFollowedStarStmt(int s1){
-	return followTable.getIndexesStar(s1, true);
+	return followTable.getIndexesStar(s1);
 }
 
 ///////////////////////PARENT TABLE//////////////////////////////
@@ -213,11 +220,11 @@ std::vector<int> PKB::getChildStmt(int parentStmt){
 }
 
 std::vector<int> PKB::getChildStarStmt(int parentStmt){
-	return parentTable.getValuesStar(parentStmt, true);
+	return parentTable.getValuesStar(parentStmt);
 }
 
 std::vector<int> PKB::getParentStarStmt(int childStmt){
-	return parentTable.getIndexesStar(childStmt, true);
+	return parentTable.getIndexesStar(childStmt);
 }
 
 int PKB::getParentTableSize()
@@ -239,11 +246,11 @@ bool PKB::isCallStar(int proc1, int proc2){
 }
 
 std::vector<int> PKB::getCallingStarProc(int proc1){
-	return callProcTable.getValuesStar(proc1, true);
+	return callProcTable.getValuesStar(proc1);
 }
 
 std::vector<int> PKB::getCalledByStarProc(int proc1){
-	return callProcTable.getIndexesStar(proc1, true);
+	return callProcTable.getIndexesStar(proc1);
 }
 
 std::vector<int> PKB::getCalledByProc(int proc1){
@@ -267,7 +274,7 @@ int PKB::getCalledProc(int stmt) {
 }
 
 vector <int> PKB::getCallingStmt (int proc) {
-	callStmtTable.getIndexes(proc);
+	return callStmtTable.getIndexes(proc);
 }
 
 /////////////////MODIFY METHODS/////////////////////////////////
@@ -355,12 +362,12 @@ bool PKB::isNextStar(int n1, int n2) {
 
 //Method to get the first parameter in the NextStar relationship --> Next*(n1, x)
 std::vector<int> PKB::getNextStarStmts(int n1) {
-	return nextTable.getValuesStar(n1, true);
+	return nextTable.getValuesStar(n1);
 }
 
 //Method to get the second parameter in the NextStar relationship --> Next*(x, n1)
 std::vector<int> PKB::getPreviousStarStmts(int n1) {
-	return nextTable.getIndexesStar(n1, true);
+	return nextTable.getIndexesStar(n1);
 }
 
 // Method to get the list of line numbers next to n1

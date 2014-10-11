@@ -31,7 +31,7 @@ private:
 public:
 	PKB();
 	static void resetPKB();
-
+	static void preCalculateStarTables();
 	//////////////////////////////////AST METHODS/////////////////
 	static TNode * createNode();
 	static TNode * createNode(Symbol type);

@@ -90,8 +90,9 @@ void MapTableTest::TestGetValuesStar() {
 	mapTable.insert (key1, key2);
 	mapTable.insert (key2, key1);
 	mapTable.insert (key2, key3);
+	mapTable.preCalculateStarTable();
 
 	int expectedResultSize = 3;
-	int actualResultSize = mapTable.getValuesStar(key1, true).size();
+	int actualResultSize = mapTable.getValuesStar(key1).size();
 	CPPUNIT_ASSERT_EQUAL (expectedResultSize, actualResultSize);
 }

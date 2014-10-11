@@ -11,6 +11,9 @@ class MapTable : public Table {
 private:
 	map <T, vector<T>> keyValueMap;
 	map <T, vector<T>> reversedKeyValueMap;
+	map <T, vector<T>> keyValueStarMap;
+	map <T, vector<T>> reversedKeyValueStarMap;
+
 	map <T, bool> processedFlags;
 
 public:
@@ -56,7 +59,38 @@ public:
 		return keyValueMap[key];
 	}
 
-	vector<T> getValuesStar (T key, bool isStartingPoint) {
+	vector<T> getValuesStar (T key) {
+		return keyValueStarMap[key];
+	}
+
+	vector<T> getIndexes (T value) {
+		return reversedKeyValueMap[value];
+	}
+
+	vector<T> getIndexesStar (T value) {
+		return reversedKeyValueStarMap[value];
+	}
+
+	void preCalculateStarTable() {
+		for (map<T, vector<T>>::iterator it = keyValueMap.begin(); it != keyValueMap.end(); ++it) {
+			T key = it->first;
+			vector<T> starResults = calculateValuesStar(key, true);
+			keyValueStarMap[key] = starResults;
+		}
+
+		for (map<T, vector<T>>::iterator it = reversedKeyValueMap.begin(); it != reversedKeyValueMap.end(); ++it) {
+			T value = it->first;
+			vector<T> starResults = calculateIndexesStar(value, true);
+			reversedKeyValueStarMap[value] = starResults;
+		}
+	}
+
+	int getSize() {
+		return keyValueMap.size();
+	}
+
+private:
+	vector<T> calculateValuesStar(T key, bool isStartingPoint) {
 		if (isStartingPoint)
 			processedFlags.clear();
 
@@ -71,17 +105,13 @@ public:
 		vector <T> values = keyValueMap[key];
 		//apply depth first search here
 		for (size_t i = 0; i < values.size(); i++) {
-			vector <T> tempList = getValuesStar(values.at(i), false);
+			vector <T> tempList = calculateValuesStar(values.at(i), false);
 			results.insert(results.end(), tempList.begin(), tempList.end());
 		}
 		return results;
 	}
 
-	vector<T> getIndexes (T value) {
-		return reversedKeyValueMap[value];
-	}
-
-	vector<T> getIndexesStar (T value, bool isStartingPoint) {
+	vector<T> calculateIndexesStar(T value, bool isStartingPoint) {
 		if (isStartingPoint)
 			processedFlags.clear();
 
@@ -96,13 +126,9 @@ public:
 		vector <T> values = keyValueMap[value];
 		//apply depth first search here
 		for (size_t i = 0; i < values.size(); i++) {
-			vector <T> tempList = getIndexesStar(values.at(i), false);
+			vector <T> tempList = calculateIndexesStar(values.at(i), false);
 			results.insert(results.end(), tempList.begin(), tempList.end());
 		}
 		return results;
-	}
-
-	int getSize() {
-		return keyValueMap.size();
 	}
 };
