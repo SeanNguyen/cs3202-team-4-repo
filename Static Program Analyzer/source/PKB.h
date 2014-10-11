@@ -103,6 +103,11 @@ public:
 	static std::vector<int> getCalledByProc(int proc1);
 	static std::vector<int> getCallingProc(int proc1);
 
+	static bool isCallStmt (int stmt, int proc);
+	static bool insertCallStmt (int stmt, int proc);
+	static int getCalledProc(int stmt);
+	static vector <int> getCallingStmt (int proc);
+
 	////////////////MODIFY METHODS///////////////////////////////
 
 	static bool isModifies(int s1, int varIndex);

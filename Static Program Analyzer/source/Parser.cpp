@@ -162,9 +162,11 @@ void Parser::buildProcTable() {
 void Parser::buildCallTable() {
 	for (size_t i = 0; i < this->calls.size(); i++) {
 		pair <string, string> callPair = this->calls[i];
-		int callingProc = pkb.getProcIndex(callPair.first).front();
+		int callingStmt = pkb.getProcIndex(callPair.first).front();
+		int callingProc = pkb.getProcIndex(getParentProc(callingStmt)).front();
 		int calledProc = pkb.getProcIndex(callPair.second).front();
 		pkb.insertCalls(callingProc, calledProc);
+		pkb.insertCallStmt(callingStmt, calledProc);
 	}
 }
 

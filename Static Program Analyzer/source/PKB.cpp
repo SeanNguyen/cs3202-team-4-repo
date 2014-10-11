@@ -254,6 +254,22 @@ std::vector<int> PKB::getCallingProc(int proc1){
 	return callProcTable.getValues(proc1);
 }
 
+bool PKB::isCallStmt (int stmt, int proc) {
+	return callStmtTable.isMapped(stmt, proc);
+}
+
+bool PKB::insertCallStmt (int stmt, int proc) {
+	return callStmtTable.insert(stmt, proc);
+}
+
+int PKB::getCalledProc(int stmt) {
+	return callStmtTable.getValues(stmt).front();
+}
+
+vector <int> PKB::getCallingStmt (int proc) {
+	callStmtTable.getIndexes(proc);
+}
+
 /////////////////MODIFY METHODS/////////////////////////////////
 bool PKB::isModifies(int s1, int varIndex){
 	return modifyStmtTable.isMapped(s1, varIndex);
