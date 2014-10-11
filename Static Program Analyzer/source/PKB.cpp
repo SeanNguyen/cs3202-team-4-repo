@@ -8,14 +8,15 @@ ListTable <string> PKB::varTable;
 ListTable <string> PKB::stmtTable;
 
 MapTable <int> PKB::followTable;
-MapTable <int> PKB::modifyStmtTable;
-MapTable <int> PKB::modifyProcTable;
 MapTable <int> PKB::parentTable;
-MapTable <int> PKB::useStmtTable;
-MapTable <int> PKB::useProcTable;
 MapTable <int> PKB::callStmtTable;
 MapTable <int> PKB::callProcTable;
 MapTable <int> PKB::nextTable;
+
+MapTable <int> PKB::modifyStmtTable;
+MapTable <int> PKB::modifyProcTable;
+MapTable <int> PKB::useStmtTable;
+MapTable <int> PKB::useProcTable;
 
 PKB::PKB()
 {
@@ -226,15 +227,15 @@ int PKB::getParentTableSize()
 
 ///////////////////////CALL TABLE////////////////////////
 bool PKB::isCalls(int proc1, int proc2){
-	return callStmtTable.isMapped(proc1, proc2);
+	return callProcTable.isMapped(proc1, proc2);
 }
 
 bool PKB::insertCalls(int proc1, int proc2){
-	return callStmtTable.insert(proc1, proc2);
+	return callProcTable.insert(proc1, proc2);
 }
 
 bool PKB::isCallStar(int proc1, int proc2){
-	return callStmtTable.isMappedStar(proc1, proc2, true);
+	return callProcTable.isMappedStar(proc1, proc2, true);
 }
 
 std::vector<int> PKB::getCallingStarProc(int proc1){
