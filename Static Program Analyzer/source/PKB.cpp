@@ -110,6 +110,8 @@ int PKB::insertVar(std::string name) {
 
 int PKB::getVarIndex(std::string name){
 	vector <int> indexes = varTable.getIndexes(name);
+	if (indexes.size() == 0)
+		return -1;
 	return indexes.front();
 }
 

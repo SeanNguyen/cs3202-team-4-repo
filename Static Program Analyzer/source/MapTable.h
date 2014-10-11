@@ -24,6 +24,7 @@ public:
 		if (isMapped(key, value))
 			return true;
 		keyValueMap[key].push_back(value);
+		reversedKeyValueMap[value].push_back(key);
 		return true;
 	}
 
