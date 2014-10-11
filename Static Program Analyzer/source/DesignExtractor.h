@@ -11,8 +11,9 @@ public:
 
 private:
 	void initialize();
-	void buildUsesTable();
-	void buildModifiesTable();
+	void extendUsesTable();
+	void extendModifiesTable();
+	void processUsesForProcedures();
 
 };
 

@@ -1,6 +1,7 @@
 #include "DesignExtractor.h"
 #include "PKB.h"
 
+
 DesignExtractor::DesignExtractor(void)
 {
 }
@@ -10,20 +11,51 @@ DesignExtractor::~DesignExtractor(void)
 }
 
 void DesignExtractor::buildPKB() {
-	initialize();
-	buildUsesTable();
-	buildModifiesTable();
+	processUsesForProcedures();
+	extendUsesTable();
+	extendModifiesTable();
 }
 
 //Private Helper Methods
-void DesignExtractor::initialize() {
+void DesignExtractor::processUsesForProcedures() {
 
+	int numOfProc = PKB.getProcTableSize();
+	vector <int> processedProc;
+	
+	for(size_t proc = 0; proc < numOfProc; proc++){
+
+		//if it has not already been processed
+		if(find(processedProc.begin(), processedProc.end(), proc) == processedProc.end()){
+
+			//for every procedure, get the called procedure
+			vector <int> calledProcedures = PKB.getCalledByStarProc(proc);
+
+			//for this procedure get all used vars in it
+			for (size_t proc2 = 0; proc2 < calledProcedures.size(); proc2++){
+				vector <int> allUsedVar = PKB.getUsedVarAtProc(proc2);
+
+				//get the all call stmt number which is calling proc2
+				vector <int> callStmts = PKB.getCallingStmt(proc2);
+
+				//insert used var into the primary proc
+				for (size_t var = 0; var < allUsedVar.size(); var++){
+					PKB.insertUsesProc(proc, var);
+
+					//for every call stmt calling proc2, insert the usesVar list
+					for (size_t stmt = 0; stmt < callStmts.size(); stmt++){
+						PKB.insertUses(stmt, var);
+					}
+				}
+			}
+		}
+		processedProc.push_back(proc);
+	}
 }
 
-void DesignExtractor::buildUsesTable() {
+void DesignExtractor::extendUsesTable() {
 	
 }
 
-void DesignExtractor::buildModifiesTable() {
+void DesignExtractor::extendModifiesTable() {
 
 }
