@@ -22,7 +22,7 @@ void TestWrapper::parse(std::string filename) {
 	Parser parser;
 	parser.parse(filename);
 	parser.buildPKB();
-	//cout<< "check pointn 01" <<endl;
+	PKB::preCalculateStarTables();
 }
 
 // method to evaluating a query
@@ -30,13 +30,11 @@ void TestWrapper::evaluate(std::string query, std::list<std::string>& results){
 	// call your evaluator to evaluate the query here
 	// ...code to evaluate query...
 
-	//cout << "checkpoint 02" <<endl;
-	//QueryProcessor queryProcessor;
-	////cout << "checkpoint 03" <<endl;
-	//std::vector<std::string> resultVector = queryProcessor.Process(query);
-	//for (size_t i=0; i<resultVector.size(); i++) {
-	//	results.push_back(resultVector[i]);
-	//}
+	QueryProcessor queryProcessor;
+	std::vector<std::string> resultVector = queryProcessor.Process(query);
+	for (size_t i=0; i<resultVector.size(); i++) {
+		results.push_back(resultVector[i]);
+	}
 
   // store the answers to the query in the results list (it is initially empty)
   // each result must be a string.
