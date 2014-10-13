@@ -8,18 +8,18 @@
 /* SYSTEM TESTING FOR ITERATION 0 AND 1 */
 class SystemTest1 : public CPPUNIT_NS::TestFixture {
 	CPPUNIT_TEST_SUITE( SystemTest1 ); 
-	/*CPPUNIT_TEST( test1 );
-	CPPUNIT_TEST( test2 );
+	CPPUNIT_TEST( test1 );
+	/*CPPUNIT_TEST( test2 );
 	CPPUNIT_TEST( test3 );
 	CPPUNIT_TEST( test4 );
-	CPPUNIT_TEST( test5 );*/
+	CPPUNIT_TEST( test5 );
 	CPPUNIT_TEST( test6 );
-	/*CPPUNIT_TEST( testCallsCallStar );
+	CPPUNIT_TEST( testCallsCallStar );
 	CPPUNIT_TEST( testWithCls );
 	CPPUNIT_TEST( testNext );
 	CPPUNIT_TEST( test7 );
-	CPPUNIT_TEST( test8 );*/
-	//CPPUNIT_TEST( TestModifyUsesProc );
+	CPPUNIT_TEST( test8 );
+	CPPUNIT_TEST( TestModifyUsesProc );*/
 	CPPUNIT_TEST_SUITE_END();
 public:
 	void setUp();

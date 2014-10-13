@@ -317,13 +317,10 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 
 				}
 				else{
-					cout << "checkpoint 001 " <<var2 << " " << arg2Value <<endl;
 					stmts = PKB::getStmtUsingVar(var2);
-					cout << "checkpoint 002 " << stmts.size() <<endl;
 				}
 
 				for (size_t i=0; i<stmts.size(); i++) {
-					cout << "checkpoint " << stmts[i] <<endl;
 					resultList.push_back(intToString(stmts[i]+1));
 				}
 				break;
@@ -1084,7 +1081,7 @@ bool QueryEvaluator::isDeclaredType(string val, string name, string type) {
 	} else {
 		// search in StmtTable for this case
 		if (table.getType(name)!= "prog_line" && table.getType(name)!= "stmt") {
-			string stmtType = PKB::getStmtName(atoi(val.c_str())-1);
+			string stmtType = PKB::getStmtName(atoi(val.c_str()));
 			if (stmtType==KEYWORD_ASSIGN && table.getType(name)!="assign") return false; 
 			if (stmtType=="while" && table.getType(name)!="while") return false;
 			// implement further for call, etc.
