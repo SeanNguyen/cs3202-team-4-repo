@@ -63,7 +63,7 @@ void SystemTest1::testCallsCallStar() {
 
 void SystemTest1::test2() {
 	string source = "..\\..\\Tests\\Source2.txt";
-	string queries = "..\\..\\Tests\\Queries2_1.txt";
+	string queries = "..\\..\\Tests\\TestBasicUsesForStmt_Query2.txt";
 	Parser parser;
 	QueryProcessor qp(queries);
 	
@@ -84,13 +84,13 @@ void SystemTest1::test2() {
 
 void SystemTest1::test3() {
 	string source = "..\\..\\Tests\\Source3.txt";
-	string queries = "..\\..\\Tests\\Queries3_TestFollows.txt";
+	string queries = "..\\..\\Tests\\TestPatternandSuchthat_Query3.txt";
 	Parser parser;
 	QueryProcessor qp(queries);
 	
 	parser.parse(source);
 	parser.buildPKB();
-
+	PKB::preCalculateStarTables();
 	vector<vector<string>> results = qp.Process();
 
 	for (size_t i=0; i<results.size(); i++) {

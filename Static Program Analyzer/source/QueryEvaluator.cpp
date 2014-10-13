@@ -316,12 +316,12 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 					stmts=PKB::getProcUsingVar(var2);
 
 				}
-				else{
+				else {
 					stmts = PKB::getStmtUsingVar(var2);
 				}
 
 				for (size_t i=0; i<stmts.size(); i++) {
-					resultList.push_back(intToString(stmts[i]+1));
+					resultList.push_back(intToString(stmts[i]));
 				}
 				break;
 			}
@@ -381,7 +381,8 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 			case Follows:
 			{
 				int stmt1 = atoi(arg1Value.c_str());
-				int result = PKB::getFollowingStmt(stmt1);		
+				int result = PKB::getFollowingStmt(stmt1);
+				cout << "Checkpoint 001 " << arg1Value << " " << result << endl;
 				if (result!=-1) {
 					resultList.push_back(intToString(result));
 				}
@@ -1025,25 +1026,25 @@ vector<string> QueryEvaluator::removeInvalidValues(vector<string> list, Symbol t
 			}
 		case Assign:
 			{
-				int stmt = atoi(value.c_str())-1;
+				int stmt = atoi(value.c_str());
 				if (PKB::getStmtName(stmt)==KEYWORD_ASSIGN ) { result.push_back(value);}
 				break;
 			}
 		case While:
 			{
-				int stmt = atoi(value.c_str())-1;
+				int stmt = atoi(value.c_str());
 				if (PKB::getStmtName(stmt)==KEYWORD_WHILE ) { result.push_back(value);}
 				break;
 			}
 		case If:
 			{
-				int stmt = atoi(value.c_str())-1;
+				int stmt = atoi(value.c_str());
 				if (PKB::getStmtName(stmt)==KEYWORD_IF ) { result.push_back(value);}
 				break;
 			}
 		case CallStmt:
 			{
-				int stmt = atoi(value.c_str())-1;
+				int stmt = atoi(value.c_str());
 				if (PKB::getStmtName(stmt)==KEYWORD_CALL ) { result.push_back(value);}
 				break;
 			}
