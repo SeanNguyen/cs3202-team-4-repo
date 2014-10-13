@@ -10,10 +10,8 @@ public:
 	void buildPKB();
 
 private:
-	void initialize();
-	void extendUsesTable();
-	void extendModifiesTable();
-	void processUsesForProcedures();
+	void processModify();
+	void processUses();
 
 };
 
