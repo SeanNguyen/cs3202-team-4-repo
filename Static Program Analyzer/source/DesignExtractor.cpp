@@ -29,23 +29,26 @@ void DesignExtractor::processUses() {
 			//for every procedure, get the called procedure
 			vector <int> calledProcedures = PKB::getCalledByStarProc(proc);
 
-			//for this procedure get all used vars in it
-			for (size_t proc2 = 0; proc2 < calledProcedures.size(); proc2++){
-				vector <int> allUsedVar = PKB::getUsedVarAtProc(proc2);
+			if(!calledProcedures.empty()){
+				//for this procedure get all used vars in it
+				for (size_t proc2 = 0; proc2 < calledProcedures.size(); proc2++){
+					vector <int> allUsedVar = PKB::getUsedVarAtProc(proc2);
 
-				//get the all call stmt number which is calling proc2
-				vector <int> callStmts = PKB::getCallingStmt(proc2);
+					//get the all call stmt number which is calling proc2
+					vector <int> callStmts = PKB::getCallingStmt(proc2);
 
-				//insert used var into the primary proc
-				for (size_t var = 0; var < allUsedVar.size(); var++){
-					PKB::insertUsesProc(proc, var);
+					//insert used var into the primary proc
+					for (size_t var = 0; var < allUsedVar.size(); var++){
+						PKB::insertUsesProc(proc, var);
 
-					//for every call stmt calling proc2, insert the usesVar list
-					for (size_t stmt = 0; stmt < callStmts.size(); stmt++){
-						PKB::insertUses(stmt, var);
+						//for every call stmt calling proc2, insert the usesVar list
+						for (size_t stmt = 0; stmt < callStmts.size(); stmt++){
+							PKB::insertUses(stmt, var);
+						}
 					}
 				}
 			}
+			
 		}
 		processedProc.push_back(proc);
 	}
@@ -63,24 +66,27 @@ void DesignExtractor::processModify() {
 			//for every procedure, get the called procedure
 			vector <int> calledProcedures = PKB::getCalledByStarProc(proc);
 			
-			for (size_t proc2 = 0; proc2 < calledProcedures.size(); proc2++){
+			if(!calledProcedures.empty()){
+				for (size_t proc2 = 0; proc2 < calledProcedures.size(); proc2++){
 				
-				//for this procedure get all modified vars in it
-				vector <int> allModifiedVar = PKB::getModifiedVarAtProc(proc2);
+					//for this procedure get all modified vars in it
+					vector <int> allModifiedVar = PKB::getModifiedVarAtProc(proc2);
 
-				//get the all call stmt number which is calling proc2
-				vector <int> callStmts = PKB::getCallingStmt(proc2);
+					//get the all call stmt number which is calling proc2
+					vector <int> callStmts = PKB::getCallingStmt(proc2);
 
-				//insert modified var into the primary proc
-				for (size_t var = 0; var < allModifiedVar.size(); var++){
-					PKB::insertModifiesProc(proc, var);
+					//insert modified var into the primary proc
+					for (size_t var = 0; var < allModifiedVar.size(); var++){
+						PKB::insertModifiesProc(proc, var);
 
-					//for every call stmt calling proc2, insert the modifiedVar list
-					for (size_t stmt = 0; stmt < callStmts.size(); stmt++){
-						PKB::insertModifies(stmt, var);
+						//for every call stmt calling proc2, insert the modifiedVar list
+						for (size_t stmt = 0; stmt < callStmts.size(); stmt++){
+							PKB::insertModifies(stmt, var);
+						}
 					}
 				}
 			}
+			
 		}
 		processedProc.push_back(proc);
 	}
