@@ -111,7 +111,8 @@ void QueryPreprocessor::preprocessQuery(vector<string> query, int index) {
 			if (element==KEYWORD_PROG_LINE	|| element==KEYWORD_ASSIGN	||
 				element==KEYWORD_STMT		|| element==KEYWORD_VAR	||
 				element==KEYWORD_CONST	|| element==KEYWORD_WHILE	||
-				element==KEYWORD_IF || element==KEYWORD_PROCEDURE) {
+				element==KEYWORD_IF || element==KEYWORD_CALL ||
+				element==KEYWORD_PROCEDURE) {
 				// find ending sign of this declaration (";");
 				if (curLine.find_first_of(";")!=string::npos) {
 					unsigned index = curLine.find_first_of(";");
