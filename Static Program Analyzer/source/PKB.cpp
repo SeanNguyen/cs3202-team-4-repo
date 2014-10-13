@@ -89,6 +89,8 @@ bool PKB::insertConst(std::string value) {
 
 int PKB::getConstIndex(std::string value){
 	vector <int> indexes = constTable.getIndexes(value);
+	if (indexes.size() == 0)
+		return -1;
 	return indexes.front();
 }
 
@@ -183,11 +185,15 @@ bool PKB::isFollowsStar(int s1, int s2) {
 
 int PKB::getFollowingStmt(int s1){
 	vector <int> stmts = followTable.getValues(s1);
+	if (stmts.size() == 0)
+		return -1;
 	return stmts.front();
 }
 
 int PKB::getFollowedStmt(int s1){
 	vector <int> stmts = followTable.getIndexes(s1);
+	if (stmts.size() == 0)
+		return -1;
 	return stmts.front();
 }
 
@@ -214,7 +220,10 @@ bool PKB::insertParent(int parentStmt, int childStmt){
 }
 
 int PKB::getParentStmt(int childStmt){
-	return parentTable.getIndexes(childStmt).front();
+	vector <int> parents = parentTable.getIndexes(childStmt);
+	if (parents.size() == 0)
+		return -1;
+	return parents.front();
 }
 
 std::vector<int> PKB::getChildStmt(int parentStmt){
@@ -272,7 +281,10 @@ bool PKB::insertCallStmt (int stmt, int proc) {
 }
 
 int PKB::getCalledProc(int stmt) {
-	return callStmtTable.getValues(stmt).front();
+	vector <int> calledProcs = callStmtTable.getValues(stmt);
+	if (calledProcs.size() == 0)
+		return -1;
+	return calledProcs.front();
 }
 
 vector <int> PKB::getCallingStmt (int proc) {
