@@ -301,7 +301,7 @@ TNode * QueryPreprocessor::preprocessTupleResult(vector<string> list, SymbolTabl
 	TNode * node = new TNode(ResultCls, "a-tuple");
 
 	for (size_t i=1; i<list.size()-1; i++) {
-		if (i%2==0) {
+		if (i%2==1) {
 			// expect declared symbol
 			if (table.isSymbol(list[i])) {
 				TNode * child = new TNode(QuerySymbol, list[i]);

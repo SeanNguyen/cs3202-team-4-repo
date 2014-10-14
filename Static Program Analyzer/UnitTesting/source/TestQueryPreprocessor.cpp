@@ -71,6 +71,19 @@ void QueryPreprocessorTest::testBuildWithCls() {
 	// root -> printTNode();
 }
 
+void QueryPreprocessorTest::testBuildTupleResult() {
+	QueryPreprocessor qp;
+	string query = "assign a1, a2; while w1, w2; Select <a1, a2>";	
+	QueryRepresentator::reset();
+	qp.Preprocess(query);
+
+	Tree tree = QueryRepresentator::getQueryTree(0);
+	TNode * root = tree.getRoot();
+	cout << endl << "TEST BUILD TREE: assign a1, a2; while w1, w2; Select <a1, a2>" <<endl;
+	root -> printTNode();
+}
+
+
 void QueryPreprocessorTest::testBuildComplexQuery1() {
 	QueryPreprocessor qp;
 	string query = "assign a1, a2; while w1, w2; Select a2 pattern a1(\"x\",_) and a2(\"x\",_\"x\"_) such that Affects(a1, a2) and Parent*(w2, a2) and Parent*(w1, w2)";
@@ -79,6 +92,6 @@ void QueryPreprocessorTest::testBuildComplexQuery1() {
 
 	Tree tree = QueryRepresentator::getQueryTree(0);
 	TNode * root = tree.getRoot();
-	cout << endl << "TEST BUILD TREE: Query: assign a1, a2; while w1, w2; Select a2 pattern a1(\"x\",_) and a2(\"x\",_\"x\"_) such that Affects(a1, a2) and Parent*(w2, a2) and Parent*(w1, w2)" <<endl;
-	root -> printTNode();
+	/*cout << endl << "TEST BUILD TREE: Query: assign a1, a2; while w1, w2; Select a2 pattern a1(\"x\",_) and a2(\"x\",_\"x\"_) such that Affects(a1, a2) and Parent*(w2, a2) and Parent*(w1, w2)" <<endl;
+	root -> printTNode();*/
 } 

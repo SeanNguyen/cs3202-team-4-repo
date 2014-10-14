@@ -924,87 +924,124 @@ void QueryEvaluator::updateResultList(vector<string> values, vector<string>& res
 	if (child1Name=="a-BOOLEAN") { // BOOLEAN query
 		result.push_back("true");
 		return;
-	}
-
-	// get index of the parameter
-	int paramIndex = table.getIndex(paramName);
-	string paramVal = values[paramIndex];
-	// check if paramVal is null value or not
-	if (paramVal!="-1") {
-		// check if paramVal has same type as in paramType
-		string type = table.getType(paramName);
-		if (!isDeclaredType(paramVal, paramName, type)) { 
-			return;
+	} else if (child1Name=="a-tuple"){
+		int i=0;
+		int size = child1.getNumChildren();
+		bool isAllSymbolUpdated = true;
+		for (i=0; i<size; i++) {
+			child = *child1.getChildAtIndex(i);
+			paramName = child.getValue();
+			int paramIndex = table.getIndex(paramName);
+			string paramVal = values[paramIndex]; 
+			if (paramVal=="-1") {
+				isAllSymbolUpdated = false;
+				paramType = SyntaxHelper::getSymbolType(table.getType(paramName));
+				vector<string> paramVals = getAllArgValues(paramType);
+				if (paramVals.empty()) return; // no result
+				for (int j=0; j<paramVals.size(); j++) {
+					values[paramIndex] = paramVals[j];
+					updateResultList(values, result);
+				}
+			}
 		}
-
-		// check if result list has this paramVal
-		if (!isResult(paramVal, result)) {
-			// add new result to list
-			result.push_back(paramVal);
+		if (isAllSymbolUpdated) {
+			string resultTuple = ""; 
+			for (i=0; i<size; i++) {
+				child = *child1.getChildAtIndex(i);
+				paramName = child.getValue();
+				int paramIndex = table.getIndex(paramName);
+				string paramVal = values[paramIndex]; 
+				if (i==size-1) {
+					resultTuple += paramVal;
+				} else {
+					resultTuple += paramVal + " ";
+				}
+			}
+			if (!isResult(resultTuple, result)) {
+				result.push_back(resultTuple);
+			}
 		}
 	} else {
-		// all values possible of param are result
-		string paramType = table.getType(paramName);
-		if (paramType== KEYWORD_PROG_LINE || paramType==KEYWORD_STMT) {
-			// retrieve all statements 
-			for (int i=1; i<PKB::getStatTableSize(); i++) {
-				paramVal = intToString(i);
-				if (!isResult(paramVal, result)) {
-					// add new result to list
-					result.push_back(paramVal);
+		// get index of the parameter
+		int paramIndex = table.getIndex(paramName);
+		string paramVal = values[paramIndex];
+		// check if paramVal is null value or not
+		if (paramVal!="-1") {
+			// check if paramVal has same type as in paramType
+			string type = table.getType(paramName);
+			if (!isDeclaredType(paramVal, paramName, type)) { 
+				return;
+			}
+
+			// check if result list has this paramVal
+			if (!isResult(paramVal, result)) {
+				// add new result to list
+				result.push_back(paramVal);
+			}
+		} else {
+			// all values possible of param are result
+			string paramType = table.getType(paramName);
+			if (paramType== KEYWORD_PROG_LINE || paramType==KEYWORD_STMT) {
+				// retrieve all statements 
+				for (int i=1; i<PKB::getStatTableSize(); i++) {
+					paramVal = intToString(i);
+					if (!isResult(paramVal, result)) {
+						// add new result to list
+						result.push_back(paramVal);
+					}
+				}
+			} else if (paramType==KEYWORD_ASSIGN) {
+				vector<int> paramList = PKB::getStmtIndex(KEYWORD_ASSIGN);
+				for (size_t i=0; i<paramList.size(); i++) {
+					paramVal = intToString(paramList[i]);
+					if (!isResult(paramVal, result)) {
+						// add new result to list
+						result.push_back(paramVal);
+					}
+				}
+			} else if (paramType==KEYWORD_WHILE) {
+				vector<int> paramList = PKB::getStmtIndex(KEYWORD_WHILE);
+				for (size_t i=0; i<paramList.size(); i++) {
+					paramVal = intToString(paramList[i]);
+					if (!isResult(paramVal, result)) {
+						// add new result to list
+						result.push_back(paramVal);
+					}
+				}
+			} else if (paramType==KEYWORD_IF) {
+				vector<int> paramList = PKB::getStmtIndex(KEYWORD_IF);
+				for (size_t i=0; i<paramList.size(); i++) {
+					paramVal = intToString(paramList[i]);
+					if (!isResult(paramVal, result)) {
+						// add new result to list
+						result.push_back(paramVal);
+					}
+				}
+			} else if (paramType==KEYWORD_CALL) {
+				vector<int> paramList = PKB::getStmtIndex(KEYWORD_CALL);
+				for (size_t i=0; i<paramList.size(); i++) {
+					paramVal = intToString(paramList[i]);
+					if (!isResult(paramVal, result)) {
+						// add new result to list
+						result.push_back(paramVal);
+					}
+				}
+			} else if (paramType==KEYWORD_VAR) {
+				for (int i=0; i<PKB::getVarTableSize(); i++) {
+					result.push_back(PKB::getVarName(i));
+				}
+			} else if (paramType==KEYWORD_CONST) {
+				for (int i=0; i<PKB::getConstTableSize(); i++) {
+					result.push_back(PKB::getConstName(i));
+				}
+			} else if (paramType==KEYWORD_PROCEDURE) {
+				for (int i=0; i<PKB::getProcTableSize(); i++) {
+					result.push_back(PKB::getProcName(i));
 				}
 			}
-		} else if (paramType==KEYWORD_ASSIGN) {
-			vector<int> paramList = PKB::getStmtIndex(KEYWORD_ASSIGN);
-			for (size_t i=0; i<paramList.size(); i++) {
-				paramVal = intToString(paramList[i]);
-				if (!isResult(paramVal, result)) {
-					// add new result to list
-					result.push_back(paramVal);
-				}
-			}
-		} else if (paramType==KEYWORD_WHILE) {
-			vector<int> paramList = PKB::getStmtIndex(KEYWORD_WHILE);
-			for (size_t i=0; i<paramList.size(); i++) {
-				paramVal = intToString(paramList[i]);
-				if (!isResult(paramVal, result)) {
-					// add new result to list
-					result.push_back(paramVal);
-				}
-			}
-		} else if (paramType==KEYWORD_IF) {
-			vector<int> paramList = PKB::getStmtIndex(KEYWORD_IF);
-			for (size_t i=0; i<paramList.size(); i++) {
-				paramVal = intToString(paramList[i]);
-				if (!isResult(paramVal, result)) {
-					// add new result to list
-					result.push_back(paramVal);
-				}
-			}
-		} else if (paramType==KEYWORD_CALL) {
-			vector<int> paramList = PKB::getStmtIndex(KEYWORD_CALL);
-			for (size_t i=0; i<paramList.size(); i++) {
-				paramVal = intToString(paramList[i]);
-				if (!isResult(paramVal, result)) {
-					// add new result to list
-					result.push_back(paramVal);
-				}
-			}
-		} else if (paramType==KEYWORD_VAR) {
-			for (int i=0; i<PKB::getVarTableSize(); i++) {
-				result.push_back(PKB::getVarName(i));
-			}
-		} else if (paramType==KEYWORD_CONST) {
-			for (int i=0; i<PKB::getConstTableSize(); i++) {
-				result.push_back(PKB::getConstName(i));
-			}
-		} else if (paramType==KEYWORD_PROCEDURE) {
-			for (int i=0; i<PKB::getProcTableSize(); i++) {
-				result.push_back(PKB::getProcName(i));
-			}
-		}
-		else return;
-	}	
+			else return;
+		}	
+	}
 }
 
 vector<string> QueryEvaluator::removeInvalidValues(vector<string> list, Symbol type) {
