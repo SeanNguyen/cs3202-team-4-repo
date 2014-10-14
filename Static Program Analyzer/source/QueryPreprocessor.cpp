@@ -273,16 +273,51 @@ TNode * QueryPreprocessor::preprocessResultNode(vector<string> list, SymbolTable
 		TNode * node = new TNode(ResultCls, "a-BOOLEAN");
 		return node;
 	} else {
-		if (table.isSymbol(list[i])) {
-			TNode * node = new TNode(ResultCls, "a-single");
-			TNode * nodeChild = new TNode(QuerySymbol, list[i]);
-			node -> addChild(nodeChild);
+		if (list[i]=="<") {
+			//expect non-single tuple
+			int j = findFirstElement(list, i, ">");
+			if (j==-1) {
+				errors.push_back("Error 005: invalid syntax for tuple result");
+				TNode * node = new TNode();
+				return node;
+			}
+			vector<string> tuple = subList(list, i, j);
+			return preprocessTupleResult(tuple, table, errors);
+		} else {
+			if (table.isSymbol(list[i])) {
+				TNode * node = new TNode(ResultCls, "a-single");
+				TNode * nodeChild = new TNode(QuerySymbol, list[i]);
+				node -> addChild(nodeChild);
+				return node;
+			}
+			errors.push_back("Error 005: unable to find symbol: " + list[i]);
+			TNode * node = new TNode();
 			return node;
 		}
-		errors.push_back("Error 005: unable to find symbol: " + list[i]);
-		TNode * node = new TNode();
-		return node;
 	}
+}
+
+TNode * QueryPreprocessor::preprocessTupleResult(vector<string> list, SymbolTable table, vector<string>& errors) {
+	TNode * node = new TNode(ResultCls, "a-tuple");
+
+	for (size_t i=1; i<list.size()-1; i++) {
+		if (i%2==0) {
+			// expect declared symbol
+			if (table.isSymbol(list[i])) {
+				TNode * child = new TNode(QuerySymbol, list[i]);
+				node ->addChild(child);
+			} else {
+				errors.push_back("Error 005: invalid symbol in tuple result: " + list[i]);
+			}
+		} else {
+			// expect comma
+			if (list[i]!=KEYWORD_COMMA) {
+				errors.push_back("Error 005: invalid symbol in tuple result: " + list[i]);
+			}
+		}
+	}
+
+	return node;
 }
 
 // Description: this method is to preprocess the such that condition of query

@@ -39,6 +39,7 @@ private:
 	TNode * preprocessIfPattern(string name, vector<string> pattern, SymbolTable table, vector<string>& errors);
 	TNode * preprocessExpressionNode(vector<string> pattern, vector<string>& errors);
 	TNode * preprocessWithCondition(vector<string> list, SymbolTable table, vector<string>& errors, int i);
+	TNode * preprocessTupleResult(vector<string> list, SymbolTable table, vector<string>& errors);
 
 	vector<string> breakStringIntoWords(string str);
 	unsigned int findFirstElement(vector<string> list, unsigned i, string element);
