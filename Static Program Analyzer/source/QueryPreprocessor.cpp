@@ -777,7 +777,7 @@ TNode * QueryPreprocessor::preprocessWithCondition(vector<string> list, SymbolTa
 	string arg1Type = table.getType(arg1);
 	if (table.isSymbol(arg1)) {
 		// check syntax
-		if (list[index+2]!=".") {
+		if (arg1Type!=KEYWORD_PROG_LINE && list[index+2]!=".") {
 			errors.push_back("Error 011: wrong expression: " + arg1 + list[index+2] + list[index+3]);
 		} 
 		if (arg1Type==KEYWORD_PROCEDURE && list[index+3]!="procName") {
@@ -795,15 +795,16 @@ TNode * QueryPreprocessor::preprocessWithCondition(vector<string> list, SymbolTa
 			&& list[index+3]!="stmt#") {
 			errors.push_back("Error 015: wrong expression: " + arg1 + list[index+2] + list[index+3]);
 		}
-		if (arg1Type==KEYWORD_PROG_LINE && list[index+3]!="prog_line#") {
-			errors.push_back("Error 016: wrong expression: " + arg1 + list[index+2] + list[index+3]);
-		}
 		if (arg1Type==KEYWORD_CALL && list[index+3]!="procName") {
 			errors.push_back("Error 017: wrong expression: " + arg1 + list[index+2] + list[index+3]);
 		}
 		TNode * arg1Node = new TNode(QuerySymbol, arg1);
 		withCls -> addChild(arg1Node);
-		index += 4;
+		if (arg1Type==KEYWORD_PROG_LINE) {
+			index +=2;
+		} else {
+			index +=4;
+		}
 	}
 
 	if (list[index]!="=") {

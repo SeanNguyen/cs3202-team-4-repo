@@ -43,8 +43,8 @@ void QueryPreprocessorTest::testBuildSuchThatCls() {
 
 	Tree tree = QueryRepresentator::getQueryTree(0);
 	TNode * root = tree.getRoot();
-	 cout << endl << "TEST BUILD TREE: Query: procedure p, q; Select p such that Calls*(p, q)" <<endl;
-	 root -> printTNode();
+	/* cout << endl << "TEST BUILD TREE: Query: procedure p, q; Select p such that Calls*(p, q)" <<endl;
+	 root -> printTNode();*/
 }
 
 void QueryPreprocessorTest::testBuildPatternCls() {
@@ -61,14 +61,14 @@ void QueryPreprocessorTest::testBuildPatternCls() {
 
 void QueryPreprocessorTest::testBuildWithCls() {
 	QueryPreprocessor qp;
-	string query = "procedure p; Select p with p.procName = \"Nothing\"";
+	string query = "stmt s; prog_line p; Select BOOLEAN with p = 1";
 	QueryRepresentator::reset();
 	qp.Preprocess(query);
 
 	Tree tree = QueryRepresentator::getQueryTree(0);
 	TNode * root = tree.getRoot();
-	// cout << endl << "TEST BUILD TREE: Query: procedure p; Select p with p.procName = \"Nothing\"" <<endl;
-	// root -> printTNode();
+	 cout << endl << "TEST BUILD TREE: Query: stmt s, prog_line p; Select BOOLEAN with p = 1" <<endl;
+	 root -> printTNode();
 }
 
 void QueryPreprocessorTest::testBuildTupleResult() {
@@ -79,8 +79,8 @@ void QueryPreprocessorTest::testBuildTupleResult() {
 
 	Tree tree = QueryRepresentator::getQueryTree(0);
 	TNode * root = tree.getRoot();
-	cout << endl << "TEST BUILD TREE: assign a1, a2; while w1, w2; Select <a1, a2>" <<endl;
-	root -> printTNode();
+	/*cout << endl << "TEST BUILD TREE: assign a1, a2; while w1, w2; Select <a1, a2>" <<endl;
+	root -> printTNode();*/
 }
 
 

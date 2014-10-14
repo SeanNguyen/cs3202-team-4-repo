@@ -382,7 +382,6 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 			{
 				int stmt1 = atoi(arg1Value.c_str());
 				int result = PKB::getFollowingStmt(stmt1);
-				cout << "Checkpoint 001 " << arg1Value << " " << result << endl;
 				if (result!=-1) {
 					resultList.push_back(intToString(result));
 				}
@@ -754,6 +753,8 @@ void QueryEvaluator::checkWithCondition(TNode withNode, vector<string> values, v
 	string child1Name = child1 -> getValue();
 	string child2Name = child2 -> getValue();
 
+	cout << "CHECKPOINT 001 "<<endl;
+
 	switch (child1Type) {
 	case Const:
 		{
@@ -812,6 +813,7 @@ void QueryEvaluator::checkWithCondition(TNode withNode, vector<string> values, v
 				switch (child2Type) {
 					case Const:
 						{
+							cout << "CHECKPOINT 001 " << child1Value << " " <<child2Name <<endl;
 							check = (child1Value==child2Name);
 							checkQueryCondition(childIndex+1, values, result, check);
 							return;
