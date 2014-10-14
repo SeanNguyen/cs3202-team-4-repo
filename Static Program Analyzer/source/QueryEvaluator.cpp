@@ -753,8 +753,6 @@ void QueryEvaluator::checkWithCondition(TNode withNode, vector<string> values, v
 	string child1Name = child1 -> getValue();
 	string child2Name = child2 -> getValue();
 
-	cout << "CHECKPOINT 001 "<<endl;
-
 	switch (child1Type) {
 	case Const:
 		{
@@ -813,7 +811,6 @@ void QueryEvaluator::checkWithCondition(TNode withNode, vector<string> values, v
 				switch (child2Type) {
 					case Const:
 						{
-							cout << "CHECKPOINT 001 " << child1Value << " " <<child2Name <<endl;
 							check = (child1Value==child2Name);
 							checkQueryCondition(childIndex+1, values, result, check);
 							return;
@@ -919,14 +916,13 @@ void QueryEvaluator::updateResultList(vector<string> values, vector<string>& res
 	TNode child1 = *root.getChildAtIndex(0);
 	string child1Name = child1.getValue();
 
-	TNode child = *child1.getChildAtIndex(0);
-	Symbol paramType = child.getType();
-	string paramName = child.getValue();
-
 	if (child1Name=="a-BOOLEAN") { // BOOLEAN query
 		result.push_back("true");
 		return;
 	} else if (child1Name=="a-tuple"){
+		TNode child = *child1.getChildAtIndex(0);
+		Symbol paramType = child.getType();
+		string paramName = child.getValue();
 		int i=0;
 		int size = child1.getNumChildren();
 		bool isAllSymbolUpdated = true;
@@ -964,6 +960,9 @@ void QueryEvaluator::updateResultList(vector<string> values, vector<string>& res
 			}
 		}
 	} else {
+		TNode child = *child1.getChildAtIndex(0);
+		Symbol paramType = child.getType();
+		string paramName = child.getValue();
 		// get index of the parameter
 		int paramIndex = table.getIndex(paramName);
 		string paramVal = values[paramIndex];
