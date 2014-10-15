@@ -108,11 +108,7 @@ void QueryPreprocessor::preprocessQuery(vector<string> query, int index) {
 		istringstream ss;
 		ss.str(curLine);
 		while (ss >> element) {
-			if (element==KEYWORD_PROG_LINE	|| element==KEYWORD_ASSIGN	||
-				element==KEYWORD_STMT		|| element==KEYWORD_VAR	||
-				element==KEYWORD_CONST	|| element==KEYWORD_WHILE	||
-				element==KEYWORD_IF || element==KEYWORD_CALL ||
-				element==KEYWORD_PROCEDURE) {
+			if (SyntaxHelper::isDesignEntity(element)) {
 				// find ending sign of this declaration (";");
 				if (curLine.find_first_of(";")!=string::npos) {
 					unsigned index = curLine.find_first_of(";");
@@ -142,7 +138,11 @@ void QueryPreprocessor::preprocessQuery(vector<string> query, int index) {
 		//		tree.printTree();
 		QueryRepresentator::addQuery(table, tree, true);
 	} else {
-		cout << "ERROR LIST:, QUERY " << index+1 <<endl;
+		cout << "ERROR LIST:, QUERY " << index+1 << ": ";
+		for (size_t i=0; i<query.size(); i++) {
+			cout << query[i] << " ";
+		}
+		cout <<endl;
 		for (size_t i=0; i<errors.size(); i++) {
 			cout << errors[i] <<endl;
 		}
@@ -332,140 +332,59 @@ TNode * QueryPreprocessor::preprocessSuchThatCondition(vector<string> list, Symb
 	if (SyntaxHelper::isRelation(relation)) {
 		Symbol relationType = SyntaxHelper::getSymbolType(relation);
 		TNode * relationNode = new TNode(relationType);
-		
-		if (list[1]!="(") {
+		int size = list.size();
+		if (list[1]!=KEYWORD_OPENBRACKET) {
 			errors.push_back("Error 006: expect symbol ( after relation name");
 		}
-
-		int commaIndex=0;
-		if (list[3]==",") {
-			commaIndex=3;
-			string arg1 = list[2];
-			if (isNumber(arg1)) {
-				TNode * arg1Node = new TNode(Const, arg1);
-				relationNode -> addChild(arg1Node);
-			} else {
-				// expect a symbol of type procedure or any stmt type
-				// depending on relation's type
-				string arg1Type = table.getType(arg1);
-				switch (relationType) {
-				case Follows:
-				case FollowsS:
-				case Parent:
-				case ParentS:
-					if (arg1Type!=KEYWORD_STMT && arg1Type!=KEYWORD_PROG_LINE &&
-						arg1Type!=KEYWORD_ASSIGN && arg1Type!= KEYWORD_WHILE &&
-						arg1Type!=KEYWORD_CALL && arg1Type!=KEYWORD_IF) {
-							errors.push_back("Error 000: not a valid symbol: " + arg1 + " for relation: " + relation);
-					}
-					break;
-				case Uses:
-				case Modifies:
-					if (arg1Type!=KEYWORD_PROCEDURE && 
-						arg1Type!=KEYWORD_STMT && arg1Type!=KEYWORD_PROG_LINE &&
-						arg1Type!=KEYWORD_ASSIGN && arg1Type!= KEYWORD_WHILE &&
-						arg1Type!=KEYWORD_CALL && arg1Type!=KEYWORD_IF) {
-							errors.push_back("Error 000: not a valid symbol: " + arg1 + " for relation: " + relation);
-					}
-					break;
-				case Calls:
-				case CallsS:
-					if (arg1Type!=KEYWORD_PROCEDURE) {
-						errors.push_back("Error 000: not a valid symbol: " + arg1 + " for relation: " + relation);
-					}
-					break;
-				case Nexts:
-				case NextsS:
-					if (arg1Type!=KEYWORD_PROG_LINE) {
-						errors.push_back("Error 000: not a valid symbol: " + arg1 + " for relation: " + relation);
-					}
-					break;
-					break;
-				default:
-					break;
-				}
-				TNode * arg1Node = new TNode(QuerySymbol, arg1);
-				relationNode -> addChild(arg1Node);
-			}
-		} else if (list[5]==",") {
-			commaIndex = 5;
-			// expect a procedure name
-			switch (relationType) {
-			case Modifies:
-			case Uses:
-			case Calls:
-			case CallsS:
-				break;
-			default:
-				errors.push_back("Error 000: invalid use of: " + list[3] + " for relation: " + relation);
-				break;
-			}
-			TNode * arg1Node = new TNode(Const, list[3]);
-			relationNode -> addChild(arg1Node);
+		if (list[size-1]!=KEYWORD_CLOSEBRACKET) {
+			errors.push_back("Error 006: expect symbol ) at the end of relation");
 		}
+		int commaIndex = findFirstElement(list, 0, KEYWORD_COMMA);
 
-		if (list[commaIndex+2]==")") {
-			string arg2 = list[commaIndex+1];
-			if (isNumber(arg2)) {
-				TNode * arg2Node = new TNode(Const, arg2);
-				relationNode -> addChild(arg2Node);
-			} else {
-				string arg2Type = table.getType(arg2);
-				// expect a valid symbol's type
-				switch (relationType) {
-				case Follows:
-				case FollowsS:
-				case Parent:
-				case ParentS:
-					if (arg2Type!=KEYWORD_PROG_LINE && arg2Type!=KEYWORD_STMT &&
-						arg2Type!=KEYWORD_ASSIGN && arg2Type!=KEYWORD_WHILE &&
-						arg2Type!= KEYWORD_CALL && arg2Type!=KEYWORD_IF) {
-						errors.push_back("Error 000: not a valid symbol: " + arg2 + " for relation: " + relation);
-					}
-					break;
-				case Modifies:
-				case Uses:
-					if (arg2Type!=KEYWORD_VAR) {
-						errors.push_back("Error 000: not a valid symbol: " + arg2 + " for relation: " + relation);
-					}
-					break;
-				case Calls:
-				case CallsS:
-					if (arg2Type!=KEYWORD_PROCEDURE) {
-						errors.push_back("Error 000: not a valid symbol: " + arg2 + " for relation: " + relation);
-					}
-					break;
-				case Nexts:
-				case NextsS:
-					if (arg2Type!=KEYWORD_PROG_LINE) {
-						errors.push_back("Error 000: not a valid symbol: " + arg2 + " for relation: " + relation);
-					}
-					break;
-				default:
-					errors.push_back("Error 000: invalid use of: " + list[3] + " for relation: " + relation);
-					break;
-				}
-				TNode * arg2Node = new TNode(QuerySymbol, arg2);
-				relationNode -> addChild(arg2Node);
-			}
-		} else if (list[commaIndex+4]==")") {
-			// expect a name for variable or procedure
-			string arg2Value = list[commaIndex+2];
-			switch (relationType) {
-			case Uses:
-			case Modifies:
-			case Calls:
-			case CallsS:
-				break;
-			default:
+		vector<string> arg1 = subList(list, 2, commaIndex-1);
+		vector<string> arg2 = subList(list, commaIndex+1, size-2);
+		TNode * arg1Node = new TNode();
+		TNode * arg2Node = new TNode();
+		switch (relationType) {
+		case Follows:
+		case FollowsS:
+		case Parent:
+		case ParentS:
+		case Affects:
+		case AffectsS:
+			{
+				arg1Node = preprocessStmtRef(arg1, table, errors);
+				arg2Node = preprocessStmtRef(arg2, table, errors);
 				break;
 			}
-			TNode * arg2Node = new TNode(Const, list[commaIndex+2]);
-			relationNode -> addChild(arg2Node);
-		} else {
-			errors.push_back("Error 007: no sign of ending for relation");
+		case Modifies:
+		case Uses:
+			{
+				arg1Node = preprocessEntRef(arg1, table, errors);
+				arg2Node = preprocessVarRef(arg2, table,errors);
+				break;
+			}
+		case Calls:
+		case CallsS:
+			{
+				arg1Node = preprocessEntRef(arg1, table, errors);
+				arg2Node = preprocessEntRef(arg2, table,errors);
+				break;
+			}
+		case Nexts:
+		case NextsS:
+			{
+				arg1Node = preprocessLineRef(arg1, table, errors);
+				arg2Node = preprocessLineRef(arg2, table, errors);
+				break;
+			}
+		default:
+			{
+				break;
+			}
 		}
-
+		relationNode -> addChild(arg1Node);
+		relationNode -> addChild(arg2Node);
 		suchThatNode -> addChild(relationNode);
 	} else {
 		errors.push_back("Error 008: not a relation name: " + relation);
@@ -473,6 +392,112 @@ TNode * QueryPreprocessor::preprocessSuchThatCondition(vector<string> list, Symb
 
 	return suchThatNode;
 }
+
+TNode * QueryPreprocessor::preprocessEntRef(vector<string> list, SymbolTable table, vector<string>& errors) {
+	TNode * node = new TNode();
+	int size = list.size();
+
+	if (size==1) {
+		if (SyntaxHelper::isNumber(list[0])) {
+			node = new TNode(Const, list[0]);
+		} else if (list[0]==KEYWORD_UNDERLINE) {
+			node = new TNode(Underline);
+		} else if (table.isSymbol(list[0])) {
+			node = new TNode(QuerySymbol, list[0]);
+		} else {
+			errors.push_back("Error: not an entity: " + list[0]);
+		}
+	} else if (size==3) {
+		if (list[0]=="\"" && list[2]=="\"") {
+			node = new TNode(Const, list[1]);
+		} else {
+			// throw error here
+		}
+	} else {
+		errors.push_back("Error: not an entity");
+	}
+
+	return node;
+}
+
+TNode * QueryPreprocessor::preprocessStmtRef(vector<string> list, SymbolTable table, vector<string>& errors) {
+	TNode * node = new TNode();
+	int size = list.size();
+
+	if (size==1) {
+		if (SyntaxHelper::isNumber(list[0])) {
+			node = new TNode(Const, list[0]);
+		} else if (list[0]==KEYWORD_UNDERLINE) {
+			node = new TNode(Underline);
+		} else if (table.isSymbol(list[0])) {
+			string type = table.getType(list[0]);
+			if (type==KEYWORD_STMT || type==KEYWORD_ASSIGN ||
+				type==KEYWORD_WHILE|| type==KEYWORD_IF     ||
+				type==KEYWORD_CALL) {
+				node = new TNode(QuerySymbol, list[0]);
+			} else {
+				errors.push_back("Error: not a stmt reference: " + list[0]);
+			}
+		} else {
+			errors.push_back("Error: not a stmt reference: " + list[0]);
+		}
+	} else {
+		errors.push_back("Error: not a stmt reference: " + list[0]);
+	}
+
+	return node;
+}
+
+TNode * QueryPreprocessor::preprocessVarRef(vector<string> list, SymbolTable table, vector<string>& errors) {
+	TNode * node = new TNode();
+	int size = list.size();
+
+	if (size==1) {
+		if (list[0]==KEYWORD_UNDERLINE) {
+			node = new TNode(Underline);
+		} else if (table.isSymbol(list[0])) {
+			string type = table.getType(list[0]);
+			if (type==KEYWORD_VAR) {
+				node = new TNode(QuerySymbol, list[0]);
+			} else {
+				errors.push_back("Error: not a variable reference: " + list[0]);
+			}
+		} else {
+			errors.push_back("Error: not a variable reference: " + list[0]);
+		}
+	} else if (size==3) {
+		if (list[0]=="\"" && list[2]=="\"") {
+			node = new TNode(Const, list[1]);
+		} else {
+			errors.push_back("Error: not a variable reference");
+		}
+	} else {
+		errors.push_back("Error: not a variable reference");
+	}
+
+	return node;
+}
+
+TNode * QueryPreprocessor::preprocessLineRef(vector<string> list, SymbolTable table, vector<string>& errors) {
+	TNode * node = new TNode();
+	int size = list.size();
+
+	if (size==1) {
+		if (SyntaxHelper::isNumber(list[0])) {
+			node = new TNode(Const, list[0]);
+		} else if (list[0]==KEYWORD_UNDERLINE) {
+			node = new TNode(Underline);
+		} else if (table.isSymbol(list[0])) {
+			node = new TNode(QuerySymbol, list[0]);
+		} else {
+			errors.push_back("Error: not a line reference: " + list[0]);
+		}
+	} {
+		errors.push_back("Error: not a line reference: " + list[0]);
+	}
+
+	return node;
+} 
 
 // Description: this method is to preprocess the pattern condition of query
 TNode * QueryPreprocessor::preprocessPatternCondition(vector<string> list, SymbolTable table, vector<string>& errors) {
@@ -522,37 +547,10 @@ TNode * QueryPreprocessor::preprocessAssignPattern(string name, vector<string> l
 	}
 	int commaIndex = findFirstElement(list, 0, ",");
 
-	switch (commaIndex) {
-	case 2:
-		{
-			string arg1 = list[1];
-			// expect arg1 of pattern is underline or query symbol
-			if (arg1==KEYWORD_UNDERLINE) {
-				TNode * arg1Node = new TNode(Underline);
-				assignNode -> addChild(arg1Node);
-			} else {
-				if (table.getIndex(arg1)==0) {
-					errors.push_back("Error 011: not a declared symbol: " + arg1);
-				}
-				TNode * arg1Node = new TNode(QuerySymbol, arg1);
-				assignNode -> addChild(arg1Node);
-			}
-			break;
-		}
-	case 4:
-		{
-			// expect a variable name
-			if (list[1]!="\"" || list[3]!="\"") {
-				errors.push_back("Error 012_01: syntax of pattern");
-				return assignNode;
-			}
-			TNode * arg1Node = new TNode(Const, list[2]);
-			assignNode -> addChild(arg1Node);
-			break;
-		}
-	default:
-		break;
-	}
+	vector<string> arg1 = subList(list, 1, commaIndex-1);
+	TNode * arg1Node = preprocessVarRef(arg1, table, errors);
+
+	assignNode ->addChild(arg1Node);
 
 	// preprocess right hand side 
 	switch (size-commaIndex) {
@@ -717,7 +715,7 @@ TNode * QueryPreprocessor::preprocessExpressionNode(vector<string> list, vector<
 			expr==KEYWORD_OPENBRACKET ||expr==KEYWORD_CLOSEBRACKET) {
 			errors.push_back("Error 013: lack in pattern expression");
 		} else {
-			if (isNumber(expr)) {
+			if (SyntaxHelper::isNumber(expr)) {
 				exprNode = new TNode(Const, expr);
 			} else {
 				exprNode = new TNode(Var, expr);
@@ -846,7 +844,7 @@ TNode * QueryPreprocessor::preprocessWithCondition(vector<string> list, SymbolTa
 		} else if (arg1Type==KEYWORD_CONST || arg1Type==KEYWORD_PROG_LINE ||
 			arg1Type==KEYWORD_STMT || arg1Type==KEYWORD_ASSIGN || arg1Type==KEYWORD_WHILE ||
 			arg1Type==KEYWORD_IF || arg1Type==KEYWORD_CALL) {
-			if (isNumber(arg2)) {
+			if (SyntaxHelper::isNumber(arg2)) {
 				TNode * arg2Node = new TNode(Const, arg2);
 				withCls -> addChild(arg2Node);
 			} else {
@@ -952,28 +950,6 @@ unsigned int QueryPreprocessor::findLastElement(vector<string> list, unsigned in
 			return i;
 	}
 	return -1;
-}
-
-
-// Description: this method is to check if a string is a number or not
-bool QueryPreprocessor::isNumber(string str) {
-	string::const_iterator it = str.begin();
-    while (it != str.end() && isdigit(*it)) ++it;
-    return !str.empty() && it == str.end();
-}
-
-/* TESTING METHODS */
-
-// Description: this method is to print fileData for testing 
-void QueryPreprocessor::printFileData() {
-	for (size_t i=0; i<fileData.size(); i++) {
-		cout << "	Query " << i <<endl;
-		vector<string> query = fileData[i];
-		if (query.size()==2) {
-			cout << query[0] << endl;
-			cout << query[1] << endl;
-		}
-	}
 }
 
 int QueryPreprocessor::getLastIndexOfTokenNotInsideBracket(vector<string> list, string token) {

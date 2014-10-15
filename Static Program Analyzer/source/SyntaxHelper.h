@@ -69,4 +69,6 @@ public:
 	static Symbol getSymbolType(string);
 	static string SymbolToString(Symbol symbol);
 	static bool isRelation(string);
+	static bool isDesignEntity(string);
+	static bool isNumber(string);
 };

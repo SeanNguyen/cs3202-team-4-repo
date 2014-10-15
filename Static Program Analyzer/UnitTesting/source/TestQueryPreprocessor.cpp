@@ -67,8 +67,8 @@ void QueryPreprocessorTest::testBuildWithCls() {
 
 	Tree tree = QueryRepresentator::getQueryTree(0);
 	TNode * root = tree.getRoot();
-	 cout << endl << "TEST BUILD TREE: Query: stmt s, prog_line p; Select BOOLEAN with p = 1" <<endl;
-	 root -> printTNode();
+	/* cout << endl << "TEST BUILD TREE: Query: stmt s, prog_line p; Select BOOLEAN with p = 1" <<endl;
+	 root -> printTNode();*/
 }
 
 void QueryPreprocessorTest::testBuildTupleResult() {

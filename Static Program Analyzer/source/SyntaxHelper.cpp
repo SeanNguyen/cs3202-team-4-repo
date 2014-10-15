@@ -157,3 +157,19 @@ bool SyntaxHelper::isRelation(string str) {
 
 	return false;
 }
+
+bool SyntaxHelper::isDesignEntity(string str) {
+	if (str==KEYWORD_PROCEDURE	|| str==KEYWORD_STMTLIST	||
+		str==KEYWORD_STMT		|| str==KEYWORD_ASSIGN		||
+		str==KEYWORD_CALL		|| str==KEYWORD_WHILE		||
+		str==KEYWORD_IF			|| str==KEYWORD_VAR			||
+		str==KEYWORD_CONST		|| str==KEYWORD_PROG_LINE)
+		return true;
+	return false;
+}
+
+bool SyntaxHelper::isNumber(string str) {
+	string::const_iterator it = str.begin();
+    while (it != str.end() && isdigit(*it)) ++it;
+    return !str.empty() && it == str.end();
+}
