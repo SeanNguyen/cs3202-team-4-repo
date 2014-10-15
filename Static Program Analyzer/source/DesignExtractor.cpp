@@ -11,6 +11,7 @@ DesignExtractor::~DesignExtractor(void)
 }
 
 void DesignExtractor::buildPKB() {
+	PKB::preCalculateStarTables();
 	processUses();
 	processModify();
 }

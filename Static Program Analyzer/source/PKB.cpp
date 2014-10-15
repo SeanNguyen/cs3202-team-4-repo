@@ -44,6 +44,7 @@ void PKB::preCalculateStarTables() {
 	followTable.preCalculateStarTable();
 	parentTable.preCalculateStarTable();
 	callStmtTable.preCalculateStarTable();
+	callProcTable.preCalculateStarTable();
 	nextTable.preCalculateStarTable();
 }
 
