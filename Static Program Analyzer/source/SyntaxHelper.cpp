@@ -173,3 +173,11 @@ bool SyntaxHelper::isNumber(string str) {
     while (it != str.end() && isdigit(*it)) ++it;
     return !str.empty() && it == str.end();
 }
+
+bool SyntaxHelper::isStmtSymbol(string str) {
+	if (str==KEYWORD_STMT		|| str==KEYWORD_ASSIGN		||
+		str==KEYWORD_CALL		|| str==KEYWORD_WHILE		||
+		str==KEYWORD_IF)
+		return true;
+	return false;
+}

@@ -46,6 +46,7 @@ private:
 	TNode * preprocessStmtRef(vector<string> list, SymbolTable table, vector<string>& errors);
 	TNode * preprocessLineRef(vector<string> list, SymbolTable table, vector<string>& errors);
 	TNode * preprocessVarRef(vector<string> list, SymbolTable table, vector<string>& errors);
+	TNode * preprocessAttrRef(vector<string> list, SymbolTable table, vector<string>& errors);
 
 	vector<string> breakStringIntoWords(string str);
 	unsigned int findFirstElement(vector<string> list, unsigned i, string element);

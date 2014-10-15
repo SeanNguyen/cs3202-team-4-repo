@@ -603,37 +603,10 @@ TNode * QueryPreprocessor::preprocessWhilePattern(string name, vector<string> li
 	}
 	int commaIndex = findFirstElement(list, 0, ",");
 	
-	switch (commaIndex) {
-	case 2:
-		{
-			string arg1 = list[1];
-			// expect arg1 of pattern is underline or query symbol
-			if (arg1==KEYWORD_UNDERLINE) {
-				TNode * arg1Node = new TNode(Underline);
-				whileNode -> addChild(arg1Node);
-			} else {
-				if (table.getIndex(arg1)==0) {
-					errors.push_back("Error 011: not a declared symbol: " + arg1);
-				}
-				TNode * arg1Node = new TNode(QuerySymbol, arg1);
-				whileNode -> addChild(arg1Node);
-			}
-			break;
-		}
-	case 4:
-		{
-			// expect a variable name
-			if (list[1]!="\"" || list[3]!="\"") {
-				errors.push_back("Error 012_01: syntax of pattern");
-				return whileNode;
-			}
-			TNode * arg1Node = new TNode(Const, list[2]);
-			whileNode -> addChild(arg1Node);
-			break;
-		}
-	default:
-		break;
-	}
+	vector<string> arg1 = subList(list, 1, commaIndex-1);
+	TNode * arg1Node = preprocessVarRef(arg1, table, errors);
+
+	whileNode ->addChild(arg1Node);
 
 	// expect right hand side is underline
 	if (commaIndex>(int)size-2 || list[commaIndex+1]!=KEYWORD_UNDERLINE) {
@@ -653,37 +626,11 @@ TNode * QueryPreprocessor::preprocessIfPattern(string name, vector<string> list,
 		errors.push_back("Error 010: no valid bracket for pattern");
 	}
 	int commaIndex = findFirstElement(list, 0, ",");
-	switch (commaIndex) {
-	case 2:
-		{
-			string arg1 = list[1];
-			// expect arg1 of pattern is underline or query symbol
-			if (arg1==KEYWORD_UNDERLINE) {
-				TNode * arg1Node = new TNode(Underline);
-				ifNode -> addChild(arg1Node);
-			} else {
-				if (table.getIndex(arg1)==0) {
-					errors.push_back("Error 011: not a declared symbol: " + arg1);
-				}
-				TNode * arg1Node = new TNode(QuerySymbol, arg1);
-				ifNode -> addChild(arg1Node);
-			}
-			break;
-		}
-	case 4:
-		{
-			// expect a variable name
-			if (list[1]!="\"" || list[3]!="\"") {
-				errors.push_back("Error 012_01: syntax of pattern");
-				return ifNode;
-			}
-			TNode * arg1Node = new TNode(Const, list[2]);
-			ifNode -> addChild(arg1Node);
-			break;
-		}
-	default:
-		break;
-	}
+
+	vector<string> arg1 = subList(list, 1, commaIndex-1);
+	TNode * arg1Node = preprocessVarRef(arg1, table, errors);
+
+	ifNode ->addChild(arg1Node);
 
 	// expect right hand side has 2 underline signs
 	if (commaIndex>(int)size-4 || list[commaIndex+1]!=KEYWORD_UNDERLINE) {
@@ -770,92 +717,58 @@ TNode * QueryPreprocessor::preprocessExpressionNode(vector<string> list, vector<
 
 TNode * QueryPreprocessor::preprocessWithCondition(vector<string> list, SymbolTable table, vector<string> & errors, int index) {
 	TNode * withCls = new TNode(WithCls, "b");
+	int size = list.size();
+	int equalSignIndex = findFirstElement(list, index, KEYWORD_EQUALSIGN);
 
-	string arg1 = list[index+1];
-	string arg1Type = table.getType(arg1);
-	if (table.isSymbol(arg1)) {
-		// check syntax
-		if (arg1Type!=KEYWORD_PROG_LINE && list[index+2]!=".") {
-			errors.push_back("Error 011: wrong expression: " + arg1 + list[index+2] + list[index+3]);
-		} 
-		if (arg1Type==KEYWORD_PROCEDURE && list[index+3]!="procName") {
-			errors.push_back("Error 012: wrong expression: " + arg1 + list[index+2] + list[index+3]);
-		}
-		if (arg1Type==KEYWORD_VAR && list[index+3]!="varName") {
-			errors.push_back("Error 013: wrong expression: " + arg1 + list[index+2] + list[index+3]);
-		}
-		if (arg1Type==KEYWORD_CONST && list[index+3]!="value") {
-			errors.push_back("Error 014: wrong expression: " + arg1 + list[index+2] + list[index+3]);
-		}
+	vector<string> arg1 = subList(list, index+1, equalSignIndex-1);
+	TNode * arg1Node = preprocessAttrRef(arg1, table, errors);
 
-		if ((arg1Type==KEYWORD_STMT || arg1Type==KEYWORD_ASSIGN ||
-			arg1Type==KEYWORD_WHILE || arg1Type==KEYWORD_IF || arg1Type == KEYWORD_CALL)
-			&& list[index+3]!="stmt#") {
-			errors.push_back("Error 015: wrong expression: " + arg1 + list[index+2] + list[index+3]);
-		}
-		if (arg1Type==KEYWORD_CALL && list[index+3]!="procName") {
-			errors.push_back("Error 017: wrong expression: " + arg1 + list[index+2] + list[index+3]);
-		}
-		TNode * arg1Node = new TNode(QuerySymbol, arg1);
-		withCls -> addChild(arg1Node);
-		if (arg1Type==KEYWORD_PROG_LINE) {
-			index +=2;
-		} else {
-			index +=4;
-		}
-	}
+	withCls ->addChild(arg1Node);
 
-	if (list[index]!="=") {
-		errors.push_back("Error 018: expect equality size (=) but find " + list[index] +" instead");
-		return withCls;
-	}
-	index++;
-
-	string arg2 = list[index];
-
-	if (table.isSymbol(arg2)) {
-		string arg2Type = table.getType(arg2);
-		if (arg1Type==KEYWORD_PROCEDURE || arg1Type==KEYWORD_VAR || arg1Type==KEYWORD_CALL) { 
-			if (arg2Type!=KEYWORD_PROCEDURE && arg2Type==KEYWORD_VAR && arg2Type!=KEYWORD_CALL) {
-				errors.push_back("Error 019: not correct comparison (different attribute type): " + arg1 + " and " + arg2);
-			} else {
-				TNode * arg2Node = new TNode(QuerySymbol, arg2);
-				withCls -> addChild(arg2Node);
-			}
-		} else {
-			if (arg2Type!=KEYWORD_CONST && arg2Type!=KEYWORD_PROG_LINE &&
-			arg2Type!=KEYWORD_STMT && arg2Type!=KEYWORD_ASSIGN && arg2Type!=KEYWORD_WHILE &&
-			arg2Type!=KEYWORD_IF && arg2Type==KEYWORD_CALL) {
-				errors.push_back("Error 020: not correct comparison (different attribute type): " + arg1 + " and " + arg2);
-			} else {
-				TNode * arg2Node = new TNode(QuerySymbol, arg2);
-				withCls -> addChild(arg2Node);
-			}
-		}
+	vector<string> arg2;
+	if (equalSignIndex+3>= size || list[equalSignIndex+2]!=KEYWORD_DOT) {
+		arg2.push_back(list[equalSignIndex+1]);
 	} else {
-		if (arg1Type==KEYWORD_PROCEDURE || arg1Type==KEYWORD_VAR || arg1Type==KEYWORD_CALL) {
-			// expect semicolon
-			if (list[index]=="\"" && list[index+2]=="\"") {
-				TNode * arg2Node = new TNode(Const, list[index+1]);
-				withCls -> addChild(arg2Node);
-			} else {
-				errors.push_back("Error 021: not correct comparison (different attribute type): " + arg1 + " and " + arg2);
-			}
-		} else if (arg1Type==KEYWORD_CONST || arg1Type==KEYWORD_PROG_LINE ||
-			arg1Type==KEYWORD_STMT || arg1Type==KEYWORD_ASSIGN || arg1Type==KEYWORD_WHILE ||
-			arg1Type==KEYWORD_IF || arg1Type==KEYWORD_CALL) {
-			if (SyntaxHelper::isNumber(arg2)) {
-				TNode * arg2Node = new TNode(Const, arg2);
-				withCls -> addChild(arg2Node);
-			} else {
-				errors.push_back("Error 022: not correct comparison (different attribute type): " + arg1 + " and " + arg2);
-			}
-		} else {
-			errors.push_back("Error 023: not correct comparison (different attribute type): " + arg1 + " and " + arg2);
-		}
+		arg2 = subList(list, equalSignIndex+1, equalSignIndex+3);
 	}
+	TNode * arg2Node = preprocessAttrRef(arg2, table, errors);
+
+	withCls ->addChild(arg2Node);
 
 	return withCls;
+}
+
+TNode * QueryPreprocessor::preprocessAttrRef(vector<string> list, SymbolTable table, vector<string>& errors) {
+	TNode * node = new TNode();
+	int size = list.size();
+
+	if (size==1) {
+		if (SyntaxHelper::isNumber(list[0])) {
+			node = new TNode(Const, list[0]);
+		} else if (table.getType(list[0])==KEYWORD_PROG_LINE) {
+			node = new TNode(QuerySymbol, list[0]);
+		} else {
+			errors.push_back("Error: not an attribute reference: " + list[0]);
+		}
+	} else if (size==3) {
+		if (table.isSymbol(list[0]) && list[1]==KEYWORD_DOT) {
+			string type = table.getType(list[0]);
+			if ((type==KEYWORD_PROCEDURE && list[2]=="procName") ||
+				(type==KEYWORD_VAR && list[2]=="varName")		 ||
+				(type==KEYWORD_CONST && list[2]=="value")		 ||
+				(SyntaxHelper::isStmtSymbol(type) && list[2]=="stmt#")) {
+				node = new TNode(QuerySymbol, list[0]);		
+			} else {
+				errors.push_back("Error: not an attribute reference");
+			}
+		} else {
+			errors.push_back("Error: not an attribute reference");
+		}
+	} else {
+		errors.push_back("Error: not an attribute reference");
+	}
+
+	return node;
 }
 
 /* SUPPORTING FUCNTIONS */
