@@ -14,6 +14,8 @@ public:
 	int getNumChildren(TNode * node);
 	TNode *getChildAtIndex(TNode * node, int i);
 	void printTree();
+	int countNode(Symbol type, string value);
 private:
 	TNode *root;
+	int countNode(TNode * node, Symbol type, string value);
 };

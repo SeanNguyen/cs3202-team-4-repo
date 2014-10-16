@@ -75,3 +75,37 @@ void QueryRepresentator::reset() {
 	size = 0;
 	return;
 }
+
+void QueryRepresentator::sortTable(int index, vector<string> symbolRanks) {
+	SymbolTable table = getSymbolTable(index);
+
+	// merge sort
+	int size = table.getSize();
+	SymbolTable new_table = sortTable(table, symbolRanks, 0, size-1);
+	// replace old table with new table
+	tables[index] = new_table;
+}
+
+SymbolTable QueryRepresentator::sortTable(SymbolTable table, vector<string> ranks, int start, int end) {
+	if (start==end) {
+		SymbolTable new_table;
+		string type = table.getType(start);
+		string name = table.getName(start);
+		new_table.setSymbol(type, name);
+		return new_table;
+	}
+
+	int mid = (start+end)/2;
+	SymbolTable table1 = sortTable(table, ranks, start, mid);
+	SymbolTable table2 = sortTable(table, ranks, mid+1, end);
+
+	SymbolTable new_table = mergeTables(table1, table2);
+
+	return new_table;
+}
+
+SymbolTable QueryRepresentator::mergeTables(SymbolTable t1, SymbolTable t2) {
+	int size1 = t1.getSize(); int size2 = t2.getSize();
+	while (size1>0 || size2>0) {
+	}
+}

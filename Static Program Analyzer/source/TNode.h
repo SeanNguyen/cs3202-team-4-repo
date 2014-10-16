@@ -21,6 +21,7 @@ public:
 	int addChild(TNode * child);
 	void printTNode();
 	void sortChildrenList();
+	bool equals(Symbol type, string value);
 private:
 	Symbol type;
 	string value;

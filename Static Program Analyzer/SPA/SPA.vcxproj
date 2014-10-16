@@ -21,6 +21,7 @@
     <ClInclude Include="..\source\QueryEvaluator.h" />
     <ClInclude Include="..\source\QueryPreprocessor.h" />
     <ClInclude Include="..\source\QueryProcessor.h" />
+    <ClInclude Include="..\source\QueryRanker.h" />
     <ClInclude Include="..\source\QueryRepresentator.h" />
     <ClInclude Include="..\source\QueryTree.h" />
     <ClInclude Include="..\source\SymbolTable.h" />
@@ -37,8 +38,8 @@
     <ClCompile Include="..\source\QueryEvaluator.cpp" />
     <ClCompile Include="..\source\QueryPreprocessor.cpp" />
     <ClCompile Include="..\source\QueryProcessor.cpp" />
+    <ClCompile Include="..\source\QueryRanker.cpp" />
     <ClCompile Include="..\source\QueryRepresentator.cpp" />
-    <ClCompile Include="..\source\QueryTree.cpp" />
     <ClCompile Include="..\source\SymbolTable.cpp" />
     <ClCompile Include="..\source\SyntaxHelper.cpp" />
     <ClCompile Include="..\source\Table.cpp" />

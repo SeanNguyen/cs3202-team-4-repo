@@ -3,6 +3,7 @@
 
 #include "QueryRepresentator.h"
 #include "TNode.h"
+#include "QueryRanker.h"
 #include "../AutoTester/source/AbstractWrapper.h"
 
 #include <iostream>

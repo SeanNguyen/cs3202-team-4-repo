@@ -16,12 +16,16 @@ public:
 	static bool getQueryValidity(int index);
 	static int getSize();
 	static int addQuery(SymbolTable &table, QueryTree &tree, bool isQueryValid);
+	static void sortTable(int index, vector<string> symbolRanks);
 	static void reset();
 private:
 	static vector<SymbolTable> tables;
 	static vector<QueryTree> trees;
 	static vector<int> queryValidities;
 	static int size;
+
+	static SymbolTable sortTable(SymbolTable table, vector<string> ranks, int start, int end);
+	static SymbolTable mergeTables(SymbolTable t1, SymbolTable t2);
 };
 
 #endif

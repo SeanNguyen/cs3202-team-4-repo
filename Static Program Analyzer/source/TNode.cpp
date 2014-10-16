@@ -102,3 +102,7 @@ vector<TNode *> TNode::mergeList(vector<TNode *> list1, vector<TNode *> list2) {
 	}
 	return list;
 }
+
+bool TNode::equals(Symbol type, string value) {
+	return (this->type==type && this->value==value);
+}
