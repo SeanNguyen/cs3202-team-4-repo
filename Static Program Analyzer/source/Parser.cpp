@@ -134,6 +134,9 @@ void Parser::buildUseTable()
 	{
 		int stmt = uses.at(index).first - 1;
 		int varIndex = pkb.getVarIndex(uses.at(index).second);
+		string parentProc = getParentProc(stmt);
+		int procIndex = pkb.getProcIndex(parentProc).front();
+		pkb.insertUsesProc(procIndex, varIndex);
 		while(stmt >= 0)
 		{
 			pkb.insertUses(stmt+1, varIndex);
