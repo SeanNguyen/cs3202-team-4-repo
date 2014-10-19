@@ -107,5 +107,6 @@ SymbolTable QueryRepresentator::sortTable(SymbolTable table, vector<string> rank
 SymbolTable QueryRepresentator::mergeTables(SymbolTable t1, SymbolTable t2) {
 	int size1 = t1.getSize(); int size2 = t2.getSize();
 	while (size1>0 || size2>0) {
+		
 	}
 }
