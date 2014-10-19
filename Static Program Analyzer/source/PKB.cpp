@@ -394,3 +394,101 @@ std::vector<int> PKB::getNextStmts(int n1){
 std::vector<int> PKB::getPreviousStmts(int n1){
 	return nextTable.getIndexes(n1);
 }
+
+////////////////////////////////////Affect METHODS///////////////////////////////
+
+bool PKB::isAffect(int affectingStmt, int affectedStmt) {
+	vector<int> affectedStmts = getAffected(affectingStmt);
+	if (find(affectedStmts.begin(), affectedStmts.end(), affectedStmt) != affectedStmts.end())
+		return true;
+	return false;
+}
+
+bool PKB::isAffectStar(int affectingStmt, int affectedStmt) {
+	vector<int> affectedStmts = getAffectedStar(affectingStmt, true);
+	if (find(affectedStmts.begin(), affectedStmts.end(), affectedStmt) != affectedStmts.end())
+		return true;
+	return false;
+}
+
+vector <int> PKB::getAffected (int affectingStmt) {
+	vector<int> affectedStmts;
+	vector<int> nextStmts = getNextStarStmts(affectingStmt);
+	vector<int> modifiedVars = getModifiedVarAtStmt(affectingStmt);
+
+	for (int i = 0; i < nextStmts.size(); i++) {
+		if (modifiedVars.size() == 0)
+			break;
+		vector<int> usedVars = getUsedVarAtStmt(nextStmts[i]);
+		for (int j = 0; j < modifiedVars.size(); j++) {
+			if (find(usedVars.begin(), usedVars.end(), modifiedVars[j]) != usedVars.end()) {
+				modifiedVars.erase(modifiedVars.begin() + j);
+				j--;
+			}
+		}
+		affectedStmts.push_back(nextStmts[i]);
+	}
+	return affectedStmts;
+}
+
+vector <int> PKB::getAffecting (int affectedStmt) {
+	vector<int> affectingStmts;
+	vector<int> previousStmts = getPreviousStarStmts(affectedStmt);
+	vector<int> usedVars = getUsedVarAtStmt(affectedStmt);
+
+	for (int i = 0; i < previousStmts.size(); i++) {
+		if (usedVars.size() == 0)
+			break;
+		vector<int> usedVars = getUsedVarAtStmt(previousStmts[i]);
+		for (int j = 0; j < usedVars.size(); j++) {
+			if (find(usedVars.begin(), usedVars.end(), usedVars[j]) != usedVars.end()) {
+				usedVars.erase(usedVars.begin() + j);
+				j--;
+			}
+		}
+		affectingStmts.push_back(previousStmts[i]);
+	}
+	return affectingStmts;
+}
+
+vector<int> PKB::getAffectedStar (int affectingStmt, bool isStartingPoint) {
+	if (isStartingPoint)
+		flags.clear();
+
+	vector <int> results;
+	if (flags.count(affectingStmt) != 0 && flags[affectingStmt] == true) {
+		return results;
+	} else if (!isStartingPoint) {
+		results.push_back(affectingStmt);
+		flags[affectingStmt] = true;
+	}
+
+	vector <int> values = getAffected(affectingStmt);
+	//apply depth first search here
+	for (size_t i = 0; i < values.size(); i++) {
+		vector <int> tempList = getAffectedStar(values.at(i), false);
+		results.insert(results.end(), tempList.begin(), tempList.end());
+	}
+	return results;
+}
+
+vector<int> PKB::getAffectingStar (int affectedStmt, bool isStartingPoint) {
+	if (isStartingPoint)
+		flags.clear();
+
+	vector <int> results;
+	if (flags.count(affectedStmt) != 0 && flags[affectedStmt] == true) {
+		return results;
+	} else if (!isStartingPoint) {
+		results.push_back(affectedStmt);
+		flags[affectedStmt] = true;
+	}
+
+	vector <int> values = getAffecting(affectedStmt);
+	//apply depth first search here
+	for (size_t i = 0; i < values.size(); i++) {
+		vector <int> tempList = getAffectingStar(values.at(i), false);
+		results.insert(results.end(), tempList.begin(), tempList.end());
+	}
+	return results;
+}

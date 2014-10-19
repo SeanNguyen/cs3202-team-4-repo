@@ -109,4 +109,5 @@ SymbolTable QueryRepresentator::mergeTables(SymbolTable t1, SymbolTable t2) {
 	while (size1>0 || size2>0) {
 		
 	}
+	return t1;
 }

@@ -17,7 +17,7 @@ void QueryRanker::RankQuery(int index) {
 	Tree tree = QueryRepresentator::getQueryTree(index);
 
 	vector<int> occurences = calcSymbolOccurences(table, tree);
-	QueryRepresentator::sortTable(index, occurences);
+	//QueryRepresentator::sortTable(index, occurences);
 }
 
 vector<int> QueryRanker::calcSymbolOccurences(SymbolTable table, Tree tree) {

@@ -28,6 +28,8 @@ private:
 	static MapTable <int> callProcTable;
 	static MapTable <int> nextTable;
 
+	static map<int, bool> flags;
+
 public:
 	PKB();
 	static void resetPKB();
@@ -139,5 +141,13 @@ public:
 	static std::vector<int> getPreviousStarStmts(int n1);
 	static std::vector<int> getNextStmts(int n1);
 	static std::vector<int> getPreviousStmts(int n1);
+
+	///////////////////////AFFECTTABLE////////////////////////////////////
+	static bool isAffect(int affectingStmt, int affectedStmt);
+	static bool isAffectStar(int affectingStmt, int affectedStmt);
+	static vector<int> getAffected (int affectingStmt);
+	static vector<int> getAffecting (int affectedStmt);
+	static vector<int> getAffectedStar (int affectingStmt, bool isStartingPoint);
+	static vector<int> getAffectingStar (int affectedStmt, bool isStartingPoint);
 };
 #endif
