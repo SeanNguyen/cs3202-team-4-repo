@@ -141,6 +141,8 @@ void QueryPreprocessor::preprocessQuery(vector<string> query, int index) {
 
 	if (errors.size()==0) {
 		//		tree.printTree();
+		// call QueryOptimizer
+		QueryOptimizer::optimizeQuery(table, tree, symbolCount);
 		QueryRepresentator::addQuery(table, tree, true);
 	} else {
 		cout << "ERROR LIST:, QUERY " << index+1 << ": ";
@@ -186,7 +188,6 @@ void QueryPreprocessor::preprocessDeclaration(string declaration) {
 		}
 	}
 }
-
 
 // Description: this method is to preprocess the query part of query
 void QueryPreprocessor::preprocessQueryPart(string queryPart) {
@@ -266,9 +267,6 @@ void QueryPreprocessor::preprocessQueryPart(string queryPart) {
 		} else {
 		}
 	}
-
-	// final step: sort children node of root for better evaluation
-	root -> sortChildrenList();
 
 	tree.setRoot(root);
 }

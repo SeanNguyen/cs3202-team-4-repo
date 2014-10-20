@@ -27,6 +27,10 @@ int TNode::getNumChildren() {
 	return children.size();
 }
 
+void TNode::setValue(string _value) {
+	this ->value = _value;
+}
+
 TNode * TNode::getChildAtIndex(int i) {
 	if (i<0 || i >=  this -> getNumChildren()) {
 		throw "Out of bounds";

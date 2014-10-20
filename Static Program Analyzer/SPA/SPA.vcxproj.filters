@@ -76,6 +76,9 @@
     <ClInclude Include="..\source\DesignExtractor.h">
       <Filter>Parser</Filter>
     </ClInclude>
+    <ClInclude Include="..\source\QueryOptimizer.h">
+      <Filter>QueryProcessor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\PKB.cpp">
@@ -116,6 +119,9 @@
     </ClCompile>
     <ClCompile Include="..\source\DesignExtractor.cpp">
       <Filter>Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\QueryOptimizer.cpp">
+      <Filter>QueryProcessor</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

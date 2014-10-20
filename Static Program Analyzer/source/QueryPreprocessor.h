@@ -2,7 +2,7 @@
 #define QueryPreprocessor_h
 
 #include "QueryRepresentator.h"
-#include "TNode.h"
+#include "QueryOptimizer.h"
 #include "../AutoTester/source/AbstractWrapper.h"
 
 #include <iostream>
