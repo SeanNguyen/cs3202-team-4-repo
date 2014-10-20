@@ -18,6 +18,8 @@ MapTable <int> PKB::modifyProcTable;
 MapTable <int> PKB::useStmtTable;
 MapTable <int> PKB::useProcTable;
 
+map <int, bool> PKB::flags;
+
 PKB::PKB()
 {
 }
