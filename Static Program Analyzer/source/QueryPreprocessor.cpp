@@ -6,6 +6,9 @@ QueryPreprocessor::QueryPreprocessor() {
 
 QueryPreprocessor::QueryPreprocessor(string directory) {
 	this -> fileDirectory = directory;
+	this -> table = SymbolTable();
+	this -> tree = QueryTree();
+	this -> errors = vector<string>();
 }
 
 /* PUBLIC METHOD */ 
@@ -98,9 +101,9 @@ void QueryPreprocessor::preprocessFileData() {
 // Description: this method is to save query data into QueryTree and SymbolTable,
 // and save them into QueryRepresentator
 void QueryPreprocessor::preprocessQuery(vector<string> query, int index) {
-	SymbolTable table;
-	QueryTree tree;
-	vector<string> errors;
+	table = SymbolTable();
+	tree = QueryTree();
+	errors = vector<string>();
 	string element = "";
 
 	for (size_t i=0; i<query.size(); i++) {
@@ -114,7 +117,7 @@ void QueryPreprocessor::preprocessQuery(vector<string> query, int index) {
 					unsigned index = curLine.find_first_of(";");
 					// read declaration
 					string declaration = curLine.substr(0, index+1);
-					preprocessDeclaration(table, declaration, errors);
+					preprocessDeclaration(declaration);
 					// continue with the rest of curLine
 					curLine = curLine.substr(index+1);
 					ss.str(curLine);
@@ -125,7 +128,7 @@ void QueryPreprocessor::preprocessQuery(vector<string> query, int index) {
 			} else if (element==KEYWORD_SELECT) {
 				//for (size_t i=0; i<table.getSize(); i++) 
 				//	cout << i << "  "<<table.getType(i)<< " " <<table.getName(i)<<endl;
-				preprocessQueryPart(tree, table, curLine, errors);
+				preprocessQueryPart(curLine);
 				ss.str("");
 				ss.clear();
 			} else {
@@ -152,7 +155,7 @@ void QueryPreprocessor::preprocessQuery(vector<string> query, int index) {
 }
 
 // Description: this method is to preprocess the declaration part of query
-void QueryPreprocessor::preprocessDeclaration(SymbolTable& table, string declaration, vector<string>& errors) {
+void QueryPreprocessor::preprocessDeclaration(string declaration) {
 	// break string into words
 	vector<string> list = breakStringIntoWords(declaration);
 
@@ -183,13 +186,13 @@ void QueryPreprocessor::preprocessDeclaration(SymbolTable& table, string declara
 
 
 // Description: this method is to preprocess the query part of query
-void QueryPreprocessor::preprocessQueryPart(QueryTree& tree, SymbolTable table, string queryPart, vector<string>& errors) {
+void QueryPreprocessor::preprocessQueryPart(string queryPart) {
 	// break string into words
 	vector<string> list = breakStringIntoWords(queryPart);
 	// create root node for Select
 	TNode * root = new TNode(Select, "");
 	// recognize result and create node for it
-	TNode * result = preprocessResultNode(list, table, errors, 1);
+	TNode * result = preprocessResultNode(list, 1);
 	root -> addChild(result);
 
 	Symbol currentCondition = Undefined;
@@ -200,7 +203,7 @@ void QueryPreprocessor::preprocessQueryPart(QueryTree& tree, SymbolTable table, 
 			unsigned index = findFirstElement(list, i, ")");
 			if ((int)index>i) {
 				vector<string> suchThatCondition = subList(list, i+2, index);
-				TNode * suchThat = preprocessSuchThatCondition(suchThatCondition, table, errors);
+				TNode * suchThat = preprocessSuchThatCondition(suchThatCondition);
 				root -> addChild(suchThat);
 				// go to element after this condition
 				i = index;
@@ -210,14 +213,14 @@ void QueryPreprocessor::preprocessQueryPart(QueryTree& tree, SymbolTable table, 
 			unsigned index = findFirstElement(list, i, ")");
 			if ((int)index>i) {
 				vector<string> patternCondition = subList(list, i+1, index);
-				TNode * pattern = preprocessPatternCondition(patternCondition, table, errors);
+				TNode * pattern = preprocessPatternCondition(patternCondition);
 				root -> addChild(pattern);
 				// go to element after this condition
 				i = index;
 			}
 		} else if (list[i]=="with") {
 			currentCondition = WithCls;
-			TNode * withCls = preprocessWithCondition(list, table, errors, i);
+			TNode * withCls = preprocessWithCondition(list, i);
 			root -> addChild(withCls);
 		} else if (list[i]=="and") {
 			switch (currentCondition) {
@@ -226,7 +229,7 @@ void QueryPreprocessor::preprocessQueryPart(QueryTree& tree, SymbolTable table, 
 					unsigned index = findFirstElement(list, i, ")");
 					if ((int)index>i) {
 						vector<string> suchThatCondition = subList(list, i+1, index);
-						TNode * suchThat = preprocessSuchThatCondition(suchThatCondition, table, errors);
+						TNode * suchThat = preprocessSuchThatCondition(suchThatCondition);
 						root -> addChild(suchThat);
 						// go to element after this condition
 						i = index;
@@ -238,7 +241,7 @@ void QueryPreprocessor::preprocessQueryPart(QueryTree& tree, SymbolTable table, 
 					unsigned index = findFirstElement(list, i, ")");
 					if ((int)index>i) {
 						vector<string> patternCondition = subList(list, i+1, index);
-						TNode * pattern = preprocessPatternCondition(patternCondition, table, errors);
+						TNode * pattern = preprocessPatternCondition(patternCondition);
 						root -> addChild(pattern);
 						// go to element after this condition
 						i = index;
@@ -248,7 +251,7 @@ void QueryPreprocessor::preprocessQueryPart(QueryTree& tree, SymbolTable table, 
 			case WithCls:
 				{
 					currentCondition = WithCls;
-					TNode * withCls = preprocessWithCondition(list, table, errors, i);
+					TNode * withCls = preprocessWithCondition(list, i);
 					root -> addChild(withCls);
 				}
 			default:
@@ -267,7 +270,7 @@ void QueryPreprocessor::preprocessQueryPart(QueryTree& tree, SymbolTable table, 
 	tree.setRoot(root);
 }
 
-TNode * QueryPreprocessor::preprocessResultNode(vector<string> list, SymbolTable table, vector<string>& errors, int i) {
+TNode * QueryPreprocessor::preprocessResultNode(vector<string> list, int i) {
 	// FOR ITERATION 1 AND 2: BOOLEAN and single value
 	if (list[i]=="BOOLEAN") {
 		TNode * node = new TNode(ResultCls, "a-BOOLEAN");
@@ -282,7 +285,7 @@ TNode * QueryPreprocessor::preprocessResultNode(vector<string> list, SymbolTable
 				return node;
 			}
 			vector<string> tuple = subList(list, i, j);
-			return preprocessTupleResult(tuple, table, errors);
+			return preprocessTupleResult(tuple);
 		} else {
 			if (table.isSymbol(list[i])) {
 				TNode * node = new TNode(ResultCls, "a-single");
@@ -297,7 +300,7 @@ TNode * QueryPreprocessor::preprocessResultNode(vector<string> list, SymbolTable
 	}
 }
 
-TNode * QueryPreprocessor::preprocessTupleResult(vector<string> list, SymbolTable table, vector<string>& errors) {
+TNode * QueryPreprocessor::preprocessTupleResult(vector<string> list) {
 	TNode * node = new TNode(ResultCls, "a-tuple");
 
 	for (size_t i=1; i<list.size()-1; i++) {
@@ -321,7 +324,7 @@ TNode * QueryPreprocessor::preprocessTupleResult(vector<string> list, SymbolTabl
 }
 
 // Description: this method is to preprocess the such that condition of query
-TNode * QueryPreprocessor::preprocessSuchThatCondition(vector<string> list, SymbolTable table, vector<string>& errors) {
+TNode * QueryPreprocessor::preprocessSuchThatCondition(vector<string> list) {
 	unsigned size = list.size();
 	// create first node for such that
 	TNode * suchThatNode = new TNode(SuchThatCls, "c");
@@ -353,29 +356,29 @@ TNode * QueryPreprocessor::preprocessSuchThatCondition(vector<string> list, Symb
 		case Affects:
 		case AffectsS:
 			{
-				arg1Node = preprocessStmtRef(arg1, table, errors);
-				arg2Node = preprocessStmtRef(arg2, table, errors);
+				arg1Node = preprocessStmtRef(arg1);
+				arg2Node = preprocessStmtRef(arg2);
 				break;
 			}
 		case Modifies:
 		case Uses:
 			{
-				arg1Node = preprocessEntRef(arg1, table, errors);
-				arg2Node = preprocessVarRef(arg2, table,errors);
+				arg1Node = preprocessEntRef(arg1);
+				arg2Node = preprocessVarRef(arg2);
 				break;
 			}
 		case Calls:
 		case CallsS:
 			{
-				arg1Node = preprocessEntRef(arg1, table, errors);
-				arg2Node = preprocessEntRef(arg2, table,errors);
+				arg1Node = preprocessEntRef(arg1);
+				arg2Node = preprocessEntRef(arg2);
 				break;
 			}
 		case Nexts:
 		case NextsS:
 			{
-				arg1Node = preprocessLineRef(arg1, table, errors);
-				arg2Node = preprocessLineRef(arg2, table, errors);
+				arg1Node = preprocessLineRef(arg1);
+				arg2Node = preprocessLineRef(arg2);
 				break;
 			}
 		default:
@@ -393,7 +396,7 @@ TNode * QueryPreprocessor::preprocessSuchThatCondition(vector<string> list, Symb
 	return suchThatNode;
 }
 
-TNode * QueryPreprocessor::preprocessEntRef(vector<string> list, SymbolTable table, vector<string>& errors) {
+TNode * QueryPreprocessor::preprocessEntRef(vector<string> list) {
 	TNode * node = new TNode();
 	int size = list.size();
 
@@ -420,7 +423,7 @@ TNode * QueryPreprocessor::preprocessEntRef(vector<string> list, SymbolTable tab
 	return node;
 }
 
-TNode * QueryPreprocessor::preprocessStmtRef(vector<string> list, SymbolTable table, vector<string>& errors) {
+TNode * QueryPreprocessor::preprocessStmtRef(vector<string> list) {
 	TNode * node = new TNode();
 	int size = list.size();
 
@@ -448,7 +451,7 @@ TNode * QueryPreprocessor::preprocessStmtRef(vector<string> list, SymbolTable ta
 	return node;
 }
 
-TNode * QueryPreprocessor::preprocessVarRef(vector<string> list, SymbolTable table, vector<string>& errors) {
+TNode * QueryPreprocessor::preprocessVarRef(vector<string> list) {
 	TNode * node = new TNode();
 	int size = list.size();
 
@@ -478,7 +481,7 @@ TNode * QueryPreprocessor::preprocessVarRef(vector<string> list, SymbolTable tab
 	return node;
 }
 
-TNode * QueryPreprocessor::preprocessLineRef(vector<string> list, SymbolTable table, vector<string>& errors) {
+TNode * QueryPreprocessor::preprocessLineRef(vector<string> list) {
 	TNode * node = new TNode();
 	int size = list.size();
 
@@ -500,7 +503,7 @@ TNode * QueryPreprocessor::preprocessLineRef(vector<string> list, SymbolTable ta
 } 
 
 // Description: this method is to preprocess the pattern condition of query
-TNode * QueryPreprocessor::preprocessPatternCondition(vector<string> list, SymbolTable table, vector<string>& errors) {
+TNode * QueryPreprocessor::preprocessPatternCondition(vector<string> list) {
 	unsigned size = list.size();
 	// create first node for pattern
 	TNode * pattern = new TNode(PatternCls, "d");
@@ -513,19 +516,19 @@ TNode * QueryPreprocessor::preprocessPatternCondition(vector<string> list, Symbo
 	switch (type) {
 	case Assign:
 		{
-			TNode * assignNode = preprocessAssignPattern(argName, patternContent, table, errors);
+			TNode * assignNode = preprocessAssignPattern(argName, patternContent);
 			pattern -> addChild(assignNode);
 			break;
 		}
 	case While:
 		{
-			TNode * whileNode = preprocessWhilePattern(argName, patternContent, table, errors);
+			TNode * whileNode = preprocessWhilePattern(argName, patternContent);
 			pattern -> addChild(whileNode);
 			break;
 		}
 	case If:
 		{
-			TNode * ifNode = preprocessIfPattern(argName, patternContent, table, errors);
+			TNode * ifNode = preprocessIfPattern(argName, patternContent);
 			pattern -> addChild(ifNode);
 			break;
 		}
@@ -539,7 +542,7 @@ TNode * QueryPreprocessor::preprocessPatternCondition(vector<string> list, Symbo
 	return pattern;
 }
 
-TNode * QueryPreprocessor::preprocessAssignPattern(string name, vector<string> list, SymbolTable table, vector<string>& errors) {
+TNode * QueryPreprocessor::preprocessAssignPattern(string name, vector<string> list) {
 	TNode * assignNode = new TNode(QuerySymbol, name);
 	unsigned size = list.size();
 	if (list[0]!=KEYWORD_OPENBRACKET || list[size-1]!=KEYWORD_CLOSEBRACKET) {
@@ -548,7 +551,7 @@ TNode * QueryPreprocessor::preprocessAssignPattern(string name, vector<string> l
 	int commaIndex = findFirstElement(list, 0, ",");
 
 	vector<string> arg1 = subList(list, 1, commaIndex-1);
-	TNode * arg1Node = preprocessVarRef(arg1, table, errors);
+	TNode * arg1Node = preprocessVarRef(arg1);
 
 	assignNode ->addChild(arg1Node);
 
@@ -574,7 +577,7 @@ TNode * QueryPreprocessor::preprocessAssignPattern(string name, vector<string> l
 				}
 				vector<string> expression = subList(list, commaIndex+2, size-3);
 				TNode * arg2Node = new TNode(No_Underline);
-				TNode * exprNode = preprocessExpressionNode(expression, errors);
+				TNode * exprNode = preprocessExpressionNode(expression);
 				arg2Node ->addChild(exprNode);
 				assignNode ->addChild(arg2Node);
 			} else {
@@ -584,7 +587,7 @@ TNode * QueryPreprocessor::preprocessAssignPattern(string name, vector<string> l
 				}
 				vector<string> expression = subList(list, commaIndex+3, size-4);
 				TNode * arg2Node = new TNode(Underline);
-				TNode * exprNode = preprocessExpressionNode(expression, errors);
+				TNode * exprNode = preprocessExpressionNode(expression);
 				arg2Node ->addChild(exprNode);
 				assignNode ->addChild(arg2Node);
 			}
@@ -595,7 +598,7 @@ TNode * QueryPreprocessor::preprocessAssignPattern(string name, vector<string> l
 	return assignNode;
 }
 
-TNode * QueryPreprocessor::preprocessWhilePattern(string name, vector<string> list, SymbolTable table, vector<string>& errors) {
+TNode * QueryPreprocessor::preprocessWhilePattern(string name, vector<string> list) {
 	TNode * whileNode = new TNode(QuerySymbol, name);
 	unsigned size = list.size();
 	if (list[0]!=KEYWORD_OPENBRACKET || list[size-1]!=KEYWORD_CLOSEBRACKET) {
@@ -604,7 +607,7 @@ TNode * QueryPreprocessor::preprocessWhilePattern(string name, vector<string> li
 	int commaIndex = findFirstElement(list, 0, ",");
 	
 	vector<string> arg1 = subList(list, 1, commaIndex-1);
-	TNode * arg1Node = preprocessVarRef(arg1, table, errors);
+	TNode * arg1Node = preprocessVarRef(arg1);
 
 	whileNode ->addChild(arg1Node);
 
@@ -619,7 +622,7 @@ TNode * QueryPreprocessor::preprocessWhilePattern(string name, vector<string> li
 	return whileNode;
 }
 
-TNode * QueryPreprocessor::preprocessIfPattern(string name, vector<string> list, SymbolTable table, vector<string>& errors) {
+TNode * QueryPreprocessor::preprocessIfPattern(string name, vector<string> list) {
 	TNode * ifNode = new TNode(QuerySymbol, name);
 	unsigned size = list.size();
 	if (list[0]!=KEYWORD_OPENBRACKET || list[size-1]!=KEYWORD_CLOSEBRACKET) {
@@ -628,7 +631,7 @@ TNode * QueryPreprocessor::preprocessIfPattern(string name, vector<string> list,
 	int commaIndex = findFirstElement(list, 0, ",");
 
 	vector<string> arg1 = subList(list, 1, commaIndex-1);
-	TNode * arg1Node = preprocessVarRef(arg1, table, errors);
+	TNode * arg1Node = preprocessVarRef(arg1);
 
 	ifNode ->addChild(arg1Node);
 
@@ -650,7 +653,7 @@ TNode * QueryPreprocessor::preprocessIfPattern(string name, vector<string> list,
 	return ifNode;
 }
 
-TNode * QueryPreprocessor::preprocessExpressionNode(vector<string> list, vector<string>& errors) {
+TNode * QueryPreprocessor::preprocessExpressionNode(vector<string> list) {
 	TNode * exprNode = new TNode();
 	unsigned size = list.size();
 	// base case
@@ -680,8 +683,8 @@ TNode * QueryPreprocessor::preprocessExpressionNode(vector<string> list, vector<
 				TNode * multiplyNode = new TNode(Times);
 				vector<string> sublist1 = subList(list, 0, multiplySignIndex-1);
 				vector<string> sublist2 = subList(list, multiplySignIndex+1, size-1);
-				TNode * node1 = preprocessExpressionNode(sublist1, errors);
-				TNode * node2 = preprocessExpressionNode(sublist2, errors);
+				TNode * node1 = preprocessExpressionNode(sublist1);
+				TNode * node2 = preprocessExpressionNode(sublist2);
 				multiplyNode ->addChild(node1);
 				multiplyNode ->addChild(node2);
 				return multiplyNode;
@@ -689,7 +692,7 @@ TNode * QueryPreprocessor::preprocessExpressionNode(vector<string> list, vector<
 				// there is a bracket covering all expression
 				if (list[0]==KEYWORD_OPENBRACKET && list[size-1]==KEYWORD_CLOSEBRACKET) {
 					list = subList(list, 1, size-2);
-					return preprocessExpressionNode(list, errors);
+					return preprocessExpressionNode(list);
 				} else {
 					errors.push_back("Error 013: invalid pattern expression");
 					return exprNode;
@@ -703,8 +706,8 @@ TNode * QueryPreprocessor::preprocessExpressionNode(vector<string> list, vector<
 			}
 			vector<string> sublist1 = subList(list, 0, signIndex-1);
 			vector<string> sublist2 = subList(list, signIndex+1, size-1);
-			TNode * node1 = preprocessExpressionNode(sublist1, errors);
-			TNode * node2 = preprocessExpressionNode(sublist2, errors);
+			TNode * node1 = preprocessExpressionNode(sublist1);
+			TNode * node2 = preprocessExpressionNode(sublist2);
 			exprNode ->addChild(node1);
 			exprNode ->addChild(node2);
 
@@ -715,13 +718,13 @@ TNode * QueryPreprocessor::preprocessExpressionNode(vector<string> list, vector<
 	return exprNode;
 }
 
-TNode * QueryPreprocessor::preprocessWithCondition(vector<string> list, SymbolTable table, vector<string> & errors, int index) {
+TNode * QueryPreprocessor::preprocessWithCondition(vector<string> list, int index) {
 	TNode * withCls = new TNode(WithCls, "b");
 	int size = list.size();
 	int equalSignIndex = findFirstElement(list, index, KEYWORD_EQUALSIGN);
 
 	vector<string> arg1 = subList(list, index+1, equalSignIndex-1);
-	TNode * arg1Node = preprocessAttrRef(arg1, table, errors);
+	TNode * arg1Node = preprocessAttrRef(arg1);
 
 	withCls ->addChild(arg1Node);
 
@@ -731,14 +734,14 @@ TNode * QueryPreprocessor::preprocessWithCondition(vector<string> list, SymbolTa
 	} else {
 		arg2 = subList(list, equalSignIndex+1, equalSignIndex+3);
 	}
-	TNode * arg2Node = preprocessAttrRef(arg2, table, errors);
+	TNode * arg2Node = preprocessAttrRef(arg2);
 
 	withCls ->addChild(arg2Node);
 
 	return withCls;
 }
 
-TNode * QueryPreprocessor::preprocessAttrRef(vector<string> list, SymbolTable table, vector<string>& errors) {
+TNode * QueryPreprocessor::preprocessAttrRef(vector<string> list) {
 	TNode * node = new TNode();
 	int size = list.size();
 
