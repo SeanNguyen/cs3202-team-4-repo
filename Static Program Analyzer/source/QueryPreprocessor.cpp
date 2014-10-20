@@ -9,6 +9,7 @@ QueryPreprocessor::QueryPreprocessor(string directory) {
 	this -> table = SymbolTable();
 	this -> tree = QueryTree();
 	this -> errors = vector<string>();
+	this -> symbolCount = vector<int>();
 }
 
 /* PUBLIC METHOD */ 
@@ -104,6 +105,7 @@ void QueryPreprocessor::preprocessQuery(vector<string> query, int index) {
 	table = SymbolTable();
 	tree = QueryTree();
 	errors = vector<string>();
+	symbolCount = vector<int>();
 	string element = "";
 
 	for (size_t i=0; i<query.size(); i++) {
@@ -180,6 +182,7 @@ void QueryPreprocessor::preprocessDeclaration(string declaration) {
 
 			// save symbol into SymbolTable
 			table.setSymbol(type, name);
+			symbolCount.push_back(0);
 		}
 	}
 }
@@ -291,6 +294,7 @@ TNode * QueryPreprocessor::preprocessResultNode(vector<string> list, int i) {
 				TNode * node = new TNode(ResultCls, "a-single");
 				TNode * nodeChild = new TNode(QuerySymbol, list[i]);
 				node -> addChild(nodeChild);
+				countSymbol(list[i]);
 				return node;
 			}
 			errors.push_back("Error 005: unable to find symbol: " + list[i]);
@@ -309,6 +313,7 @@ TNode * QueryPreprocessor::preprocessTupleResult(vector<string> list) {
 			if (table.isSymbol(list[i])) {
 				TNode * child = new TNode(QuerySymbol, list[i]);
 				node ->addChild(child);
+				countSymbol(list[i]);
 			} else {
 				errors.push_back("Error 005: invalid symbol in tuple result: " + list[i]);
 			}
@@ -407,6 +412,7 @@ TNode * QueryPreprocessor::preprocessEntRef(vector<string> list) {
 			node = new TNode(Underline);
 		} else if (table.isSymbol(list[0])) {
 			node = new TNode(QuerySymbol, list[0]);
+			countSymbol(list[0]);
 		} else {
 			errors.push_back("Error: not an entity: " + list[0]);
 		}
@@ -438,6 +444,7 @@ TNode * QueryPreprocessor::preprocessStmtRef(vector<string> list) {
 				type==KEYWORD_WHILE|| type==KEYWORD_IF     ||
 				type==KEYWORD_CALL) {
 				node = new TNode(QuerySymbol, list[0]);
+				countSymbol(list[0]);
 			} else {
 				errors.push_back("Error: not a stmt reference: " + list[0]);
 			}
@@ -462,6 +469,7 @@ TNode * QueryPreprocessor::preprocessVarRef(vector<string> list) {
 			string type = table.getType(list[0]);
 			if (type==KEYWORD_VAR) {
 				node = new TNode(QuerySymbol, list[0]);
+				countSymbol(list[0]);
 			} else {
 				errors.push_back("Error: not a variable reference: " + list[0]);
 			}
@@ -492,6 +500,7 @@ TNode * QueryPreprocessor::preprocessLineRef(vector<string> list) {
 			node = new TNode(Underline);
 		} else if (table.isSymbol(list[0])) {
 			node = new TNode(QuerySymbol, list[0]);
+			countSymbol(list[0]);
 		} else {
 			errors.push_back("Error: not a line reference: " + list[0]);
 		}
@@ -544,6 +553,7 @@ TNode * QueryPreprocessor::preprocessPatternCondition(vector<string> list) {
 
 TNode * QueryPreprocessor::preprocessAssignPattern(string name, vector<string> list) {
 	TNode * assignNode = new TNode(QuerySymbol, name);
+	countSymbol(name);
 	unsigned size = list.size();
 	if (list[0]!=KEYWORD_OPENBRACKET || list[size-1]!=KEYWORD_CLOSEBRACKET) {
 		errors.push_back("Error 010: no valid bracket for pattern");
@@ -600,6 +610,7 @@ TNode * QueryPreprocessor::preprocessAssignPattern(string name, vector<string> l
 
 TNode * QueryPreprocessor::preprocessWhilePattern(string name, vector<string> list) {
 	TNode * whileNode = new TNode(QuerySymbol, name);
+	countSymbol(name);
 	unsigned size = list.size();
 	if (list[0]!=KEYWORD_OPENBRACKET || list[size-1]!=KEYWORD_CLOSEBRACKET) {
 		errors.push_back("Error 010: no valid bracket for pattern");
@@ -624,6 +635,7 @@ TNode * QueryPreprocessor::preprocessWhilePattern(string name, vector<string> li
 
 TNode * QueryPreprocessor::preprocessIfPattern(string name, vector<string> list) {
 	TNode * ifNode = new TNode(QuerySymbol, name);
+	countSymbol(name);
 	unsigned size = list.size();
 	if (list[0]!=KEYWORD_OPENBRACKET || list[size-1]!=KEYWORD_CLOSEBRACKET) {
 		errors.push_back("Error 010: no valid bracket for pattern");
@@ -750,6 +762,7 @@ TNode * QueryPreprocessor::preprocessAttrRef(vector<string> list) {
 			node = new TNode(Const, list[0]);
 		} else if (table.getType(list[0])==KEYWORD_PROG_LINE) {
 			node = new TNode(QuerySymbol, list[0]);
+			countSymbol(list[0]);
 		} else {
 			errors.push_back("Error: not an attribute reference: " + list[0]);
 		}
@@ -761,6 +774,7 @@ TNode * QueryPreprocessor::preprocessAttrRef(vector<string> list) {
 				(type==KEYWORD_CONST && list[2]=="value")		 ||
 				(SyntaxHelper::isStmtSymbol(type) && list[2]=="stmt#")) {
 				node = new TNode(QuerySymbol, list[0]);		
+				countSymbol(list[0]);
 			} else {
 				errors.push_back("Error: not an attribute reference");
 			}
@@ -775,6 +789,13 @@ TNode * QueryPreprocessor::preprocessAttrRef(vector<string> list) {
 }
 
 /* SUPPORTING FUCNTIONS */
+
+void QueryPreprocessor::countSymbol(string str) {
+	int index = table.getIndex(str);
+	if (index!=-1) {
+		symbolCount[index] ++;
+	}
+}
 
 // Description: this method is to retrieve a sublist of input list
 vector<string> QueryPreprocessor::subList(vector<string> list, int i, int j) {

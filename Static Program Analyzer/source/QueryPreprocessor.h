@@ -48,6 +48,7 @@ private:
 	TNode * preprocessVarRef(vector<string> list);
 	TNode * preprocessAttrRef(vector<string> list);
 
+	void countSymbol(string str);
 	vector<string> breakStringIntoWords(string str);
 	unsigned int findFirstElement(vector<string> list, unsigned i, string element);
 	unsigned int findLastElement(vector<string> list, unsigned i, string element);
@@ -58,6 +59,7 @@ private:
 	SymbolTable table;
 	QueryTree tree;
 	vector<string> errors;
+	vector<int> symbolCount;
 };
 
 #endif
