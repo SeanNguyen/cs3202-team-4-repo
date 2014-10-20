@@ -88,7 +88,9 @@ vector<TNode *> TNode::mergeList(vector<TNode *> list1, vector<TNode *> list2) {
 	while (i<list1.size() && j<list2.size()) {
 		string val1 = list1[i] ->getValue();
 		string val2 = list2[j] ->getValue();
-		if (val1<val2) {
+		int v1 = stoi(val1);
+		int v2 = stoi(val2);
+		if (v1<v2) {
 			list.push_back(list1[i]);
 			i++;
 		} else {
