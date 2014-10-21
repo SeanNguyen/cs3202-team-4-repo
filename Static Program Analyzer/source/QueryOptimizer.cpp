@@ -11,6 +11,9 @@ void QueryOptimizer::sortTable(SymbolTable & table, vector<int> & count) {
 	int size = table.getSize();
 
 	table = sortTable(table, count, 0, size-1);
+	for (size_t i=0; i<table.getSize(); i++) {
+		string name = table.getName(i);
+	}
 }
 
 void QueryOptimizer::sortTree(QueryTree & tree, SymbolTable & table) {
@@ -49,7 +52,7 @@ SymbolTable  QueryOptimizer::mergeTable(SymbolTable t1, SymbolTable t2, vector<i
 
 	int i = start; int j = mid+1;
 	string name = ""; string type = "";
-	while(i<=mid || j<=end) {
+	while(i<=mid && j<=end) {
 		if (count[i]>count[j]) {
 			name = t1.getName(i);
 			type = t1.getType(name);
