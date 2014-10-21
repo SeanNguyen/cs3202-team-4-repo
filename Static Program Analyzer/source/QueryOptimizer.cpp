@@ -70,17 +70,18 @@ SymbolTable  QueryOptimizer::mergeTable(SymbolTable t1, SymbolTable t2, vector<i
 	while (i<=mid) {
 		name = t1.getName(i);
 		type = t1.getType(name);
-		i++; 
 		new_count.push_back(count[i]);
 		table.setSymbol(type, name);
+		i++;
 	}
+
 
 	while (j<=end) {
 		name = t2.getName(j);
 		type = t2.getType(name);
-		j++; 
-		new_count.push_back(count[j]);
+		new_count.push_back(count[j]); 
 		table.setSymbol(type, name);
+		j++;
 	}
 
 	for (int i=end+1; i<size; i++) {
