@@ -9,11 +9,11 @@ class QueryPreprocessorTest : public CPPUNIT_NS::TestFixture {
 	CPPUNIT_TEST( testReadFileData );
 	//CPPUNIT_TEST( testBuildSymbolTable );
 	//CPPUNIT_TEST( testBuildTree );
-	CPPUNIT_TEST( testBuildSuchThatCls );
+	//CPPUNIT_TEST( testBuildSuchThatCls );
 	//CPPUNIT_TEST( testBuildPatternCls );
 	//CPPUNIT_TEST( testBuildWithCls );
 	//CPPUNIT_TEST( testBuildTupleResult);
-	//CPPUNIT_TEST( testBuildComplexQuery1);
+	CPPUNIT_TEST( testBuildComplexQuery1);
 
 	CPPUNIT_TEST_SUITE_END();
 public:
