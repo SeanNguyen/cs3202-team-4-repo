@@ -47,7 +47,6 @@ void PKB::preCalculateStarTables() {
 	parentTable.preCalculateStarTable();
 	callStmtTable.preCalculateStarTable();
 	callProcTable.preCalculateStarTable();
-	nextTable.preCalculateStarTable();
 }
 
 ////////////////////////////////AST METHODS/////////////////
@@ -374,7 +373,11 @@ bool PKB::insertNext(int n1, int n2){
 
 // Method to check if line numbers are nextStar
 bool PKB::isNextStar(int n1, int n2) {
-	return nextTable.isMappedStar(n1, n2, true);
+	int parentStmt1 = getParentStmt(n1);
+	int parentStmt2 = getParentStmt(n2);
+	if (isFollowsStar(n1, n2) || isFollowsStar(parentStmt1, n2) || isFollowsStar(n1, parentStmt2))
+		return true;
+	return false;
 }
 
 //Method to get the first parameter in the NextStar relationship --> Next*(n1, x)
