@@ -46,3 +46,19 @@ void Tree::printTree() {
 	root -> printTNode();
 	cout <<endl;
 }
+
+int Tree::countNode(Symbol type, string value) {
+	int count = 0;
+	TNode * root = getRoot();
+	return countNode(root, type, value);
+}
+
+int Tree::countNode(TNode * node, Symbol type, string value) {
+	int count = 0;
+	if (node ->equals(type, value)) count = 1;
+	for (int i=0; i<node->getNumChildren(); i++) {
+		TNode * child = node->getChildAtIndex(i);
+		count += countNode(child, type, value);
+	}
+	return count;
+}

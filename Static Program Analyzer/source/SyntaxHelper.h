@@ -32,6 +32,7 @@ const string KEYWORD_PLUSSIGN = "+";
 const string KEYWORD_MINUSSIGN = "-";
 const string KEYWORD_MULTIPLYSIGN = "*";
 const string KEYWORD_UNDERLINE = "_";
+const string KEYWORD_DOT = ".";
 
 const string FOLLOWS_RLT = "Follows";
 const string FOLLOWSSTAR_RLT = "Follows*";
@@ -69,4 +70,7 @@ public:
 	static Symbol getSymbolType(string);
 	static string SymbolToString(Symbol symbol);
 	static bool isRelation(string);
+	static bool isDesignEntity(string);
+	static bool isNumber(string);
+	static bool isStmtSymbol(string);
 };

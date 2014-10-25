@@ -154,14 +154,14 @@ void TNodeTest::testSortChildren() {
 
 TNode * TNodeTest::populateData() {
 	TNode * root = new TNode();
-	TNode * node1 = new TNode(Program, "a");
-	TNode * node2 = new TNode(StmtList, "b");
-	TNode * node3 = new TNode(While, "e");
-	TNode * node4 = new TNode(If, "h");
-	TNode * node5 = new TNode(Var, "x");
-	TNode * node6 = new TNode(Const, "z");
-	TNode * node1_1 = new TNode();
-	TNode * node2_1 = new TNode();
+	TNode * node1 = new TNode(Program, "1");
+	TNode * node2 = new TNode(StmtList, "2");
+	TNode * node3 = new TNode(While, "3");
+	TNode * node4 = new TNode(If, "4");
+	TNode * node5 = new TNode(Var, "5");
+	TNode * node6 = new TNode(Const, "6");
+	TNode * node1_1 = new TNode(Const, "57");
+	TNode * node2_1 = new TNode(Const, "23");
 	node1->addChild(node1_1); node2->addChild(node2_1);
 	root->addChild(node6); root->addChild(node2); root->addChild(node3); 
 	root->addChild(node4); root->addChild(node5); root->addChild(node1);

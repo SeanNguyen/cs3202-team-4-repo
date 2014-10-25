@@ -13,9 +13,11 @@
   <ItemGroup>
     <ClCompile Include="source\IntegrationTest.cpp" />
     <ClCompile Include="SystemTest1.cpp" />
+    <ClCompile Include="SystemTest2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SystemTest1.h" />
+    <ClInclude Include="SystemTest2.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{44B65641-96D6-4FB5-B78A-F0CAD8DDA42C}</ProjectGuid>

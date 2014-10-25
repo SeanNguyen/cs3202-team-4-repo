@@ -10,7 +10,7 @@ class SystemTest1 : public CPPUNIT_NS::TestFixture {
 	CPPUNIT_TEST_SUITE( SystemTest1 ); 
 	/*CPPUNIT_TEST( test1 );
 	CPPUNIT_TEST( test2 );*/
-	CPPUNIT_TEST( test3 );
+	//CPPUNIT_TEST( test3 );
 	/*CPPUNIT_TEST( test4 );
 	CPPUNIT_TEST( test5 );
 	CPPUNIT_TEST( test6 );

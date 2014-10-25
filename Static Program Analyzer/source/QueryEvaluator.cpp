@@ -148,101 +148,181 @@ void QueryEvaluator::handleRelationNode(TNode & relationNode, vector<string> val
 	string arg1Name = arg1Node.getValue();
 	string arg2Name = arg2Node.getValue();
 
-	if (arg1Type == Const && arg2Type == Const) {
-		// check with query PKB::is*Relation*(arg1Value, arg2Value) 
-		check = isRelation(relation, arg1Name, arg2Name);	
-		//call back to checkQueryCondition
-		checkQueryCondition(childIndex+1, values, result, check);
-		return;
-	} else if (arg1Type == Const && arg2Type == QuerySymbol) {
-		string arg2Value = getStoredValue(values, arg2Name);
-		if (arg2Value!="-1") {
-			check = isRelation(relation, arg1Name, arg2Value);	
-			//call back to checkQueryCondition
-			checkQueryCondition(childIndex+1, values, result, check);
-			return;
-		} else {
-			vector<string> arg2Value = getArgumentValueInRelation(relation, arg1Name,arg1Type, arg2Name,arg2Type, ARG2_UNKNOWN);
-			if (arg2Value.size()==0) {
-				checkQueryCondition(childIndex+1, values, result, false);
-				return;
+	switch (arg1Type) {
+	case Const:
+		{
+			switch (arg2Type) {
+			case Const:
+				{
+					check = isRelation(relation, arg1Name, arg2Name);	
+					checkQueryCondition(childIndex+1, values, result, check);
+					return;
+				}
+			case Underline:
+				{
+					vector<string> arg2Value = getArgumentValueInRelation(relation, arg1Name,arg1Type, arg2Name,arg2Type, ARG2_UNKNOWN);
+						
+					check = arg2Value.empty();
+					checkQueryCondition(childIndex+1, values, result, check);
+					return;
+				}
+			case QuerySymbol:
+				{
+					string arg2Value = getStoredValue(values, arg2Name);
+					if (arg2Value!="-1") {
+						check = isRelation(relation, arg1Name, arg2Value);	
+						//call back to checkQueryCondition
+						checkQueryCondition(childIndex+1, values, result, check);
+						return;
+					} else {
+						vector<string> arg2Value = getArgumentValueInRelation(relation, arg1Name,arg1Type, arg2Name,arg2Type, ARG2_UNKNOWN);
+						if (arg2Value.size()==0) {
+							checkQueryCondition(childIndex+1, values, result, false);
+							return;
+						}
+						for (size_t i=0; i<arg2Value.size(); i++) {
+							int arg2Index = table.getIndex(arg2Name);
+							values[arg2Index] = arg2Value[i];
+							checkQueryCondition(childIndex+1, values, result, check);
+						}
+						return;
+					}
+					break;
+				}
+			default:
+				break;
 			}
-			for (size_t i=0; i<arg2Value.size(); i++) {
-				int arg2Index = table.getIndex(arg2Name);
-				values[arg2Index] = arg2Value[i];
-				checkQueryCondition(childIndex+1, values, result, check);
-			}
-			return;
+			break;
 		}
-	} else if (arg1Type == QuerySymbol && arg2Type == Const) {
-		string arg1Value=getStoredValue(values, arg1Name);
-		if(arg1Value!="-1"){
-			check=isRelation(relation,arg1Value, arg2Name);
-			//call back to checkQueryCondition
-			checkQueryCondition(childIndex+1, values, result, check);
-			return;
-		} else{
-			vector<string> arg1Value=getArgumentValueInRelation(relation, arg1Name,arg1Type, arg2Name, arg2Type, ARG1_UNKNOWN);
-			if (arg1Value.size()==0) {
-				checkQueryCondition(childIndex+1, values, result, false);
-				return;
+	case Underline:
+		{
+			switch (arg2Type) {
+			case Const:
+				{
+					vector<string> arg1Value=getArgumentValueInRelation(relation, arg1Name,arg1Type, arg2Name, arg2Type, ARG1_UNKNOWN);
+					check = arg1Value.empty();
+					checkQueryCondition(childIndex+1, values, result, check);
+					return;
+				}
+			case Underline:
+				{
+					checkQueryCondition(childIndex+1, values, result, true);
+					return;
+				}
+			case QuerySymbol:
+				{
+					string arg2Value = getStoredValue(values, arg2Name);
+					if (arg2Value!="-1") {
+						vector<string> arg1Value=getArgumentValueInRelation(relation, arg1Name,arg1Type, arg2Name, arg2Type, ARG1_UNKNOWN);
+						check = arg1Value.empty();
+						checkQueryCondition(childIndex+1, values, result, check);
+						return;
+					} else {
+						string type = table.getType(arg2Name);
+						vector<string> arg2Values = getAllArgValues(SyntaxHelper::getSymbolType(type));
+						// for each valu of arg1 we call checkQueryCondition again
+						for (size_t i=0; i<arg2Values.size(); i++) {
+							int arg2Index = table.getIndex(arg2Name);
+							//cout << arg1Index << " " << arg1Value[i]<< " " <<endl;
+							values[arg2Index] = arg2Values[i];
+							checkQueryCondition(childIndex, values, result, check);
+						}
+						return;
+					}
+					break;
+				}
+			default:
+				break;
 			}
-			// for each valu of arg1 we call checkQueryCondition again
-			for (size_t i=0; i<arg1Value.size(); i++) {
-				int arg1Index = table.getIndex(arg1Name);
-				values[arg1Index] = arg1Value[i];
-				checkQueryCondition(childIndex+1, values, result, check);
-			}
-			return;
+			break;
 		}
-	} else {
-		string arg1Value = getStoredValue(values, arg1Name);
-		string arg2Value = getStoredValue(values, arg2Name);
+	case QuerySymbol:
+		{
+			switch (arg2Type) {
+			case Const:
+				{
+					check = isRelation(relation, arg1Name, arg2Name);	
+					checkQueryCondition(childIndex+1, values, result, check);
+					break;
+				}
+			case Underline:
+				{
+					string arg1Value = getStoredValue(values, arg1Name);
+					if (arg1Value!="-1") {
+						vector<string> arg2Value=getArgumentValueInRelation(relation, arg1Name,arg1Type, arg2Name, arg2Type, ARG1_UNKNOWN);
+						check = arg2Value.empty();
+						checkQueryCondition(childIndex+1, values, result, check);
+						return;
+					} else {
+						string type = table.getType(arg1Name);
+						vector<string> arg1Values = getAllArgValues(SyntaxHelper::getSymbolType(type));
+						// for each valu of arg1 we call checkQueryCondition again
+						for (size_t i=0; i<arg1Values.size(); i++) {
+							int arg1Index = table.getIndex(arg1Name);
+							//cout << arg1Index << " " << arg1Value[i]<< " " <<endl;
+							values[arg1Index] = arg1Values[i];
+							checkQueryCondition(childIndex, values, result, check);
+						}
+						return;
+					}
+					break;
+				}
+			case QuerySymbol:
+				{
+					string arg1Value = getStoredValue(values, arg1Name);
+					string arg2Value = getStoredValue(values, arg2Name);
 
-		if(arg1Value!="-1" & arg2Value!="-1"){
-			check=isRelation(relation, arg1Value, arg2Value);
-			//call back to checkQueryCondition
-			checkQueryCondition(childIndex+1, values, result, check);
-			return;
-		} else if(arg1Value!="-1" & arg2Value=="-1"){
-			vector<string> arg2Values = getArgumentValueInRelation(relation, arg1Value,arg1Type, arg2Name,arg2Type, ARG2_UNKNOWN);
-			if (arg2Values.size()==0) {
-				checkQueryCondition(childIndex+1, values, result, false);
-				return;
+					if(arg1Value!="-1" & arg2Value!="-1"){
+						check=isRelation(relation, arg1Value, arg2Value);
+						//call back to checkQueryCondition
+						checkQueryCondition(childIndex+1, values, result, check);
+						return;
+					} else if(arg1Value!="-1" & arg2Value=="-1"){
+						vector<string> arg2Values = getArgumentValueInRelation(relation, arg1Value,arg1Type, arg2Name,arg2Type, ARG2_UNKNOWN);
+						if (arg2Values.size()==0) {
+							checkQueryCondition(childIndex+1, values, result, false);
+							return;
+						}
+						int arg2Index = table.getIndex(arg2Name);
+						for (size_t i=0; i<arg2Values.size(); i++) {
+							values[arg2Index] = arg2Values[i];
+							checkQueryCondition(childIndex+1, values, result, check);
+						}
+						return;
+					} else if(arg1Value=="-1" & arg2Value!="-1"){
+						vector<string> arg1Values=getArgumentValueInRelation(relation, arg1Name,arg1Type, arg2Value, arg2Type, ARG1_UNKNOWN);
+						if (arg1Values.size()==0) {
+							checkQueryCondition(childIndex+1, values, result, false);
+							return;
+						}
+						// for each valu of arg1 we call checkQueryCondition again
+						for (size_t i=0; i<arg1Values.size(); i++) {
+							int arg1Index = table.getIndex(arg1Name);
+							values[arg1Index] = arg1Values[i];
+							checkQueryCondition(childIndex+1, values, result, check);
+						}
+						return;
+					} else{
+						//brute force method
+						string type = table.getType(arg1Name);
+						vector<string> arg1Value = getAllArgValues(SyntaxHelper::getSymbolType(type));
+						// for each valu of arg1 we call checkQueryCondition again
+						for (size_t i=0; i<arg1Value.size(); i++) {
+							int arg1Index = table.getIndex(arg1Name);
+							//cout << arg1Index << " " << arg1Value[i]<< " " <<endl;
+							values[arg1Index] = arg1Value[i];
+							checkQueryCondition(childIndex, values, result, check);
+						}
+						return;
+					}
+				}
+			default:
+				break;
 			}
-			int arg2Index = table.getIndex(arg2Name);
-			for (size_t i=0; i<arg2Values.size(); i++) {
-				values[arg2Index] = arg2Values[i];
-				checkQueryCondition(childIndex+1, values, result, check);
-			}
-			return;
-		} else if(arg1Value=="-1" & arg2Value!="-1"){
-			vector<string> arg1Values=getArgumentValueInRelation(relation, arg1Name,arg1Type, arg2Value, arg2Type, ARG1_UNKNOWN);
-			if (arg1Values.size()==0) {
-				checkQueryCondition(childIndex+1, values, result, false);
-				return;
-			}
-			// for each valu of arg1 we call checkQueryCondition again
-			for (size_t i=0; i<arg1Values.size(); i++) {
-				int arg1Index = table.getIndex(arg1Name);
-				values[arg1Index] = arg1Values[i];
-				checkQueryCondition(childIndex+1, values, result, check);
-			}
-			return;
-		} else{
-			//brute force method
-			string type = table.getType(arg1Name);
-			vector<string> arg1Value = getAllArgValues(SyntaxHelper::getSymbolType(type));
-			// for each valu of arg1 we call checkQueryCondition again
-			for (size_t i=0; i<arg1Value.size(); i++) {
-				int arg1Index = table.getIndex(arg1Name);
-				//cout << arg1Index << " " << arg1Value[i]<< " " <<endl;
-				values[arg1Index] = arg1Value[i];
-				checkQueryCondition(childIndex, values, result, check);
-			}
-			return;
+			break;
 		}
-
+	default:
+		break;
 	}
 }
 
@@ -382,7 +462,6 @@ vector<string> QueryEvaluator::getArgumentValueInRelation(Symbol relation, strin
 			{
 				int stmt1 = atoi(arg1Value.c_str());
 				int result = PKB::getFollowingStmt(stmt1);
-				cout << "Checkpoint 001 " << arg1Value << " " << result << endl;
 				if (result!=-1) {
 					resultList.push_back(intToString(result));
 				}
@@ -917,94 +996,133 @@ void QueryEvaluator::updateResultList(vector<string> values, vector<string>& res
 	TNode child1 = *root.getChildAtIndex(0);
 	string child1Name = child1.getValue();
 
-	TNode child = *child1.getChildAtIndex(0);
-	Symbol paramType = child.getType();
-	string paramName = child.getValue();
-
 	if (child1Name=="a-BOOLEAN") { // BOOLEAN query
 		result.push_back("true");
 		return;
-	}
-
-	// get index of the parameter
-	int paramIndex = table.getIndex(paramName);
-	string paramVal = values[paramIndex];
-	// check if paramVal is null value or not
-	if (paramVal!="-1") {
-		// check if paramVal has same type as in paramType
-		string type = table.getType(paramName);
-		if (!isDeclaredType(paramVal, paramName, type)) { 
-			return;
+	} else if (child1Name=="a-tuple"){
+		TNode child = *child1.getChildAtIndex(0);
+		Symbol paramType = child.getType();
+		string paramName = child.getValue();
+		int i=0;
+		int size = child1.getNumChildren();
+		bool isAllSymbolUpdated = true;
+		for (i=0; i<size; i++) {
+			child = *child1.getChildAtIndex(i);
+			paramName = child.getValue();
+			int paramIndex = table.getIndex(paramName);
+			string paramVal = values[paramIndex]; 
+			if (paramVal=="-1") {
+				isAllSymbolUpdated = false;
+				paramType = SyntaxHelper::getSymbolType(table.getType(paramName));
+				vector<string> paramVals = getAllArgValues(paramType);
+				if (paramVals.empty()) return; // no result
+				for (int j=0; j<paramVals.size(); j++) {
+					values[paramIndex] = paramVals[j];
+					updateResultList(values, result);
+				}
+			}
 		}
-
-		// check if result list has this paramVal
-		if (!isResult(paramVal, result)) {
-			// add new result to list
-			result.push_back(paramVal);
+		if (isAllSymbolUpdated) {
+			string resultTuple = ""; 
+			for (i=0; i<size; i++) {
+				child = *child1.getChildAtIndex(i);
+				paramName = child.getValue();
+				int paramIndex = table.getIndex(paramName);
+				string paramVal = values[paramIndex]; 
+				if (i==size-1) {
+					resultTuple += paramVal;
+				} else {
+					resultTuple += paramVal + " ";
+				}
+			}
+			if (!isResult(resultTuple, result)) {
+				result.push_back(resultTuple);
+			}
 		}
 	} else {
-		// all values possible of param are result
-		string paramType = table.getType(paramName);
-		if (paramType== KEYWORD_PROG_LINE || paramType==KEYWORD_STMT) {
-			// retrieve all statements 
-			for (int i=1; i<PKB::getStatTableSize(); i++) {
-				paramVal = intToString(i);
-				if (!isResult(paramVal, result)) {
-					// add new result to list
-					result.push_back(paramVal);
+		TNode child = *child1.getChildAtIndex(0);
+		Symbol paramType = child.getType();
+		string paramName = child.getValue();
+		// get index of the parameter
+		int paramIndex = table.getIndex(paramName);
+		string paramVal = values[paramIndex];
+		// check if paramVal is null value or not
+		if (paramVal!="-1") {
+			// check if paramVal has same type as in paramType
+			string type = table.getType(paramName);
+			if (!isDeclaredType(paramVal, paramName, type)) { 
+				return;
+			}
+
+			// check if result list has this paramVal
+			if (!isResult(paramVal, result)) {
+				// add new result to list
+				result.push_back(paramVal);
+			}
+		} else {
+			// all values possible of param are result
+			string paramType = table.getType(paramName);
+			if (paramType== KEYWORD_PROG_LINE || paramType==KEYWORD_STMT) {
+				// retrieve all statements 
+				for (int i=1; i<PKB::getStatTableSize(); i++) {
+					paramVal = intToString(i);
+					if (!isResult(paramVal, result)) {
+						// add new result to list
+						result.push_back(paramVal);
+					}
+				}
+			} else if (paramType==KEYWORD_ASSIGN) {
+				vector<int> paramList = PKB::getStmtIndex(KEYWORD_ASSIGN);
+				for (size_t i=0; i<paramList.size(); i++) {
+					paramVal = intToString(paramList[i]);
+					if (!isResult(paramVal, result)) {
+						// add new result to list
+						result.push_back(paramVal);
+					}
+				}
+			} else if (paramType==KEYWORD_WHILE) {
+				vector<int> paramList = PKB::getStmtIndex(KEYWORD_WHILE);
+				for (size_t i=0; i<paramList.size(); i++) {
+					paramVal = intToString(paramList[i]);
+					if (!isResult(paramVal, result)) {
+						// add new result to list
+						result.push_back(paramVal);
+					}
+				}
+			} else if (paramType==KEYWORD_IF) {
+				vector<int> paramList = PKB::getStmtIndex(KEYWORD_IF);
+				for (size_t i=0; i<paramList.size(); i++) {
+					paramVal = intToString(paramList[i]);
+					if (!isResult(paramVal, result)) {
+						// add new result to list
+						result.push_back(paramVal);
+					}
+				}
+			} else if (paramType==KEYWORD_CALL) {
+				vector<int> paramList = PKB::getStmtIndex(KEYWORD_CALL);
+				for (size_t i=0; i<paramList.size(); i++) {
+					paramVal = intToString(paramList[i]);
+					if (!isResult(paramVal, result)) {
+						// add new result to list
+						result.push_back(paramVal);
+					}
+				}
+			} else if (paramType==KEYWORD_VAR) {
+				for (int i=0; i<PKB::getVarTableSize(); i++) {
+					result.push_back(PKB::getVarName(i));
+				}
+			} else if (paramType==KEYWORD_CONST) {
+				for (int i=0; i<PKB::getConstTableSize(); i++) {
+					result.push_back(PKB::getConstName(i));
+				}
+			} else if (paramType==KEYWORD_PROCEDURE) {
+				for (int i=0; i<PKB::getProcTableSize(); i++) {
+					result.push_back(PKB::getProcName(i));
 				}
 			}
-		} else if (paramType==KEYWORD_ASSIGN) {
-			vector<int> paramList = PKB::getStmtIndex(KEYWORD_ASSIGN);
-			for (size_t i=0; i<paramList.size(); i++) {
-				paramVal = intToString(paramList[i]);
-				if (!isResult(paramVal, result)) {
-					// add new result to list
-					result.push_back(paramVal);
-				}
-			}
-		} else if (paramType==KEYWORD_WHILE) {
-			vector<int> paramList = PKB::getStmtIndex(KEYWORD_WHILE);
-			for (size_t i=0; i<paramList.size(); i++) {
-				paramVal = intToString(paramList[i]);
-				if (!isResult(paramVal, result)) {
-					// add new result to list
-					result.push_back(paramVal);
-				}
-			}
-		} else if (paramType==KEYWORD_IF) {
-			vector<int> paramList = PKB::getStmtIndex(KEYWORD_IF);
-			for (size_t i=0; i<paramList.size(); i++) {
-				paramVal = intToString(paramList[i]);
-				if (!isResult(paramVal, result)) {
-					// add new result to list
-					result.push_back(paramVal);
-				}
-			}
-		} else if (paramType==KEYWORD_CALL) {
-			vector<int> paramList = PKB::getStmtIndex(KEYWORD_CALL);
-			for (size_t i=0; i<paramList.size(); i++) {
-				paramVal = intToString(paramList[i]);
-				if (!isResult(paramVal, result)) {
-					// add new result to list
-					result.push_back(paramVal);
-				}
-			}
-		} else if (paramType==KEYWORD_VAR) {
-			for (int i=0; i<PKB::getVarTableSize(); i++) {
-				result.push_back(PKB::getVarName(i));
-			}
-		} else if (paramType==KEYWORD_CONST) {
-			for (int i=0; i<PKB::getConstTableSize(); i++) {
-				result.push_back(PKB::getConstName(i));
-			}
-		} else if (paramType==KEYWORD_PROCEDURE) {
-			for (int i=0; i<PKB::getProcTableSize(); i++) {
-				result.push_back(PKB::getProcName(i));
-			}
-		}
-		else return;
-	}	
+			else return;
+		}	
+	}
 }
 
 vector<string> QueryEvaluator::removeInvalidValues(vector<string> list, Symbol type) {

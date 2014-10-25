@@ -2,7 +2,7 @@
 #define QueryPreprocessor_h
 
 #include "QueryRepresentator.h"
-#include "TNode.h"
+#include "QueryOptimizer.h"
 #include "../AutoTester/source/AbstractWrapper.h"
 
 #include <iostream>
@@ -29,23 +29,37 @@ private:
 	void readFileData();
 	void preprocessFileData();
 	void preprocessQuery(vector<string> query, int index);
-	void preprocessDeclaration(SymbolTable& table, string declaration, vector<string>& errors);
-	void preprocessQueryPart(QueryTree& tree, SymbolTable table, string queryPart, vector<string>& errors);
-	TNode * preprocessResultNode(vector<string> list, SymbolTable table, vector<string> & errors, int i);
-	TNode * preprocessSuchThatCondition(vector<string> suchthat, SymbolTable table, vector<string>& errors);
-	TNode * preprocessPatternCondition(vector<string> pattern, SymbolTable table, vector<string>& errors);
-	TNode * preprocessAssignPattern(string name, vector<string> pattern, SymbolTable table, vector<string>& errors);
-	TNode * preprocessWhilePattern(string name, vector<string> pattern, SymbolTable table, vector<string>& errors);
-	TNode * preprocessIfPattern(string name, vector<string> pattern, SymbolTable table, vector<string>& errors);
-	TNode * preprocessExpressionNode(vector<string> pattern, vector<string>& errors);
-	TNode * preprocessWithCondition(vector<string> list, SymbolTable table, vector<string>& errors, int i);
+	void preprocessDeclaration(string declaration);
+	void preprocessQueryPart(string queryPart);
+	TNode * preprocessResultNode(vector<string> list, int i);
+	TNode * preprocessSuchThatCondition(vector<string> suchthat);
+	TNode * preprocessPatternCondition(vector<string> pattern);
+	TNode * preprocessWithCondition(vector<string> list, int i);
 
+	TNode * preprocessAssignPattern(string name, vector<string> pattern);
+	TNode * preprocessWhilePattern(string name, vector<string> pattern);
+	TNode * preprocessIfPattern(string name, vector<string> pattern);
+	TNode * preprocessExpressionNode(vector<string> pattern);
+	TNode * preprocessTupleResult(vector<string> list);
+	
+	TNode * preprocessEntRef(vector<string> list);
+	TNode * preprocessStmtRef(vector<string> list);
+	TNode * preprocessLineRef(vector<string> list);
+	TNode * preprocessVarRef(vector<string> list);
+	TNode * preprocessAttrRef(vector<string> list);
+
+	void countSymbol(string str);
 	vector<string> breakStringIntoWords(string str);
 	unsigned int findFirstElement(vector<string> list, unsigned i, string element);
 	unsigned int findLastElement(vector<string> list, unsigned i, string element);
-	bool isNumber(string str);
 	vector<string> subList(vector<string> list, int i, int j);
 	int getLastIndexOfTokenNotInsideBracket(vector<string> list, string token);
+
+	// temporary storing data before pass to QueryRepresentator
+	SymbolTable table;
+	QueryTree tree;
+	vector<string> errors;
+	vector<int> symbolCount;
 };
 
 #endif

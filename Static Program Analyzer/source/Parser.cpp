@@ -134,6 +134,9 @@ void Parser::buildUseTable()
 	{
 		int stmt = uses.at(index).first - 1;
 		int varIndex = pkb.getVarIndex(uses.at(index).second);
+		string parentProc = getParentProc(stmt);
+		int procIndex = pkb.getProcIndex(parentProc).front();
+		pkb.insertUsesProc(procIndex, varIndex);
 		while(stmt >= 0)
 		{
 			pkb.insertUses(stmt+1, varIndex);
@@ -162,17 +165,21 @@ void Parser::buildProcTable() {
 void Parser::buildCallTable() {
 	for (size_t i = 0; i < this->calls.size(); i++) {
 		pair <string, string> callPair = this->calls[i];
-		int callingStmt = pkb.getProcIndex(callPair.first).front();
-		int callingProc = pkb.getProcIndex(getParentProc(callingStmt)).front();
+		int callingProc = pkb.getProcIndex(callPair.first).front();
 		int calledProc = pkb.getProcIndex(callPair.second).front();
 		pkb.insertCalls(callingProc, calledProc);
-		pkb.insertCallStmt(callingStmt, calledProc);
+	}
+	for (std::map<int, string>::iterator it = mapCallingStmtProc.begin(); it != mapCallingStmtProc.end(); ++it)
+	{
+		int stmt = it->first;
+		int proc = pkb.getProcIndex(it->second).front();
+		PKB::insertCallStmt(stmt, proc);
 	}
 }
 
 void Parser::buildCFG() {
 	for (size_t i = 0; i < stmtType.size(); i++) {
-			buildControlFlowPath(i);
+		buildControlFlowPath(i);
 	}
 	for (size_t i = 0; i < CFGNodes.size(); i++) {
 		vector <int>  nextStmts = CFGNodes[i];
@@ -651,10 +658,10 @@ vector <int> Parser::getNextNodeInControlFlow(int stmtNo) {
 		/*string calledProc = this->mapCallingStmtProc[stmtNo];
 		int startingStmtOfProc;
 		for (std::map<int, string>::iterator value = mapStartingStmtProc.begin(); value != mapStartingStmtProc.end(); value++) {
-			if (value->second == calledProc) {
-				startingStmtOfProc = value->first;
-				break;
-			}
+		if (value->second == calledProc) {
+		startingStmtOfProc = value->first;
+		break;
+		}
 		}
 		result.push_back(startingStmtOfProc);*/
 	} else if (type == KEYWORD_IF) {

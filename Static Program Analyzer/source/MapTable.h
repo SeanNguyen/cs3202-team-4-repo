@@ -124,7 +124,7 @@ private:
 			processedFlags[value] = true;
 		}
 
-		vector <T> values = keyValueMap[value];
+		vector <T> values = reversedKeyValueMap[value];
 		//apply depth first search here
 		for (size_t i = 0; i < values.size(); i++) {
 			vector <T> tempList = calculateIndexesStar(values.at(i), false);

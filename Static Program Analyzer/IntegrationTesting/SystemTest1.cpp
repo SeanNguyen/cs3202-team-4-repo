@@ -1,5 +1,6 @@
 #include <cppunit/config/SourcePrefix.h>
 #include "SystemTest1.h"
+#include "DesignExtractor.h"
 
 void SystemTest1::setUp() {
 	PKB::resetPKB();
@@ -90,7 +91,9 @@ void SystemTest1::test3() {
 	
 	parser.parse(source);
 	parser.buildPKB();
-	PKB::preCalculateStarTables();
+	DesignExtractor de;
+	de.buildPKB();
+
 	vector<vector<string>> results = qp.Process();
 
 	for (size_t i=0; i<results.size(); i++) {

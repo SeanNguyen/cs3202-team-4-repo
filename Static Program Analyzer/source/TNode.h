@@ -16,11 +16,13 @@ public:
 	TNode(Symbol _type, string _value);
 	Symbol getType();
 	string getValue();
+	void setValue(string _value);
 	int getNumChildren();
 	TNode * getChildAtIndex(int i);
 	int addChild(TNode * child);
 	void printTNode();
 	void sortChildrenList();
+	bool equals(Symbol type, string value);
 private:
 	Symbol type;
 	string value;

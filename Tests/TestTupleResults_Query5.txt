@@ -1,0 +1,67 @@
+13
+cat: Tuple Results
+1 - MultipleClauses, Typed :: Modifies and Uses
+variable v; stmt s;
+Select <s,v> such that Modifies("Example",v) and Uses(s,v) and Modifies(s,v)
+4 i, 4 x, 4 z, 5 x, 6 z, 9 z, 10 z, 10 x, 11 i, 12 x, 12 i, 12 z, 13 x, 13 i, 13 z, 14 i, 14 x, 14 z, 16 x, 16 z, 17 i, 18 x, 19 z, 21 z, 22 x, 22 z, 24 x
+5000
+2 - MultipleClauses, Typed :: Next* and Parent*
+if i; assign a;
+Select <i,a> such that Parent*(i,a) and Next*(a, 20)
+none
+5000
+3 - MultipleClauses, Typed :: Parent*
+stmt s1, s2, s3;
+Select <s1,s2> such that Parent*(s1,s2) and Parent*(s2, s3)
+4 6, 13 14
+5000
+4 - MultipleClauses, Typed :: Calls and Modifies
+procedure p1,p2; variable v;
+Select <p1,v> such that Modifies(p1,"x") and Calls(p1,p2)
+Example x, Example y, Example i, Example z, p x, p y, p i, p z
+5000
+5 - MultipleClauses, Typed :: Calls and Modifies
+procedure p1,p2;
+Select <p1,p2> such that Modifies(p1,"x") and Calls(p1,p2)
+Example p, Example q, p q
+5000
+6 - MultipleClauses, Typed :: Next and Calls 
+procedure p; prog_line n;
+Select <n,p> such that Next(n,6) and Calls(p,"q")
+5 Example, 5 p
+5000
+7 - MultipleClauses, Typed :: Next and Calls 
+procedure p; prog_line n; if i;
+Select <n,i> such that Next(n,6) and Calls(p,"q")
+5 6, 5 13, 5 22
+5000
+8 - MultipleClauses, Typed :: Next* and Next 
+prog_line n1,n2; stmt s;
+Select <n1,n2> such that Next(n2,n1) and Next(s,1)
+none
+5000
+9 - MultipleClauses, Typed :: Parent and Modifies 
+variable v; stmt s1;
+Select <v, s1> such that Parent(s1,8) and Modifies(s1,v)
+y 6, z 6
+5000
+10 - MultipleClauses, Typed :: Parent and Modifies 
+variable v; stmt s1;
+Select <s1, v> such that Parent*(s1,8) and Modifies(s1,v)
+4 i, 4 x, 4 y, 4 z, 6 y, 6 z
+5000
+11 - MultipleClauses, Typed ::  
+assign a; variable v; stmt s1;
+Select <a, s1, v> such that Parent(s1,8) and Modifies(s1,v) pattern a(v,_) 
+2 6 z, 7 6 z, 8 6 y, 9 6 z, 19 6 z, 20 6 z, 21 6 z, 23 6 z
+5000
+12 - MultipleClauses, Typed ::  
+procedure p1; variable v; while w; assign a; call c;
+Select <a,c> pattern w("i",_) and a(_,_"z+x"_) such that Uses(c,v) and Modifies(a,v)  
+8 12, 9 10, 9 12, 9 16, 21 10, 21 12, 21 16, 24 10, 24 12, 24 16
+5000
+13 - MultipleClauses, Typed ::  
+procedure p1; variable v; while w; assign a; call c;
+Select <a,c,v> pattern w("i",_) and a(_,_"z+x"_) such that Uses(c,v) and Modifies(a,v)  
+8 12 y, 9 10 z, 9 12 z, 9 16 z, 21 10 z, 21 12 z, 21 16 z, 24 10 x, 24 12 x, 24 16 x
+5000

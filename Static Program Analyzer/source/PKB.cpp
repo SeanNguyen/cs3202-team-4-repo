@@ -18,6 +18,8 @@ MapTable <int> PKB::modifyProcTable;
 MapTable <int> PKB::useStmtTable;
 MapTable <int> PKB::useProcTable;
 
+map <int, bool> PKB::flags;
+
 PKB::PKB()
 {
 }
@@ -44,7 +46,7 @@ void PKB::preCalculateStarTables() {
 	followTable.preCalculateStarTable();
 	parentTable.preCalculateStarTable();
 	callStmtTable.preCalculateStarTable();
-	nextTable.preCalculateStarTable();
+	callProcTable.preCalculateStarTable();
 }
 
 ////////////////////////////////AST METHODS/////////////////
@@ -89,6 +91,8 @@ bool PKB::insertConst(std::string value) {
 
 int PKB::getConstIndex(std::string value){
 	vector <int> indexes = constTable.getIndexes(value);
+	if (indexes.size() == 0)
+		return -1;
 	return indexes.front();
 }
 
@@ -183,11 +187,15 @@ bool PKB::isFollowsStar(int s1, int s2) {
 
 int PKB::getFollowingStmt(int s1){
 	vector <int> stmts = followTable.getValues(s1);
+	if (stmts.size() == 0)
+		return -1;
 	return stmts.front();
 }
 
 int PKB::getFollowedStmt(int s1){
 	vector <int> stmts = followTable.getIndexes(s1);
+	if (stmts.size() == 0)
+		return -1;
 	return stmts.front();
 }
 
@@ -214,7 +222,10 @@ bool PKB::insertParent(int parentStmt, int childStmt){
 }
 
 int PKB::getParentStmt(int childStmt){
-	return parentTable.getIndexes(childStmt).front();
+	vector <int> parents = parentTable.getIndexes(childStmt);
+	if (parents.size() == 0)
+		return -1;
+	return parents.front();
 }
 
 std::vector<int> PKB::getChildStmt(int parentStmt){
@@ -272,7 +283,10 @@ bool PKB::insertCallStmt (int stmt, int proc) {
 }
 
 int PKB::getCalledProc(int stmt) {
-	return callStmtTable.getValues(stmt).front();
+	vector <int> calledProcs = callStmtTable.getValues(stmt);
+	if (calledProcs.size() == 0)
+		return -1;
+	return calledProcs.front();
 }
 
 vector <int> PKB::getCallingStmt (int proc) {
@@ -359,7 +373,11 @@ bool PKB::insertNext(int n1, int n2){
 
 // Method to check if line numbers are nextStar
 bool PKB::isNextStar(int n1, int n2) {
-	return nextTable.isMappedStar(n1, n2, true);
+	int parentStmt1 = getParentStmt(n1);
+	int parentStmt2 = getParentStmt(n2);
+	if (isFollowsStar(n1, n2) || isFollowsStar(parentStmt1, n2) || isFollowsStar(n1, parentStmt2))
+		return true;
+	return false;
 }
 
 //Method to get the first parameter in the NextStar relationship --> Next*(n1, x)
@@ -380,4 +398,102 @@ std::vector<int> PKB::getNextStmts(int n1){
 // Method to get the list of line numbers for which the next line number is n1
 std::vector<int> PKB::getPreviousStmts(int n1){
 	return nextTable.getIndexes(n1);
+}
+
+////////////////////////////////////Affect METHODS///////////////////////////////
+
+bool PKB::isAffect(int affectingStmt, int affectedStmt) {
+	vector<int> affectedStmts = getAffected(affectingStmt);
+	if (find(affectedStmts.begin(), affectedStmts.end(), affectedStmt) != affectedStmts.end())
+		return true;
+	return false;
+}
+
+bool PKB::isAffectStar(int affectingStmt, int affectedStmt) {
+	vector<int> affectedStmts = getAffectedStar(affectingStmt, true);
+	if (find(affectedStmts.begin(), affectedStmts.end(), affectedStmt) != affectedStmts.end())
+		return true;
+	return false;
+}
+
+vector <int> PKB::getAffected (int affectingStmt) {
+	vector<int> affectedStmts;
+	vector<int> nextStmts = getNextStarStmts(affectingStmt);
+	vector<int> modifiedVars = getModifiedVarAtStmt(affectingStmt);
+
+	for (int i = 0; i < nextStmts.size(); i++) {
+		if (modifiedVars.size() == 0)
+			break;
+		vector<int> usedVars = getUsedVarAtStmt(nextStmts[i]);
+		for (int j = 0; j < modifiedVars.size(); j++) {
+			if (find(usedVars.begin(), usedVars.end(), modifiedVars[j]) != usedVars.end()) {
+				modifiedVars.erase(modifiedVars.begin() + j);
+				j--;
+			}
+		}
+		affectedStmts.push_back(nextStmts[i]);
+	}
+	return affectedStmts;
+}
+
+vector <int> PKB::getAffecting (int affectedStmt) {
+	vector<int> affectingStmts;
+	vector<int> previousStmts = getPreviousStarStmts(affectedStmt);
+	vector<int> usedVars = getUsedVarAtStmt(affectedStmt);
+
+	for (int i = 0; i < previousStmts.size(); i++) {
+		if (usedVars.size() == 0)
+			break;
+		vector<int> usedVars = getUsedVarAtStmt(previousStmts[i]);
+		for (int j = 0; j < usedVars.size(); j++) {
+			if (find(usedVars.begin(), usedVars.end(), usedVars[j]) != usedVars.end()) {
+				usedVars.erase(usedVars.begin() + j);
+				j--;
+			}
+		}
+		affectingStmts.push_back(previousStmts[i]);
+	}
+	return affectingStmts;
+}
+
+vector<int> PKB::getAffectedStar (int affectingStmt, bool isStartingPoint) {
+	if (isStartingPoint)
+		flags.clear();
+
+	vector <int> results;
+	if (flags.count(affectingStmt) != 0 && flags[affectingStmt] == true) {
+		return results;
+	} else if (!isStartingPoint) {
+		results.push_back(affectingStmt);
+		flags[affectingStmt] = true;
+	}
+
+	vector <int> values = getAffected(affectingStmt);
+	//apply depth first search here
+	for (size_t i = 0; i < values.size(); i++) {
+		vector <int> tempList = getAffectedStar(values.at(i), false);
+		results.insert(results.end(), tempList.begin(), tempList.end());
+	}
+	return results;
+}
+
+vector<int> PKB::getAffectingStar (int affectedStmt, bool isStartingPoint) {
+	if (isStartingPoint)
+		flags.clear();
+
+	vector <int> results;
+	if (flags.count(affectedStmt) != 0 && flags[affectedStmt] == true) {
+		return results;
+	} else if (!isStartingPoint) {
+		results.push_back(affectedStmt);
+		flags[affectedStmt] = true;
+	}
+
+	vector <int> values = getAffecting(affectedStmt);
+	//apply depth first search here
+	for (size_t i = 0; i < values.size(); i++) {
+		vector <int> tempList = getAffectingStar(values.at(i), false);
+		results.insert(results.end(), tempList.begin(), tempList.end());
+	}
+	return results;
 }

@@ -20,9 +20,11 @@ void TestWrapper::parse(std::string filename) {
 	// call your parser to do the parsing
   // ...rest of your code...'
 	Parser parser;
+	DesignExtractor de;
 	parser.parse(filename);
 	parser.buildPKB();
-	PKB::preCalculateStarTables();
+	de.buildPKB();
+	vector<int> a = PKB::getCalledByStarProc(1);
 }
 
 // method to evaluating a query
