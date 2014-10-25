@@ -29,11 +29,15 @@ private:
 	static MapTable <int> nextTable;
 
 	static map<int, bool> flags;
+	static map <int, map <int, int>> commonWhiles;
+	static map <int, map <int, int>> commonIfs;
 
 public:
 	PKB();
 	static void resetPKB();
 	static void preCalculateStarTables();
+	static void setCommonWhiles(map <int, map <int, int>> data);
+	static void setCommonIfs(map <int, map <int, int>> data);
 	//////////////////////////////////AST METHODS/////////////////
 	static TNode * createNode();
 	static TNode * createNode(Symbol type);
