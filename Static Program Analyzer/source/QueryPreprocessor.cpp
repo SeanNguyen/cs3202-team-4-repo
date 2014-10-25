@@ -145,7 +145,7 @@ void QueryPreprocessor::preprocessQuery(vector<string> query, int index) {
 		QueryOptimizer::optimizeQuery(table, tree, symbolCount);
 		QueryRepresentator::addQuery(table, tree, true);
 	} else {
-		cout << "ERROR LIST:, QUERY " << index+1 << ": ";
+		cout << "ERROR LIST: QUERY: " ;
 		for (size_t i=0; i<query.size(); i++) {
 			cout << query[i] << " ";
 		}
@@ -739,7 +739,9 @@ TNode * QueryPreprocessor::preprocessWithCondition(vector<string> list, int inde
 	withCls ->addChild(arg1Node);
 
 	vector<string> arg2;
-	if (equalSignIndex+3>= size || list[equalSignIndex+2]!=KEYWORD_DOT) {
+	if (equalSignIndex+3>= size || 
+		(list[equalSignIndex+2]!=KEYWORD_DOT &&
+		(list[equalSignIndex+1]!="\"" || list[equalSignIndex+3]!="\""))) {
 		arg2.push_back(list[equalSignIndex+1]);
 	} else {
 		arg2 = subList(list, equalSignIndex+1, equalSignIndex+3);
@@ -776,6 +778,8 @@ TNode * QueryPreprocessor::preprocessAttrRef(vector<string> list) {
 			} else {
 				errors.push_back("Error: not an attribute reference");
 			}
+		} else if (list[0]=="\"" && list[2]=="\""){
+			node = new TNode(Const, list[1]);
 		} else {
 			errors.push_back("Error: not an attribute reference");
 		}

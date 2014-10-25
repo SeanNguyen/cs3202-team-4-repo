@@ -1,6 +1,5 @@
 #include "QueryProcessor.h"
 #include "../AutoTester/source/AbstractWrapper.h"
-
 // constructors
 QueryProcessor::QueryProcessor() {
 }
@@ -28,12 +27,12 @@ vector<vector<string>> QueryProcessor::Process() {
 vector<string> QueryProcessor::Process(string query) {
 	QueryPreprocessor preprocessor("");
 	QueryEvaluator evaluator;
-/*
-	if (AbstractWrapper::GlobalStop) {
-		vector<string> results;
-		return results;
-	}
-*/
+
+	//if (AbstractWrapper::GlobalStop) {
+	//	vector<string> results;
+	//	return results;
+	//}
+
 	preprocessor.Preprocess(query);
 	evaluator.Evaluate();
 

@@ -24,6 +24,7 @@
     <ClInclude Include="..\source\QueryProcessor.h" />
     <ClInclude Include="..\source\QueryRepresentator.h" />
     <ClInclude Include="..\source\QueryTree.h" />
+    <ClInclude Include="..\source\ResultTable.h" />
     <ClInclude Include="..\source\SymbolTable.h" />
     <ClInclude Include="..\source\SyntaxHelper.h" />
     <ClInclude Include="..\source\Table.h" />
