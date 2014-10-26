@@ -19,6 +19,8 @@ MapTable <int> PKB::useStmtTable;
 MapTable <int> PKB::useProcTable;
 
 map <int, bool> PKB::flags;
+map <int, map <int, int>> PKB::commonWhiles;
+map <int, map <int, int>> PKB::commonIfs;
 
 PKB::PKB()
 {
@@ -47,6 +49,15 @@ void PKB::preCalculateStarTables() {
 	parentTable.preCalculateStarTable();
 	callStmtTable.preCalculateStarTable();
 	callProcTable.preCalculateStarTable();
+	nextTable.preCalculateStarTable();
+}
+
+void PKB::setCommonWhiles(map <int, map <int, int>> data) {
+	commonWhiles = data;
+}
+
+void PKB::setCommonIfs(map <int, map <int, int>> data) {
+	commonIfs = data;
 }
 
 ////////////////////////////////AST METHODS/////////////////
@@ -373,11 +384,13 @@ bool PKB::insertNext(int n1, int n2){
 
 // Method to check if line numbers are nextStar
 bool PKB::isNextStar(int n1, int n2) {
-	int parentStmt1 = getParentStmt(n1);
-	int parentStmt2 = getParentStmt(n2);
-	if (isFollowsStar(n1, n2) || isFollowsStar(parentStmt1, n2) || isFollowsStar(n1, parentStmt2))
+	if (commonWhiles[n1][n2] == 1)
 		return true;
-	return false;
+	if (commonIfs[n1][n2] == 2)
+		return false;
+	if (n1 >= n2)
+		return false;
+	return true;
 }
 
 //Method to get the first parameter in the NextStar relationship --> Next*(n1, x)

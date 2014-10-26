@@ -23,6 +23,8 @@ private:
 	vector<pair<int, string>> modifies;
 	vector<pair<int, string>> uses;
 	vector<pair<string, string>> calls;
+	map <int, map <int, int>> commonWhiles;
+	map <int, map <int, int>> commonIfs;
 
 	//references
 	PKB pkb;
@@ -54,6 +56,7 @@ public:
 	void buildUseTable();
 	void buildProcTable();
 	void buildCallTable();
+	void buildCommonTables();
 	void buildCFG();
 	bool getFileData(string fileDirectory);
 
