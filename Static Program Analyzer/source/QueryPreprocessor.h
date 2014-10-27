@@ -42,6 +42,7 @@ private:
 	TNode * preprocessExpressionNode(vector<string> pattern);
 	TNode * preprocessTupleResult(vector<string> list);
 	
+	TNode * preprocessResultElem(vector<string> list);
 	TNode * preprocessEntRef(vector<string> list);
 	TNode * preprocessStmtRef(vector<string> list);
 	TNode * preprocessLineRef(vector<string> list);

@@ -57,7 +57,7 @@ enum Symbol {
 	Plus, Minus, Times,
 
 	Select,
-	QuerySymbol,
+	QuerySymbol, Attr,
 	ResultCls, SuchThatCls, PatternCls, WithCls,
 	Follows, FollowsS, Parent, ParentS, Uses, Modifies, 
 	Calls, CallsS, Nexts, NextsS, Affects, AffectsS,

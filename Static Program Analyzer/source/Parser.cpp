@@ -38,6 +38,8 @@ void Parser::buildPKB() {
 	buildParentTable();
 	buildUseTable();
 	buildCFG();
+
+	buildCommonTables();
 }
 
 /*
@@ -175,6 +177,11 @@ void Parser::buildCallTable() {
 		int proc = pkb.getProcIndex(it->second).front();
 		PKB::insertCallStmt(stmt, proc);
 	}
+}
+
+void Parser::buildCommonTables() {
+	PKB::setCommonWhiles(commonWhiles);
+	PKB::setCommonIfs(commonIfs);
 }
 
 void Parser::buildCFG() {
@@ -358,6 +365,7 @@ TNode* Parser::readWhileStmt() {
 	//Stmt
 	TNode* whileNode = PKB::createNode(While);
 	this->stmtType.push_back(KEYWORD_WHILE);
+	int beginWhileStmt = stmtType.size();
 
 	//Variable
 	string conditionVar = getNextToken();
@@ -370,6 +378,10 @@ TNode* Parser::readWhileStmt() {
 	TNode* stmtListNode = readStmtList();
 	whileNode->addChild(stmtListNode);
 
+	int endWhileStmt = stmtType.size();
+	for(size_t i = beginWhileStmt; i <= endWhileStmt; i++)
+		for(size_t j = beginWhileStmt; j <= endWhileStmt; j++)
+			commonWhiles[i][j] = 1;
 	return whileNode;
 }
 
@@ -424,6 +436,14 @@ TNode* Parser::readIfStmt () {
 	match(KEYWORD_ELSE);
 	TNode* elseNode = readStmtList();
 	ifNode->addChild(elseNode);
+
+	int endIfStmt = stmtType.size();
+	for (size_t i = startOfThenStmtList; i <= endIfStmt; i++) {
+		for (size_t j = startOfThenStmtList; j <= endOfThenStmtList; j++)
+			commonIfs[i][j] = 1;
+		for (size_t j = endOfThenStmtList + 1; j <= endIfStmt; j++)
+			commonIfs[i][j] = 2;
+	}
 
 	return ifNode;
 }
