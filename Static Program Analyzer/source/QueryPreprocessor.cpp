@@ -285,12 +285,18 @@ TNode * QueryPreprocessor::preprocessResultNode(vector<string> list, int i) {
 				TNode * node = new TNode();
 				return node;
 			}
-			vector<string> tuple = subList(list, i, j);
+			vector<string> tuple = subList(list, i+1, j-1);
 			return preprocessTupleResult(tuple);
 		} else {
 			if (table.isSymbol(list[i])) {
 				TNode * node = new TNode(ResultCls, "a-single");
-				TNode * nodeChild = new TNode(QuerySymbol, list[i]);
+				vector<string> resultElem;
+				if (list[i+1]==KEYWORD_DOT) {
+					resultElem = subList(list, i, i+2);
+				} else {
+					resultElem.push_back(list[i]);
+				}
+				TNode * nodeChild = preprocessResultElem(resultElem);
 				node -> addChild(nodeChild);
 				countSymbol(list[i]);
 				return node;
@@ -305,21 +311,17 @@ TNode * QueryPreprocessor::preprocessResultNode(vector<string> list, int i) {
 TNode * QueryPreprocessor::preprocessTupleResult(vector<string> list) {
 	TNode * node = new TNode(ResultCls, "a-tuple");
 
-	for (size_t i=1; i<list.size()-1; i++) {
-		if (i%2==1) {
-			// expect declared symbol
-			if (table.isSymbol(list[i])) {
-				TNode * child = new TNode(QuerySymbol, list[i]);
-				node ->addChild(child);
-				countSymbol(list[i]);
+	for (size_t i=0; i<list.size(); i++) {
+		int commaIndex = findFirstElement(list, i, KEYWORD_COMMA); 
+		if (commaIndex>i && commaIndex!=-1){
+			vector<string> resultElem = subList(list, i, commaIndex-1);
+			TNode * tupleChild = new TNode(); 
+			if (resultElem.size()==1) {
+				tupleChild = new TNode(QuerySymbol, resultElem[0]);
 			} else {
-				errors.push_back("Error 005: invalid symbol in tuple result: " + list[i]);
+				tupleChild = preprocessResultElem(resultElem);
 			}
-		} else {
-			// expect comma
-			if (list[i]!=KEYWORD_COMMA) {
-				errors.push_back("Error 005: invalid symbol in tuple result: " + list[i]);
-			}
+			node ->addChild(tupleChild);
 		}
 	}
 
@@ -397,6 +399,23 @@ TNode * QueryPreprocessor::preprocessSuchThatCondition(vector<string> list) {
 	}
 
 	return suchThatNode;
+}
+
+TNode * QueryPreprocessor::preprocessResultElem(vector<string> list) {
+	TNode * node = new TNode();
+	int size = list.size();
+	if (table.isSymbol(list[0])) {
+		if (size==1) { 
+			node = new TNode(QuerySymbol, list[0]);
+		} else if (size==3 && list[1]==KEYWORD_DOT) {
+			node = preprocessAttrRef(list);
+		} else {
+			errors.push_back("Error: not a valid result element: " + list[0]);
+		}
+	} else {
+		errors.push_back("Error: not a valid result element: " + list[0]);
+	}
+	return node;
 }
 
 TNode * QueryPreprocessor::preprocessEntRef(vector<string> list) {
@@ -769,11 +788,13 @@ TNode * QueryPreprocessor::preprocessAttrRef(vector<string> list) {
 	} else if (size==3) {
 		if (table.isSymbol(list[0]) && list[1]==KEYWORD_DOT) {
 			string type = table.getType(list[0]);
-			if ((type==KEYWORD_PROCEDURE && list[2]=="procName") ||
+			if (((type==KEYWORD_PROCEDURE || type==KEYWORD_CALL) && list[2]=="procName") ||
 				(type==KEYWORD_VAR && list[2]=="varName")		 ||
 				(type==KEYWORD_CONST && list[2]=="value")		 ||
 				(SyntaxHelper::isStmtSymbol(type) && list[2]=="stmt#")) {
-				node = new TNode(QuerySymbol, list[0]);		
+				node = new TNode(QuerySymbol, list[0]);	
+				TNode * attrNode = new TNode(Attr, list[2]);
+				node ->addChild(attrNode);
 				countSymbol(list[0]);
 			} else {
 				errors.push_back("Error: not an attribute reference");

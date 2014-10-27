@@ -61,14 +61,14 @@ void QueryPreprocessorTest::testBuildPatternCls() {
 
 void QueryPreprocessorTest::testBuildWithCls() {
 	QueryPreprocessor qp;
-	string query = "stmt s; prog_line p; Select BOOLEAN with p = 1";
+	string query = "stmt s; prog_line p; call c; Select c.procName with c.stmt# = 1";
 	QueryRepresentator::reset();
 	qp.Preprocess(query);
 
 	Tree tree = QueryRepresentator::getQueryTree(0);
 	TNode * root = tree.getRoot();
-	/* cout << endl << "TEST BUILD TREE: Query: stmt s, prog_line p; Select BOOLEAN with p = 1" <<endl;
-	 root -> printTNode();*/
+	 cout << endl << "TEST BUILD TREE: Query: stmt s, prog_line p; Select BOOLEAN with p = 1" <<endl;
+	 root -> printTNode();
 }
 
 void QueryPreprocessorTest::testBuildTupleResult() {

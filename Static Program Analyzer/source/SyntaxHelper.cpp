@@ -100,6 +100,8 @@ string SyntaxHelper::SymbolToString(Symbol symbol) {
 		return KEYWORD_SELECT;
 	case ResultCls:
 		return "ResultCls";
+	case Attr:
+		return "Attribute";
 	case SuchThatCls:
 		return "SuchThatCls";
 	case PatternCls:
