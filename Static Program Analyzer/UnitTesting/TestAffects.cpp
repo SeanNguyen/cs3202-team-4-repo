@@ -1,98 +1,99 @@
 #include "TestAffects.h"
 #include "PKB.h"
 
-
-MapTableTest::MapTableTest(void)
+TestAffects::TestAffects(void)
 {
 }
 
 
-MapTableTest::~MapTableTest(void)
+TestAffects::~TestAffects(void)
 {
 }
 
-void MapTableTest::setUp() {
+void TestAffects::setUp() {
 }
 
-void MapTableTest::tearDown() {
+void TestAffects::tearDown() {
 
 }
 
-CPPUNIT_TEST_SUITE_REGISTRATION( MapTableTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( TestAffects );
 
-void MapTableTest::TestInsert() {
-	int key1 = 10;
-	int key2 = 20;
-	int value1 = 100;
-	int value2 = 200;
+void TestAffects::TestisAffect() {
 
-	MapTable<int> mapTable;
-	mapTable.insert (key1, value1);
-	mapTable.insert (key2, value2);
+	PKB pkb;
 
-	int expectedSize = 2;
-	int actualSize = mapTable.getSize();
-	CPPUNIT_ASSERT_EQUAL (expectedSize, actualSize);
+	bool insert1 = pkb.inserNext(1, 2);
+	bool insert2 = pkb.inserNext(2, 3); //branch
+	bool insert3 = pkb.inserNext(2, 4);
+	bool insert4 = pkb.inserNext(3, 6);
+	bool insert5 = pkb.inserNext(4, 5);
+	bool insert6 = pkb.inserNext(6, 7);//join branch
+	bool insert7 = pkb.inserNext(5, 7);
+
+	//test for isAffects (1, 4)
+	bool insertMod1 = pkb.insertModifies(1, 2);
+	bool insertUse1 = pkb.insertUses(4, 2);
+
+	//test for isAffects (2, 5)
+	bool insertMod1 = pkb.insertModifies(2, 2);
+	bool insertUse1 = pkb.insertUses(5, 2);
+
+	CPPUNIT_ASSERT(pkb.isAffect(1, 4));
+	CPPUNIT_ASSERT(pkb.isAffect(2, 5));
+
 }
 
-void MapTableTest::TestIsMapped() {
-	int key1 = 10;
-	int key2 = 20;
-	int value1 = 100;
-	int value2 = 200;
+void TestAffects::TestIsAffectStar() {
 
-	MapTable<int> mapTable;
-	mapTable.insert (key1, value1);
-	mapTable.insert (key2, value2);
-
-	CPPUNIT_ASSERT_EQUAL (true, mapTable.isMapped (key1, value1));
-	CPPUNIT_ASSERT_EQUAL (false, mapTable.isMapped (key1, value2));
 }
 
-void MapTableTest::TestIsMappedStar() {
-	int key1 = 10;
-	int key2 = 20;
-	int key3 = 30;
-	int key4 = 40;
+void TestAffects::TestgetAffected() {
+	PKB pkb;
 
-	MapTable<int> mapTable;
-	mapTable.insert (key1, key2);
-	mapTable.insert (key2, key1);
-	mapTable.insert (key2, key3);
+	bool insert1 = pkb.inserNext(1, 2);
+	bool insert2 = pkb.inserNext(2, 3); //branch
+	bool insert3 = pkb.inserNext(2, 4);
+	bool insert4 = pkb.inserNext(3, 6);
+	bool insert5 = pkb.inserNext(4, 5);
+	bool insert6 = pkb.inserNext(6, 7);//join branch
+	bool insert7 = pkb.inserNext(5, 7);
 
-	CPPUNIT_ASSERT_EQUAL (true, mapTable.isMappedStar(key1, key3, true));
-	CPPUNIT_ASSERT_EQUAL (false, mapTable.isMappedStar(key1, key4, true));
+	//test for isAffects (1, 4)
+	bool insertMod1 = pkb.insertModifies(1, 2);
+	bool insertUse1 = pkb.insertUses(4, 2);
+
+	//test for isAffects (2, 5)
+	bool insertMod1 = pkb.insertModifies(2, 2);
+	bool insertUse1 = pkb.insertUses(5, 2);
+
+	CPPUNIT_ASSERT(pkb.getAffected(1, 1, true));
+	CPPUNIT_ASSERT(pkb.getAffected(2, 2, true));
 }
 
-void MapTableTest::TestGetValues() {
-	int key1 = 10;
-	int key2 = 20;
-	int key3 = 30;
-	int key4 = 40;
+void TestAffects::TestgetAffecting() {
+	PKB pkb;
 
-	MapTable<int> mapTable;
-	mapTable.insert (key1, key2);
-	mapTable.insert (key2, key1);
-	mapTable.insert (key2, key3);
+	bool insert1 = pkb.inserNext(1, 2);
+	bool insert2 = pkb.inserNext(2, 3); //branch
+	bool insert3 = pkb.inserNext(2, 4);
+	bool insert4 = pkb.inserNext(3, 6);
+	bool insert5 = pkb.inserNext(4, 5);
+	bool insert6 = pkb.inserNext(6, 7);//join branch
+	bool insert7 = pkb.inserNext(5, 7);
 
-	int expectedResultSize = 2;
-	int actualResultSize = mapTable.getValues(key2).size();
-	CPPUNIT_ASSERT_EQUAL (expectedResultSize, actualResultSize);
+	//test for isAffects (1, 4)
+	bool insertMod1 = pkb.insertModifies(1, 2);
+	bool insertUse1 = pkb.insertUses(4, 2);
+
+	//test for isAffects (2, 5)
+	bool insertMod1 = pkb.insertModifies(2, 2);
+	bool insertUse1 = pkb.insertUses(5, 2);
+
+	CPPUNIT_ASSERT(pkb.getAffecting(4, 4, true));
+	CPPUNIT_ASSERT(pkb.getAffecting(5, 5, true));
 }
 
-void MapTableTest::TestGetValuesStar() {
-	int key1 = 10;
-	int key2 = 20;
-	int key3 = 30;
-	int key4 = 40;
-
-	MapTable<int> mapTable;
-	mapTable.insert (key1, key2);
-	mapTable.insert (key2, key1);
-	mapTable.insert (key2, key3);
-	mapTable.preCalculateStarTable();
-
-	int expectedResultSize = 3;
-	int actualResultSize = mapTable.getValuesStar(key1).size();
-	CPPUNIT_ASSERT_EQUAL (expectedResultSize, actualResultSize);
+void TestAffects::TestgetAffectingStar() {
+	
 }

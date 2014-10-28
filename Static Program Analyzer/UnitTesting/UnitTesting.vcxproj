@@ -19,6 +19,7 @@
     <ClCompile Include="source\TestTNode.cpp" />
     <ClCompile Include="source\TestTree.cpp" />
     <ClCompile Include="source\UnitTest.cpp" />
+    <ClCompile Include="TestAffects.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\ListTableTest.h" />
@@ -28,6 +29,7 @@
     <ClInclude Include="source\TestQueryRepresentator.h" />
     <ClInclude Include="source\TestTNode.h" />
     <ClInclude Include="source\TestTree.h" />
+    <ClInclude Include="TestAffects.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{353E6B76-DB90-4258-AC06-2DF35773532C}</ProjectGuid>
