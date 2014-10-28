@@ -23,6 +23,8 @@ map <int, bool> PKB::flags;
 map <int, map <int, int>> PKB::commonWhiles;
 map <int, map <int, int>> PKB::commonIfs;
 
+using namespace std;
+
 PKB::PKB()
 {
 }
@@ -443,7 +445,7 @@ vector <int> PKB::getAffected (int affectingStmt, int currentStmt, bool isStarti
 
 	vector<int> modifiedVars = getModifiedVarAtStmt(affectingStmt);
 	vector<int> modifiedVarsByCurrent = getModifiedVarAtStmt(currentStmt);
-	vector <int> usedVars = getUsedVarAtStmt(currentStmt);
+	vector<int> usedVars = getUsedVarAtStmt(currentStmt);
 
 	if (modifiedVars.size() > 0 && modifiedVarsByCurrent.size() > 0 && modifiedVars.front() == modifiedVarsByCurrent.front())
 		return;
@@ -461,24 +463,36 @@ vector <int> PKB::getAffected (int affectingStmt, int currentStmt, bool isStarti
 	return results;
 }
 
-vector <int> PKB::getAffecting (int affectedStmt) {
-	vector<int> affectingStmts;
-	vector<int> previousStmts = getPreviousStarStmts(affectedStmt);
-	vector<int> usedVars = getUsedVarAtStmt(affectedStmt);
+vector <int> PKB::getAffecting (int affectedStmt, int currentStmt, bool isStartingPoint) {
+	if (isStartingPoint)
+	flags.clear();
 
-	for (int i = 0; i < previousStmts.size(); i++) {
-		if (usedVars.size() == 0)
-			break;
-		vector<int> usedVars = getUsedVarAtStmt(previousStmts[i]);
-		for (int j = 0; j < usedVars.size(); j++) {
-			if (find(usedVars.begin(), usedVars.end(), usedVars[j]) != usedVars.end()) {
-				usedVars.erase(usedVars.begin() + j);
-				j--;
-			}
-		}
-		affectingStmts.push_back(previousStmts[i]);
+	vector <int> results;
+	if (flags.count(currentStmt) != 0 && flags[currentStmt] == true) {
+		return results;
+	} else if (!isStartingPoint) {
+		flags[currentStmt] = true;
 	}
-	return affectingStmts;
+
+	vector<int> UsedVars = getUsedVarAtStmt(affectedStmt);
+	vector<int> usedVarsByCurrent = getUsedVarAtStmt(currentStmt);
+	vector<int> modifiedVars = getModifiedVarAtStmt(currentStmt);
+
+	if (usedVars.size() > 0 && usedVarsByCurrent.size() > 0 && usedVars.front() == usedVarsByCurrent.front())
+		return;
+
+	if (usedVars.size() > 0 && find (modifiedVars.begin(), modifiedVars.end(), usedVars.front()) != modifiedVars.end()) {
+		results.push_back(currentStmt);
+	}
+
+	vector <int> previousStmts = getPreviousStmts(currentStmt);
+	//apply depth first search here
+	for (size_t i = 0; i < previousStmts.size(); i++) {
+		vector <int> tempList = getAffecting(affectedStmt, previousStmts.at(i), false);
+		results.insert(results.end(), tempList.begin(), tempList.end());
+	}
+	return results;
+
 }
 
 vector<int> PKB::getAffectedStar (int affectingStmt, bool isStartingPoint) {
