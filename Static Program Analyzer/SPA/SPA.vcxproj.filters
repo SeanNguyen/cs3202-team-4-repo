@@ -82,6 +82,9 @@
     <ClInclude Include="..\source\ResultTable.h">
       <Filter>QueryProcessor</Filter>
     </ClInclude>
+    <ClInclude Include="..\source\ResultManager.h">
+      <Filter>QueryProcessor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\PKB.cpp">
@@ -124,6 +127,12 @@
       <Filter>Parser</Filter>
     </ClCompile>
     <ClCompile Include="..\source\QueryOptimizer.cpp">
+      <Filter>QueryProcessor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\ResultTable.cpp">
+      <Filter>QueryProcessor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\ResultManager.cpp">
       <Filter>QueryProcessor</Filter>
     </ClCompile>
   </ItemGroup>
