@@ -1,5 +1,6 @@
 ﻿#include "PKB.h"
 #include <string>
+#include <algorithm>
 
 AST PKB::ast;
 ListTable <string> PKB::constTable;
@@ -429,24 +430,35 @@ bool PKB::isAffectStar(int affectingStmt, int affectedStmt) {
 	return false;
 }
 
-vector <int> PKB::getAffected (int affectingStmt) {
-	vector<int> affectedStmts;
-	vector<int> nextStmts = getNextStarStmts(affectingStmt);
-	vector<int> modifiedVars = getModifiedVarAtStmt(affectingStmt);
+vector <int> PKB::getAffected (int affectingStmt, int currentStmt, bool isStartingPoint) {
+	if (isStartingPoint)
+		flags.clear();
 
-	for (int i = 0; i < nextStmts.size(); i++) {
-		if (modifiedVars.size() == 0)
-			break;
-		vector<int> usedVars = getUsedVarAtStmt(nextStmts[i]);
-		for (int j = 0; j < modifiedVars.size(); j++) {
-			if (find(usedVars.begin(), usedVars.end(), modifiedVars[j]) != usedVars.end()) {
-				modifiedVars.erase(modifiedVars.begin() + j);
-				j--;
-			}
-		}
-		affectedStmts.push_back(nextStmts[i]);
+	vector <int> results;
+	if (flags.count(currentStmt) != 0 && flags[currentStmt] == true) {
+		return results;
+	} else if (!isStartingPoint) {
+		flags[currentStmt] = true;
 	}
-	return affectedStmts;
+
+	vector<int> modifiedVars = getModifiedVarAtStmt(affectingStmt);
+	vector<int> modifiedVarsByCurrent = getModifiedVarAtStmt(currentStmt);
+	vector <int> usedVars = getUsedVarAtStmt(currentStmt);
+
+	if (modifiedVars.size() > 0 && modifiedVarsByCurrent.size() > 0 && modifiedVars.front() == modifiedVarsByCurrent.front())
+		return;
+
+	if (modifiedVars.size() > 0 && find (usedVars.begin(), usedVars.end(), modifiedVars.front()) != usedVars.end()) {
+		results.push_back(currentStmt);
+	}
+
+	vector <int> nextStmts = getNextStmts(currentStmt);
+	//apply depth first search here
+	for (size_t i = 0; i < nextStmts.size(); i++) {
+		vector <int> tempList = getAffected(affectingStmt, nextStmts.at(i), false);
+		results.insert(results.end(), tempList.begin(), tempList.end());
+	}
+	return results;
 }
 
 vector <int> PKB::getAffecting (int affectedStmt) {
