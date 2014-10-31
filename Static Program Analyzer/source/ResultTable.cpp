@@ -54,6 +54,8 @@ bool ResultTable::containsValRow(vector<string> r) {
 	return false;
 }
 
+int ResultTable::getSize() {	return size;	}
+
 int ResultTable::getValRowIndex(vector<string> r) {
 	for (int i=0; i<size; i++) {
 		vector<string> row = valRows[i];
@@ -66,6 +68,13 @@ vector<string> ResultTable::getValRow(int index) {
 	vector<string> result;
 	if (index<0 || index>=size) return result;
 	return valRows[index];
+}
+
+void ResultTable::insertValRow(vector<vector<string>> rows) {
+	int size = rows.size();
+	for (int i=0; i<size; i++) {
+		insertValRow(rows[i]);
+	}
 }
 
 void ResultTable::insertValRow(vector<string> r) {

@@ -3,6 +3,7 @@
 
 #include "..\AutoTester\source\AbstractWrapper.h"
 #include "QueryRepresentator.h"
+#include "ResultManager.h"
 #include "PKB.h"
 
 #include <string>
@@ -17,46 +18,28 @@ const int ARG2_UNKNOWN = 1;
 
 class QueryEvaluator {
 public:
+	QueryEvaluator();
+	~QueryEvaluator();
 	void Evaluate();
 	vector<string> getResult(int index);
 	vector<vector<string>> getAllResult();
 private:
-	vector<vector<string>> resultList;
 	SymbolTable table;
 	QueryTree tree;
 	bool checkValid;
+	vector<vector<string>> resultList;
 
-	void evaluateQuery(); 
-	void findResult(vector<string> values, vector<string>& result);
-	void checkQueryCondition(int childIndex, vector<string> values, vector<string>& result, bool check);
-	void checkSuchThatCondition(TNode node, vector<string> values, vector<string>& result, bool check, int childIndex);
-	void checkPatternCondition(TNode node, vector<string> values, vector<string>& result, bool check, int childIndex);
-	void checkWithCondition(TNode node, vector<string> values, vector<string>& result, bool check, int childIndex);
-	void handleRelationNode(TNode & relationNode, vector<string> values, vector<string> & result, bool check, int childIndex);
-	void handlePatternLeftHand(string stmt, TNode * leftNode, vector<string> & values, bool & check);
-	void handlePatternRightHand(string stmt, TNode * rightNode, vector<string>& values, bool & check);
-	
-	vector<string> getArgumentValueInRelation(Symbol Relation, string arg1Value, Symbol arg1Type, string arg2Value, Symbol arg2Type, int argIndex);
+	void evaluateQuery();
+	bool evaluateClause(TNode * clause_node, ResultTable * temp_result);
+	bool evaluateClause(TNode * clause_node, vector<string> row, vector<vector<string>> * new_rows);
+	bool evaluateSTClause(TNode * ST_node, vector<string> row, vector<vector<string>> * new_rows);
+	bool evaluatePTClause(TNode * PT_node, vector<string> row, vector<vector<string>> * new_rows);
+	bool evaluateWClause(TNode * W_node, vector<string> row, vector<vector<string>> * new_rows);
 
-	bool isRelation(Symbol relation, string arg1Value, string arg2Value);
-	string getStoredValue(vector<string> values, string argName);
+	vector<string> extractResult();
+	vector<string> extractResult(TNode * result_node, ResultManager * rm, bool is_satisfied);
 
-	vector<string> getAllArgValues(Symbol type);
-	void updateResultList(vector<string> values, vector<string>& result);
-	bool isResult(string val, vector<string> result);
-	bool isDeclaredType(string val, string name, string type);
-	vector<string> removeInvalidValues(vector<string> list, Symbol type);
-
-	// unused methods
-	bool isQueryConditionsSatisfied(vector<string> values);
-	bool isSuchThatConditionSatisfied(vector<string> values, TNode node);
-	bool isPatternConditionSatisfied(vector<string> values, TNode node);
-	string getResultAfterEvaluation(vector<string> values);
-	void addNewResult(vector<string>& resultList, string result);
-
-	string intToString(int num);
-	bool isNumber(string str);
-	void printSymbolValues(vector <string> symbolValues);
+	vector<string> getSymbolsUsedBy(TNode * node);
 };
 
 #endif

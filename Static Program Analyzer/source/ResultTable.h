@@ -17,8 +17,10 @@ public:
 	void insertSymbol(string s);
 
 	bool containsValRow(vector<string> row);
+	int getSize();
 	int getValRowIndex(vector<string> row);
 	vector<string> getValRow(int index);
+	void insertValRow(vector<vector<string>> r);
 	void insertValRow(vector<string> r);
 	void deleleInvalidRows();
 

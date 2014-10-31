@@ -10,7 +10,6 @@ QueryProcessor::QueryProcessor(string directory) {
 
 // method to call by other classes
 vector<vector<string>> QueryProcessor::Process() {
-	
 	QueryPreprocessor preprocessor(fileDirectory);
 	QueryEvaluator evaluator;
 	
