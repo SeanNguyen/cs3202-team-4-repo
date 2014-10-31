@@ -149,7 +149,11 @@ public:
 	///////////////////////AFFECTTABLE////////////////////////////////////
 	static bool isAffect(int affectingStmt, int affectedStmt);
 	static bool isAffectStar(int affectingStmt, int affectedStmt);
+	// temp adding getAffected(int) to run testing - Tho
+	static vector<int> getAffected(int affectingStmt);
 	static vector<int> getAffected (int affectingStmt, int currentStmt, bool isStartingPoint);
+	// temp adding getAffecting(int) to run testing - Tho
+	static vector<int> getAffecting(int affectedStmt);
 	static vector<int> getAffecting (int affectedStmt, int currentStmt, bool isStartingPoint);
 	static vector<int> getAffectedStar (int affectingStmt, bool isStartingPoint);
 	static vector<int> getAffectingStar (int affectedStmt, bool isStartingPoint);

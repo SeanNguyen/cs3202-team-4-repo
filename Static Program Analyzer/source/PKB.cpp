@@ -432,6 +432,11 @@ bool PKB::isAffectStar(int affectingStmt, int affectedStmt) {
 	return false;
 }
 
+vector <int> PKB::getAffected(int affectingStmt) {
+	vector<int> result;
+	return result;
+}
+
 vector <int> PKB::getAffected (int affectingStmt, int currentStmt, bool isStartingPoint) {
 	if (isStartingPoint)
 		flags.clear();
@@ -448,7 +453,7 @@ vector <int> PKB::getAffected (int affectingStmt, int currentStmt, bool isStarti
 	vector<int> usedVars = getUsedVarAtStmt(currentStmt);
 
 	if (modifiedVars.size() > 0 && modifiedVarsByCurrent.size() > 0 && modifiedVars.front() == modifiedVarsByCurrent.front())
-		return;
+		return results;
 
 	if (modifiedVars.size() > 0 && find (usedVars.begin(), usedVars.end(), modifiedVars.front()) != usedVars.end()) {
 		results.push_back(currentStmt);
@@ -463,6 +468,11 @@ vector <int> PKB::getAffected (int affectingStmt, int currentStmt, bool isStarti
 	return results;
 }
 
+vector<int> PKB::getAffecting(int affectedStmt) {
+	vector<int> results;
+	return results;
+}
+
 vector <int> PKB::getAffecting (int affectedStmt, int currentStmt, bool isStartingPoint) {
 	if (isStartingPoint)
 	flags.clear();
@@ -474,12 +484,12 @@ vector <int> PKB::getAffecting (int affectedStmt, int currentStmt, bool isStarti
 		flags[currentStmt] = true;
 	}
 
-	vector<int> UsedVars = getUsedVarAtStmt(affectedStmt);
+	vector<int> usedVars = getUsedVarAtStmt(affectedStmt);
 	vector<int> usedVarsByCurrent = getUsedVarAtStmt(currentStmt);
 	vector<int> modifiedVars = getModifiedVarAtStmt(currentStmt);
 
 	if (usedVars.size() > 0 && usedVarsByCurrent.size() > 0 && usedVars.front() == usedVarsByCurrent.front())
-		return;
+		return results;
 
 	if (usedVars.size() > 0 && find (modifiedVars.begin(), modifiedVars.end(), usedVars.front()) != modifiedVars.end()) {
 		results.push_back(currentStmt);
