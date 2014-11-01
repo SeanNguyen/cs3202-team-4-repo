@@ -11,11 +11,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\UnitTesting\TestNext.cpp" />
     <ClCompile Include="source\IntegrationTest.cpp" />
     <ClCompile Include="SystemTest1.cpp" />
     <ClCompile Include="SystemTest2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\UnitTesting\TestNext.h" />
     <ClInclude Include="SystemTest1.h" />
     <ClInclude Include="SystemTest2.h" />
   </ItemGroup>

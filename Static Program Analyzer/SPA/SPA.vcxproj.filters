@@ -25,9 +25,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\source\PKB.h">
-      <Filter>PKB</Filter>
-    </ClInclude>
     <ClInclude Include="..\source\Parser.h">
       <Filter>Parser</Filter>
     </ClInclude>
@@ -83,6 +80,9 @@
       <Filter>QueryProcessor</Filter>
     </ClInclude>
     <ClInclude Include="..\source\ResultManager.h">
+      <Filter>QueryProcessor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\PKB.h">
       <Filter>QueryProcessor</Filter>
     </ClInclude>
   </ItemGroup>

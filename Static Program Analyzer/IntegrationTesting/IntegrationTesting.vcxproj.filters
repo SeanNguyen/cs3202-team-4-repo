@@ -24,12 +24,18 @@
     <ClCompile Include="SystemTest2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\UnitTesting\TestNext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SystemTest1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SystemTest2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\UnitTesting\TestNext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
