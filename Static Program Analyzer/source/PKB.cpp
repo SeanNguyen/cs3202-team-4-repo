@@ -433,8 +433,8 @@ bool PKB::isAffectStar(int affectingStmt, int affectedStmt) {
 }
 
 vector <int> PKB::getAffected(int affectingStmt) {
-	vector<int> result;
-	return result;
+	
+	return getAffected(affectingStmt, affectingStmt, true);
 }
 
 vector <int> PKB::getAffected (int affectingStmt, int currentStmt, bool isStartingPoint) {
@@ -469,8 +469,8 @@ vector <int> PKB::getAffected (int affectingStmt, int currentStmt, bool isStarti
 }
 
 vector<int> PKB::getAffecting(int affectedStmt) {
-	vector<int> results;
-	return results;
+	
+	return getAffecting(affectedStmt, affectedStmt, true);
 }
 
 vector <int> PKB::getAffecting (int affectedStmt, int currentStmt, bool isStartingPoint) {
