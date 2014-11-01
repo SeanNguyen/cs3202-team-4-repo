@@ -162,177 +162,175 @@ bool QueryEvaluator::evaluateWClause(TNode * W_node, vector<int> row, vector<vec
 bool QueryEvaluator::isRelation(Symbol relation, int arg1, int arg2) {
 	switch (relation) {
 	case Follows:
-		{
-			return PKB::isFollows(arg1, arg2);
-		}
+		return PKB::isFollows(arg1, arg2);
 	case FollowsS:
-		{
-			return PKB::isFollowsStar(arg1, arg2);
-		}
-	case Parent:
-		{
-			return PKB::isParent(arg1, arg2);
-		}
+		return PKB::isFollowsStar(arg1, arg2);
+	case Parent:	
+		return PKB::isParent(arg1, arg2);
 	case ParentS:
-		{
-			return PKB::isParentStar(arg1, arg2);
-		}
+		return PKB::isParentStar(arg1, arg2);
 	case Modifies:
-		{
-			string type = table.getType(arg1);
-			if (SyntaxHelper::isStmtSymbol(type)) {
-				return PKB::isModifies(arg1, arg2);
-			} else if (type==KEYWORD_PROCEDURE) {
-				return PKB::isModifiesProc(arg1, arg2);
-			} else {
-				return false;
-			}
-		}
+		return PKB::isModifies(arg1, arg2);
+	case ModifiesP:
+		return PKB::isModifiesProc(arg1, arg2);
 	case Uses:
-		{
-			string type = table.getType(arg1);
-			if (SyntaxHelper::isStmtSymbol(type)) {
-				return PKB::isUses(arg1, arg2);
-			} else if (type==KEYWORD_PROCEDURE) {
-				return PKB::isUsesProc(arg1, arg2);
-			} else {
-				return false;
-			}
-		}
+		return PKB::isUses(arg1, arg2);
+	case UsesP:
+		return PKB::isModifiesProc(arg1, arg2);
 	case Calls:
-		{
-			return PKB::isCalls(arg1, arg2);
-		}
+		return PKB::isCalls(arg1, arg2);
 	case CallsS:
-		{
-			return PKB::isCallStar(arg1, arg2);
-		}
+		return PKB::isCallStar(arg1, arg2);
 	case Nexts:
-		{
-			return PKB::isNext(arg1, arg2);
-		}
+		return PKB::isNext(arg1, arg2);
 	case NextsS:
-		{
-			return PKB::isNextStar(arg1, arg2);
-		}
+		return PKB::isNextStar(arg1, arg2);
 	case Affects:
-		{
-			return PKB::isAffect(arg1, arg2);
-		}
+		return PKB::isAffect(arg1, arg2);
 	case AffectsS:
-		{
-			return PKB::isAffectStar(arg1, arg2);
-		}
+		return PKB::isAffectStar(arg1, arg2);
 	default:
 		return false;
 	}
 }
 
-vector<string> QueryEvaluator::getArgInRelation(Symbol relation, string arg1_type, int arg, int arg_unknown) {
-	vector<string> results;
+vector<int> QueryEvaluator::getArgInRelation(Symbol relation, int arg, int arg_unknown) {
+	vector<int> results;
 
-	switch(arg_unknown) {
-	case ARG1:
+	switch(relation) {
+	case Follows:
 		{
-			switch(relation) {
-			case Follows:
-				{
-					int stmt = atoi(arg.c_str());
-					int result = PKB::getFollowedStmt(stmt);
-					if (result!=-1) {
-						results.push_back(to_string((long long)result));
-					}
-					break;
-				}
-			case FollowsS:
-				{
-					int stmt = atoi(arg.c_str());
-					vector<int> r = PKB::getFollowedStarStmt(stmt);
-					for (unsigned i=0; i<r.size(); i++) {
-						results.push_back(to_string((long long)r[i]));
-					}
-					break;
-				}
-			case Parent:
-				{
-					int stmt = atoi(arg.c_str());
-					int result = PKB::getParentStmt(stmt);
-					if (result!=-1) {
-						results.push_back(to_string((long long)result));
-					}
-					break;
-				}
-			case ParentS:
-				{
-					int stmt = atoi(arg.c_str());
-					vector<int> r = PKB::getParentStarStmt(stmt);
-					for (unsigned i=0; i<r.size(); i++) {
-						results.push_back(to_string((long long)r[i]));
-					}
-					break;
-				}
-			case Modifies:
-				{
-					vector<int> r;
-					if (arg1_type==KEYWORD_PROCEDURE) {
-						r = PKB::getProcModifyingVar(proc);
-					} else {
-						int stmt = atoi(arg.c_str());
-						r = PKB::getStmtModifyingVar(stmt);
-					}
-					for (unsigned i=0; i<r.size(); i++) {
-						results.push_back(to_string((long long)r[i]));
-					}
-					break;
-				}
-			case Uses:
-				{
-					vector<int> r;
-					int varIndex = PKB::getVarIndex(arg);
-					string type = table.getType(arg);
-					if (type==KEYWORD_PROC) {
-						int proc = PKB::getProcIndex(arg);
-						r = PKB::getUsedVarAtProc(proc);
-					} else {
-						int stmt = atoi(arg.c_str());
-						r = PKB::getModifiedVarAtStmt(stmt);
-					}
-					for (unsigned i=0; i<r.size(); i++) {
-						results.push_back(to_string((long long)r[i]));
-					}
-					break;
-				}
-			case Calls:
-			case CallsS:
-			case Nexts:
-			case NextsS:
-			case Affects:
-			case AffectsS:
-			default:
-				break;
+			if (arg_unknown==ARG1) {
+				results.push_back(PKB::getFollowedStmt(arg));
+			} else {
+				results.push_back(PKB::getFollowingStmt(arg));
 			}
+			break;
 		}
-	case ARG2:
+	case FollowsS:
 		{
-			switch(relation) {
-				case Follows:
-				case FollowsS:
-				case Parent:
-				case ParentS:
-				case Modifies:
-				case Uses:
-				case Calls:
-				case CallsS:
-				case Nexts:
-				case NextsS:
-				case Affects:
-				case AffectsS:
-				default:
-					break;
+			if (arg_unknown==ARG1) {
+				results = PKB::getFollowedStarStmt(arg);
+			} else {
+				results = PKB::getFollowingStarStmt(arg);
+			}		
+			break;
+		}
+	case Parent:
+		{
+			if (arg_unknown==ARG1) {
+				results.push_back(PKB::getParentStmt(arg));
+			} else {
+				results = PKB::getChildStmt(arg);
 			}
+			break;
+		}
+	case ParentS:
+		{
+			if (arg_unknown==ARG1) {
+				results = PKB::getParentStarStmt(arg);
+			} else {
+				results = PKB::getChildStarStmt(arg);
+			}
+			break;
+		}
+	case Modifies:
+		{
+			if (arg_unknown==ARG1) {
+				results = PKB::getStmtModifyingVar(arg);
+			} else {
+				results = PKB::getModifiedVarAtStmt(arg);
+			}
+			break;
+		}
+	case ModifiesP:
+		{
+			if (arg_unknown==ARG1) {
+				results = PKB::getProcModifyingVar(arg);
+			} else {
+				results = PKB::getModifiedVarAtProc(arg);
+			}
+			break;
+		}
+	case Uses:
+		{
+			if (arg_unknown==ARG1) {
+				results = PKB::getStmtUsingVar(arg);
+			} else {
+				results = PKB::getUsedVarAtStmt(arg);
+			}
+			break;
+		}
+	case UsesP:
+		{
+			if (arg_unknown==ARG1) {
+				results = PKB::getProcUsingVar(arg);
+			} else {
+				results = PKB::getUsedVarAtProc(arg);
+			}
+			break;
+		}
+	case Calls:
+		{
+			if (arg_unknown==ARG1) {
+				results = PKB::getCalledByProc(arg);
+			} else {
+				results = PKB::getCallingProc(arg);
+			}
+			break;
+		}
+	case CallsS:
+		{
+			if (arg_unknown==ARG1) {
+				results = PKB::getCalledByStarProc(arg);
+			} else {
+				results = PKB::getCallingStarProc(arg);
+			}
+			break;
+		}
+	case Nexts:
+		{
+			if (arg_unknown==ARG1) {
+				results = PKB::getPreviousStmts(arg);
+			} else {
+				results = PKB::getNextStmts(arg);
+			}
+			break;
+		}
+	case NextsS:
+		{
+			if (arg_unknown==ARG1) {
+				results = PKB::getPreviousStarStmts(arg);
+			} else {
+				results = PKB::getNextStarStmts(arg);
+			}
+			break;
+		}
+	case Affects:
+		{
+			if (arg_unknown==ARG1) {
+				results = PKB::getAffected(arg);
+			} else {
+				results = PKB::getAffecting(arg);
+			}
+			break;
+		}
+	case AffectsS:
+		{
+			if (arg_unknown==ARG1) {
+				//results = PKB::getAffectedStar(arg);
+			} else {
+				//results = PKB::getAffectingStar(arg);
+			}
+			break;
 		}
 	default:
 		break;
+	}
+	
+	if (find(results.begin(), results.end(), -1)==results.end()) {
+		// results has invalid value, i.e -1
+		results.clear(); 
 	}
 
 	return results;
@@ -345,6 +343,9 @@ vector<string> QueryEvaluator::extractResult() {
 
 vector<string> QueryEvaluator::extractResult(TNode * result_node, ResultManager * rm, bool is_satisfied) {
 	vector<string> results;
+
+	Symbol result_type = result_node->getType(); 
+
 	return results;
 }
 

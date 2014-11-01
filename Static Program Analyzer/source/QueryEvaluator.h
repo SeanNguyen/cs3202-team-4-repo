@@ -35,7 +35,7 @@ private:
 	bool evaluateWClause(TNode * W_node, vector<int> row, vector<vector<int>> * new_rows);
 
 	bool isRelation(Symbol relation, int arg1, int arg2);
-	vector<string> getArgInRelation(Symbol relation, string arg1_type, int arg, int arg_unknown);
+	vector<int> getArgInRelation(Symbol relation, int arg, int arg_unknown);
 
 	vector<string> extractResult();
 	vector<string> extractResult(TNode * result_node, ResultManager * rm, bool is_satisfied);
