@@ -50,7 +50,7 @@ void DesignExtractor::DFSRecur(TNode * node, bool visited[]){
 
 void DesignExtractor::extractContain() {
 	
-	TNode * root = PKB::getASTRoot();
+	//TNode * root = PKB::getASTRoot();
 
 	//get number of nodes
 	int sizeOfAST = TNode::getGlobalId() + 1;
