@@ -13,6 +13,7 @@ MapTable <int> PKB::parentTable;
 MapTable <int> PKB::callStmtTable;
 MapTable <int> PKB::callProcTable;
 MapTable <int> PKB::nextTable;
+MapTable <int> PKB::containTable;
 
 MapTable <int> PKB::modifyStmtTable;
 MapTable <int> PKB::modifyProcTable;
