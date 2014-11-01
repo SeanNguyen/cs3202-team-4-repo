@@ -17,12 +17,12 @@ public:
 	void insertSymbol(vector<string> s);
 	void insertSymbol(string s);
 
-	bool containsValRow(vector<string> row);
+	bool containsValRow(vector<int> row);
 	int getSize();
-	int getValRowIndex(vector<string> row);
-	vector<string> getValRow(int index);
-	void insertValRow(vector<vector<string>> r);
-	void insertValRow(vector<string> r);
+	int getValRowIndex(vector<int> row);
+	vector<int> getValRow(int index);
+	void insertValRow(vector<vector<int>> r);
+	void insertValRow(vector<int> r);
 	void deleleInvalidRows();
 
 	ResultTable * extractData(vector<string> s);
@@ -30,13 +30,13 @@ private:
 	// sth to store the names of symbols
 	vector<string> symbols;
 	// sth to store rows of values of above symbols
-	vector<vector<string>> valRows;
-	vector<vector<string>> valCols;
+	vector<vector<int>> valRows;
+	vector<vector<int>> valCols;
 	// sth more to rmb frquently used data (size, symbol#)
 	int size;
 	int symbolSize;
 
 
-	bool compareVector(vector<string> a, vector<string> b);
+	bool compareVector(vector<int> a, vector<int> b);
 	bool containsVector(vector<string> a, vector<string> b);
 };

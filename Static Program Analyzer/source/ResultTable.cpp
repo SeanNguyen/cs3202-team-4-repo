@@ -42,15 +42,15 @@ void ResultTable::insertSymbol(vector<string> s) {
 void ResultTable::insertSymbol(string s) {
 	if (!containsSymbol(s)) {
 		symbols.push_back(s);
-		vector<string> new_cols;
+		vector<int> new_cols;
 		valCols.push_back(new_cols);
 		symbolSize++;
 	}
 }
 
-bool ResultTable::containsValRow(vector<string> r) {
+bool ResultTable::containsValRow(vector<int> r) {
 	for (int i=0; i<size; i++) {
-		vector<string> row = valRows[i];
+		vector<int> row = valRows[i];
 		if (compareVector(row, r)) return true;
 	}
 	return false;
@@ -58,35 +58,35 @@ bool ResultTable::containsValRow(vector<string> r) {
 
 int ResultTable::getSize() {	return size;	}
 
-int ResultTable::getValRowIndex(vector<string> r) {
+int ResultTable::getValRowIndex(vector<int> r) {
 	for (int i=0; i<size; i++) {
-		vector<string> row = valRows[i];
+		vector<int> row = valRows[i];
 		if (compareVector(row, r)) return i;
 	}
 	return -1;
 }
 
-vector<string> ResultTable::getValRow(int index) {
-	vector<string> result;
+vector<int> ResultTable::getValRow(int index) {
+	vector<int> result;
 	if (index<0 || index>=size) return result;
 	return valRows[index];
 }
 
-void ResultTable::insertValRow(vector<vector<string>> rows) {
+void ResultTable::insertValRow(vector<vector<int>> rows) {
 	int size = rows.size();
 	for (int i=0; i<size; i++) {
 		insertValRow(rows[i]);
 	}
 }
 
-void ResultTable::insertValRow(vector<string> r) {
+void ResultTable::insertValRow(vector<int> r) {
 	if (!containsValRow(r)) { 
 		valRows.push_back(r);
 		for (int i=0; i<symbolSize; i++) {
 			if (i<r.size()) { 
 				valCols[i].push_back(r[i]);
 			} else {
-				valCols[i].push_back("-1");
+				valCols[i].push_back(-1);
 			}
 		}
 		size++;
@@ -100,7 +100,7 @@ void ResultTable::deleleInvalidRows() {
 			valRows.erase(valRows.begin()+i);
 			--i; --size;
 		} else {
-			if (find(valRows[i].begin(), valRows[i].end(), "-1")!=valRows[i].end()) {
+			if (find(valRows[i].begin(), valRows[i].end(), -1)!=valRows[i].end()) {
 				valRows.erase(valRows.begin()+i);
 				--i; --size;
 			}
@@ -120,8 +120,8 @@ ResultTable * ResultTable::extractData(vector<string> s) {
 	}
 
 	for (int i=0; i<size; i++) {
-		vector<string> row = valRows[i];
-		vector<string> r;
+		vector<int> row = valRows[i];
+		vector<int> r;
 		for (unsigned j=0; j<indexes.size(); j++) {
 			int index = indexes[j];
 			r.push_back(row[index]);
@@ -134,7 +134,7 @@ ResultTable * ResultTable::extractData(vector<string> s) {
 
 
 
-bool ResultTable::compareVector(vector<string> a, vector<string> b) {
+bool ResultTable::compareVector(vector<int> a, vector<int> b) {
 	int size_a = a.size(); int size_b = b.size();
 	int i=0;
 	while(i<size_a && i<size_b) {
@@ -142,11 +142,11 @@ bool ResultTable::compareVector(vector<string> a, vector<string> b) {
 		i++;
 	}
 	while (i<size_a) {
-		if (a[i]!="-1") return false;
+		if (a[i]!=-1) return false;
 		i++;
 	}
 	while (i<size_b) {
-		if (b[i]!="-1") return false;
+		if (b[i]!=-1) return false;
 		i++;
 	}
 	return true;

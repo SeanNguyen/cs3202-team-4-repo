@@ -34,6 +34,9 @@ private:
 	bool evaluatePTClause(TNode * PT_node, vector<string> row, vector<vector<string>> * new_rows);
 	bool evaluateWClause(TNode * W_node, vector<string> row, vector<vector<string>> * new_rows);
 
+	bool isRelation(Symbol relation, string arg1, string arg2);
+	vector<string> getArgInRelation(Symbol relation, string arg1_type, string arg, int arg_unknown);
+
 	vector<string> extractResult();
 	vector<string> extractResult(TNode * result_node, ResultManager * rm, bool is_satisfied);
 

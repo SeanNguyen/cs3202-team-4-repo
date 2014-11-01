@@ -426,7 +426,7 @@ TNode * QueryPreprocessor::preprocessEntRef(vector<string> list) {
 		if (SyntaxHelper::isNumber(list[0])) {
 			node = new TNode(Const, list[0]);
 		} else if (list[0]==KEYWORD_UNDERLINE) {
-			node = new TNode(Underline);
+			node = new TNode(Underline, KEYWORD_UNDERLINE);
 		} else if (table.isSymbol(list[0])) {
 			node = new TNode(QuerySymbol, list[0]);
 			countSymbol(list[0]);
@@ -454,7 +454,7 @@ TNode * QueryPreprocessor::preprocessStmtRef(vector<string> list) {
 		if (SyntaxHelper::isNumber(list[0])) {
 			node = new TNode(Const, list[0]);
 		} else if (list[0]==KEYWORD_UNDERLINE) {
-			node = new TNode(Underline);
+			node = new TNode(Underline, KEYWORD_UNDERLINE);
 		} else if (table.isSymbol(list[0])) {
 			string type = table.getType(list[0]);
 			if (type==KEYWORD_STMT || type==KEYWORD_ASSIGN ||
@@ -481,7 +481,7 @@ TNode * QueryPreprocessor::preprocessVarRef(vector<string> list) {
 
 	if (size==1) {
 		if (list[0]==KEYWORD_UNDERLINE) {
-			node = new TNode(Underline);
+			node = new TNode(Underline, KEYWORD_UNDERLINE);
 		} else if (table.isSymbol(list[0])) {
 			string type = table.getType(list[0]);
 			if (type==KEYWORD_VAR) {
@@ -514,7 +514,7 @@ TNode * QueryPreprocessor::preprocessLineRef(vector<string> list) {
 		if (SyntaxHelper::isNumber(list[0])) {
 			node = new TNode(Const, list[0]);
 		} else if (list[0]==KEYWORD_UNDERLINE) {
-			node = new TNode(Underline);
+			node = new TNode(Underline, KEYWORD_UNDERLINE);
 		} else if (table.isSymbol(list[0])) {
 			node = new TNode(QuerySymbol, list[0]);
 			countSymbol(list[0]);
@@ -562,7 +562,7 @@ TNode * QueryPreprocessor::preprocessPatternCondition(vector<string> list) {
 		{
 			errors.push_back("Error 009: not a valid stmt type for pattern clause: " + argName);
 			break;
-		}
+	}	
 	}
 
 	return pattern;
@@ -591,7 +591,7 @@ TNode * QueryPreprocessor::preprocessAssignPattern(string name, vector<string> l
 				errors.push_back("Error 012_02: Syntax of pattern");
 				return assignNode;
 			}
-			TNode * arg2Node = new TNode(Underline);
+			TNode * arg2Node = new TNode(Underline, KEYWORD_UNDERLINE);
 			assignNode ->addChild(arg2Node);
 			break;
 		}
@@ -613,7 +613,7 @@ TNode * QueryPreprocessor::preprocessAssignPattern(string name, vector<string> l
 					return assignNode;
 				}
 				vector<string> expression = subList(list, commaIndex+3, size-4);
-				TNode * arg2Node = new TNode(Underline);
+				TNode * arg2Node = new TNode(Underline, KEYWORD_UNDERLINE);
 				TNode * exprNode = preprocessExpressionNode(expression);
 				arg2Node ->addChild(exprNode);
 				assignNode ->addChild(arg2Node);
@@ -643,7 +643,7 @@ TNode * QueryPreprocessor::preprocessWhilePattern(string name, vector<string> li
 	if (commaIndex>(int)size-2 || list[commaIndex+1]!=KEYWORD_UNDERLINE) {
 		errors.push_back("Error 012_05: syntax of pattern");
 	} else {
-		TNode * arg2Node = new TNode(Underline);
+		TNode * arg2Node = new TNode(Underline, KEYWORD_UNDERLINE);
 		whileNode ->addChild(arg2Node);
 	}
 
@@ -668,14 +668,14 @@ TNode * QueryPreprocessor::preprocessIfPattern(string name, vector<string> list)
 	if (commaIndex>(int)size-4 || list[commaIndex+1]!=KEYWORD_UNDERLINE) {
 		errors.push_back("Error 012_05: syntax of pattern");
 	} else {
-		TNode * arg2Node = new TNode(Underline);
+		TNode * arg2Node = new TNode(Underline, KEYWORD_UNDERLINE);
 		ifNode ->addChild(arg2Node);
 	}
 
 	if (list[size-3]!=KEYWORD_COMMA || list[size-2]!=KEYWORD_UNDERLINE) {
 		errors.push_back("Error 012_06: syntax of pattern");
 	} else {
-		TNode * arg3Node = new TNode(Underline);
+		TNode * arg3Node = new TNode(Underline, KEYWORD_UNDERLINE);
 		ifNode ->addChild(arg3Node);
 	}
 
