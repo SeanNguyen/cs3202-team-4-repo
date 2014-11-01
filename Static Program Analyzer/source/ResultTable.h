@@ -3,6 +3,7 @@
 #include <vector>
 #include <algorithm>
 #include "SyntaxHelper.h"
+#include <iostream>
 
 class ResultTable {
 public:

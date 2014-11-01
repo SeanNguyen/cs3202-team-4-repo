@@ -137,9 +137,16 @@ ResultTable * ResultTable::extractData(vector<string> s) {
 bool ResultTable::compareVector(vector<string> a, vector<string> b) {
 	int size_a = a.size(); int size_b = b.size();
 	int i=0;
-	if (size_a!=size_b) return false;
-	while(i<size_a) {
+	while(i<size_a && i<size_b) {
 		if (a[i]!=b[i]) return false;
+		i++;
+	}
+	while (i<size_a) {
+		if (a[i]!="-1") return false;
+		i++;
+	}
+	while (i<size_b) {
+		if (b[i]!="-1") return false;
 		i++;
 	}
 	return true;
