@@ -24,11 +24,12 @@ ResultTable * ResultManager::getTable(int index) {
 // pre-condition: no symbol is saved in more than 1 table
 ResultTable * ResultManager::extractTable(vector<string> symbols) {
 	ResultTable * table = new ResultTable();
+	table->insertSymbol(symbols);
 	for (int i=0; i<size; i++) {
 		ResultTable * t = tables[i];
 		vector<string> sub_symbols = extractSymbols(t, symbols);
 		ResultTable * extract_table = t -> extractData(sub_symbols);
-		mergeTables(table, extract_table);
+		table = mergeTables(table, extract_table);
 	}
 	return table;
 }
@@ -37,29 +38,57 @@ ResultTable * ResultManager::mergeTables(ResultTable * t1, ResultTable * t2) {
 	if (t1->getSymbolSize()==0) return t2;
 
 	vector<string> shared_symbols = getSharedSymbols(t1, t2);
+	vector<int> shared_index1 = t1->getSymbolIndex(shared_symbols);
 	vector<int> shared_index2 = t2->getSymbolIndex(shared_symbols);
 
 	vector<string> merged_symbols = mergeSymbols(t1->getAllSymbols(), t2->getAllSymbols());
 
 	ResultTable * t = new ResultTable();
 	t->insertSymbol(merged_symbols);
-	for (int i=0; i<t1->getSize(); i++) {
-		vector<int> t1_row = t1->getValRow(i);
+
+	if (t1->getSize()==0) {
+		vector<int> t1_row (t1->getSymbolSize(), -1);
 		for (int j=0; j<t2->getSize(); j++) {
 			vector<int> t2_row = t2->getValRow(j);
-			vector<int> merged_row = mergeRow(t1_row, t2_row, shared_index2);
+			vector<int> merged_row = mergeRow(t1_row, t2_row, shared_index1, shared_index2);
+			if (!merged_row.empty())
+				t->insertValRow(merged_row);
+		}
+	} else if (t2->getSize()==0) {
+		vector<int> t2_row (t2->getSymbolSize(), -1);
+		for (int i=0; i<t1->getSize(); i++) {
+			vector<int> t1_row = t1->getValRow(i);
+			vector<int> merged_row = mergeRow(t1_row, t2_row, shared_index1, shared_index2);
+			if (!merged_row.empty())
+				t->insertValRow(merged_row);
+		}
+	} else {
+		for (int i=0; i<t1->getSize(); i++) {
+			vector<int> t1_row = t1->getValRow(i);
+			for (int j=0; j<t2->getSize(); j++) {
+				vector<int> t2_row = t2->getValRow(j);
+				vector<int> merged_row = mergeRow(t1_row, t2_row, shared_index1, shared_index2);
+				if (!merged_row.empty())
+					t->insertValRow(merged_row);
+			}
 		}
 	}
-
 	return t;
 }
 
+// version 2 of insert:
+// bfr inserting a table, merge every possible existed tables to it
 void ResultManager::insertTable(ResultTable * table) {
 	vector<string> symbols = table->getAllSymbols();
-	if (!containsTable(symbols)) {
-		tables.push_back(table);
-		size++;
+	for (int i=0; i<size; i++) {
+		if (hasSharedSymbols(table, tables[i])) {
+			table = mergeTables(table, tables[i]);
+			tables.erase(tables.begin()+i);
+			--i; --size;
+		}
 	}
+	tables.push_back(table);
+	size++;
 }
 
 vector<string> ResultManager::extractSymbols(ResultTable * t, vector<string> symbols) {
@@ -73,6 +102,12 @@ vector<string> ResultManager::extractSymbols(ResultTable * t, vector<string> sym
 	}
 
 	return result;
+}
+ 
+bool ResultManager::hasSharedSymbols(ResultTable * t1, ResultTable * t2) {
+	vector<string> shared_symbols = getSharedSymbols(t1, t2);
+	if (shared_symbols.empty()) return false;
+	return true;
 }
 
 vector<string> ResultManager::getSharedSymbols(ResultTable * t1, ResultTable * t2) {
@@ -99,14 +134,24 @@ vector<string> ResultManager::mergeSymbols(vector<string> s1, vector<string> s2)
 	return result;
 }
 
-vector<int> ResultManager::mergeRow(vector<int> r1, vector<int> r2, vector<int> shared_id2) {
+vector<int> ResultManager::mergeRow(vector<int> r1, vector<int> r2, vector<int> shared_id1, vector<int> shared_id2) {
 	vector<int> result = r1;
 
-	cout << "CHECKPOINT 001" <<endl;
-	for (size_t i=0; r2.size(); i++) {
-		if (find(shared_id2.begin(), shared_id2.end(), i)==shared_id2.end())
-			result.push_back(r2[i]);
+	for (size_t i=0; i<shared_id1.size(); i++) {
+		int i1 = shared_id1[i]; int i2 = shared_id2[i];
+		if (r1[i1]!=r2[i2] && r1[i1]!=-1 && r2[i2]!=-1) {
+			result.clear();
+			return result;
+		}
+		if (r1[i1]==-1 && r2[i2]!=-1) {
+			result[i1]=r2[i2];
+		}
 	}
-	cout << "CHECKPOINT 002" <<endl;
+
+	for (size_t i=0; i<r2.size(); i++) {
+		if (find(shared_id2.begin(), shared_id2.end(), i)==shared_id2.end()) {
+			result.push_back(r2[i]);
+		}
+	}
 	return result;
 }

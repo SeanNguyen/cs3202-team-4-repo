@@ -15,7 +15,11 @@ void ResultManagerTest::testInsertTable() {
 	ResultTable * t3 = populateData(Case3);
 	rm.insertTable(t1); rm.insertTable(t2); rm.insertTable(t3);
 
-	CPPUNIT_ASSERT_EQUAL(3, rm.getSize());
+	CPPUNIT_ASSERT_EQUAL(2, rm.getSize());
+	ResultTable * table1 = rm.getTable(0);
+	ResultTable * table2 = rm.getTable(1);
+	CPPUNIT_ASSERT_EQUAL(4, table1->getSymbolSize());
+	CPPUNIT_ASSERT_EQUAL(3, table1->getSize());
 }
 
 void ResultManagerTest::testMergeTable() {
@@ -24,6 +28,15 @@ void ResultManagerTest::testMergeTable() {
 	ResultTable * t2 = populateData(Case2);
 
 	ResultTable * mt = rm.mergeTables(t1, t2);
+	CPPUNIT_ASSERT_EQUAL(4, mt->getSymbolSize());
+	CPPUNIT_ASSERT_EQUAL(3, mt->getSize());
+	vector<int> row1; vector<int> row2; vector<int> row3; 
+	row1.push_back(1); row1.push_back(2); row1.push_back(1); row1.push_back(4);
+	row2.push_back(1); row2.push_back(2); row2.push_back(1); row2.push_back(7);
+	row3.push_back(1); row3.push_back(2); row3.push_back(1); row3.push_back(10);
+	CPPUNIT_ASSERT_EQUAL(true, mt->containsValRow(row1));
+	CPPUNIT_ASSERT_EQUAL(true, mt->containsValRow(row2));
+	CPPUNIT_ASSERT_EQUAL(true, mt->containsValRow(row3));
 } 
 
 void ResultManagerTest::testExtractTable() {
@@ -35,7 +48,10 @@ void ResultManagerTest::testExtractTable() {
 
 	vector<string> s1;
 	s1.push_back("s1"); s1.push_back("s2"); 
-	//ResultTable * et1 = rm.extractTable(s1);
+	ResultTable * et1 = rm.extractTable(s1);
+
+	CPPUNIT_ASSERT_EQUAL(2, et1->getSymbolSize());
+	CPPUNIT_ASSERT_EQUAL(1, et1->getSize());
 }
 
 ResultTable * ResultManagerTest::populateData(Case caseNum) {
