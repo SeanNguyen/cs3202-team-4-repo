@@ -1,0 +1,72 @@
+14
+cat: Affects
+1 - Affects ::
+assign a1;
+Select a1 such that Affects(103, a1)
+103, 104, 113, 114, 119
+5000
+2 - Affects ::
+assign a1;
+Select a1 such that Affects(104, a1)
+103, 113
+5000
+3 - Affects ::
+assign a1;
+Select a1 such that Affects(105, a1)
+103, 104, 118
+5000
+4 - Affects ::
+assign a1;
+Select a1 such that Affects(106, a1)
+none
+5000
+5 - Affects ::
+assign a1;
+Select a1 such that Affects(107, a1)
+103, 107
+5000
+6 - Affects ::
+assign a1;
+Select a1 such that Affects(108, a1)
+103, 108
+5000
+7 - Affects ::
+assign a1;
+Select a1 such that Affects(109, a1)
+109
+5000
+8 - Affects ::
+assign a1;
+Select a1 such that Affects(113, a1)
+114, 115, 116
+5000
+9 - Affects ::
+assign a1;
+Select a1 such that Affects(114, a1)
+103, 113, 114, 115, 119
+5000
+10 - Affects ::
+assign a1;
+Select a1 such that Affects(115, a1)
+103, 104, 116
+5000
+11 - Affects ::
+assign a1;
+Select a1 such that Affects(116, a1)
+103, 113
+5000
+12 - Affects ::
+assign a1;
+Select a1 such that Affects(118, a1)
+105
+5000
+13 - Affects ::
+assign a1;
+Select a1 such that Affects(119, a1)
+none
+5000
+14 - Affects ::
+procedure p1, p2; assign a1, a2;
+Select a1 such that Affects(a1, a2) with a2.stmt#=55
+56, 64, 74, 77
+5000

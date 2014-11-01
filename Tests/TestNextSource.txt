@@ -1,0 +1,18 @@
+procedure testNext {
+	x = 1;					\\1
+	if x then {				\\2
+		y = 2;				\\3
+		w = 4;				\\4
+	}					
+	else {
+		z = 2;				\\5
+		a = 3;				\\6
+	}
+	while x {				\\7
+		green = 7;			\\8
+		help = 3;			\\9
+		don = 8;			\\10
+	}
+	connect = trick;		\\11
+	last = yes;				\\12
+}
