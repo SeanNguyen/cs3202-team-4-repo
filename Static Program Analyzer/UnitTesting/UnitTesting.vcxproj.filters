@@ -45,6 +45,12 @@
     <ClCompile Include="ResultTableTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ResultManagerTest.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ResultManagerTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\ListTableTest.h">

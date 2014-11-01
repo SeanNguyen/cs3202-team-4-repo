@@ -7,6 +7,7 @@ public:
 	ResultManager();
 	
 	bool containsTable(vector<string> symbols);
+	int getSize();
 	//ResultTable * getTable(vector<string> symbols);
 	ResultTable * getTable(int index);
 	ResultTable * extractTable(vector<string> symbols);

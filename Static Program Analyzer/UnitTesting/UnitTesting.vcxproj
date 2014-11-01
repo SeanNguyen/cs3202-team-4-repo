@@ -11,6 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ResultManagerTest.cpp" />
+    <ClCompile Include="ResultManagerTest.h" />
     <ClCompile Include="ResultTableTest.cpp" />
     <ClCompile Include="source\ListTableTest.cpp" />
     <ClCompile Include="source\MapTableTest.cpp" />
