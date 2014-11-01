@@ -61,7 +61,7 @@ void DesignExtractor::extractContain() {
         visited[i] = false;
 
 	//apply depth first search on AST
-	DFSRecur(root, visited);
+//	DFSRecur(root, visited);
 }
 
 //Private Helper Methods
