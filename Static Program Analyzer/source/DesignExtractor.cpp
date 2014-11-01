@@ -1,6 +1,4 @@
 #include "DesignExtractor.h"
-#include "PKB.h"
-
 
 DesignExtractor::DesignExtractor(void)
 {
@@ -14,6 +12,56 @@ void DesignExtractor::buildPKB() {
 	PKB::preCalculateStarTables();
 	processUses();
 	processModify();
+
+	///////CONTAINS EXTRACTOR////////
+	extractContain();
+}
+
+void DesignExtractor::DFSRecur(TNode * node, bool visited[]){
+	int nodeID = node -> getID();
+
+	// Mark the current node as visited
+    visited[nodeID] = true;
+
+	int numOfChildren = node -> getNumChildren();
+
+	if(numOfChildren != 0){
+		// Recur for all the vertices, child to this vertex
+		for (size_t i = 0; i < numOfChildren; i++){
+			if(!visited[nodeID]) {
+				TNode * child = node -> getChildAtIndex(i);
+				int childID = child -> getID();
+
+				//insert into containTable as long as type is not Program and not undefined
+				Symbol nodeType = node -> getType();
+				Symbol childType = child -> getType();
+				if(nodeType != Program && nodeType != Undefined && 
+					childType != Program && childType != Undefined){
+					bool result = PKB::insertContains(nodeID, childID);
+				}
+
+				DFSRecur(child, visited);
+			}
+		}
+	}
+	
+}
+
+
+void DesignExtractor::extractContain() {
+	
+	TNode * root = PKB::getASTRoot();
+
+	//get number of nodes
+	int sizeOfAST = TNode::getGlobalId() + 1;
+
+	// Mark all the vertices as not visited
+	bool *visited = new bool [sizeOfAST];
+	for(int i = 0; i < sizeOfAST; i++)
+        visited[i] = false;
+
+	//apply depth first search on AST
+	DFSRecur(root, visited);
 }
 
 //Private Helper Methods

@@ -553,10 +553,14 @@ bool PKB::isContains(int nodeContaining, int nodeContained){
 	return containTable.isMapped(nodeContaining, nodeContained);
 }
 
+bool PKB::insertContains(int nodeContaining, int nodeContained){
+	return containTable.insert(nodeContaining, nodeContained);
+}
+
 vector<int> PKB::getContained(int nodeContaining){
 	return containTable.getValues(nodeContaining);
 }
 
 vector<int> PKB::getContaining(int nodeContained){
-	return containTable.getValues(nodeContained);
+	return containTable.getIndexes(nodeContained);
 }

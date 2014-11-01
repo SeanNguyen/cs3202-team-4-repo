@@ -1,4 +1,5 @@
 #include <vector>
+#include "PKB.h"
 
 using namespace std;
 
@@ -14,9 +15,8 @@ private:
 	static void processModify();
 	static void processUses();
 
-
-	static void calculateContain();
-	static bool insertContains(int nodeContaining, int nodeContained);
-	
+	////////CONTAINS EXTRACTOR//////////
+	static void extractContain();
+	static void DFSRecur(TNode * node, bool visited[]);
 };
 
