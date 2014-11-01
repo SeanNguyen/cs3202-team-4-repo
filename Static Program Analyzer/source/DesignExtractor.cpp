@@ -47,7 +47,6 @@ void DesignExtractor::DFSRecur(TNode * node, bool visited[]){
 	
 }
 
-
 void DesignExtractor::extractContain() {
 	
 	TNode * root = PKB::getASTRoot();
