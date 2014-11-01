@@ -82,7 +82,7 @@ void ResultTable::insertValRow(vector<vector<string>> rows) {
 void ResultTable::insertValRow(vector<string> r) {
 	if (!containsValRow(r)) { 
 		valRows.push_back(r);
-		for (int i=0; i<size; i++) {
+		for (int i=0; i<symbolSize; i++) {
 			if (i<r.size()) { 
 				valCols[i].push_back(r[i]);
 			} else {
@@ -98,11 +98,11 @@ void ResultTable::deleleInvalidRows() {
 		int rowSize = valRows[i].size();
 		if (rowSize!= symbolSize) {
 			valRows.erase(valRows.begin()+i);
-			--i;  
+			--i; --size;
 		} else {
 			if (find(valRows[i].begin(), valRows[i].end(), "-1")!=valRows[i].end()) {
 				valRows.erase(valRows.begin()+i);
-				--i;
+				--i; --size;
 			}
 		}
 	}

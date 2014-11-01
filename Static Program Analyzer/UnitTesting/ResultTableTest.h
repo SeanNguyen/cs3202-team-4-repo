@@ -7,6 +7,7 @@ class TestResultTable : public CPPUNIT_NS::TestFixture {
 	CPPUNIT_TEST( TestInsertSymbols );
 	CPPUNIT_TEST( TestInsertVal );
 	CPPUNIT_TEST( TestDeleteInvalidRow );
+	CPPUNIT_TEST( TestExtractData );
 	CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -17,4 +18,5 @@ public:
 	void TestInsertSymbols();
 	void TestInsertVal();
 	void TestDeleteInvalidRow();
+	void TestExtractData();
 };
