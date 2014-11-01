@@ -30,6 +30,7 @@ private:
 	vector<string> symbols;
 	// sth to store rows of values of above symbols
 	vector<vector<string>> valRows;
+	vector<vector<string>> valCols;
 	// sth more to rmb frquently used data (size, symbol#)
 	int size;
 	int symbolSize;

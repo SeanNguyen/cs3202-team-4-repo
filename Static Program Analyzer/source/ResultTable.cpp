@@ -42,6 +42,8 @@ void ResultTable::insertSymbol(vector<string> s) {
 void ResultTable::insertSymbol(string s) {
 	if (!containsSymbol(s)) {
 		symbols.push_back(s);
+		vector<string> new_cols;
+		valCols.push_back(new_cols);
 		symbolSize++;
 	}
 }
@@ -80,6 +82,13 @@ void ResultTable::insertValRow(vector<vector<string>> rows) {
 void ResultTable::insertValRow(vector<string> r) {
 	if (!containsValRow(r)) { 
 		valRows.push_back(r);
+		for (int i=0; i<size; i++) {
+			if (i<r.size()) { 
+				valCols[i].push_back(r[i]);
+			} else {
+				valCols[i].push_back("-1");
+			}
+		}
 		size++;
 	}
 }
@@ -90,6 +99,11 @@ void ResultTable::deleleInvalidRows() {
 		if (rowSize!= symbolSize) {
 			valRows.erase(valRows.begin()+i);
 			--i;  
+		} else {
+			if (find(valRows[i].begin(), valRows[i].end(), "-1")!=valRows[i].end()) {
+				valRows.erase(valRows.begin()+i);
+				--i;
+			}
 		}
 	}
 }

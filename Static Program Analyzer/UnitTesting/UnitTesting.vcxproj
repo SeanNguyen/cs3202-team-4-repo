@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ResultTableTest.cpp" />
     <ClCompile Include="source\ListTableTest.cpp" />
     <ClCompile Include="source\MapTableTest.cpp" />
     <ClCompile Include="source\ParserTest.cpp" />
@@ -22,6 +23,7 @@
     <ClCompile Include="TestAffects.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ResultTableTest.h" />
     <ClInclude Include="source\ListTableTest.h" />
     <ClInclude Include="source\MapTableTest.h" />
     <ClInclude Include="source\ParserTest.h" />

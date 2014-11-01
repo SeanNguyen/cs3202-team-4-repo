@@ -18,8 +18,6 @@ const int ARG2_UNKNOWN = 1;
 
 class QueryEvaluator {
 public:
-	QueryEvaluator();
-	~QueryEvaluator();
 	void Evaluate();
 	vector<string> getResult(int index);
 	vector<vector<string>> getAllResult();

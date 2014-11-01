@@ -11,6 +11,17 @@ void QueryEvaluator::Evaluate() {
 	}
 }
 
+vector<string> QueryEvaluator::getResult(int index) {
+	vector<string> result;
+	int size = resultList.size();
+	if (index<0 || index>=size) return result;
+	return resultList[index];
+}
+
+vector<vector<string>> QueryEvaluator::getAllResult() {
+	return resultList;
+}
+
 void QueryEvaluator::evaluateQuery() {
 	if (checkValid) {
 		TNode * select_node = tree.getRoot();
@@ -28,7 +39,7 @@ void QueryEvaluator::evaluateQuery() {
 				break;
 			} else {
 				result_manager.insertTable(temp_results);
-				result_manager.maintain();
+				//result_manager.maintain();
 			}
 		}
 		TNode * result_node = select_node->getChildAtIndex(0);
@@ -114,13 +125,13 @@ bool QueryEvaluator::evaluateSTClause(TNode * ST_node,
 	return false;
 }
 
-bool evaluatePTClause(TNode * PT_node, vector<string> row, vector<vector<string>> * new_rows) {
+bool QueryEvaluator::evaluatePTClause(TNode * PT_node, vector<string> row, vector<vector<string>> * new_rows) {
 
 	if (!new_rows->empty()) return true;
 	return false;
 }
 
-bool evaluateWClause(TNode * W_node, vector<string> row, vector<vector<string>> * new_rows) {
+bool QueryEvaluator::evaluateWClause(TNode * W_node, vector<string> row, vector<vector<string>> * new_rows) {
 
 	if (!new_rows->empty()) return true;
 	return false;
@@ -132,6 +143,11 @@ vector<string> QueryEvaluator::extractResult() {
 }
 
 vector<string> QueryEvaluator::extractResult(TNode * result_node, ResultManager * rm, bool is_satisfied) {
+	vector<string> results;
+	return results;
+}
+
+vector<string> QueryEvaluator::getSymbolsUsedBy(TNode * node) {
 	vector<string> results;
 	return results;
 }
