@@ -97,7 +97,7 @@ SymbolTable  QueryOptimizer::mergeTable(SymbolTable t1, SymbolTable t2, vector<i
 
 void QueryOptimizer::rankNode(TNode * node, SymbolTable & table) {
 	Symbol type = node ->getType();
-	if (type==ResultCls || type==SuchThatCls || type==PatternCls || type==WithCls) {
+	if (type==SuchThatCls || type==PatternCls || type==WithCls) {
 		int nodeType = rankNodeType(type);
 		int childOccurences = rankChildOccurences(node, table);
 		int rank = nodeType + childOccurences;

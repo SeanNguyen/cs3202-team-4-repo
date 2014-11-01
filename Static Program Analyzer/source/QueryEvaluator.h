@@ -43,6 +43,12 @@ private:
 	vector<string> getSymbolsUsedBy(TNode * node);
 	int getIndexOfConst(TNode * const_node, Symbol relation, int argIndex);
 	bool isNumber(string s);
+	void fillResultTable(ResultTable * t);
+	void fillResultList(TNode * result_node, ResultTable * t, vector<string> * result);
+	string fillResult(TNode * result_node, vector<int> values);
+	string fillResult(TNode * node, int value);
+	vector<int> getAllPKBValues(string name);
+	vector<string> getUnknownSymbols(ResultTable * table);
 };
 
 #endif

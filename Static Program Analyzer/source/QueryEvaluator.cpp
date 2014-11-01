@@ -347,18 +347,20 @@ vector<string> QueryEvaluator::extractResult(TNode * result_node, ResultManager 
 	string result_type = result_node->getValue();
 
 	if(!is_satisfied) {
-		if (result_type=="BOOLEAN") 
+		if (result_type=="0-BOOLEAN") 
 			results.push_back("false");
 	} 
 
-	if (result_type=="BOOLEAN") {
+	if (result_type=="0-BOOLEAN") {
 		results.push_back("true");
 	} else {
 		vector<string> symbols = getSymbolsUsedBy(result_node);
 		// extract data
 		ResultTable * r_table = rm->extractTable(symbols);
 		// fill empty column
+		fillResultTable(r_table);
 		// save data to results list
+		fillResultList(result_node, r_table, &results);
 	}
 
 	return results;
@@ -366,6 +368,20 @@ vector<string> QueryEvaluator::extractResult(TNode * result_node, ResultManager 
 
 vector<string> QueryEvaluator::getSymbolsUsedBy(TNode * node) {
 	vector<string> results;
+
+	int size = node->getNumChildren();
+	for (int i=0; i<size; i++) {
+		TNode * child = node->getChildAtIndex(0);
+		if (child->getType()==QuerySymbol) {
+			results.push_back(child->getValue());
+		}
+		vector<string> sub_results = getSymbolsUsedBy(child);
+		for (size_t j=0; j<sub_results.size(); j++) {
+			if (find(results.begin(), results.end(), sub_results[i])==results.end())
+				results.push_back(sub_results[i]);
+		}
+ 	}
+
 	return results;
 }
 
@@ -416,4 +432,121 @@ bool QueryEvaluator::isNumber(string s)
     std::string::const_iterator it = s.begin();
     while (it != s.end() && std::isdigit(*it)) ++it;
     return !s.empty() && it == s.end();
+}
+
+void QueryEvaluator::fillResultTable(ResultTable * table) {
+	// base case
+	if (table->getSymbolSize()==1 && table->getSize()==0) {
+		string symbol = table->getSymbol(0);
+		vector<int> values = getAllPKBValues(symbol);
+		for (size_t i=0; i<values.size(); i++) {
+			vector<int> row; row.push_back(values[i]);
+			table->insertValRow(row);
+		}
+	}
+
+	// get symbols with unknown values
+	vector<string> unknown_symbols = getUnknownSymbols(table);
+	ResultManager rm;
+	// go to base case for each symbol and merge back to the table
+	for (size_t i=0; i<unknown_symbols.size(); i++) {
+		ResultTable * sub_table; sub_table->insertSymbol(unknown_symbols[i]); 
+		fillResultTable(sub_table);
+		table = rm.mergeTables(table, sub_table);
+	}
+}
+
+void QueryEvaluator::fillResultList(TNode * result_node, ResultTable * table, vector<string> * results) {
+	for (int i=0; i<table->getSize(); i++) {
+		vector<int> row = table->getValRow(i);
+		string result = fillResult(result_node, row);
+		results->push_back(result);
+	}
+}
+
+string QueryEvaluator::fillResult(TNode * result_node, vector<int> values) {
+	string result = "";
+	for (size_t i=0; i<values.size(); i++) {
+		TNode * node = result_node->getChildAtIndex(i);
+		string str = fillResult(node, values[i]);
+		if (values.size()==1) { result = str; }
+		else { result += str + " "; }
+	}
+	return result;
+}
+
+string QueryEvaluator::fillResult(TNode * node, int value) {
+	string name = node->getValue();
+	string type = table.getType(name);
+	
+	// special case
+	if (type==KEYWORD_CALL) {
+		if (node->getNumChildren()!=0) {
+			TNode * attr = node->getChildAtIndex(0);
+			if (attr->getType()==Attr &&
+				attr->getValue()=="procName") {
+					value = PKB::getCalledProc(value);
+					type=KEYWORD_PROCEDURE;
+			}
+		}
+	}
+
+	if (type==KEYWORD_PROCEDURE) {
+		return PKB::getProcName(value);
+	} else if (type==KEYWORD_VAR) {
+		return PKB::getVarName(value);
+	} else if (type==KEYWORD_CONST) {
+		return PKB::getConstName(value);
+	} else if (type==KEYWORD_PROG_LINE || SyntaxHelper::isStmtSymbol(type)) {
+		return to_string((long long)value); 
+	} else {
+	}
+	return "-1";
+}
+
+vector<int> QueryEvaluator::getAllPKBValues(string name) {
+	vector<int> result;
+	string type = table.getType(name);
+	if (type==KEYWORD_PROCEDURE) {
+		for (int i=0; i<PKB::getProcTableSize(); i++) {
+			result.push_back(i);
+		}
+	} else if (type==KEYWORD_VAR) {
+		for (int i=0; i<PKB::getVarTableSize(); i++) {
+			result.push_back(i);
+		}
+	} else if (type==KEYWORD_CONST) {
+		for (int i=0; i<PKB::getConstTableSize(); i++) {
+			result.push_back(i);
+		}
+	} else if (type==KEYWORD_PROG_LINE || type==KEYWORD_STMT) {
+		for (int i=0; i<PKB::getStatTableSize(); i++) {
+			result.push_back(i);
+		}
+	} else if (type==KEYWORD_ASSIGN) {
+		result = PKB::getStmtIndex(KEYWORD_ASSIGN);
+	} else if (type==KEYWORD_WHILE) {
+		result = PKB::getStmtIndex(KEYWORD_WHILE);
+	} else if (type==KEYWORD_IF) {
+		result = PKB::getStmtIndex(KEYWORD_IF);
+	} else if (type==KEYWORD_CALL) {
+		result = PKB::getStmtIndex(KEYWORD_CALL);
+	} else {
+	}
+	return result;
+}
+
+vector<string> QueryEvaluator::getUnknownSymbols(ResultTable * table) {
+	vector<string> result;
+
+	for (int i=0; i<table->getSize(); i++) {
+		vector<int> row = table->getValRow(i);
+		for (size_t j=0; j<row.size(); j++) {
+			if (row[j]==-1 && 
+				find(result.begin(), result.end(), table->getSymbol(i))==result.end()) 
+				result.push_back(table->getSymbol(i));
+		}
+	}
+
+	return result;
 }
