@@ -18,6 +18,26 @@ void ResultManagerTest::testInsertTable() {
 	CPPUNIT_ASSERT_EQUAL(3, rm.getSize());
 }
 
+void ResultManagerTest::testMergeTable() {
+	ResultManager rm;
+	ResultTable * t1 = populateData(Case1);
+	ResultTable * t2 = populateData(Case2);
+
+	ResultTable * mt = rm.mergeTables(t1, t2);
+} 
+
+void ResultManagerTest::testExtractTable() {
+	ResultManager rm;
+	ResultTable * t1 = populateData(Case1);
+	ResultTable * t2 = populateData(Case2);
+	ResultTable * t3 = populateData(Case3);
+	rm.insertTable(t1); rm.insertTable(t2); rm.insertTable(t3);
+
+	vector<string> s1;
+	s1.push_back("s1"); s1.push_back("s2"); 
+	//ResultTable * et1 = rm.extractTable(s1);
+}
+
 ResultTable * ResultManagerTest::populateData(Case caseNum) {
 	ResultTable * table = new ResultTable();
 	switch(caseNum) {
