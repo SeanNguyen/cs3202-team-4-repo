@@ -274,7 +274,7 @@ void QueryPreprocessor::preprocessQueryPart(string queryPart) {
 TNode * QueryPreprocessor::preprocessResultNode(vector<string> list, int i) {
 	// FOR ITERATION 1 AND 2: BOOLEAN and single value
 	if (list[i]=="BOOLEAN") {
-		TNode * node = new TNode(ResultCls, "a-BOOLEAN");
+		TNode * node = new TNode(ResultCls, "BOOLEAN");
 		return node;
 	} else {
 		if (list[i]=="<") {
@@ -289,7 +289,7 @@ TNode * QueryPreprocessor::preprocessResultNode(vector<string> list, int i) {
 			return preprocessTupleResult(tuple);
 		} else {
 			if (table.isSymbol(list[i])) {
-				TNode * node = new TNode(ResultCls, "a-single");
+				TNode * node = new TNode(ResultCls, "single");
 				vector<string> resultElem;
 				if (list[i+1]==KEYWORD_DOT) {
 					resultElem = subList(list, i, i+2);

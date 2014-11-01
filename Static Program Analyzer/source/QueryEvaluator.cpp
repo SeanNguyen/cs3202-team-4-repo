@@ -344,7 +344,22 @@ vector<string> QueryEvaluator::extractResult() {
 vector<string> QueryEvaluator::extractResult(TNode * result_node, ResultManager * rm, bool is_satisfied) {
 	vector<string> results;
 
-	Symbol result_type = result_node->getType(); 
+	string result_type = result_node->getValue();
+
+	if(!is_satisfied) {
+		if (result_type=="BOOLEAN") 
+			results.push_back("false");
+	} 
+
+	if (result_type=="BOOLEAN") {
+		results.push_back("true");
+	} else {
+		vector<string> symbols = getSymbolsUsedBy(result_node);
+		// extract data
+		ResultTable * r_table = rm->extractTable(symbols);
+		// fill empty column
+		// save data to results list
+	}
 
 	return results;
 }

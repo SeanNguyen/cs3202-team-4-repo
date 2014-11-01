@@ -1,18 +1,35 @@
 #include "TNode.h"
 
+int TNode::GLOBAL_ID = 0;
+
 TNode::TNode() {
+	id = GLOBAL_ID; GLOBAL_ID++;
 	type = Undefined;
 	value = "";
 }
 
 TNode::TNode(Symbol _type) {
+	id = GLOBAL_ID; GLOBAL_ID++;
 	type = _type;
 	value = "";
 }
 
 TNode::TNode(Symbol _type, string _value) {
+	id = GLOBAL_ID; GLOBAL_ID++;
 	type = _type;
 	value = _value;
+}
+
+void TNode::resetGlobalId() {
+	GLOBAL_ID=0;
+}
+
+int TNode::getGlobalId() {
+	return GLOBAL_ID;
+}
+
+int TNode::getID() {
+	return id;
 }
 
 Symbol TNode::getType() {

@@ -12,6 +12,10 @@ bool ResultManager::containsTable(vector<string> symbols) {
 	return false;
 }
 
+int ResultManager::getSize() {
+	return size;
+}
+
 ResultTable * ResultManager::getTable(int index) {
 	if (index<0 || index>=size) return new ResultTable();
 	return tables[index];

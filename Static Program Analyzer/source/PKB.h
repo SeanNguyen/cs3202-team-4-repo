@@ -27,6 +27,8 @@ private:
 	static MapTable <int> callStmtTable;
 	static MapTable <int> callProcTable;
 	static MapTable <int> nextTable;
+	static MapTable <int> siblingTable;
+	static MapTable <int> containTable;
 
 	static map<int, bool> flags;
 	static map <int, map <int, int>> commonWhiles;
@@ -157,5 +159,17 @@ public:
 	static vector<int> getAffecting (int affectedStmt, int currentStmt, bool isStartingPoint);
 	static vector<int> getAffectedStar (int affectingStmt, bool isStartingPoint);
 	static vector<int> getAffectingStar (int affectedStmt, bool isStartingPoint);
+
+	///////////////////////SIBLINGTABLE////////////////////////////////////
+	static bool isSibling(int nId1, int nId2);
+	static bool insertSibling(int nId1, int nId2);
+	static std::vector<int> getSiblings(int nId1);
+	static int getSiblingTableSize();
+
+	///////////////////////CONTAINTABLE///////////////////////////////////
+	static bool isContains(int nodeContaining, int nodeContained);
+	static vector<int> getContained(int nodeContaining);
+	static vector<int> getContaining(int nodeContained);
+
 };
 #endif

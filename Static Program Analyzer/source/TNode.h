@@ -14,6 +14,9 @@ public:
 	TNode();
 	TNode(Symbol _type);
 	TNode(Symbol _type, string _value);
+	static void resetGlobalId();
+	static int getGlobalId();
+	int getID();
 	Symbol getType();
 	string getValue();
 	void setValue(string _value);
@@ -24,6 +27,8 @@ public:
 	void sortChildrenList();
 	bool equals(Symbol type, string value);
 private:
+	int id;
+	static int GLOBAL_ID;
 	Symbol type;
 	string value;
 	vector<TNode*> children;

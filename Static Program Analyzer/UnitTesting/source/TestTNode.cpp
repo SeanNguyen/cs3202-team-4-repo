@@ -10,14 +10,19 @@ void TNodeTest::tearDown() {
 CPPUNIT_TEST_SUITE_REGISTRATION( TNodeTest ); // Note 4 
 
 void TNodeTest::testConstructor() {
+	TNode::resetGlobalId();
+	cout << "GLOBAL ID: " << TNode::getGlobalId() <<endl;
 	TNode node1;
 	TNode node2(Program);
 	TNode node3(Var, "x");
-
+	cout << "GLOBAL ID: " << TNode::getGlobalId() <<endl;
+	CPPUNIT_ASSERT_EQUAL(0, node1.getID());
 	CPPUNIT_ASSERT(node1.getType()==Undefined);
 	CPPUNIT_ASSERT(node1.getValue()=="");
+	CPPUNIT_ASSERT_EQUAL(1, node2.getID());
 	CPPUNIT_ASSERT(node2.getType()==Program);
 	CPPUNIT_ASSERT(node2.getValue()=="");
+	CPPUNIT_ASSERT_EQUAL(2, node3.getID());
 	CPPUNIT_ASSERT(node3.getType()==Var);
 	CPPUNIT_ASSERT(node3.getValue()=="x");
 }
