@@ -83,7 +83,7 @@
       <Filter>QueryProcessor</Filter>
     </ClInclude>
     <ClInclude Include="..\source\PKB.h">
-      <Filter>QueryProcessor</Filter>
+      <Filter>PKB</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
