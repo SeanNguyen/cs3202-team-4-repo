@@ -13,8 +13,8 @@
 
 using namespace std;
 
-const int ARG1_UNKNOWN = 0;
-const int ARG2_UNKNOWN = 1;
+const int ARG1 = 0;
+const int ARG2 = 1;
 
 class QueryEvaluator {
 public:
@@ -29,18 +29,20 @@ private:
 
 	void evaluateQuery();
 	bool evaluateClause(TNode * clause_node, ResultTable * temp_result);
-	bool evaluateClause(TNode * clause_node, vector<string> row, vector<vector<string>> * new_rows);
-	bool evaluateSTClause(TNode * ST_node, vector<string> row, vector<vector<string>> * new_rows);
-	bool evaluatePTClause(TNode * PT_node, vector<string> row, vector<vector<string>> * new_rows);
-	bool evaluateWClause(TNode * W_node, vector<string> row, vector<vector<string>> * new_rows);
+	bool evaluateClause(TNode * clause_node, vector<int> row, vector<vector<int>> * new_rows);
+	bool evaluateSTClause(TNode * ST_node, vector<int> row, vector<vector<int>> * new_rows);
+	bool evaluatePTClause(TNode * PT_node, vector<int> row, vector<vector<int>> * new_rows);
+	bool evaluateWClause(TNode * W_node, vector<int> row, vector<vector<int>> * new_rows);
 
-	bool isRelation(Symbol relation, string arg1, string arg2);
-	vector<string> getArgInRelation(Symbol relation, string arg1_type, string arg, int arg_unknown);
+	bool isRelation(Symbol relation, int arg1, int arg2);
+	vector<string> getArgInRelation(Symbol relation, string arg1_type, int arg, int arg_unknown);
 
 	vector<string> extractResult();
 	vector<string> extractResult(TNode * result_node, ResultManager * rm, bool is_satisfied);
 
 	vector<string> getSymbolsUsedBy(TNode * node);
+	int getIndexOfConst(TNode * const_node, Symbol relation, int argIndex);
+	bool isNumber(string s);
 };
 
 #endif

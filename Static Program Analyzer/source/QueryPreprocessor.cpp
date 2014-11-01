@@ -391,6 +391,8 @@ TNode * QueryPreprocessor::preprocessSuchThatCondition(vector<string> list) {
 				break;
 			}
 		}
+		// solve cases of ModifiesP and UsesP
+		updateRelationNode(relationNode, arg1Node);
 		relationNode -> addChild(arg1Node);
 		relationNode -> addChild(arg2Node);
 		suchThatNode -> addChild(relationNode);
@@ -809,6 +811,27 @@ TNode * QueryPreprocessor::preprocessAttrRef(vector<string> list) {
 	}
 
 	return node;
+}
+
+void QueryPreprocessor::updateRelationNode(TNode * relation, TNode * arg1) {
+	Symbol rlt = relation->getType();
+	bool isProc = false;
+	if (rlt==Modifies || rlt==Uses) {
+		Symbol arg1_type = arg1->getType();
+		string arg1_val = arg1->getValue();
+		if (arg1_type==Const && !SyntaxHelper::isNumber(arg1_val)) isProc=true;
+		if (arg1_type==QuerySymbol) {
+			if (table.getType(arg1_val)==KEYWORD_PROCEDURE) 
+				isProc = true;
+		}
+		if (isProc) {
+			if (rlt==Modifies) {
+				relation = new TNode(ModifiesP);
+			} else {
+				relation = new TNode(UsesP);
+			}
+		}
+	}
 }
 
 /* SUPPORTING FUCNTIONS */

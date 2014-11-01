@@ -49,6 +49,8 @@ private:
 	TNode * preprocessVarRef(vector<string> list);
 	TNode * preprocessAttrRef(vector<string> list);
 
+	void updateRelationNode(TNode * relation,TNode * arg1);
+
 	void countSymbol(string str);
 	vector<string> breakStringIntoWords(string str);
 	unsigned int findFirstElement(vector<string> list, unsigned i, string element);
