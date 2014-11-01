@@ -34,9 +34,9 @@ ResultTable * ResultManager::mergeTables(ResultTable * t1, ResultTable * t2) {
 
 	ResultTable * t = new ResultTable();
 	for (int i=0; i<t1 ->getSymbolSize(); i++) {
-		vector<string> t1_row = t1->getValRow(i);
+		vector<int> t1_row = t1->getValRow(i);
 		for (int j=0; j<t2->getSymbolSize(); j++) {
-			vector<string> t2_row = t2->getValRow(j);
+			vector<int> t2_row = t2->getValRow(j);
 		}
 	}
 

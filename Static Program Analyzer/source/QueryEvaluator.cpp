@@ -368,7 +368,7 @@ int QueryEvaluator::getIndexOfConst(TNode * const_node, Symbol relation, int arg
 			if (isNumber(val)) 
 				return atoi(val.c_str());
 
-			if (arg==ARG1) {
+			if (arg_index==ARG1) {
 				if (!PKB::getProcIndex(val).empty())
 					return PKB::getProcIndex(val).front();
 				return -1;

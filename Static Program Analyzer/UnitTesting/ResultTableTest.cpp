@@ -93,7 +93,7 @@ void TestResultTable::TestExtractData() {
 	table.insertValRow(row_4);
 	table.insertValRow(row_5);
 
-	vector<int> s; s.push_back("s1");
+	vector<string> s; s.push_back("s1");
 	ResultTable * table_2 = table.extractData(s);
 
 	CPPUNIT_ASSERT_EQUAL(1, table_2->getSymbolSize());
