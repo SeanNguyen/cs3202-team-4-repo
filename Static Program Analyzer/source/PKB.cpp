@@ -546,3 +546,17 @@ vector<int> PKB::getAffectingStar (int affectedStmt, bool isStartingPoint) {
 	}
 	return results;
 }
+
+
+///////////////////////////////CONTAINTABLE///////////////////////////////////
+bool PKB::isContains(int nodeContaining, int nodeContained){
+	return containTable.isMapped(nodeContaining, nodeContained);
+}
+
+vector<int> PKB::getContained(int nodeContaining){
+	return containTable.getValues(nodeContaining);
+}
+
+vector<int> PKB::getContaining(int nodeContained){
+	return containTable.getValues(nodeContained);
+}

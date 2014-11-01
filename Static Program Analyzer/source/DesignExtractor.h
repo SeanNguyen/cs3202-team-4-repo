@@ -8,10 +8,15 @@ public:
 	DesignExtractor(void);
 	~DesignExtractor(void);
 	void buildPKB();
+	
 
 private:
-	void processModify();
-	void processUses();
+	static void processModify();
+	static void processUses();
 
+
+	static void calculateContain();
+	static bool insertContains(int nodeContaining, int nodeContained);
+	
 };
 
