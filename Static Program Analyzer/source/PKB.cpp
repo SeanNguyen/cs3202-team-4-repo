@@ -76,6 +76,10 @@ TNode * PKB::createNode(Symbol type, string value) {
 	return ast.createNode(type, value);
 }
 
+TNode * PKB::getASTRoot() {
+	return ast.getRoot();
+}
+
 int PKB::getNumChildren(TNode * node) {
 	return ast.getNumChildren(node);
 }

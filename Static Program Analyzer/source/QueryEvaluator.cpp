@@ -106,7 +106,22 @@ bool QueryEvaluator::evaluateSTClause(TNode * ST_node,
 			case Underline:
 				return true;
 			case Const:
+				{
+					arg2_val = getIndexOfConst(arg2_node, rlt, ARG2);
+					vector<int> arg1_vals = getArgInRelation(rlt, arg2_val, ARG1);
+					if (!arg1_vals.empty()) return true;
+					break;
+				}
 			case QuerySymbol:
+				{
+					// get stored value of arg2 in row
+
+					if (arg2_val!=-1) {
+						vector<int> arg1_vals = getArgInRelation(rlt, arg2_val, ARG1);
+						if (!arg1_vals.empty()) return true;
+					}
+					break;
+				}
 			default:
 				break;
 			}
@@ -117,12 +132,27 @@ bool QueryEvaluator::evaluateSTClause(TNode * ST_node,
 			arg1_val = getIndexOfConst(arg1_node, rlt, ARG1);
 			switch (arg2_type) {
 			case Underline:
+				{
+					vector<int> arg2_vals = getArgInRelation(rlt, arg1_val, ARG2);
+					if (!arg2_vals.empty()) return true;
+					break;
+				}
 			case Const:
 				{
 					arg2_val = getIndexOfConst(arg2_node, rlt, ARG2);
 					return isRelation(rlt, arg1_val, arg2_val);
 				}
 			case QuerySymbol:
+				{
+					// get value of arg2 in row
+					if (arg2_val!=-1) {
+						return isRelation(rlt, arg1_val, arg2_val);
+					}
+
+					vector<int> arg2_vals = getArgInRelation(rlt, arg1_val, ARG2);
+					// save new values of arg2 to new_rows
+					break;
+				}
 			default:
 				break;
 			}
@@ -130,10 +160,37 @@ bool QueryEvaluator::evaluateSTClause(TNode * ST_node,
 		}
 	case QuerySymbol:
 		{
+			// get arg1_val in row
 			switch (arg2_type) {
 			case Underline:
+				{
+					if (arg1_val!=-1) {
+						vector<int> arg2_vals = getArgInRelation(rlt, arg1_val, ARG2);
+						if (!arg2_vals.empty()) return true;
+					}
+					break;
+				}
 			case Const:
+				{
+					arg2_val = getIndexOfConst(arg2_node, rlt, ARG2);
+					if (arg1_val!=-1) {
+						return isRelation(rlt, arg1_val, arg2_val);
+					}
+					vector<int> arg1_vals = getArgInRelation(rlt, arg2_val, ARG1);
+					//save arg1_vals to new_rows
+					break;
+				}
 			case QuerySymbol:
+				{
+					// get value of arg2 in row
+					if (arg1_val!=-1 && arg2_val!=-1) {
+						return isRelation(rlt, arg1_val, arg2_val);
+					} else if (arg1_val!=-1 && arg2_val==-1) {
+					} else if (arg1_val==-1 && arg2_val!=-1) {
+					} else {
+					}
+					break;
+				}
 			default:
 				break;
 			}
@@ -148,6 +205,39 @@ bool QueryEvaluator::evaluateSTClause(TNode * ST_node,
 }
 
 bool QueryEvaluator::evaluatePTClause(TNode * PT_node, vector<int> row, vector<vector<int>> * new_rows) {
+	TNode * stmt_node = PT_node->getChildAtIndex(0);
+	string stmt_name = stmt_node->getValue();
+	Symbol stmt_type = SyntaxHelper::getSymbolType(table.getType(stmt_name));
+	int stmt_index; // get stmt_index from row
+
+	if (stmt_index==-1) {
+		// retrieve a list of values of stmt_type from PKB
+		vector<int> stmt_indexes = getAllPKBValues(stmt_name);
+		for (size_t i=0; i<stmt_indexes.size(); i++) {
+			//save back stmt_indexes[i] to row
+			//recursive call to update new_rows
+			bool isSatisfied = evaluatePTClause(PT_node, row, new_rows);
+			if (!isSatisfied) return false;
+		}
+	}
+
+	// from here is hell of logic
+	// get ASTNode of this Stmt 
+	TNode * root = PKB::getASTRoot();
+	AST tree; tree.setRoot(root);
+	TNode * ast_node = tree.findNodeOfStmt(stmt_index);
+	switch(stmt_type) {
+	case Assign:
+		{
+
+			break;
+		}
+	case While:
+	case If:
+	default:
+		break;
+	}
+	
 
 	if (!new_rows->empty()) return true;
 	return false;
