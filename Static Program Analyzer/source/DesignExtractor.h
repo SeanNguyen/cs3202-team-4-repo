@@ -17,6 +17,8 @@ private:
 
 	static void calculateContain();
 	static bool insertContains(int nodeContaining, int nodeContained);
+
+	static void extractSibling();
 	
 };
 
