@@ -13,7 +13,11 @@ MapTable <int> PKB::parentTable;
 MapTable <int> PKB::callStmtTable;
 MapTable <int> PKB::callProcTable;
 MapTable <int> PKB::nextTable;
+<<<<<<< HEAD
 MapTable <int> PKB::siblingTable;
+=======
+MapTable <int> PKB::containTable;
+>>>>>>> 4521663383a1d6a4876829bb990d01c34e683312
 
 MapTable <int> PKB::modifyStmtTable;
 MapTable <int> PKB::modifyProcTable;
@@ -557,11 +561,16 @@ bool PKB::isContains(int nodeContaining, int nodeContained){
 	return containTable.isMapped(nodeContaining, nodeContained);
 }
 
+bool PKB::insertContains(int nodeContaining, int nodeContained){
+	return containTable.insert(nodeContaining, nodeContained);
+}
+
 vector<int> PKB::getContained(int nodeContaining){
 	return containTable.getValues(nodeContaining);
 }
 
 vector<int> PKB::getContaining(int nodeContained){
+
 	return containTable.getValues(nodeContained);
 }
 
@@ -581,4 +590,7 @@ vector<int> PKB::getSiblings(int nId1){
 	return (temp1.insert(temp1.end(), temp2.begin(), temp2.end()));
 }
 	
+
+
+	//return containTable.getIndexes(nodeContained);
 

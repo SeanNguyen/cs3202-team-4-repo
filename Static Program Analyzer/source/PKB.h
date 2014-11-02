@@ -167,6 +167,7 @@ public:
 
 	///////////////////////CONTAINTABLE///////////////////////////////////
 	static bool isContains(int nodeContaining, int nodeContained);
+	static bool insertContains(int nodeContaining, int nodeContained);
 	static vector<int> getContained(int nodeContaining);
 	static vector<int> getContaining(int nodeContained);
 

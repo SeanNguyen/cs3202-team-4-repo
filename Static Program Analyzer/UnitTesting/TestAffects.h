@@ -4,11 +4,11 @@
 
 class TestAffects : public CPPUNIT_NS::TestFixture {
 	CPPUNIT_TEST_SUITE( TestAffects );
-	CPPUNIT_TEST( TestisAffect );
-	CPPUNIT_TEST( TestIsAffectStar );
-	CPPUNIT_TEST( TestgetAffected );
-	CPPUNIT_TEST( TestgetAffecting );
-	CPPUNIT_TEST( TestgetAffectingStar );
+	//CPPUNIT_TEST( TestisAffect );
+	//CPPUNIT_TEST( TestIsAffectStar );
+	//CPPUNIT_TEST( TestgetAffected );
+	//CPPUNIT_TEST( TestgetAffecting );
+	//CPPUNIT_TEST( TestgetAffectingStar );
 	CPPUNIT_TEST_SUITE_END();
 
 public:
