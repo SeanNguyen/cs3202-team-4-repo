@@ -35,14 +35,15 @@ void QueryEvaluator::evaluateQuery() {
 			vector<string> symbols = getSymbolsUsedBy(clause_node);
 
 			ResultTable * temp_results = result_manager.extractTable(symbols);
+			cout << "CHECKPOINT 008 " <<endl;
 			is_satisfied = evaluateClause(clause_node, temp_results);
 			if (!is_satisfied) {
 				break;
 			} else {
 				result_manager.insertTable(temp_results);
-				//result_manager.maintain();
 			}
 		}
+		cout << "CHECKPOINT 009" <<endl;
 		TNode * result_node = select_node->getChildAtIndex(0);
 		vector<string> result = extractResult(result_node, &result_manager, is_satisfied);
 		resultList.push_back(result);
@@ -66,11 +67,13 @@ bool QueryEvaluator::evaluateClause(TNode * clause_node, ResultTable * temp_resu
 		vector<int> row = temp_results->getValRow(i);
 		vector<vector<int>> new_rows;
 		is_satisfied = evaluateClause(clause_node, row, &new_rows);
-		if (!is_satisfied) {
-			return is_satisfied;
+		cout << "CHECKPOINT 005 " <<endl;
+		if (is_satisfied) {
+			temp_results->insertValRow(new_rows);
 		}
-		temp_results->insertValRow(new_rows);
+		cout << "CHECKPOINT 006 " <<endl;
 	}
+	cout << "CHECKPOINT 007 "<<endl;
 	temp_results->deleleInvalidRows();
 	return is_satisfied;
 }
@@ -277,31 +280,46 @@ bool QueryEvaluator::evaluatePTClause(TNode * PT_node, vector<int> row, vector<v
 			//recursive call to update new_rows
 			vector<vector<int>> rows;
 			bool isSatisfied = evaluatePTClause(PT_node, row, &rows);
-			if (!isSatisfied) return false;
-			for (size_t j=0; j<rows.size(); j++) {
-				new_rows->push_back(rows[j]);
+			if (isSatisfied) {
+				for (size_t j=0; j<rows.size(); j++) {
+					new_rows->push_back(rows[j]);
+				}
 			}
 		}
-	}
+	} else {
+		// from here is hell of logic
+		// get ASTNode of this Stmt
+		cout << "CHECKPOINT 001 " << stmt_index <<endl;
+		TNode * root = PKB::getASTRoot();
+		AST tree; tree.setRoot(root);
+		TNode * ast_node = tree.findNodeOfStmt(stmt_index);
+	
+		// handle first argument node
+		TNode * arg1_node = stmt_node->getChildAtIndex(0);
+		if (!evaluatePTArgNode(arg1_node, ast_node, ARG1)) 
+			return false; 
 
-	// from here is hell of logic
-	// get ASTNode of this Stmt 
-	TNode * root = PKB::getASTRoot();
-	AST tree; tree.setRoot(root);
-	TNode * ast_node = tree.findNodeOfStmt(stmt_index);
-	switch(stmt_type) {
-	case Assign:
-		{
+		switch(stmt_type) {
+		case Assign:
+			{
+				TNode * expr_node = stmt_node->getChildAtIndex(1);
+				if (!evaluateExprNode(expr_node, ast_node)) return false;
+				return true;
+			}
+		case While:
+			{
 
+				break;
+			}
+		case If:
+			{
+
+				break;
+			}
+		default:
 			break;
 		}
-	case While:
-	case If:
-	default:
-		break;
 	}
-	
-
 	if (!new_rows->empty()) return true;
 	return false;
 }
@@ -552,6 +570,69 @@ vector<int> QueryEvaluator::getArgInRelation(Symbol relation, int arg, int arg_u
 	return results;
 }
 
+bool QueryEvaluator::evaluatePTArgNode(TNode * arg_node, TNode * ast_node, int arg_index) {
+	Symbol arg_type= arg_node->getType();
+	string arg_name = arg_node->getValue();
+
+	switch (arg_type) {
+	case Underline:
+		return true;
+	case Const:
+		{
+			switch (arg_index) {
+			case ARG1:
+				{
+					TNode * ast_child1 = ast_node->getChildAtIndex(0);
+					string val = ast_child1->getValue();
+					cout << "CHECKPOINT " << arg_name << " " << val << endl;
+					return arg_name==val;
+				}
+			default:
+				// currently left for ARG2 and ARG3 of if and while stmt
+				break;
+			}
+			break;
+		}
+	case QuerySymbol:
+		{
+			switch (arg_index) {
+			case ARG1:
+			default:
+				// currently left for ARG2 and ARG3 of if and while stmt
+				break;
+			}
+			break;
+		}
+	default:
+		break;
+	}
+
+	return false;
+}
+
+bool QueryEvaluator::evaluateExprNode(TNode * expr_node, TNode * ast_node) {
+	Symbol expr_type = expr_node->getType();
+
+	switch (expr_type) {
+	case Underline:
+		{
+			if (expr_node->getNumChildren()==0) return true;
+			AST sub_ast; sub_ast.setRoot(ast_node->getChildAtIndex(1));
+			Tree sub_tree; sub_tree.setRoot(expr_node->getChildAtIndex(0));
+			return sub_ast.hasSubTree(sub_tree);
+		}
+	case No_Underline:
+		{
+			AST sub_ast; sub_ast.setRoot(ast_node->getChildAtIndex(1));
+			Tree sub_tree; sub_tree.setRoot(expr_node->getChildAtIndex(0));
+			return sub_ast.isSameTree(sub_tree);
+		}
+	default:
+		break;
+	}
+	return false;
+}
+
 vector<string> QueryEvaluator::extractResult() {
 	vector<string> results;
 	return results;
@@ -559,7 +640,7 @@ vector<string> QueryEvaluator::extractResult() {
 
 vector<string> QueryEvaluator::extractResult(TNode * result_node, ResultManager * rm, bool is_satisfied) {
 	vector<string> results;
-
+	cout << "CHECKPOINT 000 "<<endl;
 	string result_type = result_node->getValue();
 
 	if(!is_satisfied) {
@@ -569,6 +650,7 @@ vector<string> QueryEvaluator::extractResult(TNode * result_node, ResultManager 
 		if (result_type=="0-BOOLEAN") {
 			results.push_back("true");
 		} else {
+			cout << "HEREHE" <<endl;
 			vector<string> symbols = getSymbolsUsedBy(result_node);
 			// extract data
 			ResultTable * r_table = rm->extractTable(symbols);
