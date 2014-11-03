@@ -98,7 +98,7 @@ void PKB::setASTRoot(TNode * node) {
 
 //implement this function 
 TNode * PKB::getASTRoot() {
-	return NULL;
+	return ast.getRoot();
 }
 
 TNode * PKB::getNodeOfStmt(int stmt) {
