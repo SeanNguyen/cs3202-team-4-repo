@@ -440,7 +440,9 @@ TNode* Parser::readIfStmt () {
 	int endIfStmt = stmtType.size();
 	for (size_t i = startOfThenStmtList; i <= endIfStmt; i++) {
 		for (size_t j = startOfThenStmtList; j <= endIfStmt; j++) {
-			if (i == startOfThenStmtList || (i <= endOfThenStmtList && j <= endOfThenStmtList)) {
+			if (i == startOfThenStmtList 
+				|| (i <= endOfThenStmtList && j <= endOfThenStmtList)
+				|| (i > endOfThenStmtList && j > endOfThenStmtList)) {
 				commonIfs[i][j] = 1;
 			} else {
 				commonIfs[i][j] = 2;
