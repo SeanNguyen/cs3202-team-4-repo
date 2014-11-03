@@ -37,12 +37,24 @@ private:
 	bool isRelation(Symbol relation, int arg1, int arg2);
 	vector<int> getArgInRelation(Symbol relation, int arg, int arg_unknown);
 
+	bool evaluatePTArgNode(TNode * arg_node, TNode * ast_node, int arg_index, 
+							vector<int> row, vector<vector<int>> * new_rows);
+	bool evaluateExprNode(TNode * expr_node, TNode * ast_node);
+
 	vector<string> extractResult();
 	vector<string> extractResult(TNode * result_node, ResultManager * rm, bool is_satisfied);
 
 	vector<string> getSymbolsUsedBy(TNode * node);
 	int getIndexOfConst(TNode * const_node, Symbol relation, int argIndex);
 	bool isNumber(string s);
+	void fillResultTable(ResultTable * t);
+	void fillResultList(TNode * result_node, ResultTable * t, vector<string> * result);
+	string fillResult(TNode * result_node, vector<int> values);
+	string fillResult(TNode * node, int value);
+	vector<int> getAllPKBValues(string symbol_name);
+	vector<string> getUnknownSymbols(ResultTable * table);
+	string getAttrValue(TNode * node, int index);
+	vector<int> getAttrIndex(TNode * node, string attr_value);
 };
 
 #endif

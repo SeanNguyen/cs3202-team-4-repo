@@ -11,9 +11,11 @@ public:
 	~ResultTable();
 	int getSymbolSize();
 	int getSymbolIndex(string name);
+	vector<int> getSymbolIndex(vector<string> names);
 	vector<string> getAllSymbols();
 	string getSymbol(int index);
 	bool containsSymbol(string name);
+	bool containsSymbol(vector<string> names);
 	void insertSymbol(vector<string> s);
 	void insertSymbol(string s);
 

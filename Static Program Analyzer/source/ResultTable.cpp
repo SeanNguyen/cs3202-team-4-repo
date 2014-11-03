@@ -15,6 +15,13 @@ bool ResultTable::containsSymbol(string name) {
 	return false;
 }
 
+bool ResultTable::containsSymbol(vector<string> names) {
+	for (size_t i=0; i<names.size(); i++) {
+		if (!containsSymbol(names[i])) return false; 
+	}
+	return true;
+}
+
 vector<string> ResultTable::getAllSymbols() {
 	return symbols;
 }
@@ -26,6 +33,20 @@ int ResultTable::getSymbolIndex(string name) {
 		if (name==symbols[i]) return i;
 	}
 	return -1;
+}
+
+vector<int> ResultTable::getSymbolIndex(vector<string> names) {
+	vector<int> results;
+
+	for (size_t i=0; i<names.size(); i++) {
+		int index = getSymbolIndex(names[i]);
+		if (index==-1) {
+			results.clear();
+			break;
+		}
+		results.push_back(index);
+	}
+	return results;
 }
 
 string ResultTable::getSymbol(int index) {
@@ -82,7 +103,7 @@ void ResultTable::insertValRow(vector<vector<int>> rows) {
 void ResultTable::insertValRow(vector<int> r) {
 	if (!containsValRow(r)) { 
 		valRows.push_back(r);
-		for (int i=0; i<symbolSize; i++) {
+		for (size_t i=0; i<symbolSize; i++) {
 			if (i<r.size()) { 
 				valCols[i].push_back(r[i]);
 			} else {

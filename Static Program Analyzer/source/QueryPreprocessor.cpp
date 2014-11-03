@@ -274,7 +274,7 @@ void QueryPreprocessor::preprocessQueryPart(string queryPart) {
 TNode * QueryPreprocessor::preprocessResultNode(vector<string> list, int i) {
 	// FOR ITERATION 1 AND 2: BOOLEAN and single value
 	if (list[i]=="BOOLEAN") {
-		TNode * node = new TNode(ResultCls, "BOOLEAN");
+		TNode * node = new TNode(ResultCls, "0-BOOLEAN");
 		return node;
 	} else {
 		if (list[i]=="<") {
@@ -289,9 +289,10 @@ TNode * QueryPreprocessor::preprocessResultNode(vector<string> list, int i) {
 			return preprocessTupleResult(tuple);
 		} else {
 			if (table.isSymbol(list[i])) {
-				TNode * node = new TNode(ResultCls, "single");
+				TNode * node = new TNode(ResultCls, "0-single");
 				vector<string> resultElem;
-				if (list[i+1]==KEYWORD_DOT) {
+				int dotIndex = findFirstElement(list, i, KEYWORD_DOT);
+				if (dotIndex==i+1) {
 					resultElem = subList(list, i, i+2);
 				} else {
 					resultElem.push_back(list[i]);
@@ -309,7 +310,7 @@ TNode * QueryPreprocessor::preprocessResultNode(vector<string> list, int i) {
 }
 
 TNode * QueryPreprocessor::preprocessTupleResult(vector<string> list) {
-	TNode * node = new TNode(ResultCls, "a-tuple");
+	TNode * node = new TNode(ResultCls, "0-tuple");
 
 	for (size_t i=0; i<list.size(); i++) {
 		int commaIndex = findFirstElement(list, i, KEYWORD_COMMA); 

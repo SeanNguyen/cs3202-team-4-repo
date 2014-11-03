@@ -31,7 +31,6 @@ vector<string> QueryProcessor::Process(string query) {
 	//	vector<string> results;
 	//	return results;
 	//}
-
 	preprocessor.Preprocess(query);
 	evaluator.Evaluate();
 
