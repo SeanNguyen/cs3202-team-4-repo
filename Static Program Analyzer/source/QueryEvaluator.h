@@ -49,6 +49,8 @@ private:
 	string fillResult(TNode * node, int value);
 	vector<int> getAllPKBValues(string symbol_name);
 	vector<string> getUnknownSymbols(ResultTable * table);
+	string getAttrValue(TNode * node, int index);
+	vector<int> getAttrIndex(TNode * node, string attr_value);
 };
 
 #endif
