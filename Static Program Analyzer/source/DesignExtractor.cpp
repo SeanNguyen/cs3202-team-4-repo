@@ -157,7 +157,7 @@ void DesignExtractor::extractSibling(){
 	//queue<int> theQueue = new arrayDequeue 
 
 	TNode * root = PKB::getASTRoot(); 
-	TNode * previous 
+	TNode * previous; 
 	int numNodes= TNode::getGlobalId() + 1;
 	TNode * curr= root;
 	int key;

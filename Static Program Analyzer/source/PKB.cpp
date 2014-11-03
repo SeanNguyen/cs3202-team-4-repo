@@ -13,11 +13,11 @@ MapTable <int> PKB::parentTable;
 MapTable <int> PKB::callStmtTable;
 MapTable <int> PKB::callProcTable;
 MapTable <int> PKB::nextTable;
-<<<<<<< HEAD
+
 MapTable <int> PKB::siblingTable;
-=======
+
 MapTable <int> PKB::containTable;
->>>>>>> 4521663383a1d6a4876829bb990d01c34e683312
+
 
 MapTable <int> PKB::modifyStmtTable;
 MapTable <int> PKB::modifyProcTable;
@@ -94,6 +94,11 @@ int PKB::getNumChildren(TNode * node) {
 
 void PKB::setASTRoot(TNode * node) {
 	return ast.setRoot(node);
+}
+
+//implement this function 
+TNode * PKB::getASTRoot() {
+	return NULL;
 }
 
 TNode * PKB::getNodeOfStmt(int stmt) {
@@ -579,15 +584,15 @@ bool PKB::isSibling(int nId1, int nId2){
 	return siblingTable.isMapped(nId1, nId2);
 }
 
-bool PKB::insertSibling(int nId1, nId2){
+bool PKB::insertSibling(int nId1, int nId2){
 	return siblingTable.insert(nId1, nId2);
 }
 
 vector<int> PKB::getSiblings(int nId1){
-
 	vector<int> temp1= siblingTable.getValues(nId1);
 	vector<int> temp2=siblingTable.getIndexes(nId1); 
-	return (temp1.insert(temp1.end(), temp2.begin(), temp2.end()));
+	temp1.insert(temp1.end(), temp2.begin(), temp2.end());
+	return temp1;
 }
 	
 
