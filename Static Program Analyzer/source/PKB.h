@@ -163,13 +163,14 @@ public:
 	///////////////////////SIBLINGTABLE////////////////////////////////////
 	static bool isSibling(int nId1, int nId2);
 	static std::vector<int> getSiblings(int nId1);
-	static bool insertSibling(int nId1, nId2);
+	static bool insertSibling(int nId1, int nId2);
 
 	///////////////////////CONTAINTABLE///////////////////////////////////
 	static bool isContains(int nodeContaining, int nodeContained);
 	static bool insertContains(int nodeContaining, int nodeContained);
 	static vector<int> getContained(int nodeContaining);
 	static vector<int> getContaining(int nodeContained);
+	static int getContainTableSize();
 
 };
 #endif
