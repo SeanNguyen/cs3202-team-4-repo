@@ -21,7 +21,7 @@ void DesignExtractor::buildPKB() {
 	processModify();
 
 
-	extractSibling();
+	/extractSibling();
 
 	///////CONTAINS EXTRACTOR////////
 	extractContain();

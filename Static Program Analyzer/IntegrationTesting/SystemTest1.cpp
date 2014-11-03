@@ -253,3 +253,19 @@ void SystemTest1::test8() {
 		cout <<endl;
 	}
 } 
+
+void SystemTest1::test9(){
+	string source = "..\\..\\Tests\\Source1.txt";
+	Parser parser;
+	PKB pkb;
+	DesignExtractor de;
+	
+	parser.parse(source);
+	parser.buildPKB();
+	de.buildPKB();
+
+	cout << "reached here";
+	cout <<  pkb.getContainTableSize();
+	cout <<endl;
+
+}

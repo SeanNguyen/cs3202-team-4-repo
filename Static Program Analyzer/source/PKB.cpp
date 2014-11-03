@@ -575,8 +575,11 @@ vector<int> PKB::getContained(int nodeContaining){
 }
 
 vector<int> PKB::getContaining(int nodeContained){
-
 	return containTable.getValues(nodeContained);
+}
+
+int PKB::getContainTableSize() {
+	return containTable.getSize();
 }
 
 ///////////////////////////////SIBLING Methods///////////////////////////////////
