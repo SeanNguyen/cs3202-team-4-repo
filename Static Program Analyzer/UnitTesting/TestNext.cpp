@@ -20,7 +20,6 @@ void TestNext::tearDown() {
 
 CPPUNIT_TEST_SUITE_REGISTRATION( TestNext );
 
-
 void TestNext::TestisNext() {
 	string source = "..\\..\\Tests\\TestNextSource.txt";
 	Parser parser;
