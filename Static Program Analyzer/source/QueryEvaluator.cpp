@@ -35,7 +35,6 @@ void QueryEvaluator::evaluateQuery() {
 			vector<string> symbols = getSymbolsUsedBy(clause_node);
 
 			ResultTable * temp_results = result_manager.extractTable(symbols);
-			cout << "CHECKPOINT 008 " <<endl;
 			is_satisfied = evaluateClause(clause_node, temp_results);
 			if (!is_satisfied) {
 				break;
@@ -43,7 +42,6 @@ void QueryEvaluator::evaluateQuery() {
 				result_manager.insertTable(temp_results);
 			}
 		}
-		cout << "CHECKPOINT 009" <<endl;
 		TNode * result_node = select_node->getChildAtIndex(0);
 		vector<string> result = extractResult(result_node, &result_manager, is_satisfied);
 		resultList.push_back(result);
@@ -67,13 +65,10 @@ bool QueryEvaluator::evaluateClause(TNode * clause_node, ResultTable * temp_resu
 		vector<int> row = temp_results->getValRow(i);
 		vector<vector<int>> new_rows;
 		is_satisfied = evaluateClause(clause_node, row, &new_rows);
-		cout << "CHECKPOINT 005 " <<endl;
 		if (is_satisfied) {
 			temp_results->insertValRow(new_rows);
 		}
-		cout << "CHECKPOINT 006 " <<endl;
 	}
-	cout << "CHECKPOINT 007 "<<endl;
 	temp_results->deleleInvalidRows();
 	return is_satisfied;
 }
@@ -289,14 +284,13 @@ bool QueryEvaluator::evaluatePTClause(TNode * PT_node, vector<int> row, vector<v
 	} else {
 		// from here is hell of logic
 		// get ASTNode of this Stmt
-		cout << "CHECKPOINT 001 " << stmt_index <<endl;
 		TNode * root = PKB::getASTRoot();
 		AST tree; tree.setRoot(root);
 		TNode * ast_node = tree.findNodeOfStmt(stmt_index);
 	
 		// handle first argument node
 		TNode * arg1_node = stmt_node->getChildAtIndex(0);
-		if (!evaluatePTArgNode(arg1_node, ast_node, ARG1)) 
+		if (!evaluatePTArgNode(arg1_node, ast_node, ARG1, row, new_rows)) 
 			return false; 
 
 		switch(stmt_type) {
@@ -570,13 +564,17 @@ vector<int> QueryEvaluator::getArgInRelation(Symbol relation, int arg, int arg_u
 	return results;
 }
 
-bool QueryEvaluator::evaluatePTArgNode(TNode * arg_node, TNode * ast_node, int arg_index) {
+bool QueryEvaluator::evaluatePTArgNode(TNode * arg_node, TNode * ast_node, int arg_index,
+			vector<int> row, vector<vector<int>> * new_rows) {
 	Symbol arg_type= arg_node->getType();
 	string arg_name = arg_node->getValue();
 
 	switch (arg_type) {
-	case Underline:
-		return true;
+	case Underline: 
+		{
+			new_rows->push_back(row);
+			return true;
+		}
 	case Const:
 		{
 			switch (arg_index) {
@@ -584,8 +582,11 @@ bool QueryEvaluator::evaluatePTArgNode(TNode * arg_node, TNode * ast_node, int a
 				{
 					TNode * ast_child1 = ast_node->getChildAtIndex(0);
 					string val = ast_child1->getValue();
-					cout << "CHECKPOINT " << arg_name << " " << val << endl;
-					return arg_name==val;
+					if (arg_name==val) {
+						new_rows->push_back(row);
+						return true;
+					}
+					return false;
 				}
 			default:
 				// currently left for ARG2 and ARG3 of if and while stmt
@@ -597,6 +598,17 @@ bool QueryEvaluator::evaluatePTArgNode(TNode * arg_node, TNode * ast_node, int a
 		{
 			switch (arg_index) {
 			case ARG1:
+				{
+					TNode * ast_child1 = ast_node->getChildAtIndex(0);
+					string val = ast_child1->getValue();
+					int index = PKB::getVarIndex(val);
+					if (row[1]==-1 || row[1]==index) {
+						row[1] = index;
+						new_rows->push_back(row);
+						return true;
+					}
+					return false;
+				}
 			default:
 				// currently left for ARG2 and ARG3 of if and while stmt
 				break;
@@ -640,7 +652,6 @@ vector<string> QueryEvaluator::extractResult() {
 
 vector<string> QueryEvaluator::extractResult(TNode * result_node, ResultManager * rm, bool is_satisfied) {
 	vector<string> results;
-	cout << "CHECKPOINT 000 "<<endl;
 	string result_type = result_node->getValue();
 
 	if(!is_satisfied) {
@@ -650,7 +661,6 @@ vector<string> QueryEvaluator::extractResult(TNode * result_node, ResultManager 
 		if (result_type=="0-BOOLEAN") {
 			results.push_back("true");
 		} else {
-			cout << "HEREHE" <<endl;
 			vector<string> symbols = getSymbolsUsedBy(result_node);
 			// extract data
 			ResultTable * r_table = rm->extractTable(symbols);

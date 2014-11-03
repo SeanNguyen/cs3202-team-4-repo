@@ -34,4 +34,4 @@ Select a pattern a("i",_)
 assign a; variable v;
 Select a pattern a(v,_) with v.varName = "j"
 3
- 5000
+5000
