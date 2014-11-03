@@ -13,7 +13,11 @@ MapTable <int> PKB::parentTable;
 MapTable <int> PKB::callStmtTable;
 MapTable <int> PKB::callProcTable;
 MapTable <int> PKB::nextTable;
+
+MapTable <int> PKB::siblingTable;
+
 MapTable <int> PKB::containTable;
+
 
 MapTable <int> PKB::modifyStmtTable;
 MapTable <int> PKB::modifyProcTable;
@@ -23,6 +27,8 @@ MapTable <int> PKB::useProcTable;
 map <int, bool> PKB::flags;
 map <int, map <int, int>> PKB::commonWhiles;
 map <int, map <int, int>> PKB::commonIfs;
+
+
 
 using namespace std;
 
@@ -46,6 +52,7 @@ void PKB::resetPKB() {
 	PKB::callStmtTable = MapTable <int>();
 	PKB::callProcTable = MapTable <int>();
 	PKB::nextTable = MapTable <int>();
+	PKB::siblingTable = MapTable <int>();
 }
 
 void PKB::preCalculateStarTables() {
@@ -87,6 +94,11 @@ int PKB::getNumChildren(TNode * node) {
 
 void PKB::setASTRoot(TNode * node) {
 	return ast.setRoot(node);
+}
+
+//implement this function 
+TNode * PKB::getASTRoot() {
+	return NULL;
 }
 
 TNode * PKB::getNodeOfStmt(int stmt) {
@@ -563,5 +575,27 @@ vector<int> PKB::getContained(int nodeContaining){
 }
 
 vector<int> PKB::getContaining(int nodeContained){
-	return containTable.getIndexes(nodeContained);
+
+	return containTable.getValues(nodeContained);
 }
+
+///////////////////////////////SIBLING Methods///////////////////////////////////
+bool PKB::isSibling(int nId1, int nId2){
+	return siblingTable.isMapped(nId1, nId2);
+}
+
+bool PKB::insertSibling(int nId1, int nId2){
+	return siblingTable.insert(nId1, nId2);
+}
+
+vector<int> PKB::getSiblings(int nId1){
+	vector<int> temp1= siblingTable.getValues(nId1);
+	vector<int> temp2=siblingTable.getIndexes(nId1); 
+	temp1.insert(temp1.end(), temp2.begin(), temp2.end());
+	return temp1;
+}
+	
+
+
+	//return containTable.getIndexes(nodeContained);
+

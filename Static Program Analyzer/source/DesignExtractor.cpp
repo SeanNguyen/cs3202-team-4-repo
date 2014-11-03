@@ -1,5 +1,12 @@
 #include "DesignExtractor.h"
 
+#include "PKB.h"
+#include "TNode.h"
+#include <queue> 
+
+     
+     
+
 DesignExtractor::DesignExtractor(void)
 {
 }
@@ -13,8 +20,12 @@ void DesignExtractor::buildPKB() {
 	processUses();
 	processModify();
 
+
+	extractSibling();
+
 	///////CONTAINS EXTRACTOR////////
 	//extractContain();
+
 }
 
 void DesignExtractor::DFSRecur(TNode * node){
@@ -141,6 +152,42 @@ void DesignExtractor::processModify() {
 		}
 		processedProc.push_back(proc);
 	}
+}
+
+void DesignExtractor::extractSibling(){
+
+	//queue<int> theQueue = new arrayDequeue 
+
+	TNode * root = PKB::getASTRoot(); 
+	TNode * previous; 
+	int numNodes= TNode::getGlobalId() + 1;
+	TNode * curr= root;
+	int key;
+	int value;
+
+	for(int i=0;i<numNodes;i ++){ 
+		int children=curr->getNumChildren();
+
+		if(children == 0 & i!=(numNodes-1)){
+			//deal with gng back to the previous node to branch out 
+		}
+
+		else if(children==1){
+			curr=curr->getChildAtIndex(0);
+			//i++;
+		}
+		else{
+			for(int j=1;j<children;j++){
+				key=curr->getChildAtIndex(j-1)->getID();
+				value=curr->getChildAtIndex(j)->getID();
+				PKB::insertSibling(key, value);
+			}
+			curr=curr->getChildAtIndex(0);
+		}
+	
+	
+	}
+
 }
 
 

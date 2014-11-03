@@ -15,7 +15,13 @@ private:
 	static void processModify();
 	static void processUses();
 
+
+
+	static void extractSibling();
+	
+
 	////////CONTAINS EXTRACTOR//////////
+
 	static void extractContain();
 	static void DFSRecur(TNode * node);
 };
