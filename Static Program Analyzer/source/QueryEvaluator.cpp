@@ -33,7 +33,6 @@ void QueryEvaluator::evaluateQuery() {
 		for (int i=1; i<size; i++) {
 			TNode * clause_node = select_node->getChildAtIndex(i);
 			vector<string> symbols = getSymbolsUsedBy(clause_node);
-
 			ResultTable * temp_results = result_manager.extractTable(symbols);
 			is_satisfied = evaluateClause(clause_node, temp_results);
 			if (!is_satisfied) {
@@ -236,7 +235,7 @@ bool QueryEvaluator::evaluateSTClause(TNode * ST_node,
 							new_rows->push_back(row);
 						}
 					} else {
-						vector<int> arg1_vals = getAllPKBValues(type1);
+						vector<int> arg1_vals = getAllPKBValues(arg1_node->getValue());
 						for (size_t i=0; i<arg1_vals.size(); i++) {
 							vector<int> arg2_vals = getArgInRelation(rlt, arg1_vals[i], ARG2); 
 							for (size_t j=0; j<arg2_vals.size(); j++) {
@@ -382,7 +381,7 @@ bool QueryEvaluator::evaluateWClause(TNode * W_node, vector<int> row, vector<vec
 			}
 		}
 	}
-
+	
 	if (!new_rows->empty()) return true;
 	return false;
 }
@@ -685,8 +684,8 @@ vector<string> QueryEvaluator::getSymbolsUsedBy(TNode * node) {
 		}
 		vector<string> sub_results = getSymbolsUsedBy(child);
 		for (size_t j=0; j<sub_results.size(); j++) {
-			if (find(results.begin(), results.end(), sub_results[i])==results.end())
-				results.push_back(sub_results[i]);
+			if (find(results.begin(), results.end(), sub_results[j])==results.end())
+				results.push_back(sub_results[j]);
 		}
  	}
 
