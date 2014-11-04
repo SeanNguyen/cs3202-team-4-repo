@@ -28,7 +28,7 @@ void TestNext::TestisNext() {
 	
 	parser.parse(source);
 	parser.buildPKB();
-	designextractor.buildPKB();
+//	designextractor.buildPKB();
 
 	CPPUNIT_ASSERT( pkb.isNext(1, 2) );
 	CPPUNIT_ASSERT( pkb.isNext(2, 3) );

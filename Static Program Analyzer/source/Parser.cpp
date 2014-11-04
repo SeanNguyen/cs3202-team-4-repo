@@ -191,7 +191,7 @@ void Parser::buildCFG() {
 	for (size_t i = 0; i < CFGNodes.size(); i++) {
 		vector <int>  nextStmts = CFGNodes[i];
 		for (size_t j = 0; j < nextStmts.size(); j++) {
-			PKB::insertNext(i, nextStmts[j]);
+			PKB::insertNext(i + 1, nextStmts[j] + 1);
 		}
 	}
 }
