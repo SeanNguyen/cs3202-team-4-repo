@@ -164,6 +164,8 @@ public:
 	static bool isSibling(int nId1, int nId2);
 	static std::vector<int> getSiblings(int nId1);
 	static bool insertSibling(int nId1, int nId2);
+	static int getSiblingTableSize();
+
 
 	///////////////////////CONTAINTABLE///////////////////////////////////
 	static bool isContains(int nodeContaining, int nodeContained);
