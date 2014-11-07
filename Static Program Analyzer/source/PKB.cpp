@@ -139,7 +139,7 @@ int PKB::getVarIndex(std::string name){
 	return indexes.front();
 }
 
-std::string PKB::getVarName(int index){
+string PKB::getVarName(int index){
 	if (index < 0 || index >= varTable.getSize())
 		return INVALID;
 	return varTable.getValue(index);
@@ -179,7 +179,9 @@ bool PKB::insertProc(std::string name) {
 }
 
 vector <int> PKB::getProcIndex(std::string name){
-	return procTable.getIndexes(name);
+	vector<int> result = procTable.getIndexes(name);
+	if (result.empty()) result.push_back(-1);
+	return result;
 }
 
 std::string PKB::getProcName(int index) {
