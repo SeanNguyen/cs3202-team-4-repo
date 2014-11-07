@@ -55,6 +55,7 @@ private:
 	vector<string> getUnknownSymbols(ResultTable * table);
 	string getAttrValue(TNode * node, int index);
 	vector<int> getAttrIndex(TNode * node, string attr_value);
+	vector<int> removeInvalidValues(vector<int> value, string symbol_name);
 };
 
 #endif

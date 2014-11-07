@@ -513,6 +513,7 @@ TNode * QueryPreprocessor::preprocessLineRef(vector<string> list) {
 	TNode * node = new TNode();
 	int size = list.size();
 
+
 	if (size==1) {
 		if (SyntaxHelper::isNumber(list[0])) {
 			node = new TNode(Const, list[0]);
@@ -524,7 +525,7 @@ TNode * QueryPreprocessor::preprocessLineRef(vector<string> list) {
 		} else {
 			errors.push_back("Error: not a line reference: " + list[0]);
 		}
-	} {
+	} else {
 		errors.push_back("Error: not a line reference: " + list[0]);
 	}
 
