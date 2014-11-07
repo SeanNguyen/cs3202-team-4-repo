@@ -597,6 +597,10 @@ vector<int> PKB::getSiblings(int nId1){
 	temp1.insert(temp1.end(), temp2.begin(), temp2.end());
 	return temp1;
 }
+
+int PKB::getSiblingTableSize() {
+    return siblingTable.getSize();
+}
 	
 
 

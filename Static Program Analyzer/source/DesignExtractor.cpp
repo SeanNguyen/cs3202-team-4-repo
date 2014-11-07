@@ -21,6 +21,7 @@ void DesignExtractor::buildPKB() {
 	processModify();
 
 
+	///////SIBLING EXTRACTOR////////
 	extractSibling();
 
 	///////CONTAINS EXTRACTOR////////
@@ -156,6 +157,32 @@ void DesignExtractor::processModify() {
 
 void DesignExtractor::extractSibling(){
 
+	bool test=false;
+
+	int numNodes=TNode::getGlobalId() +1;
+
+    cout<< "the AST size is " ;
+ 	cout << numNodes;
+	cout<< " "; 
+
+    for(int i=0;i<numNodes;i++){
+        vector<int> children = PKB::getContained(i);
+        //the values returned here will be the nodeIDs right??
+
+        for(int j=1;j<children.size();j++){
+            test =PKB::insertSibling(children[j-1], children[j]);
+			cout << "for i = " ;
+			cout << i ;
+			cout<< "adding into the sibling table is" ;
+			cout << test ; 
+        }
+    }
+
+	cout << "adding into the sibling table is" ;
+	cout << test ; 
+
+	/*
+
 	//queue<int> theQueue = new arrayDequeue 
 
 	TNode * root = PKB::getASTRoot(); 
@@ -187,6 +214,7 @@ void DesignExtractor::extractSibling(){
 	
 	
 	}
+	*/
 
 }
 
