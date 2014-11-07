@@ -168,6 +168,7 @@ bool QueryEvaluator::evaluateSTClause(TNode * ST_node,
 						break;
 					}
 					vector<int> arg2_vals = getArgInRelation(rlt, arg1_val, ARG2);
+					arg2_vals = removeInvalidValues(arg2_vals, arg2_node->getValue());
 					// save new values of arg2 to new_rows
 					for (size_t i=0; i<arg2_vals.size(); i++) {
 						row[0] = arg2_vals[i];
@@ -209,6 +210,7 @@ bool QueryEvaluator::evaluateSTClause(TNode * ST_node,
 						break;
 					} 
 					vector<int> arg1_vals = getArgInRelation(rlt, arg2_val, ARG1);
+					arg1_vals = removeInvalidValues(arg1_vals, arg1_node->getValue());
 					//save arg1_vals to new_rows
 					for (size_t i=0; i<arg1_vals.size(); i++) {
 						row[0] = arg1_vals[i];
@@ -224,12 +226,14 @@ bool QueryEvaluator::evaluateSTClause(TNode * ST_node,
 						return isRelation(rlt, arg1_val, arg2_val);
 					} else if (arg1_val!=-1 && arg2_val==-1) {
 						vector<int> arg2_vals = getArgInRelation(rlt, arg1_val, ARG2);
+						arg2_vals = removeInvalidValues(arg2_vals, arg2_node->getValue());
 						for (size_t i=0; i<arg2_vals.size(); i++) {
 							row[0] = arg2_vals[i];
 							new_rows->push_back(row);
 						}
 					} else if (arg1_val==-1 && arg2_val!=-1) {
 						vector<int> arg1_vals = getArgInRelation(rlt, arg2_val, ARG1);
+						arg1_vals = removeInvalidValues(arg1_vals, arg1_node->getValue());
 						for (size_t i=0; i<arg1_vals.size(); i++) {
 							row[0] = arg1_vals[i];
 							new_rows->push_back(row);
@@ -237,7 +241,8 @@ bool QueryEvaluator::evaluateSTClause(TNode * ST_node,
 					} else {
 						vector<int> arg1_vals = getAllPKBValues(arg1_node->getValue());
 						for (size_t i=0; i<arg1_vals.size(); i++) {
-							vector<int> arg2_vals = getArgInRelation(rlt, arg1_vals[i], ARG2); 
+							vector<int> arg2_vals = getArgInRelation(rlt, arg1_vals[i], ARG2);
+							arg2_vals = removeInvalidValues(arg2_vals, arg2_node->getValue());
 							for (size_t j=0; j<arg2_vals.size(); j++) {
 								row[0] = arg1_vals[i]; row[1] = arg2_vals[j];
 								new_rows->push_back(row);
@@ -555,6 +560,9 @@ vector<int> QueryEvaluator::getArgInRelation(Symbol relation, int arg, int arg_u
 		break;
 	}
 	
+	// remove result with invalid type
+
+
 	if (find(results.begin(), results.end(), -1)!=results.end()) {
 		// results has invalid value, i.e -1
 		results.clear(); 
@@ -952,5 +960,47 @@ vector<int> QueryEvaluator::getAttrIndex(TNode * node, string attr_value) {
 		break;
 	}
 
+	return result;
+}
+
+vector<int> QueryEvaluator::removeInvalidValues(vector<int> values, string symbol_name) {
+	vector<int> result;
+	string symbol_type = table.getType(symbol_name);
+	Symbol type = SyntaxHelper::getSymbolType(symbol_type);
+	for (size_t i=0; i<values.size(); i++) {
+		bool isCorrectType = false;
+		int value = values[i];
+		switch (type) {
+		case Procedure:
+			isCorrectType = (PKB::getProcName(value)!="");
+			break;
+		case Var:
+			isCorrectType = (PKB::getVarName(value)!="");
+			break;
+		case Const:
+			isCorrectType = (PKB::getConstName(value)!="");
+			break;
+		case Prog_line:
+		case Stmt:
+			isCorrectType = (PKB::getStatTableSize()>value);
+			break;
+		case Assign:
+			isCorrectType = (PKB::getStmtName(value)==KEYWORD_ASSIGN);
+			break;
+		case While:
+			isCorrectType = (PKB::getStmtName(value)==KEYWORD_WHILE);
+			break;
+		case If:
+			isCorrectType = (PKB::getStmtName(value)==KEYWORD_IF);
+			break;
+		case CallStmt:
+			isCorrectType = (PKB::getStmtName(value)==KEYWORD_CALL);
+			break;
+		default:
+			break;
+		}
+		if (isCorrectType && value>0) 
+			result.push_back(values[i]);
+	}
 	return result;
 }
