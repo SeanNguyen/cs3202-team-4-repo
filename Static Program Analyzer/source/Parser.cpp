@@ -424,10 +424,10 @@ TNode* Parser::readIfStmt () {
 	match(KEYWORD_THEN);
 	size_t startOfThenStmtList = this->stmtType.size();
 	TNode* thenNode = readStmtList();
-	size_t endOfThenStmtList = this->stmtType.size() - 1;
+	size_t endOfThenStmtList = this->stmtType.size();
 	ifNode->addChild(thenNode);
 
-	for (size_t i = startOfThenStmtList; i <= endOfThenStmtList; i++) {
+	for (size_t i = startOfThenStmtList; i < endOfThenStmtList; i++) {
 		if (depthLv[i] - 1 == currentDepth)
 			this->thenStmtFlags[i] = 1;
 	}
