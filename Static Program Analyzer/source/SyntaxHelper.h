@@ -49,6 +49,8 @@ const string NEXTSTAR_RLT = "Next*";
 const string AFFECTS_RLT = "Affects";
 const string AFFECTSSTAR_RLT = "Affects*";
 
+const string INVALID = "invalid";
+
 enum Symbol {
 	Undefined,
 

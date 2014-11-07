@@ -342,48 +342,50 @@ bool QueryEvaluator::evaluateWClause(TNode * W_node,
 	TNode * arg2_node = W_node->getChildAtIndex(1);
 	Symbol arg1_type = arg1_node->getType();
 	Symbol arg2_type = arg2_node->getType();
+	int arg1_index = temp_result->getSymbolIndex(arg1_node->getValue());
+	int arg2_index = temp_result->getSymbolIndex(arg2_node->getValue());
 	string arg1_val = arg1_node->getValue();
 	string arg2_val = arg2_node->getValue();
 
 	if (arg1_type==Const && arg2_type==Const) {
 		return arg1_val==arg2_val;
 	} else if (arg1_type==Const && arg2_type==QuerySymbol) {
-		arg2_val = getAttrValue(arg2_node, row[0]);
+		arg2_val = getAttrValue(arg2_node, row[arg2_index]);
 		if (arg2_val!="-1") {
 			return arg1_val==arg2_val;
 		} else {
 			vector<int> arg2_indexes = getAttrIndex(arg2_node, arg1_val);
 			for (size_t i=0; i<arg2_indexes.size(); i++) {
-				row[0] = arg2_indexes[i];
+				row[arg2_index] = arg2_indexes[i];
 				new_rows->push_back(row);
 			}
 		}
 	} else if (arg1_type==QuerySymbol && arg2_type==Const) {
-		arg1_val = getAttrValue(arg1_node, row[0]);
+		arg1_val = getAttrValue(arg1_node, row[arg1_index]);
 		if (arg1_val!="-1") {
 			return arg1_val==arg2_val;
 		} else {
 			vector<int> arg1_indexes = getAttrIndex(arg1_node, arg2_val);
 			for (size_t i=0; i<arg1_indexes.size(); i++) {
-				row[0] = arg1_indexes[i];
+				row[arg1_index] = arg1_indexes[i];
 				new_rows->push_back(row);
 			}
 		}
 	} else {
-		arg1_val = getAttrValue(arg1_node, row[0]);
-		arg2_val = getAttrValue(arg2_node, row[1]);
+		arg1_val = getAttrValue(arg1_node, row[arg1_index]);
+		arg2_val = getAttrValue(arg2_node, row[arg2_index]);
 		if (arg1_val!="-1" && arg2_val!="-1") {
 			return arg1_val==arg2_val;
 		} else if (arg1_val!="-1" && arg2_val=="-1") {
 			vector<int> arg2_indexes = getAttrIndex(arg2_node, arg1_val);
 			for (size_t i=0; i<arg2_indexes.size(); i++) {
-				row[1] = arg2_indexes[i];
+				row[arg2_index] = arg2_indexes[i];
 				new_rows->push_back(row);
 			}
 		} else if (arg1_val=="-1" && arg2_val!="-1") {
 			vector<int> arg1_indexes = getAttrIndex(arg1_node, arg2_val);
 			for (size_t i=0; i<arg1_indexes.size(); i++) {
-				row[0] = arg1_indexes[i];
+				row[arg1_index] = arg1_indexes[i];
 				new_rows->push_back(row);
 			}
 		} else {
@@ -394,8 +396,8 @@ bool QueryEvaluator::evaluateWClause(TNode * W_node,
 				arg1_val = getAttrValue(arg1_node, arg1_indexes[i]);
 				vector<int> arg2_indexes = getAttrIndex(arg2_node, arg1_val);
 				for (size_t j=0; j<arg2_indexes.size(); j++) {
-					row[0] = arg1_indexes[i];
-					row[1] = arg2_indexes[j];
+					row[arg1_index] = arg1_indexes[i];
+					row[arg2_index] = arg2_indexes[j];
 					new_rows->push_back(row);
 				}
 			}
