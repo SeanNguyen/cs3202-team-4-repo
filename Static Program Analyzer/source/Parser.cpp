@@ -708,7 +708,7 @@ vector <int> Parser::getNextNodeInControlFlow(int stmtNo) {
 	int parentStmtNo = getParentStmt(stmtNo);
 	if (parentStmtNo == -1) {
 		int followingStmt = getFollowingStmt(stmtNo);
-		if (followingStmt != -1)
+		if (followingStmt != -1 && type != KEYWORD_IF)
 			result.push_back(followingStmt);
 
 	} else if (stmtType[parentStmtNo] == KEYWORD_WHILE) {
