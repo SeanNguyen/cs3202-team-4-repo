@@ -723,9 +723,9 @@ vector <int> Parser::getNextNodeInControlFlow(int stmtNo) {
 		if (followingStmt > -1)
 			result.push_back(followingStmt);
 		else {
-			vector <int> followingStmts = getNextNodeInControlFlow(parentStmtNo);
-			if (followingStmts.size() == 3)
-				result.push_back(followingStmts.back()); //supposed to be the one that not include children of if stmt
+			int followingStmt = getFollowingStmt(parentStmtNo);
+			if (followingStmt != -1)
+				result.push_back(followingStmt); //supposed to be the one that not include children of if stmt
 		}
 	}
 
