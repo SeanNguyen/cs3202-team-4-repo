@@ -133,21 +133,23 @@ void TestNext::TestgetPreviousStmts() {
 	vector<int> prevstmts5(stmts5, stmts5 + sizeof(stmts5) / sizeof(int) );
 	CPPUNIT_ASSERT_EQUAL(prevstmts5.at(0), (PKB::getPreviousStmts(5)).at(0));
 
-	//int stmts2[] = {3, 5, 7};
-	//vector<int> nextstmts2(stmts2, stmts2 + sizeof(stmts2) / sizeof(int) );
-	//CPPUNIT_ASSERT_EQUAL(nextstmts2.at(0), (PKB::getNextStmts(2)).at(0));
-	//CPPUNIT_ASSERT_EQUAL(nextstmts2.at(1), (PKB::getNextStmts(2)).at(1));
-	//CPPUNIT_ASSERT_EQUAL(nextstmts2.at(2), (PKB::getNextStmts(2)).at(2));
+	int stmts2[] = {4, 6, 10};
+	vector<int> prevstmts2(stmts2, stmts2 + sizeof(stmts2) / sizeof(int) );
+	CPPUNIT_ASSERT_EQUAL(prevstmts2.at(0), (PKB::getPreviousStmts(7)).at(0));
+	CPPUNIT_ASSERT_EQUAL(prevstmts2.at(1), (PKB::getPreviousStmts(7)).at(1));
+	CPPUNIT_ASSERT_EQUAL(prevstmts2.at(2), (PKB::getPreviousStmts(7)).at(2));
 
-	//int stmts4[] = {4};
-	//vector<int> nextstmts4(stmts4, stmts4 + sizeof(stmts4) / sizeof(int) );
-	//CPPUNIT_ASSERT_EQUAL(nextstmts4.at(0), (PKB::getNextStmts(3)).at(0));
+	int stmts4[] = {9};
+	vector<int> prevstmts4(stmts4, stmts4 + sizeof(stmts4) / sizeof(int) );
+	CPPUNIT_ASSERT_EQUAL(prevstmts4.at(0), (PKB::getPreviousStmts(10)).at(0));
 
-	//int stmts3[] = {4, 6};
-	//vector<int> prevstmts3(stmts3, stmts3 + sizeof(stmts3) / sizeof(int) );
-	//CPPUNIT_ASSERT_EQUAL(prevstmts3.at(0), (PKB::getPreviousStmts(7)).at(0));
-	//CPPUNIT_ASSERT_EQUAL(prevstmts3.at(1), (PKB::getPreviousStmts(7)).at(1));
+	int stmts3[] = {7};
+	vector<int> prevstmts3(stmts3, stmts3 + sizeof(stmts3) / sizeof(int) );
+	CPPUNIT_ASSERT_EQUAL(prevstmts3.at(0), (PKB::getPreviousStmts(11)).at(0));
 
+	int stmts6[] = {11};
+	vector<int> prevstmts6(stmts6, stmts6 + sizeof(stmts6) / sizeof(int) );
+	CPPUNIT_ASSERT_EQUAL(prevstmts6.at(0), (PKB::getPreviousStmts(12)).at(0));
 }
 
 void TestNext::TestgetPreviousStarStmts() {
@@ -155,5 +157,33 @@ void TestNext::TestgetPreviousStarStmts() {
 }
 
 void TestNext::TestgetNextStarStmts() {
-	
+
+	int stmts[] = {2,3,4,5,6,7,8,9,10,11,12};
+	vector<int> nextstmts(stmts, stmts + sizeof(stmts) / sizeof(int) );
+	CPPUNIT_ASSERT_EQUAL(nextstmts.at(0), (PKB::getNextStarStmts(1)).at(0));
+	CPPUNIT_ASSERT_EQUAL(nextstmts.at(1), (PKB::getNextStarStmts(1)).at(1));
+	CPPUNIT_ASSERT_EQUAL(nextstmts.at(2), (PKB::getNextStarStmts(1)).at(2));
+	CPPUNIT_ASSERT_EQUAL(nextstmts.at(3), (PKB::getNextStarStmts(1)).at(3));
+	CPPUNIT_ASSERT_EQUAL(nextstmts.at(4), (PKB::getNextStarStmts(1)).at(4));
+	CPPUNIT_ASSERT_EQUAL(nextstmts.at(5), (PKB::getNextStarStmts(1)).at(5));
+	CPPUNIT_ASSERT_EQUAL(nextstmts.at(6), (PKB::getNextStarStmts(1)).at(6));
+	CPPUNIT_ASSERT_EQUAL(nextstmts.at(7), (PKB::getNextStarStmts(1)).at(7));
+	CPPUNIT_ASSERT_EQUAL(nextstmts.at(8), (PKB::getNextStarStmts(1)).at(8));
+	//CPPUNIT_ASSERT_EQUAL(nextstmts.at(9), (PKB::getNextStarStmts(1)).at(9));
+	//CPPUNIT_ASSERT_EQUAL(nextstmts.at(10), (PKB::getNextStarStmts(1)).at(10));
+
+	//int stmts2[] = {3, 5, 7};
+	//vector<int> nextstmts2(stmts2, stmts2 + sizeof(stmts2) / sizeof(int) );
+	//CPPUNIT_ASSERT_EQUAL(nextstmts2.at(0), (PKB::getNextStarStmts(2)).at(0));
+	//CPPUNIT_ASSERT_EQUAL(nextstmts2.at(1), (PKB::getNextStarStmts(2)).at(1));
+	////CPPUNIT_ASSERT_EQUAL(nextstmts2.at(2), (PKB::getNextStmts(2)).at(2));
+
+	//int stmts4[] = {4};
+	//vector<int> nextstmts4(stmts4, stmts4 + sizeof(stmts4) / sizeof(int) );
+	//CPPUNIT_ASSERT_EQUAL(nextstmts4.at(0), (PKB::getNextStarStmts(3)).at(0));
+
+	//int stmts3[] = {8, 11};
+	//vector<int> nextstmts3(stmts3, stmts3 + sizeof(stmts3) / sizeof(int) );
+	//CPPUNIT_ASSERT_EQUAL(nextstmts3.at(0), (PKB::getNextStarStmts(7)).at(0));
+	//CPPUNIT_ASSERT_EQUAL(nextstmts3.at(1), (PKB::getNextStarStmts(7)).at(1));
 }
