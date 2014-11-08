@@ -1,74 +1,74 @@
-procedure p{ a = x + y * b;
-	c = m - y + z * 3;
-	call a;
-	if b then {
-		while m {
-			m = m - 1;
-			k = m + b + d; }
-		b = b - m;
-	} else { x = b - d + x;
-		call q;
-		y = x + 5 * b; } }
-procedure q{ if i then {
-		b = x + (y - m) * i;
-		x = 2 - 8;
-		while b {
-			y = b - c - 3;
-			x = x + y;
-			if z then {
-				a = b * 3 + x + y;
-				x = i - y * 5;
-				while z {
-					a = b;
-					b = c + 3;
-					c = b - e;
-					e = c + d;
-					while x {
-						x = x + b;
-						b = b - 1; }}
-				if m then {
-					e = m - 1;
-					a = x - i;
-				} else { k = b + k - m; }
-			} else { if x then {
-					if m then {
-						y = x - 5;
-						call a;
-						m = y - 1;
-					} else { b = x + y - m; }
-					b = x + y + k;
-				} else { i = m - i;
-					while i {
-						y = x;
-						k = k + 1;
-						y = z - k - i; }}}
-			y = m + 3 * (5 * x) * b; }
-		y = x * x - 3;
-	} else { y = k - 5;
-		while k {
-			x = y;
-			call a; }}}
-procedure a{ while b {
-		while d {
-			x = m + i;
-			k = x - z - y; }}
-	b = m * i - k;
-	call d;
-	if i then {
-		a = b - m - x;
-	} else { e = b - m;
-		c = e + b * x; }
-	a = e + k; }
-procedure d { y = i + m + b;
-	if y then {
-		if m then {
-			if k then {
-				k = k + 1;
-			} else { y = y - 1; }
-		} else { y = y + 1; }
-	} else { while y {
-			y = y + k;
-			if y then {
-				k = k - m;
-			} else { c = b - m - x; }}}
-	c = k + y * 3;}
+procedure p{ a = x + y * b;				\\1
+	c = m - y + z * 3;			\\2
+	call a;				\\3
+	if b then {			\\4
+		while m {			\\5
+			m = m - 1;			\\6
+			k = m + b + d; }			\\7
+		b = b - m;			\\8
+	} else { x = b - d + x;			\\9
+		call q;			\\10
+		y = x + 5 * b; } }			\\11
+procedure q{ if i then {			\\12
+		b = x + (y - m) * i;			\\13
+		x = 2 - 8;			\\14
+		while b {			\\15
+			y = b - c - 3;			\\16
+			x = x + y;			\\17
+			if z then {			\\18
+				a = b * 3 + x + y;			\\19
+				x = i - y * 5;			\\20
+				while z {			\\21
+					a = b;			\\22
+					b = c + 3;			\\23
+					c = b - e;			\\24
+					e = c + d;			\\25
+					while x {			\\26
+						x = x + b;			\\27
+						b = b - 1; }}			\\28
+				if m then {			\\29
+					e = m - 1;			\\30
+					a = x - i;			\\31
+				} else { k = b + k - m; }			\\32
+			} else { if x then {			\\33
+					if m then {			\\34
+						y = x - 5;			\\35
+						call a;			\\36
+						m = y - 1;			\\37
+					} else { b = x + y - m; }			\\38
+					b = x + y + k;			\\39
+				} else { i = m - i;			\\40
+					while i {			\\41
+						y = x;			\\42
+						k = k + 1;			\\43
+						y = z - k - i; }}}			\\44
+			y = m + 3 * (5 * x) * b; }			\\45
+		y = x * x - 3;			\\46
+	} else { y = k - 5;			\\47
+		while k {			\\48
+			x = y;			\\49
+			call a; }}}			\\50
+procedure a{ while b {			\\51
+		while d {			\\52
+			x = m + i;			\\53
+			k = x - z - y; }}			\\54
+	b = m * i - k;			\\55
+	call d;			\\56
+	if i then {			\\57
+		a = b - m - x;			\\58
+	} else { e = b - m;			\\59
+		c = e + b * x; }			\\60
+	a = e + k; }			\\61
+procedure d { y = i + m + b;			\\62
+	if y then {			\\63
+		if m then {			\\64
+			if k then {			\\65
+				k = k + 1;			\\66
+			} else { y = y - 1; }			\\67
+		} else { y = y + 1; }			\\68
+	} else { while y {			\\69
+			y = y + k;			\\70
+			if y then {			\\71
+				k = k - m;			\\72
+			} else { c = b - m - x; }}}			\\73
+	c = k + y * 3;}			\\74
