@@ -1,6 +1,10 @@
 #include <cppunit/config/SourcePrefix.h>
 #include "TestNext.h"
 
+Parser parser;
+PKB pkb;
+DesignExtractor designextractor;
+
 TestNext::TestNext(void)
 {
 }
@@ -12,6 +16,11 @@ TestNext::~TestNext(void)
 
 void TestNext::setUp() {	
 	PKB::resetPKB();
+	string source = "..\\..\\Tests\\TestNextSource.txt";
+	
+	parser.parse(source);
+	parser.buildPKB();
+//	designextractor.buildPKB();
 }
 
 void TestNext::tearDown() {
@@ -21,14 +30,6 @@ void TestNext::tearDown() {
 CPPUNIT_TEST_SUITE_REGISTRATION( TestNext );
 
 void TestNext::TestisNext() {
-	string source = "..\\..\\Tests\\TestNextSource.txt";
-	Parser parser;
-	PKB pkb;
-	DesignExtractor designextractor;
-	
-	parser.parse(source);
-	parser.buildPKB();
-//	designextractor.buildPKB();
 
 	CPPUNIT_ASSERT( pkb.isNext(1, 2) );
 	CPPUNIT_ASSERT( pkb.isNext(2, 3) );
@@ -46,14 +47,6 @@ void TestNext::TestisNext() {
 }
 
 void TestNext::TestIsNextStar() {
-	string source = "..\\..\\Tests\\TestNextSource.txt";
-	Parser parser;
-	PKB pkb;
-	DesignExtractor designextractor;
-	
-	parser.parse(source);
-	parser.buildPKB();
-//	designextractor.buildPKB();
 
 	CPPUNIT_ASSERT( pkb.isNextStar(1, 4) );
 	CPPUNIT_ASSERT( pkb.isNextStar(1, 5) );
@@ -110,29 +103,51 @@ void TestNext::TestIsNextStar() {
 }
 
 void TestNext::TestgetNextStmts() {
-	string source = "..\\..\\Tests\\TestNextSource.txt";
-	Parser parser;
-	PKB pkb;
-	DesignExtractor designextractor;
-	
-	parser.parse(source);
-	parser.buildPKB();
-//	designextractor.buildPKB();
 
 	int stmts[] = {2};
 	vector<int> nextstmts(stmts, stmts + sizeof(stmts) / sizeof(int) );
-	//sort(expectedvars.begin(), nextstmts.end()); 
 	CPPUNIT_ASSERT_EQUAL(nextstmts.at(0), (pkb.getNextStmts(1)).at(0));
-	//CPPUNIT_ASSERT_EQUAL(nextstmts.at(1), (pkb.getNextStmts(1)).at(1));
 
-	int stmts2[] = {3, 5};
+	int stmts2[] = {3, 5, 7};
 	vector<int> nextstmts2(stmts2, stmts2 + sizeof(stmts2) / sizeof(int) );
-	//sort(expectedvars.begin(), nextstmts.end()); 
 	CPPUNIT_ASSERT_EQUAL(nextstmts2.at(0), (pkb.getNextStmts(2)).at(0));
+	CPPUNIT_ASSERT_EQUAL(nextstmts2.at(1), (pkb.getNextStmts(2)).at(1));
+	CPPUNIT_ASSERT_EQUAL(nextstmts2.at(2), (pkb.getNextStmts(2)).at(2));
 
+	int stmts4[] = {4};
+	vector<int> nextstmts4(stmts4, stmts4 + sizeof(stmts4) / sizeof(int) );
+	CPPUNIT_ASSERT_EQUAL(nextstmts4.at(0), (pkb.getNextStmts(3)).at(0));
+
+	int stmts3[] = {8, 11};
+	vector<int> nextstmts3(stmts3, stmts3 + sizeof(stmts3) / sizeof(int) );
+	CPPUNIT_ASSERT_EQUAL(nextstmts3.at(0), (pkb.getNextStmts(7)).at(0));
+	CPPUNIT_ASSERT_EQUAL(nextstmts3.at(1), (pkb.getNextStmts(7)).at(1));
 }
 
 void TestNext::TestgetPreviousStmts() {
+
+	int stmts[] = {2};
+	vector<int> prevstmts(stmts, stmts + sizeof(stmts) / sizeof(int) );
+	CPPUNIT_ASSERT_EQUAL(prevstmts.at(0), (pkb.getPreviousStmts(3)).at(0));
+
+	int stmts5[] = {2};
+	vector<int> prevstmts5(stmts5, stmts5 + sizeof(stmts5) / sizeof(int) );
+	CPPUNIT_ASSERT_EQUAL(prevstmts5.at(0), (pkb.getPreviousStmts(5)).at(0));
+
+	//int stmts2[] = {3, 5, 7};
+	//vector<int> nextstmts2(stmts2, stmts2 + sizeof(stmts2) / sizeof(int) );
+	//CPPUNIT_ASSERT_EQUAL(nextstmts2.at(0), (pkb.getNextStmts(2)).at(0));
+	//CPPUNIT_ASSERT_EQUAL(nextstmts2.at(1), (pkb.getNextStmts(2)).at(1));
+	//CPPUNIT_ASSERT_EQUAL(nextstmts2.at(2), (pkb.getNextStmts(2)).at(2));
+
+	//int stmts4[] = {4};
+	//vector<int> nextstmts4(stmts4, stmts4 + sizeof(stmts4) / sizeof(int) );
+	//CPPUNIT_ASSERT_EQUAL(nextstmts4.at(0), (pkb.getNextStmts(3)).at(0));
+
+	//int stmts3[] = {4, 6};
+	//vector<int> prevstmts3(stmts3, stmts3 + sizeof(stmts3) / sizeof(int) );
+	//CPPUNIT_ASSERT_EQUAL(prevstmts3.at(0), (pkb.getPreviousStmts(7)).at(0));
+	//CPPUNIT_ASSERT_EQUAL(prevstmts3.at(1), (pkb.getPreviousStmts(7)).at(1));
 
 }
 
