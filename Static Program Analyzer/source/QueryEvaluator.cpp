@@ -399,18 +399,26 @@ bool QueryEvaluator::evaluateWClause(TNode * W_node,
 			// get all possible values of arg1
 			arg1_val = arg1_node->getValue();
 			vector<int> arg1_indexes = getAllPKBValues(arg1_val);
-			for (size_t i=0; i<arg1_indexes.size(); i++) {
-				arg1_val = getAttrValue(arg1_node, arg1_indexes[i]);
-				vector<int> arg2_indexes = getAttrIndex(arg2_node, arg1_val);
-				for (size_t j=0; j<arg2_indexes.size(); j++) {
+			if (arg1_index==arg2_index) {
+				for (size_t i=0; i<arg1_indexes.size(); i++) {
 					row[arg1_index] = arg1_indexes[i];
-					row[arg2_index] = arg2_indexes[j];
 					new_rows->push_back(row);
+				}
+			} else {
+				for (size_t i=0; i<arg1_indexes.size(); i++) {
+					arg1_val = getAttrValue(arg1_node, arg1_indexes[i]);
+					vector<int> arg2_indexes = getAttrIndex(arg2_node, arg1_val);
+					arg2_indexes = removeInvalidValues(arg2_indexes, arg2_node->getValue());
+					for (size_t j=0; j<arg2_indexes.size(); j++) {
+						row[arg1_index] = arg1_indexes[i];
+						row[arg2_index] = arg2_indexes[j];
+						new_rows->push_back(row);
+					}
 				}
 			}
 		}
 	}
-	
+
 	if (!new_rows->empty()) return true;
 	return false;
 }
@@ -652,7 +660,6 @@ bool QueryEvaluator::evaluatePTArgNode(TNode * arg_node, TNode * ast_node, int a
 
 bool QueryEvaluator::evaluateExprNode(TNode * expr_node, TNode * ast_node) {
 	Symbol expr_type = expr_node->getType();
-
 	switch (expr_type) {
 	case Underline:
 		{
@@ -979,11 +986,22 @@ vector<int> QueryEvaluator::getAttrIndex(TNode * node, string attr_value) {
 	case While:
 	case CallStmt:
 		{
-			result.push_back(atoi(attr_value.c_str()));
+			int value = atoi(attr_value.c_str());
+			if ((value>0 && value<PKB::getStatTableSize()) && 
+				(table.getType(symbol_name)==KEYWORD_STMT ||
+				table.getType(symbol_name)==KEYWORD_PROG_LINE ||
+				table.getType(symbol_name)==PKB::getStmtName(value))) {
+				result.push_back(value);
+			}
 			break;
 		}
 	default:
 		break;
+	}
+
+	//remove all values = -1
+	if (result.size()==1 && result[0]==-1) {
+		result.clear();
 	}
 
 	return result;
