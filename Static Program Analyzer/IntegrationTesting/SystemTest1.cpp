@@ -275,7 +275,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION( SystemTest1 );
 
 void SystemTest1::test10(){
 	cout<< "Sibling table test. " << "\n";
-	string source = "..\\..\\Tests\\Source1.txt";
+	string source = "..\\..\\Tests\\complexSource.txt";
+	//string source = "..\\..\\Tests\\Source2.txt";
 	Parser parser;
 	PKB pkb;
 	DesignExtractor de;
@@ -283,6 +284,11 @@ void SystemTest1::test10(){
 	parser.parse(source);
 	parser.buildPKB();
 	de.buildPKB();
+
+	TNode * root = PKB::getASTRoot(); 
+
+	//cout << " AST is : \n";
+	//root->printTNode();
 
 	cout << " Contains table size is : ";
 	cout <<  pkb.getContainTableSize() << "\n";
