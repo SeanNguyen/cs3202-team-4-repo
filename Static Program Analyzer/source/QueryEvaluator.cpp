@@ -63,7 +63,7 @@ bool QueryEvaluator::evaluateClause(TNode * clause_node, ResultTable * temp_resu
 	for (int i=0; i<size; i++) {
 		vector<int> row = temp_results->getValRow(i);
 		vector<vector<int>> new_rows;
-		is_satisfied = evaluateClause(clause_node, row, &new_rows);
+		is_satisfied = evaluateClause(clause_node, row, &new_rows, temp_results);
 		if (is_satisfied) {
 			temp_results->insertValRow(new_rows);
 		}
@@ -72,20 +72,21 @@ bool QueryEvaluator::evaluateClause(TNode * clause_node, ResultTable * temp_resu
 	return is_satisfied;
 }
 
-bool QueryEvaluator::evaluateClause(TNode * clause_node, vector<int> row, vector<vector<int>> * new_rows) {
+bool QueryEvaluator::evaluateClause(TNode * clause_node, vector<int> row, 
+									vector<vector<int>> * new_rows, ResultTable * temp_result) {
 	Symbol clause_type = clause_node->getType();
 	switch(clause_type) {
 	case SuchThatCls:
 		{
-			return evaluateSTClause(clause_node, row, new_rows);
+			return evaluateSTClause(clause_node, row, new_rows, temp_result);
 		}
 	case PatternCls:
 		{
-			return evaluatePTClause(clause_node, row, new_rows);
+			return evaluatePTClause(clause_node, row, new_rows, temp_result);
 		}
 	case WithCls:
 		{
-			return evaluateWClause(clause_node, row, new_rows);
+			return evaluateWClause(clause_node, row, new_rows, temp_result);
 		}
 	default:
 		return false;
@@ -94,7 +95,8 @@ bool QueryEvaluator::evaluateClause(TNode * clause_node, vector<int> row, vector
 
 bool QueryEvaluator::evaluateSTClause(TNode * ST_node, 
 									vector<int> row, 
-									vector<vector<int>> * new_rows) {
+									vector<vector<int>> * new_rows,
+									ResultTable * temp_result) {
 	TNode * rlt_node = ST_node->getChildAtIndex(0);
 	TNode * arg1_node = rlt_node->getChildAtIndex(0);
 	TNode * arg2_node = rlt_node->getChildAtIndex(1);
@@ -104,6 +106,8 @@ bool QueryEvaluator::evaluateSTClause(TNode * ST_node,
 	Symbol arg2_type = arg2_node->getType();
 	string type1 = table.getType(arg1_node->getValue());
 	string type2 = table.getType(arg2_node->getValue());
+	int arg1_index = temp_result->getSymbolIndex(arg1_node->getValue());
+	int arg2_index = temp_result->getSymbolIndex(arg2_node->getValue());
 	int arg1_val; int arg2_val;
 
 	switch (arg1_type) {
@@ -122,7 +126,7 @@ bool QueryEvaluator::evaluateSTClause(TNode * ST_node,
 			case QuerySymbol:
 				{
 					// get stored value of arg2 in row
-					arg2_val = row[0];
+					arg2_val = row[arg2_index];
 					if (arg2_val!=-1) {
 						vector<int> arg1_vals = getArgInRelation(rlt, arg2_val, ARG1);
 						if (!arg1_vals.empty()) return true;
@@ -133,7 +137,7 @@ bool QueryEvaluator::evaluateSTClause(TNode * ST_node,
 					for (size_t i=0; i<arg2_vals.size(); i++) {
 						vector<int> arg1_vals = getArgInRelation(rlt, arg2_vals[i], ARG1);
 						if (!arg1_vals.empty()) {
-							row[0] = arg2_vals[i];
+							row[arg2_index] = arg2_vals[i];
 							new_rows->push_back(row);
 						}
 					}
@@ -162,7 +166,7 @@ bool QueryEvaluator::evaluateSTClause(TNode * ST_node,
 			case QuerySymbol:
 				{
 					// get value of arg2 in row
-					arg2_val = row[0];
+					arg2_val = row[arg2_index];
 					if (arg2_val!=-1) {
 						return isRelation(rlt, arg1_val, arg2_val);
 						break;
@@ -171,7 +175,7 @@ bool QueryEvaluator::evaluateSTClause(TNode * ST_node,
 					arg2_vals = removeInvalidValues(arg2_vals, arg2_node->getValue());
 					// save new values of arg2 to new_rows
 					for (size_t i=0; i<arg2_vals.size(); i++) {
-						row[0] = arg2_vals[i];
+						row[arg2_index] = arg2_vals[i];
 						new_rows->push_back(row);
 					}
 					break;
@@ -183,7 +187,7 @@ bool QueryEvaluator::evaluateSTClause(TNode * ST_node,
 		}
 	case QuerySymbol:
 		{
-			arg1_val = row[0];
+			arg1_val = row[arg1_index];
 			switch (arg2_type) {
 			case Underline:
 				{
@@ -192,11 +196,11 @@ bool QueryEvaluator::evaluateSTClause(TNode * ST_node,
 						if (!arg2_vals.empty()) return true;
 						break;
 					}
-					vector<int> arg1_vals = getAllPKBValues(type1);
+					vector<int> arg1_vals = getAllPKBValues(arg1_node->getValue());
 					for (size_t i=0; i<arg1_vals.size(); i++) {
 						vector<int> arg2_vals = getArgInRelation(rlt, arg1_vals[i], ARG1);
 						if (!arg2_vals.empty()) {
-							row[0] = arg1_vals[i];
+							row[arg1_index] = arg1_vals[i];
 							new_rows->push_back(row);
 						}
 					}
@@ -213,7 +217,7 @@ bool QueryEvaluator::evaluateSTClause(TNode * ST_node,
 					arg1_vals = removeInvalidValues(arg1_vals, arg1_node->getValue());
 					//save arg1_vals to new_rows
 					for (size_t i=0; i<arg1_vals.size(); i++) {
-						row[0] = arg1_vals[i];
+						row[arg1_index] = arg1_vals[i];
 						new_rows->push_back(row);
 					}
 					break;
@@ -221,21 +225,21 @@ bool QueryEvaluator::evaluateSTClause(TNode * ST_node,
 			case QuerySymbol:
 				{
 					// get value of arg2 in row
-					arg2_val = row[1];
+					arg2_val = row[arg2_index];
 					if (arg1_val!=-1 && arg2_val!=-1) {
 						return isRelation(rlt, arg1_val, arg2_val);
 					} else if (arg1_val!=-1 && arg2_val==-1) {
 						vector<int> arg2_vals = getArgInRelation(rlt, arg1_val, ARG2);
 						arg2_vals = removeInvalidValues(arg2_vals, arg2_node->getValue());
 						for (size_t i=0; i<arg2_vals.size(); i++) {
-							row[0] = arg2_vals[i];
+							row[arg2_index] = arg2_vals[i];
 							new_rows->push_back(row);
 						}
 					} else if (arg1_val==-1 && arg2_val!=-1) {
 						vector<int> arg1_vals = getArgInRelation(rlt, arg2_val, ARG1);
 						arg1_vals = removeInvalidValues(arg1_vals, arg1_node->getValue());
 						for (size_t i=0; i<arg1_vals.size(); i++) {
-							row[0] = arg1_vals[i];
+							row[arg1_index] = arg1_vals[i];
 							new_rows->push_back(row);
 						}
 					} else {
@@ -244,7 +248,7 @@ bool QueryEvaluator::evaluateSTClause(TNode * ST_node,
 							vector<int> arg2_vals = getArgInRelation(rlt, arg1_vals[i], ARG2);
 							arg2_vals = removeInvalidValues(arg2_vals, arg2_node->getValue());
 							for (size_t j=0; j<arg2_vals.size(); j++) {
-								row[0] = arg1_vals[i]; row[1] = arg2_vals[j];
+								row[arg1_index] = arg1_vals[i]; row[arg2_index] = arg2_vals[j];
 								new_rows->push_back(row);
 							}
 						}
@@ -264,7 +268,10 @@ bool QueryEvaluator::evaluateSTClause(TNode * ST_node,
 	return false;
 }
 
-bool QueryEvaluator::evaluatePTClause(TNode * PT_node, vector<int> row, vector<vector<int>> * new_rows) {
+bool QueryEvaluator::evaluatePTClause(TNode * PT_node, 
+										vector<int> row, 
+										vector<vector<int>> * new_rows, 
+										ResultTable * temp_result) {
 	TNode * stmt_node = PT_node->getChildAtIndex(0);
 	string stmt_name = stmt_node->getValue();
 	Symbol stmt_type = SyntaxHelper::getSymbolType(table.getType(stmt_name));
@@ -278,7 +285,7 @@ bool QueryEvaluator::evaluatePTClause(TNode * PT_node, vector<int> row, vector<v
 			row[0] = stmt_indexes[i];
 			//recursive call to update new_rows
 			vector<vector<int>> rows;
-			bool isSatisfied = evaluatePTClause(PT_node, row, &rows);
+			bool isSatisfied = evaluatePTClause(PT_node, row, &rows, temp_result);
 			if (isSatisfied) {
 				for (size_t j=0; j<rows.size(); j++) {
 					new_rows->push_back(rows[j]);
@@ -322,53 +329,58 @@ bool QueryEvaluator::evaluatePTClause(TNode * PT_node, vector<int> row, vector<v
 	return false;
 }
 
-bool QueryEvaluator::evaluateWClause(TNode * W_node, vector<int> row, vector<vector<int>> * new_rows) {
+bool QueryEvaluator::evaluateWClause(TNode * W_node, 
+										vector<int> row, 
+										vector<vector<int>> * new_rows,
+										ResultTable * temp_result) {
 	TNode * arg1_node = W_node->getChildAtIndex(0);
 	TNode * arg2_node = W_node->getChildAtIndex(1);
 	Symbol arg1_type = arg1_node->getType();
 	Symbol arg2_type = arg2_node->getType();
+	int arg1_index = temp_result->getSymbolIndex(arg1_node->getValue());
+	int arg2_index = temp_result->getSymbolIndex(arg2_node->getValue());
 	string arg1_val = arg1_node->getValue();
 	string arg2_val = arg2_node->getValue();
 
 	if (arg1_type==Const && arg2_type==Const) {
 		return arg1_val==arg2_val;
 	} else if (arg1_type==Const && arg2_type==QuerySymbol) {
-		arg2_val = getAttrValue(arg2_node, row[0]);
+		arg2_val = getAttrValue(arg2_node, row[arg2_index]);
 		if (arg2_val!="-1") {
 			return arg1_val==arg2_val;
 		} else {
 			vector<int> arg2_indexes = getAttrIndex(arg2_node, arg1_val);
 			for (size_t i=0; i<arg2_indexes.size(); i++) {
-				row[0] = arg2_indexes[i];
+				row[arg2_index] = arg2_indexes[i];
 				new_rows->push_back(row);
 			}
 		}
 	} else if (arg1_type==QuerySymbol && arg2_type==Const) {
-		arg1_val = getAttrValue(arg1_node, row[0]);
+		arg1_val = getAttrValue(arg1_node, row[arg1_index]);
 		if (arg1_val!="-1") {
 			return arg1_val==arg2_val;
 		} else {
 			vector<int> arg1_indexes = getAttrIndex(arg1_node, arg2_val);
 			for (size_t i=0; i<arg1_indexes.size(); i++) {
-				row[0] = arg1_indexes[i];
+				row[arg1_index] = arg1_indexes[i];
 				new_rows->push_back(row);
 			}
 		}
 	} else {
-		arg1_val = getAttrValue(arg1_node, row[0]);
-		arg2_val = getAttrValue(arg2_node, row[1]);
+		arg1_val = getAttrValue(arg1_node, row[arg1_index]);
+		arg2_val = getAttrValue(arg2_node, row[arg2_index]);
 		if (arg1_val!="-1" && arg2_val!="-1") {
 			return arg1_val==arg2_val;
 		} else if (arg1_val!="-1" && arg2_val=="-1") {
 			vector<int> arg2_indexes = getAttrIndex(arg2_node, arg1_val);
 			for (size_t i=0; i<arg2_indexes.size(); i++) {
-				row[1] = arg2_indexes[i];
+				row[arg2_index] = arg2_indexes[i];
 				new_rows->push_back(row);
 			}
 		} else if (arg1_val=="-1" && arg2_val!="-1") {
 			vector<int> arg1_indexes = getAttrIndex(arg1_node, arg2_val);
 			for (size_t i=0; i<arg1_indexes.size(); i++) {
-				row[0] = arg1_indexes[i];
+				row[arg1_index] = arg1_indexes[i];
 				new_rows->push_back(row);
 			}
 		} else {
@@ -379,8 +391,8 @@ bool QueryEvaluator::evaluateWClause(TNode * W_node, vector<int> row, vector<vec
 				arg1_val = getAttrValue(arg1_node, arg1_indexes[i]);
 				vector<int> arg2_indexes = getAttrIndex(arg2_node, arg1_val);
 				for (size_t j=0; j<arg2_indexes.size(); j++) {
-					row[0] = arg1_indexes[i];
-					row[1] = arg2_indexes[j];
+					row[arg1_index] = arg1_indexes[i];
+					row[arg2_index] = arg2_indexes[j];
 					new_rows->push_back(row);
 				}
 			}

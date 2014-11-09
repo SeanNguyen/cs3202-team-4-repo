@@ -40,12 +40,16 @@ const string PARENT_RLT = "Parent";
 const string PARENTSTAR_RLT = "Parent*";
 const string MODIFIES_RLT = "Modifies";
 const string USES_RLT = "Uses";
+const string MODIFIES_P_RLT = "ModifiesP";
+const string USES_P_RLT = "UsesP";
 const string CALLS_RLT = "Calls";
 const string CALLSSTAR_RLT = "Calls*";
 const string NEXT_RLT = "Next";
 const string NEXTSTAR_RLT = "Next*";
 const string AFFECTS_RLT = "Affects";
 const string AFFECTSSTAR_RLT = "Affects*";
+
+const string INVALID = "invalid";
 
 enum Symbol {
 	Undefined,

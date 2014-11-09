@@ -129,6 +129,10 @@ string SyntaxHelper::SymbolToString(Symbol symbol) {
 		return MODIFIES_RLT;
 	case Uses:
 		return USES_RLT;
+	case ModifiesP:
+		return MODIFIES_P_RLT;
+	case UsesP:
+		return USES_P_RLT;
 	case Calls:
 		return CALLS_RLT;
 	case CallsS:

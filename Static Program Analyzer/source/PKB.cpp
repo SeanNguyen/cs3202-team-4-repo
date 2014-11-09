@@ -124,6 +124,8 @@ int PKB::getConstIndex(std::string value){
 }
 
 std::string PKB::getConstName(int index) {
+	if (index < 0 || index >= constTable.getSize())
+		return INVALID;
 	return constTable.getValue(index);
 }
 
@@ -146,7 +148,9 @@ int PKB::getVarIndex(std::string name){
 	return indexes.front();
 }
 
-std::string PKB::getVarName(int index){
+string PKB::getVarName(int index){
+	if (index < 0 || index >= varTable.getSize())
+		return INVALID;
 	return varTable.getValue(index);
 }
 
@@ -167,6 +171,8 @@ vector<int> PKB::getStmtIndex(std::string name){
 }
 
 std::string PKB::getStmtName(int index) {
+	if (index < 0 || index >= stmtTable.getSize())
+		return INVALID;
 	return stmtTable.getValue(index);
 }
 
@@ -182,10 +188,14 @@ bool PKB::insertProc(std::string name) {
 }
 
 vector <int> PKB::getProcIndex(std::string name){
-	return procTable.getIndexes(name);
+	vector<int> result = procTable.getIndexes(name);
+	if (result.empty()) result.push_back(-1);
+	return result;
 }
 
 std::string PKB::getProcName(int index) {
+	if (index < 0 || index >= procTable.getSize())
+		return INVALID;
 	return procTable.getValue(index);
 }
 
