@@ -16,6 +16,9 @@ Symbol SyntaxHelper::getSymbolType(string type) {
 	if (type.compare("if")==0) {
 		return If;
 	}
+	if (type.compare("call")==0) {
+		return CallStmt;
+	}
 	if (type.compare("stmt")==0) {
 		return Stmt;
 	}

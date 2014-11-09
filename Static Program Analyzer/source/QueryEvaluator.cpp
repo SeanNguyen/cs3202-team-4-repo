@@ -559,9 +559,6 @@ vector<int> QueryEvaluator::getArgInRelation(Symbol relation, int arg, int arg_u
 	default:
 		break;
 	}
-	
-	// remove result with invalid type
-
 
 	if (find(results.begin(), results.end(), -1)!=results.end()) {
 		// results has invalid value, i.e -1
@@ -672,9 +669,12 @@ vector<string> QueryEvaluator::extractResult(TNode * result_node, ResultManager 
 			// extract data
 			ResultTable * r_table = rm->extractTable(symbols);
 			// fill empty column
+			cout << "CHECKPOINT 001 " <<endl;
 			fillResultTable(r_table);
 			// save data to results list
+			cout << "CHECKPOINT 002 " <<endl;
 			fillResultList(result_node, r_table, &results);
+			cout << "CHECKPOINT 003 " <<endl;
 		}
 	}
 
@@ -782,6 +782,7 @@ void QueryEvaluator::fillResultList(TNode * result_node, ResultTable * table, ve
 string QueryEvaluator::fillResult(TNode * result_node, vector<int> values) {
 	string result = "";
 	for (size_t i=0; i<values.size(); i++) {
+		cout << "CHECKPOINT " << i << " " << values[i] <<endl;
 		TNode * node = result_node->getChildAtIndex(i);
 		string str = fillResult(node, values[i]);
 		if (values.size()==1) { result = str; }
@@ -792,8 +793,8 @@ string QueryEvaluator::fillResult(TNode * result_node, vector<int> values) {
 
 string QueryEvaluator::fillResult(TNode * node, int value) {
 	string name = node->getValue();
-	string type = table.getType(name);
-	
+	string type = table.getType(name); 
+	cout << "CHECKPOINT " + name + " " + type + " " << value <<endl;
 	// special case
 	if (type==KEYWORD_CALL) {
 		if (node->getNumChildren()!=0) {
