@@ -496,7 +496,6 @@ vector<int> QueryEvaluator::getArgInRelation(Symbol relation, int arg, int arg_u
 				results = PKB::getStmtModifyingVar(arg);
 			} else {
 				results = PKB::getModifiedVarAtStmt(arg);
-				cout << "CHECKPOINT 001 " <<arg << " " << results.size() <<endl;
 			}
 			break;
 		}
@@ -566,18 +565,18 @@ vector<int> QueryEvaluator::getArgInRelation(Symbol relation, int arg, int arg_u
 	case Affects:
 		{
 			if (arg_unknown==ARG1) {
-				results = PKB::getAffected(arg);
-			} else {
 				results = PKB::getAffecting(arg);
+			} else {
+				results = PKB::getAffected(arg);
 			}
 			break;
 		}
 	case AffectsS:
 		{
 			if (arg_unknown==ARG1) {
-				//results = PKB::getAffectedStar(arg);
+				results = PKB::getAffectingStar(arg);
 			} else {
-				//results = PKB::getAffectingStar(arg);
+				results = PKB::getAffectedStar(arg);
 			}
 			break;
 		}
