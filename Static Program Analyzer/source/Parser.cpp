@@ -443,7 +443,7 @@ TNode* Parser::readIfStmt () {
 			if (i == startOfThenStmtList || j == startOfThenStmtList
 				|| (i <= endOfThenStmtList && j <= endOfThenStmtList)
 				|| (i > endOfThenStmtList && j > endOfThenStmtList)) {
-				commonIfs[i][j] = 1;
+					commonIfs[i][j] = 1;
 			} else {
 				commonIfs[i][j] = 2;
 			}
@@ -703,30 +703,31 @@ vector <int> Parser::getNextNodeInControlFlow(int stmtNo) {
 		result.push_back(startElseStmtNo);
 	}
 
-
+	if (type == KEYWORD_IF) {
+		return result;
+	}
 	//consider these are nested stmts
-	int parentStmtNo = getParentStmt(stmtNo);
-	if (parentStmtNo == -1) {
-		int followingStmt = getFollowingStmt(stmtNo);
-		if (followingStmt != -1 && type != KEYWORD_IF)
-			result.push_back(followingStmt);
-
-	} else if (stmtType[parentStmtNo] == KEYWORD_WHILE) {
-		int followingStmt = getFollowingStmt(stmtNo);
-		if (followingStmt == -1)
-			result.push_back(parentStmtNo);
-		else
-			result.push_back(followingStmt);
-
-	} else if (stmtType[parentStmtNo] == KEYWORD_IF) {
-		int followingStmt = getFollowingStmt(stmtNo);
-		if (followingStmt > -1)
-			result.push_back(followingStmt);
-		else {
-			int followingStmt = getFollowingStmt(parentStmtNo);
-			if (followingStmt != -1)
-				result.push_back(followingStmt); //supposed to be the one that not include children of if stmt
+	while (stmtNo > -1) {
+		int parentStmtNo = getParentStmt(stmtNo);
+		if (parentStmtNo == -1) {
+			int followingStmt = getFollowingStmt(stmtNo);
+			if (followingStmt != -1 && type != KEYWORD_IF)
+				result.push_back(followingStmt);
+			break;
+		} else if (stmtType[parentStmtNo] == KEYWORD_WHILE) {
+			int followingStmt = getFollowingStmt(stmtNo);
+			if (followingStmt == -1)
+				result.push_back(parentStmtNo);
+			else
+				result.push_back(followingStmt);
+			break;
+		} else if (stmtType[parentStmtNo] == KEYWORD_IF) {
+			int followingStmt = getFollowingStmt(stmtNo);
+			if (followingStmt > -1)
+				result.push_back(followingStmt);
 		}
+		stmtNo = parentStmtNo;
+		type = stmtType[stmtNo];
 	}
 
 	return result;
