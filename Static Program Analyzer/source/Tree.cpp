@@ -1,8 +1,7 @@
 #include "Tree.h"
 
 Tree::Tree() {
-	TNode * node = new TNode();
-	setRoot(node);
+	size = 0;
 }
 
 TNode * Tree::createNode() { 
@@ -28,8 +27,12 @@ int Tree::addChild(TNode * parent, TNode * child) {
 	return parent -> addChild(child);
 }
 
+int Tree::getSize() { return size; }
+
 TNode * Tree::getRoot() {
-	return root;
+	if (root!=NULL)
+		return root;
+	return new TNode(Undefined);
 }
 
 int Tree::getNumChildren(TNode * node) {
@@ -59,6 +62,21 @@ int Tree::countNode(TNode * node, Symbol type, string value) {
 	for (int i=0; i<node->getNumChildren(); i++) {
 		TNode * child = node->getChildAtIndex(i);
 		count += countNode(child, type, value);
+	}
+	return count;
+}
+
+void Tree::calculateSize() {
+	if (root!=NULL) {
+		size = calculateSize(root); 
+	}
+}
+
+int Tree::calculateSize(TNode * node) {
+	if (node==NULL) return 0;
+	int count=1;
+	for (int i=0; i<node->getNumChildren(); i++) {
+		count += calculateSize(node->getChildAtIndex(i));
 	}
 	return count;
 }

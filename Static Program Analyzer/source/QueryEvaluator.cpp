@@ -518,7 +518,6 @@ vector<int> QueryEvaluator::getArgInRelation(Symbol relation, int arg, int arg_u
 		{
 			if (arg_unknown==ARG1) {
 				results = PKB::getProcUsingVar(arg);
-				cout << "CHECKPOINT 001 " << results.size() << endl; 
 			} else {
 				results = PKB::getUsedVarAtProc(arg);
 			}
