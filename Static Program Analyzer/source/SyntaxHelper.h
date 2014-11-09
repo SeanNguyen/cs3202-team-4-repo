@@ -5,8 +5,6 @@
 using namespace std;
 
 
-const string KEYWORD_ASSIGNMENT = "assignment";
-
 const string KEYWORD_SELECT = "Select";
 const string KEYWORD_PROGRAM = "program";
 const string KEYWORD_PROCEDURE = "procedure";
