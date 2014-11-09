@@ -68,7 +68,7 @@ void TNode::printTNode(int depth) {
 	for (int i=0; i<depth; i++) {
 		cout << "  ";
 	}
-	cout << SyntaxHelper::SymbolToString(type) << " " << value << " " << getNumChildren()<<endl;
+	cout << SyntaxHelper::SymbolToString(type) << " " << value << " " << getID()<<endl;
 	for (size_t i=0; i<children.size(); i++) {
 		TNode child = *getChildAtIndex(i);
 		child.printTNode(depth+1);

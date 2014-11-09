@@ -17,10 +17,13 @@ DesignExtractor::~DesignExtractor(void)
 
 void DesignExtractor::buildPKB() {
 	PKB::preCalculateStarTables();
+
+	PKB::calculateASTSize();
+
 	processUses();
 	processModify();
 
-	createNodeIDtoRealIDtable();
+	//createNodeIDtoRealIDtable();
 	
 	///////CONTAINS EXTRACTOR////////
 	extractContain();
@@ -29,26 +32,21 @@ void DesignExtractor::buildPKB() {
 	///////SIBLING EXTRACTOR////////
 	extractSibling();
 
-
 }
 
-void createNodeIDtoRealIDtable(){
-
-}
+//void createNodeIDtoRealIDtable(){
+//
+//}
 
 
 void DesignExtractor::DFSRecur(TNode * node){
 	int nodeID = node -> getID();
-
-	// Mark the current node as visited
-   // visited[nodeID] = true;
 
 	int numOfChildren = node -> getNumChildren();
 
 	if(numOfChildren != 0){
 		// Recur for all the vertices, child to this vertex
 		for (size_t i = 0; i < numOfChildren; i++){
-			//if(!visited[nodeID]) {
 				TNode * child = node -> getChildAtIndex(i);
 				int childID = child -> getID();
 
@@ -57,12 +55,13 @@ void DesignExtractor::DFSRecur(TNode * node){
 				Symbol childType = child -> getType();
 				if(nodeType != Program && nodeType != Undefined && 
 					childType != Program && childType != Undefined){
-					//cout << "CHECKPOINT " + SyntaxHelper::SymbolToString(nodeType) <<endl;
+						if (nodeID==16) {
+							node -> printTNode();
+						}
 					bool result = PKB::insertContains(nodeID, childID);
 				}
 
 				DFSRecur(child);
-			//}
 		}
 	}
 	
@@ -73,8 +72,11 @@ void DesignExtractor::extractContain() {
 	
 	TNode * root = PKB::getASTRoot();
 
-	cout<< "The AST ROOT ID IS ";
-	cout << root -> getID();
+	cout<< "The AST ROOT ID (in  contains mtd) IS  " << root -> getID() << "\n" ;
+	cout<< "The Size of the AST (in contains mtd ) is: " << (PKB::getASTSize()) << "\n";
+	
+	//cout << root -> getID() + "\n";
+
 
 	//get number of nodes
 	int sizeOfAST = TNode::getGlobalId() + 1;
@@ -164,11 +166,14 @@ void DesignExtractor::processModify() {
 }
 
 void DesignExtractor::extractSibling(){
+
 	bool test=false;
 
 	//get size of contains table
 	int containsSize = PKB::getContainTableSize();
-	cout << containsSize;
+	//cout << containsSize;
+
+	cout<< "The Size of the AST (in sibling mtd ) is: " << (PKB::getASTSize()) << "\n";
 
 	for (int i = 0; i < containsSize; i++) {
 		vector <int> children = PKB::getContaining(i);

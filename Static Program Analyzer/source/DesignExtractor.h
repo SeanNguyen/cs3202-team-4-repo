@@ -12,13 +12,11 @@ public:
 	
 
 private:
+
+
 	static void processModify();
 	static void processUses();
 
-
-    ////////SIBLINGS EXTRACTOR//////////
-	static void extractSibling();
-	
 
 	////////CONTAINS EXTRACTOR//////////
 	static void extractContain();
@@ -26,6 +24,10 @@ private:
 
 
 	///////NODE ID --> REAL ID//////////
-	static void createNodeIDtoRealIDtable();
+	//static void createNodeIDtoRealIDtable();
+
+    ////////SIBLINGS EXTRACTOR//////////
+	static void extractSibling();
+	
 };
 
