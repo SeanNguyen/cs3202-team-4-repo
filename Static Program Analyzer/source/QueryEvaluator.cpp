@@ -198,7 +198,7 @@ bool QueryEvaluator::evaluateSTClause(TNode * ST_node,
 					}
 					vector<int> arg1_vals = getAllPKBValues(arg1_node->getValue());
 					for (size_t i=0; i<arg1_vals.size(); i++) {
-						vector<int> arg2_vals = getArgInRelation(rlt, arg1_vals[i], ARG1);
+						vector<int> arg2_vals = getArgInRelation(rlt, arg1_vals[i], ARG2);
 						if (!arg2_vals.empty()) {
 							row[arg1_index] = arg1_vals[i];
 							new_rows->push_back(row);
@@ -723,10 +723,11 @@ int QueryEvaluator::getIndexOfConst(TNode * const_node, Symbol relation, int arg
 		return atoi(val.c_str());
 	case Modifies:
 	case Uses:
+	case ModifiesP:
+	case UsesP:
 		{
 			if (isNumber(val)) 
 				return atoi(val.c_str());
-
 			if (arg_index==ARG1) {
 				if (!PKB::getProcIndex(val).empty())
 					return PKB::getProcIndex(val).front();
