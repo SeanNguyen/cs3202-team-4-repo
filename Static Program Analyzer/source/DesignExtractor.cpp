@@ -50,6 +50,10 @@ void DesignExtractor::DFSRecur(TNode * node){
 				TNode * child = node -> getChildAtIndex(i);
 				int childID = child -> getID();
 
+				if (nodeID==382) {
+					node->printTNode();
+				}
+
 				//insert into containTable as long as type is not Program and not undefined
 				Symbol nodeType = node -> getType();
 				Symbol childType = child -> getType();
@@ -170,12 +174,13 @@ void DesignExtractor::extractSibling(){
 	bool test=false;
 
 	//get size of contains table
-	int containsSize = PKB::getContainTableSize();
+	int astSize = PKB::getASTSize();
+	//int containsSize = PKB::getContainTableSize();
 	//cout << containsSize;
 
-	cout<< "The Size of the AST (in sibling mtd ) is: " << (PKB::getASTSize()) << "\n";
+	cout<< "The Size of the AST (in sibling mtd ) is: " << (astSize) << "\n";
 
-	for (int i = 0; i < containsSize; i++) {
+	for (int i = 0; i < astSize; i++) {
 		vector <int> children = PKB::getContaining(i);
 
 		if(children.size() > 1){

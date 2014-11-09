@@ -96,7 +96,8 @@ vector<string> ResultManager::extractSymbols(ResultTable * t, vector<string> sym
 	vector<string> result;
 	for (unsigned i=0; i<symbols.size(); i++) {
 		string symbol = symbols[i];
-		if (find(s.begin(), s.end(), symbol) != s.end()) {
+		if (find(s.begin(), s.end(), symbol) != s.end() &&
+			find(result.begin(), result.end(), symbol)== result.end()) {
 			result.push_back(symbol);
 		}
 	}

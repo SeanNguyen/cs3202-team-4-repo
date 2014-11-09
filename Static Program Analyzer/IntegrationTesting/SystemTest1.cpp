@@ -256,7 +256,6 @@ CPPUNIT_TEST_SUITE_REGISTRATION( SystemTest1 );
 //
 void SystemTest1::test9(){
 	cout<< "Contains table test."; 
-
 	string source = "..\\..\\Tests\\Source1.txt";
 	Parser parser;
 	PKB pkb;

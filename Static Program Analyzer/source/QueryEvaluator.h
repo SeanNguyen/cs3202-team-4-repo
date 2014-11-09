@@ -49,7 +49,7 @@ private:
 	bool isNumber(string s);
 	void fillResultTable(ResultTable * t);
 	void fillResultList(TNode * result_node, ResultTable * t, vector<string> * result);
-	string fillResult(TNode * result_node, vector<int> values);
+	string fillResult(TNode * result_node, vector<int> values, ResultTable * table);
 	string fillResult(TNode * node, int value);
 	vector<int> getAllPKBValues(string symbol_name);
 	vector<string> getUnknownSymbols(ResultTable * table);
