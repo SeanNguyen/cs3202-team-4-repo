@@ -255,6 +255,8 @@ void SystemTest1::test8() {
 } 
 
 void SystemTest1::test9(){
+	cout<< "Contains table test."; 
+
 	string source = "..\\..\\Tests\\Source1.txt";
 	Parser parser;
 	PKB pkb;
@@ -264,13 +266,14 @@ void SystemTest1::test9(){
 	parser.buildPKB();
 	de.buildPKB();
 
-	cout << "reached here";
+	cout << " Contains table size is : ";
 	cout <<  pkb.getContainTableSize();
 	cout <<endl;
 
 }
 
 void SystemTest1::test10(){
+	cout<< "Sibling table test. ";
 	string source = "..\\..\\Tests\\Source1.txt";
 	Parser parser;
 	PKB pkb;
@@ -280,7 +283,7 @@ void SystemTest1::test10(){
 	parser.buildPKB();
 	de.buildPKB();
 
-	cout << "reached here";
+	cout << "Sibling table size is : ";
 	cout <<  pkb.getSiblingTableSize();
 	cout <<endl;
 

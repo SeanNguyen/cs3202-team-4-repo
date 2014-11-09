@@ -37,6 +37,7 @@ PKB::PKB()
 }
 
 void PKB::resetPKB() {
+	TNode::resetGlobalId();
 	PKB::ast = AST();
 	PKB::constTable = ListTable <string>();
 	PKB::varTable = ListTable <string>();
@@ -581,7 +582,7 @@ bool PKB::insertContains(int nodeContaining, int nodeContained){
 }
 
 vector<int> PKB::getContained(int nodeContaining){
-	return containTable.getValues(nodeContaining);
+	return containTable.getIndexes(nodeContaining);
 }
 
 vector<int> PKB::getContaining(int nodeContained){
@@ -591,6 +592,13 @@ vector<int> PKB::getContaining(int nodeContained){
 int PKB::getContainTableSize() {
 	return containTable.getSize();
 }
+
+//void PKB::printContainsTable() {
+//	int size = containTable.getSize();
+//	for (int i = 0; i < size; i++) {
+//		cout << "VALUE" + containTable.getValues(i);
+//	}
+//}
 
 ///////////////////////////////SIBLING Methods///////////////////////////////////
 bool PKB::isSibling(int nId1, int nId2){

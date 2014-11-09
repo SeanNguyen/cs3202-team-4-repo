@@ -20,12 +20,14 @@ void DesignExtractor::buildPKB() {
 	processUses();
 	processModify();
 
+	
+	///////CONTAINS EXTRACTOR////////
+	extractContain();
+
 
 	///////SIBLING EXTRACTOR////////
 	extractSibling();
 
-	///////CONTAINS EXTRACTOR////////
-	extractContain();
 
 }
 
@@ -49,6 +51,7 @@ void DesignExtractor::DFSRecur(TNode * node){
 				Symbol childType = child -> getType();
 				if(nodeType != Program && nodeType != Undefined && 
 					childType != Program && childType != Undefined){
+					//cout << "CHECKPOINT " + SyntaxHelper::SymbolToString(nodeType) <<endl;
 					bool result = PKB::insertContains(nodeID, childID);
 				}
 
@@ -64,6 +67,7 @@ void DesignExtractor::extractContain() {
 	
 	TNode * root = PKB::getASTRoot();
 
+	cout<< "The AST ROOT ID IS ";
 	cout << root -> getID();
 
 	//get number of nodes
@@ -156,30 +160,52 @@ void DesignExtractor::processModify() {
 }
 
 void DesignExtractor::extractSibling(){
-
 	bool test=false;
 
-	int numNodes=TNode::getGlobalId() +1;
+	//get size of contains table
+	int containsSize = PKB::getContainTableSize();
+	cout << containsSize;
 
-    cout<< "the AST size is " ;
- 	cout << numNodes;
-	cout<< " "; 
+	for (int i = 0; i < containsSize; i++) {
+		vector <int> children = PKB::getContaining(i);
 
-    for(int i=0;i<numNodes;i++){
-        vector<int> children = PKB::getContained(i);
-        //the values returned here will be the nodeIDs right??
+		if(children.size() > 1){
+			for (int j = 1; j < children.size(); j++){
+				test = PKB::insertSibling(children[j-1], children[j]);
+			}
+		}
+		
 
-        for(int j=1;j<children.size();j++){
-            test =PKB::insertSibling(children[j-1], children[j]);
-			cout << "for i = " ;
-			cout << i ;
-			cout<< "adding into the sibling table is" ;
-			cout << test ; 
-        }
-    }
+	}
 
-	cout << "adding into the sibling table is" ;
-	cout << test ; 
+	//bool test=false;
+
+	//int numNodes=TNode::getGlobalId() +1;
+
+ //   cout<< "the AST size is " ;
+ //	cout << numNodes;
+	//cout<< " "; 
+
+ //   for(int i=0;i<numNodes;i++){
+ //       vector<int> children = PKB::getContaining(i);
+
+	//	if(children.size()!=0){
+
+	//		for(int j=1;j<children.size();j++){
+ //           test =PKB::insertSibling(children[j-1], children[j]);
+	//		cout << "for j = " ;
+	//		cout << j ;
+	//		cout<< "adding into the sibling table is" ;
+	//		cout << test ; 
+	//		cout << "\n" ; 
+ //       }
+	//		
+	//	}
+
+ //       //the values returned here will be the nodeIDs right??
+	//	
+ //       
+ //   }
 
 	/*
 
