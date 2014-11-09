@@ -250,15 +250,18 @@ bool QueryEvaluator::evaluateSTClause(TNode * ST_node,
 					} else {
 						vector<int> arg1_vals = getAllPKBValues(arg1_node->getValue());
 						for (size_t i=0; i<arg1_vals.size(); i++) {
-							vector<int> arg2_vals = getArgInRelation(rlt, arg1_vals[i], ARG2);
-							arg2_vals = removeInvalidValues(arg2_vals, arg2_node->getValue());
-							for (size_t j=0; j<arg2_vals.size(); j++) {
-								if (arg1_index==arg2_index && arg1_vals[i]!= arg2_vals[j]) {
-									return false;
-								} else {
-									row[arg1_index] = arg1_vals[i]; row[arg2_index] = arg2_vals[j];
+							if (arg1_index==arg2_index) {
+								if (isRelation(rlt, arg1_vals[i], arg1_vals[i])) {
+									row[arg1_index] = arg1_vals[i];
+									new_rows->push_back(row);
 								}
-								new_rows->push_back(row);
+							} else {
+								vector<int> arg2_vals = getArgInRelation(rlt, arg1_vals[i], ARG2);
+								arg2_vals = removeInvalidValues(arg2_vals, arg2_node->getValue());
+								for (size_t j=0; j<arg2_vals.size(); j++) {
+									row[arg1_index] = arg1_vals[i]; row[arg2_index] = arg2_vals[j];
+									new_rows->push_back(row);
+								}
 							}
 						}
 					}
