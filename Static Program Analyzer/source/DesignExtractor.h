@@ -12,17 +12,21 @@ public:
 	
 
 private:
+
+
 	static void processModify();
 	static void processUses();
 
-
-    ////////SIBLINGS EXTRACTOR//////////
-	static void extractSibling();
-	
 
 	////////CONTAINS EXTRACTOR//////////
 
 	static void extractContain();
 	static void DFSRecur(TNode * node);
+
+    ////////SIBLINGS EXTRACTOR//////////
+	static void extractSibling();
+	
+
+	
 };
 

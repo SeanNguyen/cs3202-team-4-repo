@@ -17,6 +17,9 @@ DesignExtractor::~DesignExtractor(void)
 
 void DesignExtractor::buildPKB() {
 	PKB::preCalculateStarTables();
+
+	PKB::calculateASTSize();
+
 	processUses();
 	processModify();
 
@@ -30,6 +33,8 @@ void DesignExtractor::buildPKB() {
 
 
 }
+
+
 
 void DesignExtractor::DFSRecur(TNode * node){
 	int nodeID = node -> getID();
@@ -67,8 +72,11 @@ void DesignExtractor::extractContain() {
 	
 	TNode * root = PKB::getASTRoot();
 
-	cout<< "The AST ROOT ID IS ";
-	cout << root -> getID();
+	cout<< "The AST ROOT ID (in  contains mtd) IS  " << root -> getID() << "\n" ;
+	cout<< "The Size of the AST (in contains mtd ) is: " << (PKB::getASTSize()) << "\n";
+	
+	//cout << root -> getID() + "\n";
+
 
 	//get number of nodes
 	//int sizeOfAST = TNode::getGlobalId() + 1;
@@ -160,11 +168,14 @@ void DesignExtractor::processModify() {
 }
 
 void DesignExtractor::extractSibling(){
+
 	bool test=false;
 
 	//get size of contains table
 	int containsSize = PKB::getContainTableSize();
-	cout << containsSize;
+	//cout << containsSize;
+
+	cout<< "The Size of the AST (in sibling mtd ) is: " << (PKB::getASTSize()) << "\n";
 
 	for (int i = 0; i < containsSize; i++) {
 		vector <int> children = PKB::getContaining(i);

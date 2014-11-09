@@ -48,6 +48,11 @@ void QueryEvaluator::evaluateQuery() {
 		vector<string> result = extractResult();
 		resultList.push_back(result);
 	}	
+
+	if (AbstractWrapper::GlobalStop) {
+		vector<string> result;
+		resultList.push_back(result);
+	}
 }
 
 bool QueryEvaluator::evaluateClause(TNode * clause_node, ResultTable * temp_results) {
