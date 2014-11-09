@@ -50,6 +50,8 @@ public:
 	static void setASTRoot(TNode * node);
 	static int addChild(TNode * parent, TNode * child);
 	static TNode * getNodeOfStmt(int stmt);
+	static int getASTSize();
+	static void calculateASTSize();
 
 	//////////////////////////CONST TABLE METHODS/////////////////
 	static bool insertConst(std::string value);
