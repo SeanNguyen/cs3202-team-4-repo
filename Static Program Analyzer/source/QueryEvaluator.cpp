@@ -34,13 +34,10 @@ void QueryEvaluator::evaluateQuery() {
 			TNode * clause_node = select_node->getChildAtIndex(i);
 			vector<string> symbols = getSymbolsUsedBy(clause_node);
 			ResultTable * temp_results = result_manager.extractTable(symbols);
-			cout << "BEFORE:	" << temp_results->getSize() << endl;
 			is_satisfied = evaluateClause(clause_node, temp_results);
-			cout << "CHECKPOINT 004 " << is_satisfied <<endl;
 			if (!is_satisfied) {
 				break;
 			} else {
-				cout << "AFTER:		" << temp_results->getSize() << endl;
 				result_manager.insertTable(temp_results);
 			}
 		}
@@ -212,14 +209,12 @@ bool QueryEvaluator::evaluateSTClause(TNode * ST_node,
 			case Const:
 				{
 					arg2_val = getIndexOfConst(arg2_node, rlt, ARG2);
-					cout << "CHECKPOINT 001 " << arg2_val <<endl;
 					if (arg1_val!=-1) {
 						return isRelation(rlt, arg1_val, arg2_val);
 						break;
 					} 
 					vector<int> arg1_vals = getArgInRelation(rlt, arg2_val, ARG1);
 					arg1_vals = removeInvalidValues(arg1_vals, arg1_node->getValue());
-					cout << "CHECKPOINT 002 " << arg1_vals.size() << endl;
 					//save arg1_vals to new_rows
 					for (size_t i=0; i<arg1_vals.size(); i++) {
 						row[arg1_index] = arg1_vals[i];
@@ -817,7 +812,7 @@ string QueryEvaluator::fillResult(TNode * node, int value) {
 			TNode * attr = node->getChildAtIndex(0);
 			if (attr->getType()==Attr &&
 				attr->getValue()=="procName") {
-					value = PKB::getCalledProc(value-1);
+					value = PKB::getCalledProc(value);
 					type=KEYWORD_PROCEDURE;
 			}
 		}
@@ -987,7 +982,6 @@ vector<int> QueryEvaluator::removeInvalidValues(vector<int> values, string symbo
 	for (size_t i=0; i<values.size(); i++) {
 		bool isCorrectType = false;
 		int value = values[i];
-		cout << "CHECK " << PKB::getProcName(value) << endl;
 		switch (type) {
 		case Procedure:
 			isCorrectType = (PKB::getProcName(value)!="");
