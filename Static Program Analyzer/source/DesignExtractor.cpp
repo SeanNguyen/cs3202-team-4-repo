@@ -104,7 +104,7 @@ void DesignExtractor::processUses() {
 		if(find(processedProc.begin(), processedProc.end(), proc) == processedProc.end()){
 
 			//for every procedure, get the called procedure
-			vector <int> calledProcedures = PKB::getCalledByStarProc(proc);
+			vector <int> calledProcedures = PKB::getCallingStarProc(proc);
 
 			if(!calledProcedures.empty()){
 				//for this procedure get all used vars in it
@@ -112,7 +112,7 @@ void DesignExtractor::processUses() {
 					vector <int> allUsedVar = PKB::getUsedVarAtProc(proc);
 
 					//get the all call stmt number which is calling proc2
-					vector <int> callStmts = PKB::getCallingStmt(proc2);
+					vector <int> callStmts = PKB::getCalledByProc(proc2);
 
 					//insert used var into the primary proc
 					for (size_t var = 0; var < allUsedVar.size(); var++){
@@ -141,7 +141,7 @@ void DesignExtractor::processModify() {
 		if(find(processedProc.begin(), processedProc.end(), proc) == processedProc.end()){
 
 			//for every procedure, get the called procedure
-			vector <int> calledProcedures = PKB::getCalledByStarProc(proc);
+			vector <int> calledProcedures = PKB::getCallingStarProc(proc);
 			
 			if(!calledProcedures.empty()){
 				for (size_t proc2 = 0; proc2 < calledProcedures.size(); proc2++){
@@ -150,7 +150,7 @@ void DesignExtractor::processModify() {
 					vector <int> allModifiedVar = PKB::getModifiedVarAtProc(proc);
 
 					//get the all call stmt number which is calling proc2
-					vector <int> callStmts = PKB::getCallingStmt(proc2);
+					vector <int> callStmts = PKB::getCalledByProc(proc2);
 
 					//insert modified var into the primary called proc
 					for (size_t var = 0; var < allModifiedVar.size(); var++){
