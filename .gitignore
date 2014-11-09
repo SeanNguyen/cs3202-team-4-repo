@@ -67,3 +67,5 @@ packages/
 *.testsettings
 Tests/TestFollowsFollowsStarSource1.txt
 /Static Program Analyzer/AutoTester/output.xml
+/Static Program Analyzer/enc_temp_folder
+/Static Program Analyzer/AutoTester/flatfile.txt

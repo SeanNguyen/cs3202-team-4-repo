@@ -1,0 +1,12 @@
+2
+cat: Sibling
+1 - Sibling ::
+procedure p; if ifStmt; while w; assign a; plus add; constant c; variable v, v1; stmt s; stmtLst then, else;
+Select s such that Sibling (s, 4)
+1, 2, 3, 5
+5000
+2 - Sibling ::
+procedure p; if ifStmt; while w; assign a; plus add; constant c; variable v, v1; stmt s; stmtLst then, else;
+Select v such that Sibling (v, v1) with v1.varName = “x”
+y, z
+5000

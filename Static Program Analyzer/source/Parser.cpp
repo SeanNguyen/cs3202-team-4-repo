@@ -424,10 +424,10 @@ TNode* Parser::readIfStmt () {
 	match(KEYWORD_THEN);
 	size_t startOfThenStmtList = this->stmtType.size();
 	TNode* thenNode = readStmtList();
-	size_t endOfThenStmtList = this->stmtType.size() - 1;
+	size_t endOfThenStmtList = this->stmtType.size();
 	ifNode->addChild(thenNode);
 
-	for (size_t i = startOfThenStmtList; i <= endOfThenStmtList; i++) {
+	for (size_t i = startOfThenStmtList; i < endOfThenStmtList; i++) {
 		if (depthLv[i] - 1 == currentDepth)
 			this->thenStmtFlags[i] = 1;
 	}
@@ -708,7 +708,7 @@ vector <int> Parser::getNextNodeInControlFlow(int stmtNo) {
 	int parentStmtNo = getParentStmt(stmtNo);
 	if (parentStmtNo == -1) {
 		int followingStmt = getFollowingStmt(stmtNo);
-		if (followingStmt != -1)
+		if (followingStmt != -1 && type != KEYWORD_IF)
 			result.push_back(followingStmt);
 
 	} else if (stmtType[parentStmtNo] == KEYWORD_WHILE) {
@@ -723,9 +723,9 @@ vector <int> Parser::getNextNodeInControlFlow(int stmtNo) {
 		if (followingStmt > -1)
 			result.push_back(followingStmt);
 		else {
-			vector <int> followingStmts = getNextNodeInControlFlow(parentStmtNo);
-			if (followingStmts.size() == 3)
-				result.push_back(followingStmts.back()); //supposed to be the one that not include children of if stmt
+			int followingStmt = getFollowingStmt(parentStmtNo);
+			if (followingStmt != -1)
+				result.push_back(followingStmt); //supposed to be the one that not include children of if stmt
 		}
 	}
 
