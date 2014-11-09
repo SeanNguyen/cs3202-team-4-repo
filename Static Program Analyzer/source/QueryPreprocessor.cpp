@@ -50,7 +50,6 @@ void QueryPreprocessor::readFileData() {
 			// set numOfQueries
 			if (countLine==1) {
 				numOfQueries = atoi(line.c_str());
-				//cout <<"Num of queries: " << numOfQueries << endl;
 			} else {
 
 				// meet first line of query, recognize as description (useless info)
@@ -313,7 +312,7 @@ TNode * QueryPreprocessor::preprocessTupleResult(vector<string> list) {
 	TNode * node = new TNode(ResultCls, "0-tuple");
 
 	for (size_t i=0; i<list.size(); i++) {
-		int commaIndex = findFirstElement(list, i, KEYWORD_COMMA); 
+		int commaIndex = findFirstElement(list, i, KEYWORD_COMMA);
 		if (commaIndex>i && commaIndex!=-1){
 			vector<string> resultElem = subList(list, i, commaIndex-1);
 			TNode * tupleChild = new TNode(); 
@@ -323,6 +322,13 @@ TNode * QueryPreprocessor::preprocessTupleResult(vector<string> list) {
 				tupleChild = preprocessResultElem(resultElem);
 			}
 			node ->addChild(tupleChild);
+			i = commaIndex;
+		} else {
+			// reach last element
+			vector<string> resultElem = subList(list, i, list.size()-1);
+			TNode * tupleChild = preprocessResultElem(resultElem);
+			node->addChild(tupleChild);
+			break;
 		}
 	}
 
@@ -462,7 +468,7 @@ TNode * QueryPreprocessor::preprocessStmtRef(vector<string> list) {
 			string type = table.getType(list[0]);
 			if (type==KEYWORD_STMT || type==KEYWORD_ASSIGN ||
 				type==KEYWORD_WHILE|| type==KEYWORD_IF     ||
-				type==KEYWORD_CALL) {
+				type==KEYWORD_CALL || type==KEYWORD_PROG_LINE) {
 				node = new TNode(QuerySymbol, list[0]);
 				countSymbol(list[0]);
 			} else {

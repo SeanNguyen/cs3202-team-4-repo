@@ -55,9 +55,6 @@
     <ClInclude Include="..\source\TNode.h">
       <Filter>PKB\AST</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\Tree.h">
-      <Filter>PKB\AST</Filter>
-    </ClInclude>
     <ClInclude Include="..\source\SymbolTable.h">
       <Filter>PKB\Old PKB</Filter>
     </ClInclude>
@@ -84,6 +81,9 @@
     </ClInclude>
     <ClInclude Include="..\source\PKB.h">
       <Filter>PKB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Tree.h">
+      <Filter>PKB\Old PKB</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -493,6 +493,7 @@ vector<int> QueryEvaluator::getArgInRelation(Symbol relation, int arg, int arg_u
 				results = PKB::getStmtModifyingVar(arg);
 			} else {
 				results = PKB::getModifiedVarAtStmt(arg);
+				cout << "CHECKPOINT 001 " <<arg << " " << results.size() <<endl;
 			}
 			break;
 		}
@@ -793,18 +794,23 @@ void QueryEvaluator::fillResultTable(ResultTable * table) {
 void QueryEvaluator::fillResultList(TNode * result_node, ResultTable * table, vector<string> * results) {
 	for (int i=0; i<table->getSize(); i++) {
 		vector<int> row = table->getValRow(i);
-		string result = fillResult(result_node, row);
+		string result = fillResult(result_node, row, table);
 		results->push_back(result);
 	}
 }
 
-string QueryEvaluator::fillResult(TNode * result_node, vector<int> values) {
+string QueryEvaluator::fillResult(TNode * result_node, vector<int> values, ResultTable * table) {
 	string result = "";
-	for (size_t i=0; i<values.size(); i++) {
+	int size = result_node->getNumChildren();
+	for (size_t i=0; i<size; i++) {
 		TNode * node = result_node->getChildAtIndex(i);
-		string str = fillResult(node, values[i]);
-		if (values.size()==1) { result = str; }
-		else { result += str + " "; }
+		int value_index = table->getSymbolIndex(node->getValue());
+		string str = fillResult(node, values[value_index]);
+		if (i<size-1) {
+			result += str + " "; 
+		} else {
+			result += str;
+		}
 	}
 	return result;
 }
