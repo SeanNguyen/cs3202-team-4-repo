@@ -94,7 +94,6 @@ void DesignExtractor::extractContain() {
 
 //Private Helper Methods
 void DesignExtractor::processUses() {
-
 	int numOfProc = PKB::getProcTableSize();
 	vector <int> processedProc;
 	
@@ -105,22 +104,23 @@ void DesignExtractor::processUses() {
 
 			//for every procedure, get the called procedure
 			vector <int> calledProcedures = PKB::getCallingStarProc(proc);
-
+			
 			if(!calledProcedures.empty()){
-				//for this procedure get all used vars in it
 				for (size_t proc2 = 0; proc2 < calledProcedures.size(); proc2++){
+				
+					//for this procedure get all modified vars in it
 					vector <int> allUsedVar = PKB::getUsedVarAtProc(calledProcedures[proc2]);
 
 					//get the all call stmt number which is calling proc2
 					vector <int> callStmts = PKB::getCallingStmt(calledProcedures[proc2]);
 
-					//insert used var into the primary proc
+					//insert modified var into the primary called proc
 					for (size_t var = 0; var < allUsedVar.size(); var++){
-						PKB::insertUsesProc(calledProcedures[proc2], allUsedVar.at(var));
+						PKB::insertUsesProc(proc, allUsedVar[var]);
 
-						//for every call stmt calling proc2, insert the usesVar list
+						//for every call stmt calling proc2, insert the modifiedVar list
 						for (size_t stmt = 0; stmt < callStmts.size(); stmt++){
-							PKB::insertUses(callStmts.at(stmt), allUsedVar.at(var));
+							PKB::insertUses(callStmts[stmt], allUsedVar[var]);
 						}
 					}
 				}
