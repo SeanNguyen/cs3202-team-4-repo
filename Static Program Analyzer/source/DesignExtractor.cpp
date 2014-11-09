@@ -20,6 +20,7 @@ void DesignExtractor::buildPKB() {
 	processUses();
 	processModify();
 
+	createNodeIDtoRealIDtable();
 	
 	///////CONTAINS EXTRACTOR////////
 	extractContain();
@@ -30,6 +31,11 @@ void DesignExtractor::buildPKB() {
 
 
 }
+
+void createNodeIDtoRealIDtable(){
+
+}
+
 
 void DesignExtractor::DFSRecur(TNode * node){
 	int nodeID = node -> getID();
@@ -71,12 +77,10 @@ void DesignExtractor::extractContain() {
 	cout << root -> getID();
 
 	//get number of nodes
-	//int sizeOfAST = TNode::getGlobalId() + 1;
-
-	//// Mark all the vertices as not visited
-	//bool *visited = new bool [sizeOfAST];
-	//for(int i = 0; i < sizeOfAST; i++)
- //       visited[i] = false;
+	int sizeOfAST = TNode::getGlobalId() + 1;
+	cout << "size of ast: ";
+	cout << sizeOfAST; 
+	cout << endl;
 
 	//apply depth first search on AST
 	DFSRecur(root);

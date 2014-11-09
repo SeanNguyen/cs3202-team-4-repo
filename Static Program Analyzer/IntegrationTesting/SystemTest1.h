@@ -39,6 +39,6 @@ private:
 	void testNext();
 	void test8();
 	void test9();
-	void test10();
+//	void test10();
 	//void TestModifyUsesProc();
 };
