@@ -48,6 +48,11 @@ void QueryEvaluator::evaluateQuery() {
 		vector<string> result = extractResult();
 		resultList.push_back(result);
 	}	
+
+	if (AbstractWrapper::GlobalStop) {
+		vector<string> result;
+		resultList.push_back(result);
+	}
 }
 
 bool QueryEvaluator::evaluateClause(TNode * clause_node, ResultTable * temp_results) {
@@ -488,6 +493,7 @@ vector<int> QueryEvaluator::getArgInRelation(Symbol relation, int arg, int arg_u
 				results = PKB::getStmtModifyingVar(arg);
 			} else {
 				results = PKB::getModifiedVarAtStmt(arg);
+				cout << "CHECKPOINT 002 " << arg << " " << results.size() <<endl;
 			}
 			break;
 		}
