@@ -29,10 +29,10 @@ private:
 
 	void evaluateQuery();
 	bool evaluateClause(TNode * clause_node, ResultTable * temp_result);
-	bool evaluateClause(TNode * clause_node, vector<int> row, vector<vector<int>> * new_rows);
-	bool evaluateSTClause(TNode * ST_node, vector<int> row, vector<vector<int>> * new_rows);
-	bool evaluatePTClause(TNode * PT_node, vector<int> row, vector<vector<int>> * new_rows);
-	bool evaluateWClause(TNode * W_node, vector<int> row, vector<vector<int>> * new_rows);
+	bool evaluateClause(TNode * clause_node, vector<int> row, vector<vector<int>> * new_rows, ResultTable * temp_result);
+	bool evaluateSTClause(TNode * ST_node, vector<int> row, vector<vector<int>> * new_rows, ResultTable * temp_result);
+	bool evaluatePTClause(TNode * PT_node, vector<int> row, vector<vector<int>> * new_rows, ResultTable * temp_result);
+	bool evaluateWClause(TNode * W_node, vector<int> row, vector<vector<int>> * new_rows, ResultTable * temp_result);
 
 	bool isRelation(Symbol relation, int arg1, int arg2);
 	vector<int> getArgInRelation(Symbol relation, int arg, int arg_unknown);
@@ -55,6 +55,7 @@ private:
 	vector<string> getUnknownSymbols(ResultTable * table);
 	string getAttrValue(TNode * node, int index);
 	vector<int> getAttrIndex(TNode * node, string attr_value);
+	vector<int> removeInvalidValues(vector<int> value, string symbol_name);
 };
 
 #endif

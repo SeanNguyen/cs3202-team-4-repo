@@ -393,7 +393,7 @@ TNode * QueryPreprocessor::preprocessSuchThatCondition(vector<string> list) {
 			}
 		}
 		// solve cases of ModifiesP and UsesP
-		updateRelationNode(relationNode, arg1Node);
+		relationNode = updateRelationNode(relationNode, arg1Node);
 		relationNode -> addChild(arg1Node);
 		relationNode -> addChild(arg2Node);
 		suchThatNode -> addChild(relationNode);
@@ -513,6 +513,7 @@ TNode * QueryPreprocessor::preprocessLineRef(vector<string> list) {
 	TNode * node = new TNode();
 	int size = list.size();
 
+
 	if (size==1) {
 		if (SyntaxHelper::isNumber(list[0])) {
 			node = new TNode(Const, list[0]);
@@ -524,7 +525,7 @@ TNode * QueryPreprocessor::preprocessLineRef(vector<string> list) {
 		} else {
 			errors.push_back("Error: not a line reference: " + list[0]);
 		}
-	} {
+	} else {
 		errors.push_back("Error: not a line reference: " + list[0]);
 	}
 
@@ -814,7 +815,7 @@ TNode * QueryPreprocessor::preprocessAttrRef(vector<string> list) {
 	return node;
 }
 
-void QueryPreprocessor::updateRelationNode(TNode * relation, TNode * arg1) {
+TNode * QueryPreprocessor::updateRelationNode(TNode * relation, TNode * arg1) {
 	Symbol rlt = relation->getType();
 	bool isProc = false;
 	if (rlt==Modifies || rlt==Uses) {
@@ -833,6 +834,7 @@ void QueryPreprocessor::updateRelationNode(TNode * relation, TNode * arg1) {
 			}
 		}
 	}
+	return relation;
 }
 
 /* SUPPORTING FUCNTIONS */

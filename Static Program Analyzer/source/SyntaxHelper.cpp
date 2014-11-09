@@ -16,6 +16,9 @@ Symbol SyntaxHelper::getSymbolType(string type) {
 	if (type.compare("if")==0) {
 		return If;
 	}
+	if (type.compare("call")==0) {
+		return CallStmt;
+	}
 	if (type.compare("stmt")==0) {
 		return Stmt;
 	}
@@ -126,6 +129,10 @@ string SyntaxHelper::SymbolToString(Symbol symbol) {
 		return MODIFIES_RLT;
 	case Uses:
 		return USES_RLT;
+	case ModifiesP:
+		return MODIFIES_P_RLT;
+	case UsesP:
+		return USES_P_RLT;
 	case Calls:
 		return CALLS_RLT;
 	case CallsS:
