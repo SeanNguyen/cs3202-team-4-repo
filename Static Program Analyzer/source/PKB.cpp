@@ -500,7 +500,8 @@ vector <int> PKB::getAffected (int affectingStmt, int currentStmt, bool isStarti
 		if (modifiedVars.size() > 0 && modifiedVarsByCurrent.size() > 0 && modifiedVars.front() == modifiedVarsByCurrent.front() && !isStartingPoint)
 			return results;
 	} else if (stmtTable.getValue(currentStmt) == KEYWORD_CALL) {
-		if (modifiedVars.size() > 0 && modifiedVarsByCurrent.size() > 0 && modifiedVars.front() == modifiedVarsByCurrent.front() && !isStartingPoint)
+		if (modifiedVars.size() > 0 && modifiedVarsByCurrent.size() > 0 && !isStartingPoint
+			&& find(modifiedVarsByCurrent.begin(), modifiedVarsByCurrent.end(), modifiedVars.front()) != modifiedVarsByCurrent.end())
 			return results;
 	}
 
@@ -540,7 +541,8 @@ vector <int> PKB::getAffecting (int affectedStmt, int currentStmt, bool isStarti
 			return results;
 		}
 	} else if (stmtTable.getValue(currentStmt) == KEYWORD_CALL) {
-		if (modifiedVars.size() > 0 && usedVarsByCurrent.size() > 0 && modifiedVars.front() == usedVarsByCurrent.front() && !isStartingPoint)
+		if (usedVars.size() > 0 && usedVarsByCurrent.size() > 0 && !isStartingPoint
+			&& find(usedVarsByCurrent.begin(), usedVarsByCurrent.end(), usedVars.front()) != usedVarsByCurrent.end())
 			return results;
 	}
 
