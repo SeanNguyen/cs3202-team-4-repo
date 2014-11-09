@@ -182,7 +182,8 @@ void Parser::buildCallTable() {
 void Parser::buildCommonTables() {
 	PKB::setCommonWhiles(commonWhiles);
 	PKB::setCommonIfs(commonIfs);
-}
+	PKB::setStartingStmtOfProc(mapStartingStmtProc);
+ }
 
 void Parser::buildCFG() {
 	for (size_t i = 0; i < stmtType.size(); i++) {

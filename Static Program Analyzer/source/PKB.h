@@ -33,6 +33,7 @@ private:
 	static map<int, bool> flags;
 	static map <int, map <int, int>> commonWhiles;
 	static map <int, map <int, int>> commonIfs;
+	static map<int, string> mapStatingStmtProc;
 
 public:
 	PKB();
@@ -40,6 +41,7 @@ public:
 	static void preCalculateStarTables();
 	static void setCommonWhiles(map <int, map <int, int>> data);
 	static void setCommonIfs(map <int, map <int, int>> data);
+	static void setStartingStmtOfProc(map <int, string> data);
 	//////////////////////////////////AST METHODS/////////////////
 	static TNode * createNode();
 	static TNode * createNode(Symbol type);
@@ -159,6 +161,8 @@ public:
 	// temp adding getAffecting(int) to run testing - Tho
 	static vector<int> getAffecting(int affectedStmt);
 	static vector<int> getAffecting (int affectedStmt, int currentStmt, bool isStartingPoint);
+	static vector<int> getAffectedStar (int affectingStmt);
+	static vector<int> getAffectingStar (int affectedStmt);
 	static vector<int> getAffectedStar (int affectingStmt, bool isStartingPoint);
 	static vector<int> getAffectingStar (int affectedStmt, bool isStartingPoint);
 

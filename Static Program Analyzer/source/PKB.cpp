@@ -13,11 +13,8 @@ MapTable <int> PKB::parentTable;
 MapTable <int> PKB::callStmtTable;
 MapTable <int> PKB::callProcTable;
 MapTable <int> PKB::nextTable;
-
 MapTable <int> PKB::siblingTable;
-
 MapTable <int> PKB::containTable;
-
 
 MapTable <int> PKB::modifyStmtTable;
 MapTable <int> PKB::modifyProcTable;
@@ -27,7 +24,7 @@ MapTable <int> PKB::useProcTable;
 map <int, bool> PKB::flags;
 map <int, map <int, int>> PKB::commonWhiles;
 map <int, map <int, int>> PKB::commonIfs;
-
+map <int, string> PKB::mapStatingStmtProc;
 
 
 using namespace std;
@@ -70,6 +67,10 @@ void PKB::setCommonWhiles(map <int, map <int, int>> data) {
 
 void PKB::setCommonIfs(map <int, map <int, int>> data) {
 	commonIfs = data;
+}
+
+void PKB::setStartingStmtOfProc(map <int, string> data) {
+	mapStatingStmtProc = data;
 }
 
 ////////////////////////////////AST METHODS/////////////////
@@ -419,6 +420,14 @@ bool PKB::insertNext(int n1, int n2){
 
 // Method to check if line numbers are nextStar
 bool PKB::isNextStar(int n1, int n2) {
+	if (n1==n2) {
+		int a = 32;
+	}
+	for(map<int,string>::iterator it = mapStatingStmtProc.begin(); it != mapStatingStmtProc.end(); ++it) {
+		int startingStmt = it->first;
+		if ((n1 < startingStmt && n2 >= startingStmt) || (n1 >= startingStmt && n2 < startingStmt))
+			return false;
+	}
 	if (commonWhiles[n1][n2] == 1)
 		return true;
 	if (commonIfs[n1][n2] == 2)
@@ -465,7 +474,6 @@ bool PKB::isAffectStar(int affectingStmt, int affectedStmt) {
 }
 
 vector <int> PKB::getAffected(int affectingStmt) {
-	
 	return getAffected(affectingStmt, affectingStmt, true);
 }
 
@@ -501,13 +509,12 @@ vector <int> PKB::getAffected (int affectingStmt, int currentStmt, bool isStarti
 }
 
 vector<int> PKB::getAffecting(int affectedStmt) {
-	
 	return getAffecting(affectedStmt, affectedStmt, true);
 }
 
 vector <int> PKB::getAffecting (int affectedStmt, int currentStmt, bool isStartingPoint) {
 	if (isStartingPoint)
-	flags.clear();
+		flags.clear();
 
 	vector <int> results;
 	if (flags.count(currentStmt) != 0 && flags[currentStmt] == true) {
@@ -535,6 +542,14 @@ vector <int> PKB::getAffecting (int affectedStmt, int currentStmt, bool isStarti
 	}
 	return results;
 
+}
+
+vector<int> PKB::getAffectedStar (int affectingStmt) {
+	return getAffectedStar(affectingStmt, true);
+}
+
+vector<int> PKB::getAffectingStar (int affectedStmt) {
+	return getAffectingStar(affectedStmt, true);
 }
 
 vector<int> PKB::getAffectedStar (int affectingStmt, bool isStartingPoint) {
@@ -625,10 +640,10 @@ vector<int> PKB::getSiblings(int nId1){
 }
 
 int PKB::getSiblingTableSize() {
-    return siblingTable.getSize();
+	return siblingTable.getSize();
 }
-	
 
 
-	//return containTable.getIndexes(nodeContained);
+
+//return containTable.getIndexes(nodeContained);
 
