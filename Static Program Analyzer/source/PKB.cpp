@@ -110,6 +110,14 @@ int PKB::addChild(TNode * parent, TNode * child) {
 	return ast.addChild(parent, child);
 }
 
+int PKB::getASTSize() {
+	return ast.getSize();
+}
+
+void PKB::calculateASTSize() {
+	ast.calculateSize();
+}
+
 ///////////////////CONST TABLE METHODS////////////////////
 bool PKB::insertConst(std::string value) {
 	if (constTable.exist(value))
