@@ -133,7 +133,7 @@ bool QueryEvaluator::evaluateSTClause(TNode * ST_node,
 						break;
 					}
 
-					vector<int> arg2_vals = getAllPKBValues(type2);
+					vector<int> arg2_vals = getAllPKBValues(arg2_node->getValue());
 					for (size_t i=0; i<arg2_vals.size(); i++) {
 						vector<int> arg1_vals = getArgInRelation(rlt, arg2_vals[i], ARG1);
 						if (!arg1_vals.empty()) {
@@ -248,7 +248,11 @@ bool QueryEvaluator::evaluateSTClause(TNode * ST_node,
 							vector<int> arg2_vals = getArgInRelation(rlt, arg1_vals[i], ARG2);
 							arg2_vals = removeInvalidValues(arg2_vals, arg2_node->getValue());
 							for (size_t j=0; j<arg2_vals.size(); j++) {
-								row[arg1_index] = arg1_vals[i]; row[arg2_index] = arg2_vals[j];
+								if (arg1_index==arg2_index && arg1_vals[i]!= arg2_vals[j]) {
+									return false;
+								} else {
+									row[arg1_index] = arg1_vals[i]; row[arg2_index] = arg2_vals[j];
+								}
 								new_rows->push_back(row);
 							}
 						}
@@ -681,12 +685,9 @@ vector<string> QueryEvaluator::extractResult(TNode * result_node, ResultManager 
 			// extract data
 			ResultTable * r_table = rm->extractTable(symbols);
 			// fill empty column
-			cout << "CHECKPOINT 001 " <<endl;
 			fillResultTable(r_table);
 			// save data to results list
-			cout << "CHECKPOINT 002 " <<endl;
 			fillResultList(result_node, r_table, &results);
-			cout << "CHECKPOINT 003 " <<endl;
 		}
 	}
 
@@ -794,7 +795,6 @@ void QueryEvaluator::fillResultList(TNode * result_node, ResultTable * table, ve
 string QueryEvaluator::fillResult(TNode * result_node, vector<int> values) {
 	string result = "";
 	for (size_t i=0; i<values.size(); i++) {
-		cout << "CHECKPOINT " << i << " " << values[i] <<endl;
 		TNode * node = result_node->getChildAtIndex(i);
 		string str = fillResult(node, values[i]);
 		if (values.size()==1) { result = str; }
@@ -806,7 +806,6 @@ string QueryEvaluator::fillResult(TNode * result_node, vector<int> values) {
 string QueryEvaluator::fillResult(TNode * node, int value) {
 	string name = node->getValue();
 	string type = table.getType(name); 
-	cout << "CHECKPOINT " + name + " " + type + " " << value <<endl;
 	// special case
 	if (type==KEYWORD_CALL) {
 		if (node->getNumChildren()!=0) {
@@ -985,13 +984,13 @@ vector<int> QueryEvaluator::removeInvalidValues(vector<int> values, string symbo
 		int value = values[i];
 		switch (type) {
 		case Procedure:
-			isCorrectType = (PKB::getProcName(value)!="");
+			isCorrectType = (PKB::getProcName(value)!=INVALID);
 			break;
 		case Var:
-			isCorrectType = (PKB::getVarName(value)!="");
+			isCorrectType = (PKB::getVarName(value)!=INVALID);
 			break;
 		case Const:
-			isCorrectType = (PKB::getConstName(value)!="");
+			isCorrectType = (PKB::getConstName(value)!=INVALID);
 			break;
 		case Prog_line:
 		case Stmt:
@@ -1012,7 +1011,7 @@ vector<int> QueryEvaluator::removeInvalidValues(vector<int> values, string symbo
 		default:
 			break;
 		}
-		if (isCorrectType && value>0) 
+		if (isCorrectType && value>=0) 
 			result.push_back(values[i]);
 	}
 	return result;
