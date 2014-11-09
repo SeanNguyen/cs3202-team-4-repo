@@ -254,9 +254,26 @@ CPPUNIT_TEST_SUITE_REGISTRATION( SystemTest1 );
 //	}
 //} 
 //
-//void SystemTest1::test9(){
-//	cout<< "Contains table test."; 
-//
+void SystemTest1::test9(){
+	cout<< "Contains table test."; 
+	string source = "..\\..\\Tests\\Source1.txt";
+	Parser parser;
+	PKB pkb;
+	DesignExtractor de;
+	
+	parser.parse(source);
+	parser.buildPKB();
+	de.buildPKB();
+
+	cout << " Contains table size is : ";
+	cout <<  pkb.getContainTableSize();
+	cout <<endl;
+
+}
+
+
+//void SystemTest1::test10(){
+//	cout<< "Sibling table test. " << "\n";
 //	string source = "..\\..\\Tests\\Source1.txt";
 //	Parser parser;
 //	PKB pkb;
@@ -267,34 +284,10 @@ CPPUNIT_TEST_SUITE_REGISTRATION( SystemTest1 );
 //	de.buildPKB();
 //
 //	cout << " Contains table size is : ";
-//	cout <<  pkb.getContainTableSize();
+//	cout <<  pkb.getContainTableSize() << "\n";
+//
+//	cout << "Sibling table size is : ";
+//	cout <<  pkb.getSiblingTableSize();
 //	cout <<endl;
 //
 //}
-
-
-void SystemTest1::test10(){
-	cout<< "Sibling table test. " << "\n";
-	string source = "..\\..\\Tests\\complexSource.txt";
-	//string source = "..\\..\\Tests\\Source2.txt";
-	Parser parser;
-	PKB pkb;
-	DesignExtractor de;
-	
-	parser.parse(source);
-	parser.buildPKB();
-	de.buildPKB();
-
-	TNode * root = PKB::getASTRoot(); 
-
-	//cout << " AST is : \n";
-	//root->printTNode();
-
-	cout << " Contains table size is : ";
-	cout <<  pkb.getContainTableSize() << "\n";
-
-	cout << "Sibling table size is : ";
-	cout <<  pkb.getSiblingTableSize();
-	cout <<endl;
-
-}

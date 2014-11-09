@@ -23,6 +23,7 @@ void DesignExtractor::buildPKB() {
 	processUses();
 	processModify();
 
+	//createNodeIDtoRealIDtable();
 	
 	///////CONTAINS EXTRACTOR////////
 	extractContain();
@@ -31,23 +32,21 @@ void DesignExtractor::buildPKB() {
 	///////SIBLING EXTRACTOR////////
 	extractSibling();
 
-
 }
 
+//void createNodeIDtoRealIDtable(){
+//
+//}
 
 
 void DesignExtractor::DFSRecur(TNode * node){
 	int nodeID = node -> getID();
-
-	// Mark the current node as visited
-   // visited[nodeID] = true;
 
 	int numOfChildren = node -> getNumChildren();
 
 	if(numOfChildren != 0){
 		// Recur for all the vertices, child to this vertex
 		for (size_t i = 0; i < numOfChildren; i++){
-			//if(!visited[nodeID]) {
 				TNode * child = node -> getChildAtIndex(i);
 				int childID = child -> getID();
 
@@ -60,12 +59,13 @@ void DesignExtractor::DFSRecur(TNode * node){
 				Symbol childType = child -> getType();
 				if(nodeType != Program && nodeType != Undefined && 
 					childType != Program && childType != Undefined){
-					//cout << "CHECKPOINT " + SyntaxHelper::SymbolToString(nodeType) <<endl;
+						if (nodeID==16) {
+							node -> printTNode();
+						}
 					bool result = PKB::insertContains(nodeID, childID);
 				}
 
 				DFSRecur(child);
-			//}
 		}
 	}
 	
@@ -83,12 +83,10 @@ void DesignExtractor::extractContain() {
 
 
 	//get number of nodes
-	//int sizeOfAST = TNode::getGlobalId() + 1;
-
-	//// Mark all the vertices as not visited
-	//bool *visited = new bool [sizeOfAST];
-	//for(int i = 0; i < sizeOfAST; i++)
- //       visited[i] = false;
+	int sizeOfAST = TNode::getGlobalId() + 1;
+	cout << "size of ast: ";
+	cout << sizeOfAST; 
+	cout << endl;
 
 	//apply depth first search on AST
 	DFSRecur(root);
