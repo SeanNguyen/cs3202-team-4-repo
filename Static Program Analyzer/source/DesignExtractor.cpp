@@ -16,8 +16,6 @@ DesignExtractor::~DesignExtractor(void)
 }
 
 void DesignExtractor::buildPKB() {
-	PKB::preCalculateStarTables();
-
 	PKB::calculateASTSize();
 
 	processUses();
@@ -27,10 +25,10 @@ void DesignExtractor::buildPKB() {
 	
 	///////CONTAINS EXTRACTOR////////
 	extractContain();
-
-
 	///////SIBLING EXTRACTOR////////
 	extractSibling();
+
+	PKB::preCalculateStarTables();
 
 }
 

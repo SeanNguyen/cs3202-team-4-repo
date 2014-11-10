@@ -67,6 +67,7 @@ void PKB::preCalculateStarTables() {
 	callStmtTable.preCalculateStarTable();
 	callProcTable.preCalculateStarTable();
 	nextTable.preCalculateStarTable();
+	containTable.preCalculateStarTable();
 }
 
 void PKB::setCommonWhiles(map <int, map <int, int>> data) {
@@ -655,12 +656,14 @@ int PKB::getContainTableSize() {
 	return containTable.getSize();
 }
 
-//void PKB::printContainsTable() {
-//	int size = containTable.getSize();
-//	for (int i = 0; i < size; i++) {
-//		cout << "VALUE" + containTable.getValues(i);
-//	}
-//}
+vector<int> PKB::getContainedStar(int nodeContaining){
+	return containTable.getIndexesStar(nodeContaining);
+}
+
+vector<int> PKB::getContainingStar(int nodeContained){
+	return containTable.getValuesStar(nodeContained);
+}
+
 
 ///////////////////////////////SIBLING Methods///////////////////////////////////
 bool PKB::isSibling(int nId1, int nId2){
