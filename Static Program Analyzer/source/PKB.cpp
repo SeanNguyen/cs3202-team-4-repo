@@ -486,25 +486,31 @@ vector <int> PKB::getAffected(int affectingStmt) {
 }
 
 vector <int> PKB::getAffected (int affectingStmt, int currentStmt, bool isStartingPoint) {
+	static map <int, int> visited;
 	if (isStartingPoint)
-		flags.clear();
+		visited.clear();
 
 	vector <int> results;
-	if (flags.count(currentStmt) != 0 && flags[currentStmt] == true) {
+	if (visited.count(currentStmt) != 0 && visited[currentStmt] == 2) {
 		return results;
 	} else if (!isStartingPoint) {
-		flags[currentStmt] = true;
+		visited[currentStmt] ++;
 	}
 
 	vector<int> modifiedVars = getModifiedVarAtStmt(affectingStmt);
 	vector<int> modifiedVarsByCurrent = getModifiedVarAtStmt(currentStmt);
 	vector<int> usedVars = getUsedVarAtStmt(currentStmt);
 
-	if (modifiedVars.size() > 0 && modifiedVarsByCurrent.size() > 0 && modifiedVars.front() == modifiedVarsByCurrent.front())
-		return results;
-
-	if (modifiedVars.size() > 0 && find (usedVars.begin(), usedVars.end(), modifiedVars.front()) != usedVars.end()) {
-		results.push_back(currentStmt);
+	if (stmtTable.getValue(currentStmt) == KEYWORD_ASSIGN) {
+		if (modifiedVars.size() > 0 && find (usedVars.begin(), usedVars.end(), modifiedVars.front()) != usedVars.end() && !isStartingPoint) {
+			results.push_back(currentStmt);
+		}
+		if (modifiedVars.size() > 0 && modifiedVarsByCurrent.size() > 0 && modifiedVars.front() == modifiedVarsByCurrent.front() && !isStartingPoint)
+			return results;
+	} else if (stmtTable.getValue(currentStmt) == KEYWORD_CALL) {
+		if (modifiedVars.size() > 0 && modifiedVarsByCurrent.size() > 0 && !isStartingPoint
+			&& find(modifiedVarsByCurrent.begin(), modifiedVarsByCurrent.end(), modifiedVars.front()) != modifiedVarsByCurrent.end())
+			return results;
 	}
 
 	vector <int> nextStmts = getNextStmts(currentStmt);
@@ -521,25 +527,31 @@ vector<int> PKB::getAffecting(int affectedStmt) {
 }
 
 vector <int> PKB::getAffecting (int affectedStmt, int currentStmt, bool isStartingPoint) {
+	static map<int, int> visited;
 	if (isStartingPoint)
-		flags.clear();
+		visited.clear();
 
 	vector <int> results;
-	if (flags.count(currentStmt) != 0 && flags[currentStmt] == true) {
+	if (visited.count(currentStmt) != 0 && visited[currentStmt] == 2) {
 		return results;
 	} else if (!isStartingPoint) {
-		flags[currentStmt] = true;
+		visited[currentStmt] ++;
 	}
 
 	vector<int> usedVars = getUsedVarAtStmt(affectedStmt);
 	vector<int> usedVarsByCurrent = getUsedVarAtStmt(currentStmt);
 	vector<int> modifiedVars = getModifiedVarAtStmt(currentStmt);
 
-	if (usedVars.size() > 0 && usedVarsByCurrent.size() > 0 && usedVars.front() == usedVarsByCurrent.front())
-		return results;
-
-	if (usedVars.size() > 0 && find (modifiedVars.begin(), modifiedVars.end(), usedVars.front()) != modifiedVars.end()) {
-		results.push_back(currentStmt);
+	if (stmtTable.getValue(currentStmt) == KEYWORD_ASSIGN) {
+		if (usedVars.size() > 0 && find (modifiedVars.begin(), modifiedVars.end(), usedVars.front()) != modifiedVars.end() && !isStartingPoint) {
+			results.push_back(currentStmt);
+		if (usedVars.size() > 0 && usedVarsByCurrent.size() > 0 && usedVars.front() == usedVarsByCurrent.front() && !isStartingPoint)
+			return results;
+		}
+	} else if (stmtTable.getValue(currentStmt) == KEYWORD_CALL) {
+		if (usedVars.size() > 0 && usedVarsByCurrent.size() > 0 && !isStartingPoint
+			&& find(usedVarsByCurrent.begin(), usedVarsByCurrent.end(), usedVars.front()) != usedVarsByCurrent.end())
+			return results;
 	}
 
 	vector <int> previousStmts = getPreviousStmts(currentStmt);
@@ -561,15 +573,16 @@ vector<int> PKB::getAffectingStar (int affectedStmt) {
 }
 
 vector<int> PKB::getAffectedStar (int affectingStmt, bool isStartingPoint) {
+	static map<int, bool> visited;
 	if (isStartingPoint)
-		flags.clear();
+		visited.clear();
 
 	vector <int> results;
-	if (flags.count(affectingStmt) != 0 && flags[affectingStmt] == true) {
+	if (visited.count(affectingStmt) != 0 && visited[affectingStmt] == true) {
 		return results;
 	} else if (!isStartingPoint) {
 		results.push_back(affectingStmt);
-		flags[affectingStmt] = true;
+		visited[affectingStmt] = true;
 	}
 
 	vector <int> values = getAffected(affectingStmt);
@@ -582,15 +595,16 @@ vector<int> PKB::getAffectedStar (int affectingStmt, bool isStartingPoint) {
 }
 
 vector<int> PKB::getAffectingStar (int affectedStmt, bool isStartingPoint) {
+	static map<int, bool> visited;
 	if (isStartingPoint)
-		flags.clear();
+		visited.clear();
 
 	vector <int> results;
-	if (flags.count(affectedStmt) != 0 && flags[affectedStmt] == true) {
+	if (visited.count(affectedStmt) != 0 && visited[affectedStmt] == true) {
 		return results;
 	} else if (!isStartingPoint) {
 		results.push_back(affectedStmt);
-		flags[affectedStmt] = true;
+		visited[affectedStmt] = true;
 	}
 
 	vector <int> values = getAffecting(affectedStmt);
