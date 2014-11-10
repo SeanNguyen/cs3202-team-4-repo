@@ -23,7 +23,7 @@ void DesignExtractor::buildPKB() {
 	processUses();
 	processModify();
 
-	//createNodeIDtoRealIDtable();
+	//nodeIdToRealId();
 	
 	///////CONTAINS EXTRACTOR////////
 	extractContain();
@@ -34,12 +34,42 @@ void DesignExtractor::buildPKB() {
 
 }
 
-//void createNodeIDtoRealIDtable(){
-//
-//}
+void nodeidtorealid(TNode * node){
+	int astsize = PKB::getASTSize();
+
+	int nodeId=node->getID();
+	Symbol nodeType = node->getType();
+	string nodeValue = node->getValue();
+	int realId=0;
+	bool temp1, temp2;
+	
+	switch(nodeType){
+		case(Const):{
+			realId = PKB::getConstIndex(nodeValue);
+			break;
+					}
+		case(Procedure):{
+			vector<int> temp =PKB::getProcIndex(nodeValue);
+			realId=temp.front();
+			break;
+						}
+		case(Var):{
+			realId=PKB::getVarIndex(nodeValue);
+			break;
+				  }
+	}
+
+	temp1=PKB::insertNodeToReal(nodeId, realId);
+	temp2=PKB::insertNodeType(nodeId, SyntaxHelper::SymbolToString(nodeType));
+
+}
 
 
 void DesignExtractor::DFSRecur(TNode * node){
+	
+	//call method to handle dealing with the nodeIdtorReal/type --> the nodes here might be called multiple times but all will be called 
+	nodeidtorealid(node);
+
 	int nodeID = node -> getID();
 
 	int numOfChildren = node -> getNumChildren();
@@ -82,11 +112,11 @@ void DesignExtractor::extractContain() {
 	//cout << root -> getID() + "\n";
 
 
-	//get number of nodes
-	int sizeOfAST = TNode::getGlobalId() + 1;
-	cout << "size of ast: ";
-	cout << sizeOfAST; 
-	cout << endl;
+	////get number of nodes
+	//int sizeOfAST = TNode::getGlobalId() + 1;
+	//cout << "size of ast: ";
+	//cout << sizeOfAST; 
+	//cout << endl;
 
 	//apply depth first search on AST
 	DFSRecur(root);
@@ -178,7 +208,7 @@ void DesignExtractor::extractSibling(){
 	//int containsSize = PKB::getContainTableSize();
 	//cout << containsSize;
 
-	cout<< "The Size of the AST (in sibling mtd ) is: " << (astSize) << "\n";
+	//cout<< "The Size of the AST (in sibling mtd ) is: " << (astSize) << "\n";
 
 	for (int i = 0; i < astSize; i++) {
 		vector <int> children = PKB::getContaining(i);
@@ -188,74 +218,7 @@ void DesignExtractor::extractSibling(){
 				test = PKB::insertSibling(children[j-1], children[j]);
 			}
 		}
-		
-
 	}
-
-	//bool test=false;
-
-	//int numNodes=TNode::getGlobalId() +1;
-
- //   cout<< "the AST size is " ;
- //	cout << numNodes;
-	//cout<< " "; 
-
- //   for(int i=0;i<numNodes;i++){
- //       vector<int> children = PKB::getContaining(i);
-
-	//	if(children.size()!=0){
-
-	//		for(int j=1;j<children.size();j++){
- //           test =PKB::insertSibling(children[j-1], children[j]);
-	//		cout << "for j = " ;
-	//		cout << j ;
-	//		cout<< "adding into the sibling table is" ;
-	//		cout << test ; 
-	//		cout << "\n" ; 
- //       }
-	//		
-	//	}
-
- //       //the values returned here will be the nodeIDs right??
-	//	
- //       
- //   }
-
-	/*
-
-	//queue<int> theQueue = new arrayDequeue 
-
-	TNode * root = PKB::getASTRoot(); 
-	TNode * previous; 
-	int numNodes= TNode::getGlobalId() + 1;
-	TNode * curr= root;
-	int key;
-	int value;
-
-	for(int i=0;i<numNodes;i ++){ 
-		int children=curr->getNumChildren();
-
-		if(children == 0 & i!=(numNodes-1)){
-			//deal with gng back to the previous node to branch out 
-		}
-
-		else if(children==1){
-			curr=curr->getChildAtIndex(0);
-			//i++;
-		}
-		else{
-			for(int j=1;j<children;j++){
-				key=curr->getChildAtIndex(j-1)->getID();
-				value=curr->getChildAtIndex(j)->getID();
-				PKB::insertSibling(key, value);
-			}
-			curr=curr->getChildAtIndex(0);
-		}
-	
-	
-	}
-	*/
-
 }
 
 

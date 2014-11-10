@@ -17,6 +17,7 @@ private:
 	static ListTable <string> procTable;
 	static ListTable <string> varTable;
 	static ListTable <string> stmtTable;
+	
 
 	static MapTable <int> followTable;
 	static MapTable <int> modifyStmtTable;
@@ -29,6 +30,9 @@ private:
 	static MapTable <int> nextTable;
 	static MapTable <int> siblingTable;
 	static MapTable <int> containTable;
+	static MapTable <int> nodeToRealIdTable;
+	static map <int,string> nodeIdToTypeTable;
+
 
 	static map<int, bool> flags;
 	static map <int, map <int, int>> commonWhiles;
@@ -42,6 +46,7 @@ public:
 	static void setCommonWhiles(map <int, map <int, int>> data);
 	static void setCommonIfs(map <int, map <int, int>> data);
 	static void setStartingStmtOfProc(map <int, string> data);
+
 	//////////////////////////////////AST METHODS/////////////////
 	static TNode * createNode();
 	static TNode * createNode(Symbol type);
@@ -179,6 +184,20 @@ public:
 	static vector<int> getContained(int nodeContaining);
 	static vector<int> getContaining(int nodeContained);
 	static int getContainTableSize();
+
+	/////////////////////////////////NODE TO REAL ID  Methods/////////////////////////////////
+	static bool insertNodeToReal(int nodeId, int realId);
+	static int getRealIndex(int nodeId);
+	static vector<int> getNodeIndexes(int realId);
+	static int getNodeToRealIdTableSize();
+
+	/////////////////////////////////NODE ID TO TYPE  Methods/////////////////////////////////
+	static bool insertNodeType(int nodeId, string nodeType);
+	static Symbol getNodeType(int nodeId);
+	static vector<int> getNodeIndexes(string nodeType);
+	static int getNodeIdToTypeTableSize();
+
+
 
 };
 #endif

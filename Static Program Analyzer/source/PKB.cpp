@@ -8,6 +8,7 @@ ListTable <string> PKB::procTable;
 ListTable <string> PKB::varTable;
 ListTable <string> PKB::stmtTable;
 
+
 MapTable <int> PKB::followTable;
 MapTable <int> PKB::parentTable;
 MapTable <int> PKB::callStmtTable;
@@ -15,6 +16,10 @@ MapTable <int> PKB::callProcTable;
 MapTable <int> PKB::nextTable;
 MapTable <int> PKB::siblingTable;
 MapTable <int> PKB::containTable;
+MapTable <int> PKB::nodeToRealIdTable;
+map <int,string> PKB::nodeIdToTypeTable;
+
+
 
 MapTable <int> PKB::modifyStmtTable;
 MapTable <int> PKB::modifyProcTable;
@@ -51,6 +56,9 @@ void PKB::resetPKB() {
 	PKB::callProcTable = MapTable <int>();
 	PKB::nextTable = MapTable <int>();
 	PKB::siblingTable = MapTable <int>();
+	PKB::nodeToRealIdTable = MapTable<int>();
+	PKB::nodeIdToTypeTable = map<int, string>();
+	
 }
 
 void PKB::preCalculateStarTables() {
@@ -675,6 +683,77 @@ int PKB::getSiblingTableSize() {
 }
 
 
+///////////////////////////////NODE TO REAL ID  Methods///////////////////////////////////
+bool PKB::insertNodeToReal(int nodeId, int realId) {
 
-//return containTable.getIndexes(nodeContained);
+	if(nodeToRealIdTable.isMapped(nodeId, realId))
+		return false;
+
+	return nodeToRealIdTable.insert(nodeId,realId);
+}
+
+int PKB::getRealIndex(int nodeId){
+	vector <int> realId=nodeToRealIdTable.getValues(nodeId);
+	cout<<realId.size(); 
+	//if realId.size!=0 get the element and return as int
+	return realId.front();
+}
+
+vector<int> PKB::getNodeIndexes(int realId){
+	vector <int> indexes = nodeToRealIdTable.getIndexes(realId);
+
+	return indexes;
+}
+
+int PKB::getNodeToRealIdTableSize() {
+	return nodeToRealIdTable.getSize();
+}
+
+
+/////////////////////////////////NODE ID TO TYPE  Methods/////////////////////////////////
+
+//change all of the mtds here to reflect the map implementation 
+bool PKB::insertNodeType(int nodeId, string nodeType){
+	if(nodeIdToTypeTable.find(nodeId) != nodeIdToTypeTable.end())
+		return false; //nodeId already inserted 
+//
+//	//make_pair(nodeId, nodeType);
+//	//map<int, string>::iterator it = nodeIdToTypeTable.begin();
+//	//map::iterator <int, string> it = nodeIdToTypeTable.find(nodeId);
+//	//nodeIdToTypeTable
+//	//nodeIdToTypeTable.insert(nodeId, nodeType);
+//	//nodeIdToTypeTable.insert(value_type(nodeId, nodeType))
+	nodeIdToTypeTable[nodeId] = nodeType;
+	return true;
+//	//return nodeIdToTypeTable.insert(std::make_pair(nodeId, nodeType));
+}
+
+Symbol PKB::getNodeType(int nodeId){
+	//string nodeType = nodeIdToTypeTable.getValue(nodeId);
+
+
+	map<int, string>::const_iterator it = nodeIdToTypeTable.find(nodeId);
+
+	//if(it!=nodeIdToTypeTable.end())
+		string nodeType= it->second;
+
+	Symbol symbol = SyntaxHelper::getSymbolType(nodeType);
+
+	return symbol;
+}
+
+vector<int> PKB::getNodeIndexes(string nodeType){
+	vector<int> indexes; //= nodeIdToTypeTable.getIndexes(nodeType);
+
+	for(map<int, string>::iterator it = nodeIdToTypeTable.begin(); it!=nodeIdToTypeTable.end();++it){
+		indexes.push_back(it->first);
+
+	}
+
+	return indexes;
+}
+
+int PKB::getNodeIdToTypeTableSize(){
+	return nodeIdToTypeTable.size();
+}
 

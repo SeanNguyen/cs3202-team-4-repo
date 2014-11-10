@@ -3,7 +3,7 @@ cat: Next
 1 - Next ::
 assign a1; prog_line n1, n2;
 Select n1 such that Next(n1, 1)
-none
+4
 5000
 2 - Next ::
 assign a1; prog_line n1, n2;
@@ -23,7 +23,7 @@ Select n1 such that Next(n1, 4)
 5 - Next ::
 assign a1; prog_line n1, n2;
 Select n1 such that Next(n1, 5)
-4
+1
 5000
 6 - Next ::
 assign a1; prog_line n1, n2;
