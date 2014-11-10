@@ -256,6 +256,7 @@ void QueryPreprocessor::preprocessQueryPart(string queryPart) {
 					currentCondition = WithCls;
 					TNode * withCls = preprocessWithCondition(list, i);
 					root -> addChild(withCls);
+					break;
 				}
 			default:
 				{
