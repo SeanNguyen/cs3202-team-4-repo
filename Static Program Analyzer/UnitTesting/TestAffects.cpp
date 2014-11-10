@@ -67,8 +67,8 @@ void TestAffects::TestgetAffected() {
 	insertMod1 = pkb.insertModifies(2, 2);
 	insertUse1 = pkb.insertUses(5, 2);
 
-	CPPUNIT_ASSERT(pkb.getAffected(1, 1, true).empty());
-	CPPUNIT_ASSERT(pkb.getAffected(2, 2, true).empty());
+	CPPUNIT_ASSERT(pkb.getAffected(1).empty());
+	CPPUNIT_ASSERT(pkb.getAffected(2).empty());
 }
 
 void TestAffects::TestgetAffecting() {

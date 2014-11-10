@@ -58,7 +58,7 @@ void PKB::resetPKB() {
 	PKB::siblingTable = MapTable <int>();
 	PKB::nodeToRealIdTable = MapTable<int>();
 	PKB::nodeIdToTypeTable = map<int, string>();
-	
+
 }
 
 void PKB::preCalculateStarTables() {
@@ -483,40 +483,36 @@ bool PKB::isAffectStar(int affectingStmt, int affectedStmt) {
 }
 
 vector <int> PKB::getAffected(int affectingStmt) {
-	return getAffected(affectingStmt, affectingStmt, true);
+	vector<int> modifiedVars = getModifiedVarAtStmt(affectingStmt);
+	vector<int> path;
+	return getAffected(modifiedVars, affectingStmt, path);
 }
 
-vector <int> PKB::getAffected (int affectingStmt, int currentStmt, bool isStartingPoint) {
-	static map <int, int> visited;
-
-	//If this is the starting point, then clear all the flags from the previous run
-	if (isStartingPoint) {
-		visited.clear();
-	}
-
+vector <int> PKB::getAffected (vector<int> modifiedVars, int currentStmt, vector<int> path) {
 	vector <int> results;
 	//If a stmt was visited, return with no result. Else set as visited and continue.
-	if (visited[currentStmt] == 1) {
+	if (modifiedVars.size() == 0 || find(path.begin(), path.end(), currentStmt) != path.end()) {
 		return results;
-	} else if (!isStartingPoint) {
-		visited[currentStmt] = 1;
+	} else if (path.size() == 0) {
+		path.push_back(-1);
+	} else {
+		path.push_back(currentStmt);
 	}
 
-	vector<int> modifiedVars = getModifiedVarAtStmt(affectingStmt);
 	vector<int> modifiedVarsByCurrent = getModifiedVarAtStmt(currentStmt);
 	vector<int> usedVars = getUsedVarAtStmt(currentStmt);
 
 	//is currently at startingStmt then skip this step
 	//Else, see if the current stmt use sth that the original stmt modify then add current stmt to result list
 	//ASSUME the original stmt only modify 1 var
-	if (!isStartingPoint && stmtTable.getValue(currentStmt) == KEYWORD_ASSIGN) {
+	if (path.size() > 1 && stmtTable.getValue(currentStmt) == KEYWORD_ASSIGN) {
 		if (find (usedVars.begin(), usedVars.end(), modifiedVars.front()) != usedVars.end()) {
 			results.push_back(currentStmt);
 		}
 	}
-	
+
 	//if current stmt modify var that original stmt modify then return;
-	if (!isStartingPoint && (stmtTable.getValue(currentStmt) == KEYWORD_CALL || stmtTable.getValue(currentStmt) == KEYWORD_ASSIGN)) {
+	if (path.size() > 1 && (stmtTable.getValue(currentStmt) == KEYWORD_CALL || stmtTable.getValue(currentStmt) == KEYWORD_ASSIGN)) {
 		if (find(modifiedVarsByCurrent.begin(), modifiedVarsByCurrent.end(), modifiedVars.front()) != modifiedVarsByCurrent.end())
 			return results;
 	}
@@ -524,7 +520,7 @@ vector <int> PKB::getAffected (int affectingStmt, int currentStmt, bool isStarti
 	vector <int> nextStmts = getNextStmts(currentStmt);
 	//apply depth first search here
 	for (size_t i = 0; i < nextStmts.size(); i++) {
-		vector <int> tempList = getAffected(affectingStmt, nextStmts.at(i), false);
+		vector <int> tempList = getAffected(modifiedVars, nextStmts.at(i), path);
 		results.insert(results.end(), tempList.begin(), tempList.end());
 	}
 	return results;
@@ -532,23 +528,19 @@ vector <int> PKB::getAffected (int affectingStmt, int currentStmt, bool isStarti
 
 vector<int> PKB::getAffecting(int affectedStmt) {
 	vector <int> usedVars = getUsedVarAtStmt(affectedStmt);
-	return getAffecting(usedVars, affectedStmt, true);
+	vector<int> path;
+	return getAffecting(usedVars, affectedStmt, path);
 }
 
-vector <int> PKB::getAffecting (vector<int> usedVars, int currentStmt, bool isStartingPoint) {
-	static map <int, int> visited;
-
-	//If this is the starting point, then clear all the flags from the previous run
-	if (isStartingPoint) {
-		visited.clear();
-	}
-
+vector <int> PKB::getAffecting (vector<int> usedVars, int currentStmt, vector<int> path) {
 	vector <int> results;
 	//If a stmt was visited, return with no result. Else set as visited and continue.
-	if (visited[currentStmt] == 1 || usedVars.size() == 0) {
+	if (usedVars.size() == 0 || find(path.begin(), path.end(), currentStmt) != path.end()) {
 		return results;
-	} else if (!isStartingPoint) {
-		visited[currentStmt] = 1;
+	} else if (path.size() == 0) {
+		path.push_back(-1);
+	} else {
+		path.push_back(currentStmt);
 	}
 
 	vector<int> modifiedVars = getModifiedVarAtStmt(currentStmt);
@@ -556,15 +548,15 @@ vector <int> PKB::getAffecting (vector<int> usedVars, int currentStmt, bool isSt
 	//is currently at startingStmt then skip this step
 	//Else, see if the current stmt modifys sth that the original stmt use then add current stmt to result list
 	//		and revome the modified var from the used var list
-	if (!isStartingPoint && stmtTable.getValue(currentStmt) == KEYWORD_ASSIGN) {
+	if (path.size() > 1 && stmtTable.getValue(currentStmt) == KEYWORD_ASSIGN) {
 		if (find (usedVars.begin(), usedVars.end(), modifiedVars.front()) != usedVars.end()) {
 			results.push_back(currentStmt);
 			usedVars.erase(find (usedVars.begin(), usedVars.end(), modifiedVars.front()));
 		}
 	}
-	
+
 	//if current stmt modify var that original stmt modify then return;
-	if (!isStartingPoint && (stmtTable.getValue(currentStmt) == KEYWORD_CALL || stmtTable.getValue(currentStmt) == KEYWORD_ASSIGN)) {
+	if (path.size() > 1 && (stmtTable.getValue(currentStmt) == KEYWORD_CALL || stmtTable.getValue(currentStmt) == KEYWORD_ASSIGN)) {
 		for (size_t i = 0; i < modifiedVars.size(); i++) {
 			int modifiedVar = modifiedVars[i];
 			if (find(usedVars.begin(), usedVars.end(), modifiedVar) != usedVars.end()) {
@@ -576,7 +568,7 @@ vector <int> PKB::getAffecting (vector<int> usedVars, int currentStmt, bool isSt
 	vector <int> previousStmts = getPreviousStmts(currentStmt);
 	//apply depth first search here
 	for (size_t i = 0; i < previousStmts.size(); i++) {
-		vector <int> tempList = getAffecting(usedVars, previousStmts.at(i), false);
+		vector <int> tempList = getAffecting(usedVars, previousStmts.at(i), path);
 		results.insert(results.end(), tempList.begin(), tempList.end());
 	}
 	return results;
@@ -719,16 +711,16 @@ int PKB::getNodeToRealIdTableSize() {
 bool PKB::insertNodeType(int nodeId, string nodeType){
 	if(nodeIdToTypeTable.find(nodeId) != nodeIdToTypeTable.end())
 		return false; //nodeId already inserted 
-//
-//	//make_pair(nodeId, nodeType);
-//	//map<int, string>::iterator it = nodeIdToTypeTable.begin();
-//	//map::iterator <int, string> it = nodeIdToTypeTable.find(nodeId);
-//	//nodeIdToTypeTable
-//	//nodeIdToTypeTable.insert(nodeId, nodeType);
-//	//nodeIdToTypeTable.insert(value_type(nodeId, nodeType))
+	//
+	//	//make_pair(nodeId, nodeType);
+	//	//map<int, string>::iterator it = nodeIdToTypeTable.begin();
+	//	//map::iterator <int, string> it = nodeIdToTypeTable.find(nodeId);
+	//	//nodeIdToTypeTable
+	//	//nodeIdToTypeTable.insert(nodeId, nodeType);
+	//	//nodeIdToTypeTable.insert(value_type(nodeId, nodeType))
 	nodeIdToTypeTable[nodeId] = nodeType;
 	return true;
-//	//return nodeIdToTypeTable.insert(std::make_pair(nodeId, nodeType));
+	//	//return nodeIdToTypeTable.insert(std::make_pair(nodeId, nodeType));
 }
 
 Symbol PKB::getNodeType(int nodeId){
@@ -738,7 +730,7 @@ Symbol PKB::getNodeType(int nodeId){
 	map<int, string>::const_iterator it = nodeIdToTypeTable.find(nodeId);
 
 	//if(it!=nodeIdToTypeTable.end())
-		string nodeType= it->second;
+	string nodeType= it->second;
 
 	Symbol symbol = SyntaxHelper::getSymbolType(nodeType);
 

@@ -162,10 +162,10 @@ public:
 	static bool isAffectStar(int affectingStmt, int affectedStmt);
 	// temp adding getAffected(int) to run testing - Tho
 	static vector<int> getAffected(int affectingStmt);
-	static vector<int> getAffected (int affectingStmt, int currentStmt, bool isStartingPoint);
+	static vector<int> getAffected (vector<int> modifiedVars, int currentStmt, vector<int> path);
 	// temp adding getAffecting(int) to run testing - Tho
 	static vector<int> getAffecting(int affectedStmt);
-	static vector<int> getAffecting (vector<int> usedVars, int currentStmt, bool isStartingPoint);
+	static vector<int> getAffecting (vector<int> usedVars, int currentStmt, vector<int> path);
 	static vector<int> getAffectedStar (int affectingStmt);
 	static vector<int> getAffectingStar (int affectedStmt);
 	static vector<int> getAffectedStar (int affectingStmt, bool isStartingPoint);
