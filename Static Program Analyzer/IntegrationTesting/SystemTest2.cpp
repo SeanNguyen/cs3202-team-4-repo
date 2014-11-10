@@ -306,7 +306,7 @@ void SystemTest2::processUsesLoopProc() {
 }
 
 void SystemTest2::processUsesBasicTest(){
-	string source = "..\\..\\Tests\\complexSource.txt";
+	string source = "..\\..\\Tests\\TestAllSources1.txt";
 	Parser parser;
 	PKB pkb;
 	DesignExtractor designextractor;
@@ -315,10 +315,10 @@ void SystemTest2::processUsesBasicTest(){
 	parser.buildPKB();
 	designextractor.buildPKB();
 
-	int p = pkb.getProcIndex("p").at(0);
-	int a = pkb.getProcIndex("a").at(0);
-	int q = pkb.getProcIndex("q").at(0);
-	int d = pkb.getProcIndex("d").at(0);
+	//int p = pkb.getProcIndex("p").at(0);
+	//int a = pkb.getProcIndex("a").at(0);
+	//int q = pkb.getProcIndex("q").at(0);
+	//int d = pkb.getProcIndex("d").at(0);
 
 
 	cout << "---------USE CHECK-----------";
@@ -328,13 +328,17 @@ void SystemTest2::processUsesBasicTest(){
 	//for (int i = 0; i < usedvars.size(); i++){
 	//	cout << pkb.getVarName(usedvars[i]);	
 	//}
-	 
-	vector<int> usedProc = pkb.getProcUsingVar(10);
+	
+	int Example = pkb.getProcIndex("Example").front();
+
+	cout << Example;
+
+	vector<int> usedProc = pkb.getUsedVarAtProc(Example);
 
 	cout << "size of usedProc";
 	cout << usedProc.size();
 	
 	for (int i = 0; i < usedProc.size(); i++){
-		cout << pkb.getProcName(usedProc[i]);	
+		cout << pkb.getVarName(usedProc[i]);	
 	}
 }

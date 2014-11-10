@@ -25,6 +25,7 @@ void DesignExtractor::buildPKB() {
 	extractSibling();
 
 	PKB::preCalculateStarTables();
+	
 	processUses();
 	processModify();
 
