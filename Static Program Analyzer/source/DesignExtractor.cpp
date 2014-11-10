@@ -16,19 +16,23 @@ DesignExtractor::~DesignExtractor(void)
 }
 
 void DesignExtractor::buildPKB() {
+	
 	PKB::calculateASTSize();
 
-	processUses();
-	processModify();
-
-	//nodeIdToRealId();
-	
 	///////CONTAINS EXTRACTOR////////
 	extractContain();
 	///////SIBLING EXTRACTOR////////
 	extractSibling();
 
 	PKB::preCalculateStarTables();
+	processUses();
+	processModify();
+
+	//nodeIdToRealId();
+	
+
+
+
 
 }
 
