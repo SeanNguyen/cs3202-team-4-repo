@@ -160,7 +160,7 @@ public:
 	static vector<int> getAffected (int affectingStmt, int currentStmt, bool isStartingPoint);
 	// temp adding getAffecting(int) to run testing - Tho
 	static vector<int> getAffecting(int affectedStmt);
-	static vector<int> getAffecting (int affectedStmt, int currentStmt, bool isStartingPoint);
+	static vector<int> getAffecting (vector<int> usedVars, int currentStmt, bool isStartingPoint);
 	static vector<int> getAffectedStar (int affectingStmt);
 	static vector<int> getAffectingStar (int affectedStmt);
 	static vector<int> getAffectedStar (int affectingStmt, bool isStartingPoint);

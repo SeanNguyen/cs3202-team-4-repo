@@ -479,32 +479,39 @@ vector <int> PKB::getAffected(int affectingStmt) {
 
 vector <int> PKB::getAffected (int affectingStmt, int currentStmt, bool isStartingPoint) {
 	static map <int, int> visited;
-	if (isStartingPoint)
+
+	//If this is the starting point, then clear all the flags from the previous run
+	if (isStartingPoint) {
 		visited.clear();
+	}
 
 	vector <int> results;
-	if (visited.count(currentStmt) != 0 && visited[currentStmt] == 2) {
+	//If a stmt was visited, return with no result. Else set as visited and continue.
+	if (visited[currentStmt] == 1) {
 		return results;
 	} else if (!isStartingPoint) {
-		visited[currentStmt] ++;
+		visited[currentStmt] = 1;
 	}
 
 	vector<int> modifiedVars = getModifiedVarAtStmt(affectingStmt);
 	vector<int> modifiedVarsByCurrent = getModifiedVarAtStmt(currentStmt);
 	vector<int> usedVars = getUsedVarAtStmt(currentStmt);
 
-	if (stmtTable.getValue(currentStmt) == KEYWORD_ASSIGN) {
-		if (modifiedVars.size() > 0 && find (usedVars.begin(), usedVars.end(), modifiedVars.front()) != usedVars.end() && !isStartingPoint) {
+	//is currently at startingStmt then skip this step
+	//Else, see if the current stmt use sth that the original stmt modify then add current stmt to result list
+	//ASSUME the original stmt only modify 1 var
+	if (!isStartingPoint && stmtTable.getValue(currentStmt) == KEYWORD_ASSIGN) {
+		if (find (usedVars.begin(), usedVars.end(), modifiedVars.front()) != usedVars.end()) {
 			results.push_back(currentStmt);
 		}
-		if (modifiedVars.size() > 0 && modifiedVarsByCurrent.size() > 0 && modifiedVars.front() == modifiedVarsByCurrent.front() && !isStartingPoint)
-			return results;
-	} else if (stmtTable.getValue(currentStmt) == KEYWORD_CALL) {
-		if (modifiedVars.size() > 0 && modifiedVarsByCurrent.size() > 0 && !isStartingPoint
-			&& find(modifiedVarsByCurrent.begin(), modifiedVarsByCurrent.end(), modifiedVars.front()) != modifiedVarsByCurrent.end())
+	}
+	
+	//if current stmt modify var that original stmt modify then return;
+	if (!isStartingPoint && (stmtTable.getValue(currentStmt) == KEYWORD_CALL || stmtTable.getValue(currentStmt) == KEYWORD_ASSIGN)) {
+		if (find(modifiedVarsByCurrent.begin(), modifiedVarsByCurrent.end(), modifiedVars.front()) != modifiedVarsByCurrent.end())
 			return results;
 	}
-
+	//Else continue travel by next
 	vector <int> nextStmts = getNextStmts(currentStmt);
 	//apply depth first search here
 	for (size_t i = 0; i < nextStmts.size(); i++) {
@@ -515,45 +522,55 @@ vector <int> PKB::getAffected (int affectingStmt, int currentStmt, bool isStarti
 }
 
 vector<int> PKB::getAffecting(int affectedStmt) {
-	return getAffecting(affectedStmt, affectedStmt, true);
+	vector <int> usedVars = getUsedVarAtStmt(affectedStmt);
+	return getAffecting(usedVars, affectedStmt, true);
 }
 
-vector <int> PKB::getAffecting (int affectedStmt, int currentStmt, bool isStartingPoint) {
-	static map<int, int> visited;
-	if (isStartingPoint)
+vector <int> PKB::getAffecting (vector<int> usedVars, int currentStmt, bool isStartingPoint) {
+	static map <int, int> visited;
+
+	//If this is the starting point, then clear all the flags from the previous run
+	if (isStartingPoint) {
 		visited.clear();
+	}
 
 	vector <int> results;
-	if (visited.count(currentStmt) != 0 && visited[currentStmt] == 2) {
+	//If a stmt was visited, return with no result. Else set as visited and continue.
+	if (visited[currentStmt] == 1 || usedVars.size() == 0) {
 		return results;
 	} else if (!isStartingPoint) {
-		visited[currentStmt] ++;
+		visited[currentStmt] = 1;
 	}
 
-	vector<int> usedVars = getUsedVarAtStmt(affectedStmt);
-	vector<int> usedVarsByCurrent = getUsedVarAtStmt(currentStmt);
 	vector<int> modifiedVars = getModifiedVarAtStmt(currentStmt);
 
-	if (stmtTable.getValue(currentStmt) == KEYWORD_ASSIGN) {
-		if (usedVars.size() > 0 && find (modifiedVars.begin(), modifiedVars.end(), usedVars.front()) != modifiedVars.end() && !isStartingPoint) {
+	//is currently at startingStmt then skip this step
+	//Else, see if the current stmt modifys sth that the original stmt use then add current stmt to result list
+	//		and revome the modified var from the used var list
+	if (!isStartingPoint && stmtTable.getValue(currentStmt) == KEYWORD_ASSIGN) {
+		if (find (usedVars.begin(), usedVars.end(), modifiedVars.front()) != usedVars.end()) {
 			results.push_back(currentStmt);
-		if (usedVars.size() > 0 && usedVarsByCurrent.size() > 0 && usedVars.front() == usedVarsByCurrent.front() && !isStartingPoint)
-			return results;
+			usedVars.erase(find (usedVars.begin(), usedVars.end(), modifiedVars.front()));
 		}
-	} else if (stmtTable.getValue(currentStmt) == KEYWORD_CALL) {
-		if (usedVars.size() > 0 && usedVarsByCurrent.size() > 0 && !isStartingPoint
-			&& find(usedVarsByCurrent.begin(), usedVarsByCurrent.end(), usedVars.front()) != usedVarsByCurrent.end())
-			return results;
 	}
-
+	
+	//if current stmt modify var that original stmt modify then return;
+	if (!isStartingPoint && (stmtTable.getValue(currentStmt) == KEYWORD_CALL || stmtTable.getValue(currentStmt) == KEYWORD_ASSIGN)) {
+		for (size_t i = 0; i < modifiedVars.size(); i++) {
+			int modifiedVar = modifiedVars[i];
+			if (find(usedVars.begin(), usedVars.end(), modifiedVar) != usedVars.end()) {
+				usedVars.erase(find(usedVars.begin(), usedVars.end(), modifiedVar));
+			}
+		}
+	}
+	//Else continue travel by next
 	vector <int> previousStmts = getPreviousStmts(currentStmt);
 	//apply depth first search here
 	for (size_t i = 0; i < previousStmts.size(); i++) {
-		vector <int> tempList = getAffecting(affectedStmt, previousStmts.at(i), false);
+		vector <int> tempList = getAffecting(usedVars, previousStmts.at(i), false);
 		results.insert(results.end(), tempList.begin(), tempList.end());
 	}
 	return results;
-
 }
 
 vector<int> PKB::getAffectedStar (int affectingStmt) {
