@@ -23,8 +23,8 @@ private:
 	static void DFSRecur(TNode * node);
 
 
-	///////NODE ID --> REAL ID//////////
-	//static void createNodeIDtoRealIDtable();
+	/////NODE ID --> REAL ID//////////
+	static void nodeIdToRealId(TNode * node);
 
     ////////SIBLINGS EXTRACTOR//////////
 	static void extractSibling();
