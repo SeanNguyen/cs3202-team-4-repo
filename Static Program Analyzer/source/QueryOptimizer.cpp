@@ -1,7 +1,7 @@
 #include "QueryOptimizer.h"
 
 void QueryOptimizer::optimizeQuery(SymbolTable & table, QueryTree & tree, vector<int> & count) {
-	sortTable(table, count);
+	//sortTable(table, count);
 	sortTree(tree, table);
 }
 
@@ -139,8 +139,7 @@ int QueryOptimizer::rankChildOccurences(TNode * node, SymbolTable & table) {
 	case QuerySymbol:
 		{
 			string name = node ->getValue();
-			int index = table.getIndex(name);
-			rank = index+2;
+			rank = QueryOptimizer::QUERYSYMBOL_RANK;
 			break;
 		}
 	case No_Underline:

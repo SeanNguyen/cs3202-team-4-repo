@@ -1,4 +1,5 @@
 #include "ResultManager.h"
+#include "AbstractWrapper.h"
 
 ResultManager::ResultManager() {
 	size = 0;
@@ -28,8 +29,10 @@ ResultTable * ResultManager::extractTable(vector<string> symbols) {
 	for (int i=0; i<size; i++) {
 		ResultTable * t = tables[i];
 		vector<string> sub_symbols = extractSymbols(t, symbols);
-		ResultTable * extract_table = t -> extractData(sub_symbols);
-		table = mergeTables(table, extract_table);
+		if (sub_symbols.size()!=0) {
+			ResultTable * extract_table = t -> extractData(sub_symbols);
+			table = mergeTables(table, extract_table);
+		}
 	}
 	return table;
 }
@@ -38,6 +41,17 @@ ResultTable * ResultManager::mergeTables(ResultTable * t1, ResultTable * t2) {
 	if (t1->getSymbolSize()==0) return t2;
 
 	vector<string> shared_symbols = getSharedSymbols(t1, t2);
+	string symbols1 = "LIST 1 "; string symbols2 = "LIST 2 "; string symbol_s = "SHARED ";
+	for (int i=0; i<t1->getSymbolSize(); i++) {
+		symbols1 += t1->getSymbol(i) + " ";
+	}
+	for (int i=0; i<t2->getSymbolSize(); i++) {
+		symbols2 += t2->getSymbol(i) + " ";
+	}
+	for (size_t i=0; i<shared_symbols.size(); i++) {
+		symbol_s += shared_symbols[i] + " ";
+	}
+	// cout << symbols1 <<endl; cout << symbols2<<endl; cout <<symbol_s <<endl;
 	vector<int> shared_index1 = t1->getSymbolIndex(shared_symbols);
 	vector<int> shared_index2 = t2->getSymbolIndex(shared_symbols);
 
@@ -82,6 +96,7 @@ void ResultManager::insertTable(ResultTable * table) {
 	vector<string> symbols = table->getAllSymbols();
 	for (int i=0; i<size; i++) {
 		if (hasSharedSymbols(table, tables[i])) {
+		//	cout << "CHECKPOINT " << table->getSize() << " " << tables[i]->getSize() <<endl;
 			table = mergeTables(table, tables[i]);
 			tables.erase(tables.begin()+i);
 			--i; --size;
@@ -146,6 +161,9 @@ vector<int> ResultManager::mergeRow(vector<int> r1, vector<int> r2, vector<int> 
 		}
 		if (r1[i1]==-1 && r2[i2]!=-1) {
 			result[i1]=r2[i2];
+		}
+		if (AbstractWrapper::GlobalStop) {
+			return result;
 		}
 	}
 

@@ -8,6 +8,8 @@ void QueryEvaluator::Evaluate() {
 		tree = QueryRepresentator::getQueryTree(i);
 		checkValid = QueryRepresentator::getQueryValidity(i);
 		evaluateQuery();
+
+
 	}
 }
 
@@ -40,6 +42,10 @@ void QueryEvaluator::evaluateQuery() {
 			} else {
 				result_manager.insertTable(temp_results);
 			}
+			if (AbstractWrapper::GlobalStop) {
+				vector<string> result;
+				resultList.push_back(result);
+			}
 		}
 		TNode * result_node = select_node->getChildAtIndex(0);
 		vector<string> result = extractResult(result_node, &result_manager, is_satisfied);
@@ -48,11 +54,6 @@ void QueryEvaluator::evaluateQuery() {
 		vector<string> result = extractResult();
 		resultList.push_back(result);
 	}	
-
-	if (AbstractWrapper::GlobalStop) {
-		vector<string> result;
-		resultList.push_back(result);
-	}
 }
 
 bool QueryEvaluator::evaluateClause(TNode * clause_node, ResultTable * temp_results) {

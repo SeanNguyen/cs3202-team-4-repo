@@ -17,6 +17,7 @@ private:
 	static int rankNodeType(Symbol type);
 	static int rankChildOccurences(TNode * node, SymbolTable & table);
 
+	static const int QUERYSYMBOL_RANK = 2;
 	static const int EXPRESSION_RANK = 10;
 	static const int UNDEFINE_RANK = 1000;
 };
