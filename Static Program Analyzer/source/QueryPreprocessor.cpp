@@ -694,10 +694,10 @@ TNode * QueryPreprocessor::preprocessIfPattern(string name, vector<string> list)
 
 TNode * QueryPreprocessor::preprocessExpressionNode(vector<string> list) {
 	TNode * exprNode = new TNode();
-	unsigned size = list.size();
+	int size = list.size();
 	// base case
 	if (size==0) {
-		errors.push_back("Error 013: lack in pattern expression");
+		errors.push_back("Error 013: no pattern expression");
 	} else if (size==1) {
 		string expr = list[0];
 		if (expr==KEYWORD_PLUSSIGN || expr==KEYWORD_MINUSSIGN || expr==KEYWORD_MULTIPLYSIGN ||
@@ -876,6 +876,10 @@ vector<string> QueryPreprocessor::breakStringIntoWords(string str) {
 		}
 		if (curChar=='+') {
 			str = str.replace(i, 1, " + ");
+			i+=2;
+		}
+		if (curChar=='-') {
+			str = str.replace(i, 1, " - ");
 			i+=2;
 		}
 		if (curChar==')') {
