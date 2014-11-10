@@ -184,6 +184,8 @@ public:
 	static vector<int> getContained(int nodeContaining);
 	static vector<int> getContaining(int nodeContained);
 	static int getContainTableSize();
+	static vector<int> getContainedStar(int nodeContaining);
+	static vector<int> getContainingStar(int nodeContained);
 
 	/////////////////////////////////NODE TO REAL ID  Methods/////////////////////////////////
 	static bool insertNodeToReal(int nodeId, int realId);
