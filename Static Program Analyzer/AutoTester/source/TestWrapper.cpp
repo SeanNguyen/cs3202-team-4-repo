@@ -24,7 +24,6 @@ void TestWrapper::parse(std::string filename) {
 	parser.parse(filename);
 	parser.buildPKB();
 	de.buildPKB();
-	vector<int> a = PKB::getCalledByStarProc(1);
 }
 
 // method to evaluating a query

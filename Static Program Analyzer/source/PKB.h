@@ -162,10 +162,10 @@ public:
 	static bool isAffectStar(int affectingStmt, int affectedStmt);
 	// temp adding getAffected(int) to run testing - Tho
 	static vector<int> getAffected(int affectingStmt);
-	static vector<int> getAffected (int affectingStmt, int currentStmt, bool isStartingPoint);
+	static vector<int> getAffected (vector<int> modifiedVars, int currentStmt, vector<int> path);
 	// temp adding getAffecting(int) to run testing - Tho
 	static vector<int> getAffecting(int affectedStmt);
-	static vector<int> getAffecting (int affectedStmt, int currentStmt, bool isStartingPoint);
+	static vector<int> getAffecting (vector<int> usedVars, int currentStmt, vector<int> path);
 	static vector<int> getAffectedStar (int affectingStmt);
 	static vector<int> getAffectingStar (int affectedStmt);
 	static vector<int> getAffectedStar (int affectingStmt, bool isStartingPoint);
@@ -184,6 +184,8 @@ public:
 	static vector<int> getContained(int nodeContaining);
 	static vector<int> getContaining(int nodeContained);
 	static int getContainTableSize();
+	static vector<int> getContainedStar(int nodeContaining);
+	static vector<int> getContainingStar(int nodeContained);
 
 	/////////////////////////////////NODE TO REAL ID  Methods/////////////////////////////////
 	static bool insertNodeToReal(int nodeId, int realId);

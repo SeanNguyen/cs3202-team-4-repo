@@ -304,3 +304,41 @@ void SystemTest2::processUsesLoopProc() {
 	CPPUNIT_ASSERT_EQUAL(expectedvars.at(7), usedvars.at(7));
 	CPPUNIT_ASSERT_EQUAL(expectedvars.at(8), usedvars.at(8));
 }
+
+void SystemTest2::processUsesBasicTest(){
+	string source = "..\\..\\Tests\\TestAllSources1.txt";
+	Parser parser;
+	PKB pkb;
+	DesignExtractor designextractor;
+	
+	parser.parse(source);
+	parser.buildPKB();
+	designextractor.buildPKB();
+
+	//int p = pkb.getProcIndex("p").at(0);
+	//int a = pkb.getProcIndex("a").at(0);
+	//int q = pkb.getProcIndex("q").at(0);
+	//int d = pkb.getProcIndex("d").at(0);
+
+
+	cout << "---------USE CHECK-----------";
+
+	//vector<int> usedvars = pkb.getUsedVarAtProc(p);
+
+	//for (int i = 0; i < usedvars.size(); i++){
+	//	cout << pkb.getVarName(usedvars[i]);	
+	//}
+	
+	int Example = pkb.getProcIndex("Example").front();
+
+	cout << Example;
+
+	vector<int> usedProc = pkb.getUsedVarAtProc(Example);
+
+	cout << "size of usedProc";
+	cout << usedProc.size();
+	
+	for (int i = 0; i < usedProc.size(); i++){
+		cout << pkb.getVarName(usedProc[i]);	
+	}
+}

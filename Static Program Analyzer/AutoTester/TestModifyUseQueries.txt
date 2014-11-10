@@ -1,0 +1,7 @@
+1
+cat: All Category
+1 - Multiple_Clauses, Typed :: Modifies and Uses
+variable v; stmt s; procedure p;
+Select p such that Modifies("Example", v)
+Example,p,q
+5000
