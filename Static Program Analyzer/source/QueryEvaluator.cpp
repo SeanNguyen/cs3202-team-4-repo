@@ -321,6 +321,10 @@ bool QueryEvaluator::evaluatePTClause(TNode * PT_node,
 		case Assign:
 			{
 				TNode * expr_node = stmt_node->getChildAtIndex(1);
+				if (stmt_index==15) {
+					ast_node->printTNode();
+					expr_node->printTNode();
+				}
 				if (!evaluateExprNode(expr_node, ast_node)) return false;
 				return true;
 			}
@@ -755,8 +759,12 @@ int QueryEvaluator::getIndexOfConst(TNode * const_node, Symbol relation, int arg
 	case Calls:
 	case CallsS:
 		{
-			if (isNumber(val)) 
-				return atoi(val.c_str());
+			if (isNumber(val)) { 
+				int stmt = atoi(val.c_str());
+				if (PKB::getStmtName(stmt)==KEYWORD_CALL)
+					return PKB::getCalledProc(stmt);
+				return -1;
+			}
 			if (!PKB::getProcIndex(val).empty())
 				return PKB::getProcIndex(val).front();
 			return -1;

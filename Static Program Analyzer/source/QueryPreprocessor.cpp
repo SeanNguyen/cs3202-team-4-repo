@@ -926,6 +926,10 @@ vector<string> QueryPreprocessor::breakStringIntoWords(string str) {
 			// only add space if * is in pattern
 			// make a subtring up to this char
 			string sub_str = str.substr(0, i);
+			cout << "CHECK PLZ " << string::npos <<endl;
+			cout << "CHECK PLZ " << sub_str <<endl;
+			cout << "CHECK PLZ " << (sub_str.find_last_of("such that")) << endl;
+			cout << "CHECK PLZ " << (sub_str.find_last_of("pattern")) << endl;
 			if (sub_str.find_last_of("such that")==string::npos ||
 				sub_str.find_last_of("such that")<sub_str.find_last_of("pattern")) {
 				str = str.replace(i, 1, " * ");
