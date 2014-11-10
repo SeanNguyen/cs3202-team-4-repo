@@ -190,3 +190,81 @@ bool SyntaxHelper::isStmtSymbol(string str) {
 		return true;
 	return false;
 }
+
+vector<string> SyntaxHelper::breakStringIntoWords(string str) {
+	vector<string> list;
+	string word;
+
+	//separate elements
+	for (size_t i=0; i<str.length(); i++) {
+		char curChar = str.at(i);
+		if (curChar=='(') {
+			str = str.replace(i, 1, " ( ");
+			i+=2;
+		}
+		if (curChar=='+') {
+			str = str.replace(i, 1, " + ");
+			i+=2;
+		}
+		if (curChar=='-') {
+			str = str.replace(i, 1, " - ");
+			i+=2;
+		}
+		if (curChar==')') {
+			str = str.replace(i, 1, " ) ");
+			i+=2;
+		}
+		if (curChar==';') {
+			str = str.replace(i, 1, " ; ");
+			i+=2;
+		}
+		if (curChar==',') {
+				str = str.replace(i, 1, " , ");
+				i+=2;
+		}
+		if (curChar=='_') {
+			if ((int) i>3 && str.substr(i-4, 9) == "prog_line") {
+			} else { 
+				str = str.replace(i, 1, " _ ");
+				i+=2;
+			}
+		}
+		if (curChar==34) {
+			str = str.replace(i, 1, " \" ");
+			i+=2;
+		}
+		if (curChar=='.') {
+			str = str.replace(i, 1, " . ");
+			i+=2;
+		}
+		if (curChar=='<') {
+			str = str.replace(i, 1, " < ");
+			i+=2;
+		}
+		if (curChar=='>') {
+			str = str.replace(i, 1, " > ");
+			i+=2;
+		}
+		if (curChar=='=') {
+			str = str.replace(i, 1, " = ");
+			i+=2;
+		}
+		if (curChar=='*') {	// recognize * in relation and * in pattern
+			// only add space if * is in pattern
+			// make a subtring up to this char
+			string sub_str = str.substr(0, i);
+			if (sub_str.find_last_of("such that")==string::npos ||
+				sub_str.find_last_of("such that")<sub_str.find_last_of("pattern")) {
+				str = str.replace(i, 1, " * ");
+				i+=2;
+			}
+		}
+	}
+
+	istringstream ss;
+	ss.str(str);
+	while (ss >> word) {
+		list.push_back(word);
+	}
+	return list;
+}

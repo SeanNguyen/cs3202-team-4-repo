@@ -1,6 +1,8 @@
 #pragma once
 
 #include <string>
+#include <vector>
+#include <sstream>
 
 using namespace std;
 
@@ -75,4 +77,5 @@ public:
 	static bool isDesignEntity(string);
 	static bool isNumber(string);
 	static bool isStmtSymbol(string);
+	static vector<string> breakStringIntoWords(string str);
 };

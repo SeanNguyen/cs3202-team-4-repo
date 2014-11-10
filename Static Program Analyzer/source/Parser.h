@@ -1,5 +1,6 @@
 #pragma once
 #include "PKB.h"
+#include "SyntaxHelper.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
