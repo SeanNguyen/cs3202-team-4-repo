@@ -411,7 +411,7 @@ std::vector<int> PKB::getUsedVarAtProc(int proc1){
 }
 
 std::vector<int> PKB::getProcUsingVar(int varIndex){
-	return useProcTable.getValues(varIndex);
+	return useProcTable.getIndexes(varIndex);
 }
 
 ////////////////////////////////////Next METHODS///////////////////////////////
