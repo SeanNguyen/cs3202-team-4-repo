@@ -183,7 +183,7 @@ void Parser::buildCommonTables() {
 	PKB::setCommonWhiles(commonWhiles);
 	PKB::setCommonIfs(commonIfs);
 	PKB::setStartingStmtOfProc(mapStartingStmtProc);
- }
+}
 
 void Parser::buildCFG() {
 	for (size_t i = 0; i < stmtType.size(); i++) {
@@ -703,28 +703,25 @@ vector <int> Parser::getNextNodeInControlFlow(int stmtNo) {
 	if (type == KEYWORD_IF) {
 		return result;
 	}
-	//consider these are nested stmts
-	while (stmtNo > -1) {
+
+	//consider these are nested stmts, until now the stmt must be the last stmt of a stmtList
+	while (true) {
+		//If there is a following stmt then added it and return
+		int followingStmt = getFollowingStmt(stmtNo);
+		if (followingStmt != -1) {
+			result.push_back(followingStmt);
+			return result;
+		}
 		int parentStmtNo = getParentStmt(stmtNo);
 		if (parentStmtNo == -1) {
-			int followingStmt = getFollowingStmt(stmtNo);
-			if (followingStmt != -1 && type != KEYWORD_IF)
-				result.push_back(followingStmt);
-			break;
+			return result;
 		} else if (stmtType[parentStmtNo] == KEYWORD_WHILE) {
-			int followingStmt = getFollowingStmt(stmtNo);
-			if (followingStmt == -1)
-				result.push_back(parentStmtNo);
-			else
-				result.push_back(followingStmt);
-			break;
+			result.push_back(parentStmtNo);
+			return result;
 		} else if (stmtType[parentStmtNo] == KEYWORD_IF) {
-			int followingStmt = getFollowingStmt(stmtNo);
-			if (followingStmt > -1)
-				result.push_back(followingStmt);
+			stmtNo = parentStmtNo;
+			type = stmtType[stmtNo];
 		}
-		stmtNo = parentStmtNo;
-		type = stmtType[stmtNo];
 	}
 
 	return result;
