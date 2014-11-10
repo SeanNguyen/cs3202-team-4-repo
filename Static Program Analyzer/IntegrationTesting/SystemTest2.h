@@ -14,6 +14,7 @@ class SystemTest2 : public CPPUNIT_NS::TestFixture {
 	CPPUNIT_TEST( processModify );
 	CPPUNIT_TEST( processModifyLoopProc );
 	CPPUNIT_TEST( processUsesLoopProc );
+	CPPUNIT_TEST( processUsesBasicTest);
 	CPPUNIT_TEST_SUITE_END();
 public:
 	void setUp();
@@ -23,4 +24,5 @@ private:
 	void processModify();
 	void processModifyLoopProc();
 	void processUsesLoopProc();
+	void processUsesBasicTest();
 };
