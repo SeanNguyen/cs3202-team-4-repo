@@ -591,13 +591,9 @@ void Parser::error() {
 vector<string> Parser::breakFileDataIntoElements() {
 	vector<string> elements;
 	for (size_t i=0; i< fileData.size(); i++) {
-		string element;
 		string line = fileData[i];
-		istringstream ss;
-		ss.str(line);
-		while (ss >> element) {
-			elements.push_back(element);
-		}
+		vector<string> words = SyntaxHelper::breakStringIntoWords(line);
+		elements.insert(elements.end(), words.begin(), words.end());
 	}
 	return elements;
 }
