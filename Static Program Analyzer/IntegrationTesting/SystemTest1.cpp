@@ -287,10 +287,13 @@ void SystemTest1::test10(){
 	cout <<  pkb.getContainTableSize() << "\n";
 
 	cout << "Sibling table size is : ";
-	cout <<  pkb.getSiblingTableSize();
+	cout <<  pkb.getSiblingTableSize() << "\n";
 
 	cout << "Node ID to Real ID table size is : ";
-	cout <<  pkb.getNodeToRealIdTableSize();
+	cout <<  pkb.getNodeToRealIdTableSize() << "\n";
+
+	cout << "Node ID to Node Type table size is : ";
+	cout <<  pkb.getNodeIdToTypeTableSize();
 	cout <<endl;
 
 }

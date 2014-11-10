@@ -706,6 +706,8 @@ bool PKB::insertNodeType(int nodeId, string nodeType){
 //	//nodeIdToTypeTable
 //	//nodeIdToTypeTable.insert(nodeId, nodeType);
 //	//nodeIdToTypeTable.insert(value_type(nodeId, nodeType))
+	nodeIdToTypeTable[nodeId] = nodeType;
+	return true;
 //	//return nodeIdToTypeTable.insert(std::make_pair(nodeId, nodeType));
 }
 
