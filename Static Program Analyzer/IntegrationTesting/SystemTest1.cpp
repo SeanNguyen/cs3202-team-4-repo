@@ -254,26 +254,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION( SystemTest1 );
 //	}
 //} 
 //
-void SystemTest1::test9(){
-	cout<< "Contains table test."; 
-	string source = "..\\..\\Tests\\Source1.txt";
-	Parser parser;
-	PKB pkb;
-	DesignExtractor de;
-	
-	parser.parse(source);
-	parser.buildPKB();
-	de.buildPKB();
-
-	cout << " Contains table size is : ";
-	cout <<  pkb.getContainTableSize();
-	cout <<endl;
-
-}
-
-
-//void SystemTest1::test10(){
-//	cout<< "Sibling table test. " << "\n";
+//void SystemTest1::test9(){
+//	cout<< "Contains table test."; 
 //	string source = "..\\..\\Tests\\Source1.txt";
 //	Parser parser;
 //	PKB pkb;
@@ -284,10 +266,34 @@ void SystemTest1::test9(){
 //	de.buildPKB();
 //
 //	cout << " Contains table size is : ";
-//	cout <<  pkb.getContainTableSize() << "\n";
-//
-//	cout << "Sibling table size is : ";
-//	cout <<  pkb.getSiblingTableSize();
+//	cout <<  pkb.getContainTableSize();
 //	cout <<endl;
 //
 //}
+
+
+void SystemTest1::test10(){
+	cout<< "Sibling table test. " << "\n";
+	string source = "..\\..\\Tests\\Source1.txt";
+	Parser parser;
+	PKB pkb;
+	DesignExtractor de;
+	
+	parser.parse(source);
+	parser.buildPKB();
+	de.buildPKB();
+
+	cout << " Contains table size is : ";
+	cout <<  pkb.getContainTableSize() << "\n";
+
+	cout << "Sibling table size is : ";
+	cout <<  pkb.getSiblingTableSize() << "\n";
+
+	cout << "Node ID to Real ID table size is : ";
+	cout <<  pkb.getNodeToRealIdTableSize() << "\n";
+
+	cout << "Node ID to Node Type table size is : ";
+	cout <<  pkb.getNodeIdToTypeTableSize();
+	cout <<endl;
+
+}
