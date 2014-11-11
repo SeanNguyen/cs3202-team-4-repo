@@ -321,10 +321,6 @@ bool QueryEvaluator::evaluatePTClause(TNode * PT_node,
 		case Assign:
 			{
 				TNode * expr_node = stmt_node->getChildAtIndex(1);
-				if (stmt_index==15) {
-					ast_node->printTNode();
-					expr_node->printTNode();
-				}
 				if (!evaluateExprNode(expr_node, ast_node)) return false;
 				return true;
 			}
