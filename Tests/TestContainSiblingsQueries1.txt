@@ -1,0 +1,50 @@
+10
+cat: Contains
+1 - Variable, Contains ::
+variable v; if ifStmt;
+Select v such that Contains(ifStmt,v);
+none
+5000
+2 - Variable, Contains, ContainsStar ::
+variable v; if ifStmt; procedure p;
+Select v such that Contains(ifStmt, v) and Contains*(p, ifStmt) with p.procName="OhSimple";
+none
+5000
+3 - Assignment, ContainsStar::
+assignment a; variable v
+Select a such that Contains*(a, v) with v.varName="i";
+1,3  
+5000
+4 - Procedure, ContainsStar::
+procedure p; constant c
+Select p such that Contains*(p,c) with c.value=5;
+OhSimple
+5000
+5 - Assignment, ContainsStar ::
+variable v; assignment a; plus add;
+Select a such that Contains*(a, add) and Contains*(add, v) with v.varName="k" ;
+1
+5000
+6 - Procedure, ContainsStar::
+procedure p; while w1, w2;
+Select p such that Contains*(p,w1) and Contains*(w1, w2);
+OhSimple
+5000
+7 - Statement, ContainsStar ::
+statement s;
+Select s such that Contains*(4, s);
+5,6
+8 - Boolean, ContainsStar::
+Select BOOLEAN such that Contains*(4, 5);
+true
+5000
+9 - Variable, ContainsStar ::
+variable v;
+Select v such that Contains*(1, v);
+i, j, h, f, w, k
+5000
+10 - Statement, Sibling::
+statement s;
+Select s such that Sibling(s, 4);
+2,3
+5000

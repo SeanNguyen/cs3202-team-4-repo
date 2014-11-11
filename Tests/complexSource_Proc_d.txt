@@ -1,0 +1,13 @@
+procedure d { y = i + m + b;
+	if y then {
+		if m then {
+			if k then {
+				k = k + 1;
+			} else { y = y - 1; }
+		} else { y = y + 1; }
+	} else { while y {
+			y = y + k;
+			if y then {
+				k = k - m;
+			} else { c = b - m - x; }}}
+	c = k + y * 3;}
