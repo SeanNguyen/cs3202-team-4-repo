@@ -154,6 +154,11 @@ void DesignExtractor::processUses() {
 						//for every call stmt calling proc2, insert the modifiedVar list
 						for (size_t stmt = 0; stmt < callStmts.size(); stmt++){
 							PKB::insertUses(callStmts[stmt], allUsedVar[var]);
+							// for every parent star stmt of callStmt[stmt], insert modifiedVar list
+							vector <int> parentStarStmts = PKB::getParentStarStmt(callStmts[stmt]);
+							for (size_t stmt1=0; stmt1<parentStarStmts.size(); stmt1++) {
+								PKB::insertUses(parentStarStmts[stmt1], allUsedVar[var]);
+							}
 						}
 					}
 				}
@@ -192,6 +197,11 @@ void DesignExtractor::processModify() {
 						//for every call stmt calling proc2, insert the modifiedVar list
 						for (size_t stmt = 0; stmt < callStmts.size(); stmt++){
 							PKB::insertModifies(callStmts[stmt], allModifiedVar[var]);
+							// for every parent star stmt of callStmt[stmt], insert modifiedVar list
+							vector <int> parentStarStmts = PKB::getParentStarStmt(callStmts[stmt]);
+							for (size_t stmt1=0; stmt1<parentStarStmts.size(); stmt1++) {
+								PKB::insertModifies(parentStarStmts[stmt1], allModifiedVar[var]);
+							}
 						}
 					}
 				}
