@@ -1,7 +1,7 @@
 7
 cat: Variable, Statement
-1 - MultipleClauses, Typed :: Modifies and Uses
-variable v; stmt s;
-Select BOOLEAN such that Modifies("Example",v) and Uses(14,"x") and Modifies(14,"x")
-true
+1 - Multiple_Clauses, Typed ::
+constant co; variable v,v1; if i; call c; procedure p1;
+Select p1 pattern i(v,_,_) such that Modifies(i,v) and Next*(c,i) with p1.procName = v1.varName such that Calls(p1,62)
+a
 5000

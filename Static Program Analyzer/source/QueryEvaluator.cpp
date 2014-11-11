@@ -720,7 +720,7 @@ vector<string> QueryEvaluator::extractResult(TNode * result_node, ResultManager 
 			// extract data
 			ResultTable * r_table = rm->extractTable(symbols);
 			// fill empty column
-			fillResultTable(r_table);
+			r_table = fillResultTable(r_table);
 			// save data to results list
 			fillResultList(result_node, r_table, &results);
 		}
@@ -802,7 +802,7 @@ bool QueryEvaluator::isNumber(string s)
     return !s.empty() && it == s.end();
 }
 
-void QueryEvaluator::fillResultTable(ResultTable * table) {
+ResultTable * QueryEvaluator::fillResultTable(ResultTable * table) {
 	// base case
 	if (table->getSymbolSize()==1 && table->getSize()==0) {
 		string symbol = table->getSymbol(0);
@@ -819,9 +819,11 @@ void QueryEvaluator::fillResultTable(ResultTable * table) {
 	// go to base case for each symbol and merge back to the table
 	for (size_t i=0; i<unknown_symbols.size(); i++) {
 		ResultTable * sub_table = new ResultTable(); sub_table->insertSymbol(unknown_symbols[i]); 
-		fillResultTable(sub_table);
+		sub_table = fillResultTable(sub_table);
 		table = rm.mergeTables(table, sub_table);
 	}
+
+	return table;
 }
 
 void QueryEvaluator::fillResultList(TNode * result_node, ResultTable * table, vector<string> * results) {
@@ -915,8 +917,8 @@ vector<string> QueryEvaluator::getUnknownSymbols(ResultTable * table) {
 		vector<int> row = table->getValRow(i);
 		for (size_t j=0; j<row.size(); j++) {
 			if (row[j]==-1 && 
-				find(result.begin(), result.end(), table->getSymbol(i))==result.end()) 
-				result.push_back(table->getSymbol(i));
+				find(result.begin(), result.end(), table->getSymbol(j))==result.end()) 
+				result.push_back(table->getSymbol(j));
 		}
 	}
 
