@@ -41,17 +41,6 @@ ResultTable * ResultManager::mergeTables(ResultTable * t1, ResultTable * t2) {
 	if (t1->getSymbolSize()==0) return t2;
 
 	vector<string> shared_symbols = getSharedSymbols(t1, t2);
-	string symbols1 = "LIST 1 "; string symbols2 = "LIST 2 "; string symbol_s = "SHARED ";
-	for (int i=0; i<t1->getSymbolSize(); i++) {
-		symbols1 += t1->getSymbol(i) + " ";
-	}
-	for (int i=0; i<t2->getSymbolSize(); i++) {
-		symbols2 += t2->getSymbol(i) + " ";
-	}
-	for (size_t i=0; i<shared_symbols.size(); i++) {
-		symbol_s += shared_symbols[i] + " ";
-	}
-	// cout << symbols1 <<endl; cout << symbols2<<endl; cout <<symbol_s <<endl;
 	vector<int> shared_index1 = t1->getSymbolIndex(shared_symbols);
 	vector<int> shared_index2 = t2->getSymbolIndex(shared_symbols);
 
@@ -66,7 +55,7 @@ ResultTable * ResultManager::mergeTables(ResultTable * t1, ResultTable * t2) {
 			vector<int> t2_row = t2->getValRow(j);
 			vector<int> merged_row = mergeRow(t1_row, t2_row, shared_index1, shared_index2);
 			if (!merged_row.empty())
-				t->insertValRow(merged_row);
+				t->insertValRow(merged_row, false);
 		}
 	} else if (t2->getSize()==0) {
 		vector<int> t2_row (t2->getSymbolSize(), -1);
@@ -74,7 +63,7 @@ ResultTable * ResultManager::mergeTables(ResultTable * t1, ResultTable * t2) {
 			vector<int> t1_row = t1->getValRow(i);
 			vector<int> merged_row = mergeRow(t1_row, t2_row, shared_index1, shared_index2);
 			if (!merged_row.empty())
-				t->insertValRow(merged_row);
+				t->insertValRow(merged_row, false);
 		}
 	} else {
 		for (int i=0; i<t1->getSize(); i++) {
@@ -83,7 +72,7 @@ ResultTable * ResultManager::mergeTables(ResultTable * t1, ResultTable * t2) {
 				vector<int> t2_row = t2->getValRow(j);
 				vector<int> merged_row = mergeRow(t1_row, t2_row, shared_index1, shared_index2);
 				if (!merged_row.empty())
-					t->insertValRow(merged_row);
+					t->insertValRow(merged_row, false);
 			}
 		}
 	}
@@ -96,7 +85,6 @@ void ResultManager::insertTable(ResultTable * table) {
 	vector<string> symbols = table->getAllSymbols();
 	for (int i=0; i<size; i++) {
 		if (hasSharedSymbols(table, tables[i])) {
-		//	cout << "CHECKPOINT " << table->getSize() << " " << tables[i]->getSize() <<endl;
 			table = mergeTables(table, tables[i]);
 			tables.erase(tables.begin()+i);
 			--i; --size;

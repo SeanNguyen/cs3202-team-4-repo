@@ -34,9 +34,9 @@ void ResultManagerTest::testMergeTable() {
 	row1.push_back(1); row1.push_back(2); row1.push_back(1); row1.push_back(4);
 	row2.push_back(1); row2.push_back(2); row2.push_back(1); row2.push_back(7);
 	row3.push_back(1); row3.push_back(2); row3.push_back(1); row3.push_back(10);
-	CPPUNIT_ASSERT_EQUAL(true, mt->containsValRow(row1));
-	CPPUNIT_ASSERT_EQUAL(true, mt->containsValRow(row2));
-	CPPUNIT_ASSERT_EQUAL(true, mt->containsValRow(row3));
+	CPPUNIT_ASSERT_EQUAL(true, mt->containsValRow(row1, true));
+	CPPUNIT_ASSERT_EQUAL(true, mt->containsValRow(row2, true));
+	CPPUNIT_ASSERT_EQUAL(true, mt->containsValRow(row3, true));
 } 
 
 void ResultManagerTest::testExtractTable() {
@@ -62,19 +62,19 @@ ResultTable * ResultManagerTest::populateData(Case caseNum) {
 			table->insertSymbol("s1"); table->insertSymbol("s2"); table->insertSymbol("p");
 			vector<int> row1;
 			row1.push_back(1); row1.push_back(2); row1.push_back(1); 
-			table->insertValRow(row1);
+			table->insertValRow(row1, true);
 			vector<int> row2;
 			row2.push_back(1); row2.push_back(3); row2.push_back(1); 
-			table->insertValRow(row2);
+			table->insertValRow(row2, true);
 			vector<int> row3;
 			row3.push_back(1); row3.push_back(4); row3.push_back(3);
-			table->insertValRow(row3);
+			table->insertValRow(row3, true);
 			vector<int> row4;
 			row4.push_back(2); row4.push_back(3); row4.push_back(1);
-			table->insertValRow(row4);
+			table->insertValRow(row4, true);
 			vector<int> row5;
 			row5.push_back(2); row5.push_back(10); row5.push_back(1);
-			table->insertValRow(row5);
+			table->insertValRow(row5, true);
 			break;
 		}
 	case Case2:
@@ -82,19 +82,19 @@ ResultTable * ResultManagerTest::populateData(Case caseNum) {
 			table->insertSymbol("s2"); table->insertSymbol("s3"); table->insertSymbol("p");
 			vector<int> row1;
 			row1.push_back(1); row1.push_back(4); row1.push_back(1); 
-			table->insertValRow(row1);
+			table->insertValRow(row1, true);
 			vector<int> row2;
 			row2.push_back(1); row2.push_back(5); row2.push_back(1); 
-			table->insertValRow(row2);
+			table->insertValRow(row2, true);
 			vector<int> row3;
 			row3.push_back(2); row3.push_back(4); row3.push_back(1);
-			table->insertValRow(row3);
+			table->insertValRow(row3, true);
 			vector<int> row4;
 			row4.push_back(2); row4.push_back(7); row4.push_back(1);
-			table->insertValRow(row4);
+			table->insertValRow(row4, true);
 			vector<int> row5;
 			row5.push_back(2); row5.push_back(10); row5.push_back(1);
-			table->insertValRow(row5);
+			table->insertValRow(row5, true);
 			break;
 		}
 	case Case3:
@@ -102,19 +102,19 @@ ResultTable * ResultManagerTest::populateData(Case caseNum) {
 			table->insertSymbol("s4"); table->insertSymbol("v");
 			vector<int> row1;
 			row1.push_back(1); row1.push_back(2); 
-			table->insertValRow(row1);
+			table->insertValRow(row1, true);
 			vector<int> row2;
 			row2.push_back(1); row2.push_back(3);
-			table->insertValRow(row2);
+			table->insertValRow(row2, true);
 			vector<int> row3;
 			row3.push_back(1); row3.push_back(4); 
-			table->insertValRow(row3);
+			table->insertValRow(row3, true);
 			vector<int> row4;
 			row4.push_back(2); row4.push_back(3); 
-			table->insertValRow(row4);
+			table->insertValRow(row4, true);
 			vector<int> row5;
 			row5.push_back(2); row5.push_back(10); 
-			table->insertValRow(row5);
+			table->insertValRow(row5, true);
 			break;
 		}
 	default:

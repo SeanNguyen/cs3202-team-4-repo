@@ -1,0 +1,7 @@
+7
+cat: Variable, Statement
+1 - MultipleClauses, Typed :: Modifies and Uses
+variable v; stmt s;
+Select BOOLEAN such that Modifies("Example",v) and Uses(14,"z") and Modifies(14,"z")
+true
+5000

@@ -1,0 +1,9 @@
+<?xml-stylesheet type="text/xsl" href="analysis.xsl"?>
+<test_results>
+<info>
+<name>AutoTester</name><parsing_time_taken>142.000000</parsing_time_taken>
+</info>
+<queries>
+<category name=" Variable, Statement">
+<query>
+<id MultipleClauses="1" Typed="1" comment="Modifies and Uses" >1</id><querystr><![CDATA[variable v; stmt s; Select BOOLEAN such that Modifies("Example",v) and Uses(14,"z") and Modifies(14,"z")]]></querystr>
