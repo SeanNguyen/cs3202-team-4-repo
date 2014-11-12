@@ -83,10 +83,6 @@ void DesignExtractor::DFSRecur(TNode * node){
 				TNode * child = node -> getChildAtIndex(i);
 				int childID = child -> getID();
 
-				if (nodeID==382) {
-					node->printTNode();
-				}
-
 				//insert into containTable as long as type is not Program and not undefined
 				Symbol nodeType = node -> getType();
 				Symbol childType = child -> getType();
@@ -105,22 +101,8 @@ void DesignExtractor::DFSRecur(TNode * node){
 }
 
 
-void DesignExtractor::extractContain() {
-	
+void DesignExtractor::extractContain() {	
 	TNode * root = PKB::getASTRoot();
-
-	cout<< "The AST ROOT ID (in  contains mtd) IS  " << root -> getID() << "\n" ;
-	cout<< "The Size of the AST (in contains mtd ) is: " << (PKB::getASTSize()) << "\n";
-	
-	//cout << root -> getID() + "\n";
-
-
-	////get number of nodes
-	//int sizeOfAST = TNode::getGlobalId() + 1;
-	//cout << "size of ast: ";
-	//cout << sizeOfAST; 
-	//cout << endl;
-
 	//apply depth first search on AST
 	DFSRecur(root);
 }

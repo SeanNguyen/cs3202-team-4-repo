@@ -18,6 +18,7 @@ private:
 	vector<ResultTable *> tables;
 	int size;
 
+	ResultTable * updateTable(ResultTable * t, ResultTable * table);
 	vector<string> extractSymbols(ResultTable * t, vector<string> s);
 	bool hasSharedSymbols(ResultTable * t1, ResultTable * t2);
 	vector<string> getSharedSymbols(ResultTable * t1, ResultTable * t2);
