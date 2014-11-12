@@ -1,7 +1,7 @@
 7
 cat: Variable, Statement
 1 - Multiple_Clauses, Typed ::
-constant co; variable v,v1; if i; call c; procedure p1;
-Select p1 pattern i(v,_,_) such that Modifies(i,v) and Next*(c,i) with p1.procName = v1.varName such that Calls(p1,62)
-a
+stmt s1, s2; variable v1, v2; prog_line n; assign a;
+Select n such that Affects(s1, n) and Affects(n, s2) with s1.stmt# = n pattern a(v1, "m-1") such that Modifies(s2, v2) with v1.varName = "m"
+6,17,27,28,32,40,43,70,72
 5000

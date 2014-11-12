@@ -25,6 +25,7 @@ vector<vector<string>> QueryEvaluator::getAllResult() {
 void QueryEvaluator::evaluateQuery() {
 	if (checkValid) {
 		TNode * select_node = tree.getRoot();
+		//select_node->printTNode();
 		ResultManager result_manager = ResultManager(); 
 		bool is_satisfied = true;
 

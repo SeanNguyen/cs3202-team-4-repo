@@ -40,6 +40,8 @@ ResultTable * ResultManager::extractTable(vector<string> symbols) {
 ResultTable * ResultManager::mergeTables(ResultTable * t1, ResultTable * t2) {
 	if (t1->getSymbolSize()==0) return t2;
 
+	//cout << "CHECKPOINT 000 " << t1->getSymbolSize() << " " << t2->getSymbolSize() <<endl;
+	//cout << "CHECKPOINT 001 " << t1->getSize() << " " << t2->getSize() <<endl;
 	vector<string> shared_symbols = getSharedSymbols(t1, t2);
 	vector<int> shared_index1 = t1->getSymbolIndex(shared_symbols);
 	vector<int> shared_index2 = t2->getSymbolIndex(shared_symbols);
@@ -76,6 +78,8 @@ ResultTable * ResultManager::mergeTables(ResultTable * t1, ResultTable * t2) {
 			}
 		}
 	}
+
+	//cout << "CHECKPOINT 002 " << t->getSize() <<endl; 
 	return t;
 }
 
@@ -85,6 +89,7 @@ void ResultManager::insertTable(ResultTable * table) {
 	vector<string> symbols = table->getAllSymbols();
 	for (int i=0; i<size; i++) {
 		if (hasSharedSymbols(table, tables[i])) {
+			//tables[i] = updateTable(tables[i], table);
 			table = mergeTables(table, tables[i]);
 			tables.erase(tables.begin()+i);
 			--i; --size;
@@ -92,6 +97,25 @@ void ResultManager::insertTable(ResultTable * table) {
 	}
 	tables.push_back(table);
 	size++;
+}
+
+ResultTable * ResultManager::updateTable(ResultTable * t, ResultTable * table) {
+	ResultTable * result = new ResultTable();
+	result->insertSymbol(table->getAllSymbols());
+	vector<string> shared_symbols = getSharedSymbols(t, table);
+	vector<int> shared_index1 = table->getSymbolIndex(shared_symbols);
+	vector<int> shared_index2 = t->getSymbolIndex(shared_symbols);
+	for (int i=0; i<table->getSize(); i++) {
+		vector <int> row = table->getValRow(i);
+		for (int j=0; j<t->getSize(); j++) {
+			vector<int> r = t->getValRow(j);
+			vector<int> merged_r = mergeRow(row, r, shared_index1, shared_index2);
+			if (merged_r.size()!=0) {
+				result->insertValRow(row, true);
+			}
+		}
+	}
+	return result;
 }
 
 vector<string> ResultManager::extractSymbols(ResultTable * t, vector<string> symbols) {
