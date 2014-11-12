@@ -69,10 +69,11 @@ void ResultTable::insertSymbol(string s) {
 	}
 }
 
-bool ResultTable::containsValRow(vector<int> r) {
+bool ResultTable::containsValRow(vector<int> r, bool correctness) {
 	for (int i=0; i<size; i++) {
 		vector<int> row = valRows[i];
-		if (compareVector(row, r)) return true;
+		bool correct = correctRows[i];
+		if (compareVector(row, r) && correct == correctness) return true;
 	}
 	return false;
 }
@@ -93,15 +94,15 @@ vector<int> ResultTable::getValRow(int index) {
 	return valRows[index];
 }
 
-void ResultTable::insertValRow(vector<vector<int>> rows) {
+void ResultTable::insertValRow(vector<vector<int>> rows, bool correctness) {
 	int size = rows.size();
 	for (int i=0; i<size; i++) {
-		insertValRow(rows[i]);
+		insertValRow(rows[i], correctness);
 	}
 }
 
-void ResultTable::insertValRow(vector<int> r) {
-	if (!containsValRow(r)) { 
+void ResultTable::insertValRow(vector<int> r, bool correctness) {
+	if (!containsValRow(r, correctness)) { 
 		valRows.push_back(r);
 		for (size_t i=0; i<symbolSize; i++) {
 			if (i<r.size()) { 
@@ -110,13 +111,19 @@ void ResultTable::insertValRow(vector<int> r) {
 				valCols[i].push_back(-1);
 			}
 		}
+		correctRows.push_back(correctness);
 		size++;
 	}
 }
 
 void ResultTable::deleleInvalidRows() {
 	for (int i=0; i<size; i++) {
-		int rowSize = valRows[i].size();
+		if (!correctRows[i]) {
+			valRows.erase(valRows.begin()+i);
+			correctRows.erase(correctRows.begin()+i);
+			i--; size--;
+		}
+		/*int rowSize = valRows[i].size();
 		if (rowSize!= symbolSize) {
 			valRows.erase(valRows.begin()+i);
 			--i; --size;
@@ -125,7 +132,7 @@ void ResultTable::deleleInvalidRows() {
 				valRows.erase(valRows.begin()+i);
 				--i; --size;
 			}
-		}
+		}*/
 	}
 }
 
@@ -147,7 +154,7 @@ ResultTable * ResultTable::extractData(vector<string> s) {
 			int index = indexes[j];
 			r.push_back(row[index]);
 		}
-		t ->insertValRow(r);
+		t ->insertValRow(r, false);
 	}
 
 	return t;
@@ -180,4 +187,20 @@ bool ResultTable::containsVector(vector<string> a, vector<string> b) {
 		if (!containsSymbol(b[i])) return false;
 	}
 	return true;
+}
+
+void ResultTable::printTable() {
+	string symbolLine = "";
+	for (int i=0; i<symbolSize; i++) {
+		symbolLine += symbols[i] + " || " ;  
+	}
+	cout << symbolLine <<endl;
+	for (int i=0; i<size; i++) {
+		vector<int> value = valRows[i];
+		for (size_t j=0; j<value.size(); j++) {
+			cout << value[j] << "    ";
+		}
+		cout << endl;
+	}
+	cout <<endl;
 }

@@ -40,18 +40,9 @@ ResultTable * ResultManager::extractTable(vector<string> symbols) {
 ResultTable * ResultManager::mergeTables(ResultTable * t1, ResultTable * t2) {
 	if (t1->getSymbolSize()==0) return t2;
 
+	//cout << "CHECKPOINT 000 " << t1->getSymbolSize() << " " << t2->getSymbolSize() <<endl;
+	//cout << "CHECKPOINT 001 " << t1->getSize() << " " << t2->getSize() <<endl;
 	vector<string> shared_symbols = getSharedSymbols(t1, t2);
-	string symbols1 = "LIST 1 "; string symbols2 = "LIST 2 "; string symbol_s = "SHARED ";
-	for (int i=0; i<t1->getSymbolSize(); i++) {
-		symbols1 += t1->getSymbol(i) + " ";
-	}
-	for (int i=0; i<t2->getSymbolSize(); i++) {
-		symbols2 += t2->getSymbol(i) + " ";
-	}
-	for (size_t i=0; i<shared_symbols.size(); i++) {
-		symbol_s += shared_symbols[i] + " ";
-	}
-	// cout << symbols1 <<endl; cout << symbols2<<endl; cout <<symbol_s <<endl;
 	vector<int> shared_index1 = t1->getSymbolIndex(shared_symbols);
 	vector<int> shared_index2 = t2->getSymbolIndex(shared_symbols);
 
@@ -66,7 +57,7 @@ ResultTable * ResultManager::mergeTables(ResultTable * t1, ResultTable * t2) {
 			vector<int> t2_row = t2->getValRow(j);
 			vector<int> merged_row = mergeRow(t1_row, t2_row, shared_index1, shared_index2);
 			if (!merged_row.empty())
-				t->insertValRow(merged_row);
+				t->insertValRow(merged_row, false);
 		}
 	} else if (t2->getSize()==0) {
 		vector<int> t2_row (t2->getSymbolSize(), -1);
@@ -74,7 +65,7 @@ ResultTable * ResultManager::mergeTables(ResultTable * t1, ResultTable * t2) {
 			vector<int> t1_row = t1->getValRow(i);
 			vector<int> merged_row = mergeRow(t1_row, t2_row, shared_index1, shared_index2);
 			if (!merged_row.empty())
-				t->insertValRow(merged_row);
+				t->insertValRow(merged_row, false);
 		}
 	} else {
 		for (int i=0; i<t1->getSize(); i++) {
@@ -83,10 +74,12 @@ ResultTable * ResultManager::mergeTables(ResultTable * t1, ResultTable * t2) {
 				vector<int> t2_row = t2->getValRow(j);
 				vector<int> merged_row = mergeRow(t1_row, t2_row, shared_index1, shared_index2);
 				if (!merged_row.empty())
-					t->insertValRow(merged_row);
+					t->insertValRow(merged_row, false);
 			}
 		}
 	}
+
+	//cout << "CHECKPOINT 002 " << t->getSize() <<endl; 
 	return t;
 }
 
@@ -96,7 +89,7 @@ void ResultManager::insertTable(ResultTable * table) {
 	vector<string> symbols = table->getAllSymbols();
 	for (int i=0; i<size; i++) {
 		if (hasSharedSymbols(table, tables[i])) {
-		//	cout << "CHECKPOINT " << table->getSize() << " " << tables[i]->getSize() <<endl;
+			//tables[i] = updateTable(tables[i], table);
 			table = mergeTables(table, tables[i]);
 			tables.erase(tables.begin()+i);
 			--i; --size;
@@ -104,6 +97,25 @@ void ResultManager::insertTable(ResultTable * table) {
 	}
 	tables.push_back(table);
 	size++;
+}
+
+ResultTable * ResultManager::updateTable(ResultTable * t, ResultTable * table) {
+	ResultTable * result = new ResultTable();
+	result->insertSymbol(table->getAllSymbols());
+	vector<string> shared_symbols = getSharedSymbols(t, table);
+	vector<int> shared_index1 = table->getSymbolIndex(shared_symbols);
+	vector<int> shared_index2 = t->getSymbolIndex(shared_symbols);
+	for (int i=0; i<table->getSize(); i++) {
+		vector <int> row = table->getValRow(i);
+		for (int j=0; j<t->getSize(); j++) {
+			vector<int> r = t->getValRow(j);
+			vector<int> merged_r = mergeRow(row, r, shared_index1, shared_index2);
+			if (merged_r.size()!=0) {
+				result->insertValRow(row, true);
+			}
+		}
+	}
+	return result;
 }
 
 vector<string> ResultManager::extractSymbols(ResultTable * t, vector<string> symbols) {

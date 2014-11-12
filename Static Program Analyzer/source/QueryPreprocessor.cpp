@@ -926,8 +926,11 @@ vector<string> QueryPreprocessor::breakStringIntoWords(string str) {
 			// only add space if * is in pattern
 			// make a subtring up to this char
 			string sub_str = str.substr(0, i);
-			if (sub_str.find_last_of("such that")>=i-7 ||
-				sub_str.find_last_of("such that")<sub_str.find_last_of("pattern")) {
+			if (i<7 || SyntaxHelper::isRelation(sub_str.substr(i-4, 4)) 
+					|| SyntaxHelper::isRelation(sub_str.substr(i-5, 5))
+					|| SyntaxHelper::isRelation(sub_str.substr(i-6, 6))
+					|| SyntaxHelper::isRelation(sub_str.substr(i-7, 7))) {
+			} else {
 				str = str.replace(i, 1, " * ");
 				i+=2;
 			}

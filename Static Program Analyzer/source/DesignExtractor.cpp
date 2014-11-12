@@ -83,10 +83,6 @@ void DesignExtractor::DFSRecur(TNode * node){
 				TNode * child = node -> getChildAtIndex(i);
 				int childID = child -> getID();
 
-				if (nodeID==382) {
-					node->printTNode();
-				}
-
 				//insert into containTable as long as type is not Program and not undefined
 				Symbol nodeType = node -> getType();
 				Symbol childType = child -> getType();
@@ -105,22 +101,8 @@ void DesignExtractor::DFSRecur(TNode * node){
 }
 
 
-void DesignExtractor::extractContain() {
-	
+void DesignExtractor::extractContain() {	
 	TNode * root = PKB::getASTRoot();
-
-	cout<< "The AST ROOT ID (in  contains mtd) IS  " << root -> getID() << "\n" ;
-	cout<< "The Size of the AST (in contains mtd ) is: " << (PKB::getASTSize()) << "\n";
-	
-	//cout << root -> getID() + "\n";
-
-
-	////get number of nodes
-	//int sizeOfAST = TNode::getGlobalId() + 1;
-	//cout << "size of ast: ";
-	//cout << sizeOfAST; 
-	//cout << endl;
-
 	//apply depth first search on AST
 	DFSRecur(root);
 }
@@ -154,6 +136,11 @@ void DesignExtractor::processUses() {
 						//for every call stmt calling proc2, insert the modifiedVar list
 						for (size_t stmt = 0; stmt < callStmts.size(); stmt++){
 							PKB::insertUses(callStmts[stmt], allUsedVar[var]);
+							// for every parent star stmt of callStmt[stmt], insert modifiedVar list
+							vector <int> parentStarStmts = PKB::getParentStarStmt(callStmts[stmt]);
+							for (size_t stmt1=0; stmt1<parentStarStmts.size(); stmt1++) {
+								PKB::insertUses(parentStarStmts[stmt1], allUsedVar[var]);
+							}
 						}
 					}
 				}
@@ -192,6 +179,11 @@ void DesignExtractor::processModify() {
 						//for every call stmt calling proc2, insert the modifiedVar list
 						for (size_t stmt = 0; stmt < callStmts.size(); stmt++){
 							PKB::insertModifies(callStmts[stmt], allModifiedVar[var]);
+							// for every parent star stmt of callStmt[stmt], insert modifiedVar list
+							vector <int> parentStarStmts = PKB::getParentStarStmt(callStmts[stmt]);
+							for (size_t stmt1=0; stmt1<parentStarStmts.size(); stmt1++) {
+								PKB::insertModifies(parentStarStmts[stmt1], allModifiedVar[var]);
+							}
 						}
 					}
 				}

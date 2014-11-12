@@ -39,11 +39,11 @@ void TestResultTable::TestInsertVal() {
 	vector<int> row_3(&data_3[0], &data_3[0]+2);
 	vector<int> row_4(&data_4[0], &data_4[0]+3);
 	vector<int> row_5(&data_5[0], &data_5[0]+3);
-	table.insertValRow(row_1);
-	table.insertValRow(row_2);
-	table.insertValRow(row_3);
-	table.insertValRow(row_4);
-	table.insertValRow(row_5);
+	table.insertValRow(row_1, true);
+	table.insertValRow(row_2, true);
+	table.insertValRow(row_3, true);
+	table.insertValRow(row_4, true);
+	table.insertValRow(row_5, true);
 
 	CPPUNIT_ASSERT_EQUAL(3, table.getSize());
 	vector<int> table_row_3 = table.getValRow(2);
@@ -64,11 +64,11 @@ void TestResultTable::TestDeleteInvalidRow() {
 	vector<int> row_3(&data_3[0], &data_3[0]+2);
 	vector<int> row_4(&data_4[0], &data_4[0]+3);
 	vector<int> row_5(&data_5[0], &data_5[0]+3);
-	table.insertValRow(row_1);
-	table.insertValRow(row_2);
-	table.insertValRow(row_3);
-	table.insertValRow(row_4);
-	table.insertValRow(row_5);
+	table.insertValRow(row_1, true);
+	table.insertValRow(row_2, true);
+	table.insertValRow(row_3, false);
+	table.insertValRow(row_4, false);
+	table.insertValRow(row_5, true);
 
 	table.deleleInvalidRows();
 	CPPUNIT_ASSERT_EQUAL(3, table.getSize());
@@ -87,11 +87,11 @@ void TestResultTable::TestExtractData() {
 	vector<int> row_3(&data_3[0], &data_3[0]+2);
 	vector<int> row_4(&data_4[0], &data_4[0]+3);
 	vector<int> row_5(&data_5[0], &data_5[0]+3);
-	table.insertValRow(row_1);
-	table.insertValRow(row_2);
-	table.insertValRow(row_3);
-	table.insertValRow(row_4);
-	table.insertValRow(row_5);
+	table.insertValRow(row_1, true);
+	table.insertValRow(row_2, true);
+	table.insertValRow(row_3, true);
+	table.insertValRow(row_4, true);
+	table.insertValRow(row_5, true);
 
 	vector<string> s; s.push_back("s1");
 	ResultTable * table_2 = table.extractData(s);
