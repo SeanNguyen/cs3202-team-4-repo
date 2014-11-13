@@ -1,4 +1,5 @@
 #include "QueryEvaluator.h"
+#include <exception>
 
 void QueryEvaluator::Evaluate() {
 	int size = QueryRepresentator::getSize();
