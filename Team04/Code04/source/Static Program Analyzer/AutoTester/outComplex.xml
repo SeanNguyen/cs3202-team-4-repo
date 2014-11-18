@@ -1,0 +1,9 @@
+<?xml-stylesheet type="text/xsl" href="analysis.xsl"?>
+<test_results>
+<info>
+<name>AutoTester</name><parsing_time_taken>786.000000</parsing_time_taken>
+</info>
+<queries>
+<category name=" Variable, Statement">
+<query>
+<id Multiple_Clauses="1" Typed="1" comment="" >1</id><querystr><![CDATA[stmt s1, s2; variable v1, v2; prog_line n; assign a; Select n such that Affects(s1, n) and Affects(n, s2) with s1.stmt# = n pattern a(v1, "m-1") such that Modifies(s2, v2) with v1.varName = "m"]]></querystr>
