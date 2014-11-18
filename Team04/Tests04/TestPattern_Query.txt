@@ -1,0 +1,187 @@
+37
+cat: Pattern
+1 - Pattern :: 
+assign a;
+Select a pattern a(_, _"i+n"_)
+none
+5000
+2 - Pattern :: 
+assign a;
+Select a pattern a(_, _"n-2"_)
+1
+5000
+3 - Pattern :: 
+assign a;
+Select a pattern a(_, _"a+5"_)
+3,5
+5000
+4 - Pattern :: 
+assign a;
+Select a pattern a(_, _"a+5-3"_)
+none
+5000
+5 - Pattern :: 
+assign a;
+Select a pattern a(_, _"5-3"_)
+2
+5000
+6 - Pattern :: 
+assign a;
+Select a pattern a(_, _"3*n"_)
+none
+5000
+7 - Pattern :: 
+assign a;
+Select a pattern a(_, _"(5-3)*n"_)
+2
+5000
+8 - Pattern :: 
+assign a;
+Select a pattern a(_, _"5-3*n"_)
+none
+5000
+9 - Pattern :: 
+assign a;
+Select a pattern a(_, _"a+(5-3)*n"_)
+2
+5000
+10 - Pattern :: 
+assign a;
+Select a pattern a(_, _"a+(5-3)"_)
+none
+5000
+11 - Pattern :: 
+assign a;
+Select a pattern a(_, _"a-n"_)
+3,5
+5000
+12 - Pattern :: 
+assign a;
+Select a pattern a(_, _"a-n*c"_)
+none
+5000
+13 - Pattern :: 
+assign a;
+Select a pattern a(_, _"(a-n)*c"_)
+3
+5000
+14 - Pattern :: 
+assign a;
+Select a pattern a(_, _"(a-n)*c-(i+o)"_)
+none
+5000
+15 - Pattern :: 
+assign a;
+Select a pattern a(_, _"(a+5)+1-(a-n)*c"_)
+3
+5000
+16 - Pattern :: 
+assign a;
+Select a pattern a(_, _"(a+5)+1"_)
+3,5
+5000
+17 - Pattern :: 
+assign a;
+Select a pattern a(_, _"a+5+1"_)
+3,5
+5000
+18 - Pattern :: 
+assign a;
+Select a pattern a(_, _"i+o"_)
+3,5
+5000
+19 - Pattern :: 
+assign a;
+Select a pattern a(_, _"(i+o)"_)
+3,5
+5000
+20 - Pattern :: 
+assign a;
+Select a pattern a(_, _"a*o"_)
+none
+5000
+21 - Pattern :: 
+assign a;
+Select a pattern a(_, _"1-n"_)
+none
+5000
+22 - Pattern :: 
+assign a;
+Select a pattern a(_, _"o+c"_)
+none
+5000
+23 - Pattern :: 
+assign a;
+Select a pattern a(_, _"n+a"_)
+4
+5000
+24 - Pattern :: 
+assign a;
+Select a pattern a(_, _"(n+a)"_)
+4
+5000
+25 - Pattern :: 
+assign a;
+Select a pattern a(_, _"n+a*o"_)
+none
+5000
+26 - Pattern :: 
+assign a;
+Select a pattern a(_, _"(n+a)*o"_)
+4
+5000
+27 - Pattern :: 
+assign a;
+Select a pattern a(_, _"i-n+a*o"_)
+none
+5000
+28 - Pattern :: 
+assign a;
+Select a pattern a(_, _"i-(n+a)*o"_)
+4
+5000
+29 - Pattern :: 
+assign a;
+Select a pattern a(_, _"(n+a)*o+c"_)
+none
+5000
+30 - Pattern :: 
+assign a;
+Select a pattern a(_, _"1-(a-n)"_)
+none
+5000
+31 - Pattern :: 
+assign a;
+Select a pattern a(_, _"((a+5)+1)-(a-n)"_)
+5
+5000
+32 - Pattern :: 
+assign a;
+Select a pattern a(_, _"n"_)
+1,2,3,4,5
+5000
+33 - Pattern :: 
+assign a;
+Select a pattern a(_, _"i"_)
+1,3,4,5
+5000
+34 - Pattern :: 
+assign a;
+Select a pattern a("i", _)
+2
+5000
+35 - Pattern :: 
+assign a;
+Select a pattern a("b", _)
+3,5
+5000
+36 - Pattern :: 
+assign a;
+Select a pattern a("a", _)
+1
+5000
+37 - Pattern :: 
+assign a;
+Select a pattern a("n", _)
+4
+5000

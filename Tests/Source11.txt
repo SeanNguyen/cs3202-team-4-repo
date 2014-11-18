@@ -16,6 +16,7 @@ procedure testIf{if i then{
 		y = i;}
 		else {i = y;}}
 		x = y;}
+	call testBoth;
 procedure testBoth{while i {
 	if z then {
 		i = y + 1; }
@@ -24,6 +25,8 @@ procedure testBoth{while i {
 		else {i = i * 1; }}
 	while i {
 		x = y;}}}
+	call callAll;
 procedure callAll {call testWhile;
 	call testBoth;
-	call testIf;}
+	call testIf;
+	d = y + 1;}

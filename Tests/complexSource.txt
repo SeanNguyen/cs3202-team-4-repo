@@ -1,12 +1,12 @@
-procedure p{ a = x + y * b;
+procedure p{ a = x + y * lala;
 	c = m - y + z * 3;
 	call a;
-	if b then {
+	if jiji then {
 		while m {
 			m = m - 1;
-			k = m + b + d; }
-		b = b - m;
-	} else { x = b - d + x;
+			k = m + lala + d; }
+		b = koko - m;
+	} else { x = lplp - d + x;
 		call q;
 		y = x + 5 * b; } }
 procedure q{ if i then {
@@ -24,7 +24,7 @@ procedure q{ if i then {
 					c = b - e;
 					e = c + d;
 					while x {
-						x = x + b;
+						x = x + loops;
 						b = b - 1; }}
 				if m then {
 					e = m - 1;

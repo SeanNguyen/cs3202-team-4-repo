@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="PKB">
+      <UniqueIdentifier>{6157f980-46c8-4c47-b2c0-81969bfa2c43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Parser">
+      <UniqueIdentifier>{a6237cdf-241c-4037-83b4-8dbe4b931ef3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="QueryProcessor">
+      <UniqueIdentifier>{1f78c42e-cb83-45de-a5be-d6d19aacc1fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PKB\AST">
+      <UniqueIdentifier>{bb7c2bd1-cfbf-462a-b46f-e800ff3552ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PKB\Old PKB">
+      <UniqueIdentifier>{d0a721a6-6d8f-48c4-b8c2-130b6e069009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PKB\Table">
+      <UniqueIdentifier>{000bfc62-d4cc-4e17-8e09-7ad20ae0765e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\source\Parser.h">
+      <Filter>Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\QueryEvaluator.h">
+      <Filter>QueryProcessor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\QueryPreprocessor.h">
+      <Filter>QueryProcessor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\QueryProcessor.h">
+      <Filter>QueryProcessor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\QueryRepresentator.h">
+      <Filter>QueryProcessor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\QueryTree.h">
+      <Filter>QueryProcessor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Constants.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\SyntaxHelper.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\AST.h">
+      <Filter>PKB\AST</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\TNode.h">
+      <Filter>PKB\AST</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\SymbolTable.h">
+      <Filter>PKB\Old PKB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\ListTable.h">
+      <Filter>PKB\Table</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\MapTable.h">
+      <Filter>PKB\Table</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Table.h">
+      <Filter>PKB\Table</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\DesignExtractor.h">
+      <Filter>Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\QueryOptimizer.h">
+      <Filter>QueryProcessor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\ResultTable.h">
+      <Filter>QueryProcessor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\ResultManager.h">
+      <Filter>QueryProcessor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\PKB.h">
+      <Filter>PKB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Tree.h">
+      <Filter>PKB\Old PKB</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\source\PKB.cpp">
+      <Filter>PKB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Parser.cpp">
+      <Filter>Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\QueryEvaluator.cpp">
+      <Filter>QueryProcessor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\QueryPreprocessor.cpp">
+      <Filter>QueryProcessor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\QueryProcessor.cpp">
+      <Filter>QueryProcessor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\QueryRepresentator.cpp">
+      <Filter>QueryProcessor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\SyntaxHelper.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\AST.cpp">
+      <Filter>PKB\AST</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\TNode.cpp">
+      <Filter>PKB\AST</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Tree.cpp">
+      <Filter>PKB\AST</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\SymbolTable.cpp">
+      <Filter>PKB\Old PKB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Table.cpp">
+      <Filter>PKB\Table</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\DesignExtractor.cpp">
+      <Filter>Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\QueryOptimizer.cpp">
+      <Filter>QueryProcessor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\ResultTable.cpp">
+      <Filter>QueryProcessor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\ResultManager.cpp">
+      <Filter>QueryProcessor</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
