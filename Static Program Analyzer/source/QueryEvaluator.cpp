@@ -462,7 +462,7 @@ bool QueryEvaluator::isRelation(Symbol relation, int arg1, int arg2) {
 	case Uses:
 		return PKB::isUses(arg1, arg2);
 	case UsesP:
-		return PKB::isModifiesProc(arg1, arg2);
+		return PKB::isUsesProc(arg1, arg2);
 	case Calls:
 		return PKB::isCalls(arg1, arg2);
 	case CallsS:
